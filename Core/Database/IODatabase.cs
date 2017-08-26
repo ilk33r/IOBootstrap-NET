@@ -6,7 +6,7 @@ using System.Reactive.Concurrency;
 
 namespace IOBootstrap.NET.Core.Database
 {
-    public class IODatabase
+    public class IODatabase: IIODatabase
     {
 
         #region Properties

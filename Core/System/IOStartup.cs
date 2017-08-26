@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IOBootstrap.NET.Core.Database;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace IOBootstrap.NET.Core.System
         #region Properties
 
         public IConfigurationRoot Configuration { get; }
+        public IIODatabase Database { get; }
 
         #endregion
 
@@ -22,12 +24,16 @@ namespace IOBootstrap.NET.Core.System
 
         public IOStartup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
+			// Create builder
+			var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
+
+			// Setup properties
+			Configuration = builder.Build();
+            Database = new IODatabase(Configuration.GetValue<string>("IODatabasePath"));
         }
 
         #endregion
@@ -46,6 +52,7 @@ namespace IOBootstrap.NET.Core.System
 				options.CookieName = ".IO.Session";
 			});
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton<IIODatabase>(Database);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,8 +68,10 @@ namespace IOBootstrap.NET.Core.System
             // Create default routes
             app.UseMvc(routes =>
             {
-                routes.MapRoute("default", "", new { controller = this.BaseControllerName(), action = "Index" });
-                routes.MapRoute("Error404", "{*url}", new { controller = this.BaseControllerName(), action = "Error404" });
+				routes.MapRoute("addClient", "backoffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
+				routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
+				routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
+				routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });
         }
 
@@ -70,9 +79,14 @@ namespace IOBootstrap.NET.Core.System
 
 		#region Routing
 
-        public virtual string BaseControllerName()
+		public virtual string BackOfficeControllerName()
 		{
-            return "IO";
+			return "IOBackOffice";
+		}
+
+		public virtual string BaseControllerName()
+		{
+			return "IO";
 		}
 
         #endregion

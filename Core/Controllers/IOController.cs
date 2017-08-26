@@ -2,6 +2,7 @@
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ namespace IOBootstrap.NET.Core.Controllers
         #region Properties
 
         public IConfiguration _configuration { get; }
+        public IIODatabase _database { get; }
         public ILogger<TLogger> _logger { get; }
         public ILoggerFactory _loggerFactory { get; }
 
@@ -24,10 +26,11 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Controller Lifecycle
 
-        public IOController(ILoggerFactory factory, ILogger<TLogger> logger, IConfiguration configuration)
+        public IOController(ILoggerFactory factory, ILogger<TLogger> logger, IConfiguration configuration, IIODatabase database)
         {
             // Setup properties
             _configuration = configuration;
+            _database = database;
             _logger = logger;
             _loggerFactory = factory;
 

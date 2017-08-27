@@ -30,8 +30,8 @@ namespace IOBootstrap.NET.Common.Utilities
 				return ipList.Split(',')[0];
 			}
 
-			// Returrn ip address
-			return request.Headers["REMOTE_ADDR"];
+            // Returrn ip address
+            return request.HttpContext.Connection.RemoteIpAddress.ToString();
 		}
 
 		#endregion

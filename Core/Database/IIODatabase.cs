@@ -17,6 +17,5 @@ namespace IOBootstrap.NET.Core.Database
         IObservable<TEntity> InsertEntity<TEntity>(TEntity entity) where TEntity : RealmObject;
         IObservable<IList<TEntity>> UpdateEntities<TEntity>(IList<TEntity> entities) where TEntity : RealmObject;
         IObservable<TEntity> UpdateEntity<TEntity>(TEntity entity) where TEntity : RealmObject;
-		
 	}
 }

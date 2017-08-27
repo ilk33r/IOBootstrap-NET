@@ -49,7 +49,7 @@ namespace IOBootstrap.NET.Core.System
             services.AddLogging();
 			services.AddSession(options =>
 			{
-				options.CookieName = ".IO.Session";
+				options.Cookie.Name = ".IO.Session";
 			});
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IIODatabase>(Database);

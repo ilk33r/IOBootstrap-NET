@@ -8,7 +8,7 @@ namespace IOBootstrap.NET.Core.Database
 {
     public class IODatabase: IIODatabase
     {
-
+        
         #region Properties
 
         private Realm realm;

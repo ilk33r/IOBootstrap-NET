@@ -18,12 +18,13 @@ namespace IOBootstrap.NET.Core.Database
 
         #region Initialization Methods
 
-        public IODatabase(string databasePath)
+        public IODatabase(string databasePath, Type[] objects)
         {
             // Initialize properties
             this.realmConfiguration = new RealmConfiguration(databasePath);
             this.realmConfiguration.ShouldDeleteIfMigrationNeeded = true;
-            this.realm = Realm.GetInstance(this.realmConfiguration);
+            this.realmConfiguration.ObjectClasses = objects;
+            this.realm = this.GetRealmForThread();
         }
 
         public Realm GetRealmForThread()
@@ -35,7 +36,7 @@ namespace IOBootstrap.NET.Core.Database
         public Realm GetRealmForMainThread()
         {
             // Retrieve default realm
-            return this.realm;
+            return this.GetRealmForThread();
         }
 
         #endregion

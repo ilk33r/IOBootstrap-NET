@@ -5,6 +5,9 @@
     <ReleaseVersion>0.0.1</ReleaseVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Common\Models\" />

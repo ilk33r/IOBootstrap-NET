@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using IOBootstrap.NET.Common.Entities.Clients;
 
 namespace IOBootstrap.NET.Core.System
 {
@@ -33,7 +34,7 @@ namespace IOBootstrap.NET.Core.System
 
 			// Setup properties
 			Configuration = builder.Build();
-            Database = new IODatabase(Configuration.GetValue<string>("IODatabasePath"));
+            Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"), this.DatabaseObjects());
         }
 
         #endregion
@@ -75,11 +76,21 @@ namespace IOBootstrap.NET.Core.System
             });
         }
 
-		#endregion
+        #endregion
 
-		#region Routing
+        #region Database
 
-		public virtual string BackOfficeControllerName()
+        public virtual Type[] DatabaseObjects() {
+            return new Type[] { 
+                typeof(IOClientsEntity)
+            };
+        }
+
+        #endregion
+
+        #region Routing
+
+        public virtual string BackOfficeControllerName()
 		{
 			return "IOBackOffice";
 		}

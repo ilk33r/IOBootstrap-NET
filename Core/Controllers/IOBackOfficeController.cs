@@ -53,23 +53,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public IOClientListResponseModel ListClients()
         {
-            // Obtain realm 
-            Realm realm = _database.GetRealmForMainThread();
-
-            // Obtain clients from realm
-            IQueryable<IOClientsEntity> clients = realm.All<IOClientsEntity>();
-
-            // Create list for clients
-            List<IOClientBackOfficeInfoModel> clientInfos = new List<IOClientBackOfficeInfoModel>();
-
-            // Loop throught clients
-            foreach(IOClientsEntity client in clients) {
-                // Create back office info model
-                IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.id, client.clientId, client.clientSecret);
-
-                // Add model to client info list
-                clientInfos.Add(model);
-            }
+            // Obtain client infos
+            var clientInfos = IOClientsEntity.GetClients(_database);
 
             // Create and return response
             return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
@@ -84,8 +69,11 @@ namespace IOBootstrap.NET.Core.Controllers
             // Obtain user ip address
             string userIP = IOCommonHelpers.GetUserIP(this.Request);
 
+            // Log call
+            _logger.LogDebug("User IP: {0}", userIP);
+
             // Check user ip is not local address
-            if (userIP.Equals("127.0.0.1"))
+            if (userIP.Equals(_configuration.GetValue<string>("IODefaultLocalIPV4Address")) || userIP.Equals(_configuration.GetValue<string>("IODefaultLocalIPV6Address")))
             {
                 // Then return back office
                 return true;

@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using Realms;
+using IOBootstrap.NET.Common.Entities.Clients;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -128,6 +130,29 @@ namespace IOBootstrap.NET.Core.Controllers
 
             }
 
+            return false;
+        }
+
+        public bool CheckClient(IOClientInfoModel clientInfo) {
+            // Obtain realm instance
+            Realm realm = _database.GetRealmForMainThread();
+
+            // Find client
+            var clientsEntity = realm.All<IOClientsEntity>().Where((arg1) => arg1.clientId == clientInfo.ClientID);
+
+            // Check finded client counts is greater than zero
+            if (clientsEntity.Count() > 0) {
+                // Obtain client
+                IOClientsEntity client = clientsEntity.First();
+
+                // Check client secret
+                if (client.clientSecret == clientInfo.ClientSecret) {
+                    // Then return client valid
+                    return true;
+                }
+            }
+
+            // Then return invalid clients
             return false;
         }
 

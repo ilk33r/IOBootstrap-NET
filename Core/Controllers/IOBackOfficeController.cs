@@ -74,9 +74,14 @@ namespace IOBootstrap.NET.Core.Controllers
 
             // Check client entity is not null
             if (clientEntity != null) {
-                // Delete client entity
-                _database.DeleteEntity(clientEntity)
-                         .Subscribe();
+				// Begin write transaction
+				Transaction realmTransaction = realm.BeginWrite();
+
+				// Delete all entity
+				realm.Remove(clientEntity);
+
+				// Write transaction
+				realmTransaction.Commit();
 
                 // Then return response
                 return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));

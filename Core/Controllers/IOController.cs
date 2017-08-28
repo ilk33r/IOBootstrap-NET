@@ -55,6 +55,13 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuting(context);
         }
 
+        public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {
+            // Dispose database
+            _database.Dispose();
+
+            base.OnActionExecuted(context);
+        }
+
         #endregion
 
         #region Default

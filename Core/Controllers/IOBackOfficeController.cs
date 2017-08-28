@@ -11,6 +11,7 @@ using Realms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -46,9 +47,44 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Client Methods
 
-        public IOResponseModel AddClient()
+        public IOClientAddResponseModel AddClient()
         {
-            return this.Error400("AddClients.");
+            // Create a client entity
+            IOClientsEntity clientEntity = IOClientsEntity.CreateClient(_database);
+
+            // Write client to database
+            _database.InsertEntity(clientEntity)
+                     .Subscribe();
+
+            // Create client info
+            var clientInfos = new IOClientBackOfficeInfoModel(clientEntity.id, clientEntity.clientId, clientEntity.clientSecret);
+
+            // Create and return response
+            return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
+		}
+
+        [HttpPost]
+        public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel) 
+        {
+            // Obtain realm instance 
+            Realm realm = _database.GetRealmForMainThread();
+
+            // Obtain client entity
+            IOClientsEntity clientEntity = realm.Find<IOClientsEntity>(requestModel.ClientId);
+
+            // Check client entity is not null
+            if (clientEntity != null) {
+                // Delete client entity
+                _database.DeleteEntity(clientEntity)
+                         .Subscribe();
+
+                // Then return response
+                return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+            }
+
+            // Return bad request
+            this.Response.StatusCode = 400;
+            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
         public IOClientListResponseModel ListClients()

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using IOBootstrap.NET.Common.Entities.Clients;
+using IOBootstrap.NET.Common.Entities.AutoIncrements;
 
 namespace IOBootstrap.NET.Core.System
 {
@@ -70,6 +71,7 @@ namespace IOBootstrap.NET.Core.System
             app.UseMvc(routes =>
             {
 				routes.MapRoute("addClient", "backoffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
+                routes.MapRoute("deleteClient", "backoffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
 				routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
 				routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
 				routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
@@ -82,6 +84,7 @@ namespace IOBootstrap.NET.Core.System
 
         public virtual Type[] DatabaseObjects() {
             return new Type[] { 
+				typeof(IOAutoIncrementsEntity),
                 typeof(IOClientsEntity)
             };
         }

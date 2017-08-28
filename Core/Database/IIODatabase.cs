@@ -11,6 +11,7 @@ namespace IOBootstrap.NET.Core.Database
 
         Realm GetRealmForThread();
         Realm GetRealmForMainThread();
+		void Dispose();
         IObservable<Object> DeleteAll();
         IObservable<Object> DeleteEntity<TEntity>(TEntity entity) where TEntity : RealmObject;
         IObservable<IList<TEntity>> InsertEntities<TEntity>(IList<TEntity> entities) where TEntity : RealmObject;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 
 namespace IOBootstrap.NET.Core.Database
 {
@@ -39,6 +40,10 @@ namespace IOBootstrap.NET.Core.Database
             return this.GetRealmForThread();
         }
 
+        public void Dispose() {
+            this.realm.Dispose();
+        }
+
         #endregion
 
         #region Database Operations
@@ -64,7 +69,9 @@ namespace IOBootstrap.NET.Core.Database
                 subscriber.OnCompleted();
 
                 // Return disposable
-                return null;
+                return Disposable.Create(() => {
+                    realmInstance.Dispose();
+                });
             };
 
             // Create a signal
@@ -92,8 +99,10 @@ namespace IOBootstrap.NET.Core.Database
 				// Send completed event to listeners
 				subscriber.OnCompleted();
 
-                // Return disposable
-                return null;
+				// Return disposable
+				return Disposable.Create(() => {
+					realmInstance.Dispose();
+				});
             };
 
 			// Create a signal
@@ -127,7 +136,9 @@ namespace IOBootstrap.NET.Core.Database
 				subscriber.OnCompleted();
 
 				// Return disposable
-				return null;
+				return Disposable.Create(() => {
+					realmInstance.Dispose();
+				});
             };
 
 			// Create a signal
@@ -148,6 +159,9 @@ namespace IOBootstrap.NET.Core.Database
 				// Add objects to database
 				realmInstance.Add(entity);
 
+				// Write transaction
+				realmTransaction.Commit();
+
 				// Send entity to listeners
 				subscriber.OnNext(entity);
 
@@ -155,7 +169,9 @@ namespace IOBootstrap.NET.Core.Database
 				subscriber.OnCompleted();
 
 				// Return disposable
-				return null;
+				return Disposable.Create(() => {
+					realmInstance.Dispose();
+				});
 			};
 
 			// Create a signal
@@ -180,7 +196,10 @@ namespace IOBootstrap.NET.Core.Database
 					// Add objects to database
                     realmInstance.Add(entity, true);
 				}
-				
+
+				// Write transaction
+				realmTransaction.Commit();
+
                 // Send entity to listeners
 				subscriber.OnNext(entities);
 
@@ -188,7 +207,9 @@ namespace IOBootstrap.NET.Core.Database
 				subscriber.OnCompleted();
 
 				// Return disposable
-				return null;
+				return Disposable.Create(() => {
+					realmInstance.Dispose();
+				});
             };
 
 			// Create a signal
@@ -210,6 +231,9 @@ namespace IOBootstrap.NET.Core.Database
                 // Add object to database
                 realmInstance.Add(entity, true);
 
+				// Write transaction
+				realmTransaction.Commit();
+
 				// Send entity to listeners
 				subscriber.OnNext(entity);
 
@@ -217,7 +241,9 @@ namespace IOBootstrap.NET.Core.Database
 				subscriber.OnCompleted();
 
 				// Return disposable
-				return null;
+				return Disposable.Create(() => {
+					realmInstance.Dispose();
+				});
 			};
 
 			// Create a signal

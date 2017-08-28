@@ -1,4 +1,6 @@
-﻿using IOBootstrap.NET.Common.Models.Shared;
+﻿using IOBootstrap.NET.Common.Entities.AutoIncrements;
+using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using Realms;
 using System;
@@ -23,8 +25,17 @@ namespace IOBootstrap.NET.Common.Entities.Clients
 
         #region Helper Methods
 
-        public static void AddClient(IIODatabase database) {
-            
+        public static IOClientsEntity CreateClient(IIODatabase database) {
+            // Create IOClients entity
+            IOClientsEntity clientsEntity = new IOClientsEntity()
+            {
+                id = IOAutoIncrementsEntity.IdForClass(database, typeof(IOClientsEntity)),
+                clientId = IOCommonHelpers.GenerateRandomAlphaNumericString(16),
+                clientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(48)
+            };
+
+            // Return clients entity
+            return clientsEntity;
         }
 
         public static List<IOClientBackOfficeInfoModel> GetClients(IIODatabase database)

@@ -40,7 +40,7 @@
     <PackageReference Include="Realm" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Tools\RealmWeaver.Fody.dll" />
+    <None Remove=".gitignore" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

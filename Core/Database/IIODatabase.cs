@@ -9,9 +9,10 @@ namespace IOBootstrap.NET.Core.Database
     public interface IIODatabase
     {
 
+		void Dispose();
         Realm GetRealmForThread();
         Realm GetRealmForMainThread();
-		void Dispose();
+        void SetDatabaseObjects(Type[] objects);
         IObservable<Object> DeleteAll();
         IObservable<Object> DeleteEntity<TEntity>(TEntity entity) where TEntity : RealmObject;
         IObservable<IList<TEntity>> InsertEntities<TEntity>(IList<TEntity> entities) where TEntity : RealmObject;

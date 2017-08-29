@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.Core.System
 
 			// Setup properties
 			Configuration = builder.Build();
-            Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"), this.DatabaseObjects());
+            Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"));
         }
 
         #endregion
@@ -54,6 +54,8 @@ namespace IOBootstrap.NET.Core.System
 				options.Cookie.Name = ".IO.Session";
 			});
             services.AddSingleton<IConfiguration>(Configuration);
+
+            Database.SetDatabaseObjects(this.DatabaseObjects());
             services.AddSingleton<IIODatabase>(Database);
         }
 
@@ -78,22 +80,24 @@ namespace IOBootstrap.NET.Core.System
             });
         }
 
-        #endregion
+		#endregion
 
-        #region Database
+		#region Database
 
-        public virtual Type[] DatabaseObjects() {
-            return new Type[] { 
+        public virtual Type[] DatabaseObjects()
+		{
+			return new Type[] {
 				typeof(IOAutoIncrementsEntity),
-                typeof(IOClientsEntity)
-            };
-        }
+				typeof(IOClientsEntity)
+			};
+		}
 
-        #endregion
+		#endregion
 
-        #region Routing
 
-        public virtual string BackOfficeControllerName()
+		#region Routing
+
+		public virtual string BackOfficeControllerName()
 		{
 			return "IOBackOffice";
 		}

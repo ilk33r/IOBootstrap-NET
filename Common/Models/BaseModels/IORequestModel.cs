@@ -8,7 +8,7 @@ namespace IOBootstrap.NET.Common.Models.BaseModels
 
         #region Properties
 
-        public IOClientInfoModel ClientInfo { get; }
+        public IOClientInfoModel ClientInfo { get; set; }
 
         #endregion
     }

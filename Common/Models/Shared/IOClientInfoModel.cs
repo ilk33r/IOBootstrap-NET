@@ -7,8 +7,8 @@ namespace IOBootstrap.NET.Common.Models.Shared
 
         #region Properties
 
-        public String ClientID { get; }
-        public String ClientSecret { get; }
+        public String ClientID { get; set; }
+        public String ClientSecret { get; set; }
 
         #endregion
 

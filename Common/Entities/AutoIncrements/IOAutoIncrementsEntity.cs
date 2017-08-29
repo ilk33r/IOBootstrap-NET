@@ -12,8 +12,9 @@ namespace IOBootstrap.NET.Common.Entities.AutoIncrements
         #region Properties
 
         [PrimaryKey]
-        public string className { get; set; }
-        public int autoId { get; set; }
+        public string ClassName { get; set; }
+
+        public int AutoId { get; set; }
 
         #endregion
 
@@ -33,7 +34,7 @@ namespace IOBootstrap.NET.Common.Entities.AutoIncrements
             // Check auto increment entity is not null
             if (autoIncrementsEntity != null) {
                 // Then return id
-                idValue = autoIncrementsEntity.autoId;
+                idValue = autoIncrementsEntity.AutoId;
             }
 
             // Increase id value
@@ -52,8 +53,8 @@ namespace IOBootstrap.NET.Common.Entities.AutoIncrements
             {
 
                 // Update entity properties
-                autoId = autoId,
-                className = className
+                AutoId = autoId,
+                ClassName = className
             };
 
             // Listen updates entity

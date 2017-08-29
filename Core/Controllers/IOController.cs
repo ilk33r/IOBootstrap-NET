@@ -138,7 +138,7 @@ namespace IOBootstrap.NET.Core.Controllers
             Realm realm = _database.GetRealmForMainThread();
 
             // Find client
-            var clientsEntity = realm.All<IOClientsEntity>().Where((arg1) => arg1.clientId == clientInfo.ClientID);
+            var clientsEntity = realm.All<IOClientsEntity>().Where((arg1) => arg1.ClientId == clientInfo.ClientID);
 
             // Check finded client counts is greater than zero
             if (clientsEntity.Count() > 0) {
@@ -146,7 +146,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 IOClientsEntity client = clientsEntity.First();
 
                 // Check client secret
-                if (client.clientSecret == clientInfo.ClientSecret) {
+                if (client.ClientSecret == clientInfo.ClientSecret) {
                     // Then return client valid
                     return true;
                 }

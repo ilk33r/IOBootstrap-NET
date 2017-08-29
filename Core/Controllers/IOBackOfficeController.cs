@@ -57,7 +57,7 @@ namespace IOBootstrap.NET.Core.Controllers
                      .Subscribe();
 
             // Create client info
-            var clientInfos = new IOClientBackOfficeInfoModel(clientEntity.id, clientEntity.clientId, clientEntity.clientSecret);
+            var clientInfos = new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret);
 
             // Create and return response
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);

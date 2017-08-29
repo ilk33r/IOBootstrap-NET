@@ -15,11 +15,12 @@ namespace IOBootstrap.NET.Common.Entities.Clients
         #region Properties
 
         [PrimaryKey]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         [Indexed]
-        public string clientId { get; set; }
-        public string clientSecret { get; set; }
+        public string ClientId { get; set; }
+
+        public string ClientSecret { get; set; }
 
         #endregion
 
@@ -29,9 +30,9 @@ namespace IOBootstrap.NET.Common.Entities.Clients
             // Create IOClients entity
             IOClientsEntity clientsEntity = new IOClientsEntity()
             {
-                id = IOAutoIncrementsEntity.IdForClass(database, typeof(IOClientsEntity)),
-                clientId = IOCommonHelpers.GenerateRandomAlphaNumericString(16),
-                clientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(48)
+                ID = IOAutoIncrementsEntity.IdForClass(database, typeof(IOClientsEntity)),
+                ClientId = IOCommonHelpers.GenerateRandomAlphaNumericString(16),
+                ClientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(48)
             };
 
             // Return clients entity
@@ -62,7 +63,7 @@ namespace IOBootstrap.NET.Common.Entities.Clients
                         IOClientsEntity client = clients.ElementAt(i);
 
                         // Create back office info model
-                        IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.id, client.clientId, client.clientSecret);
+                        IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, client.ClientId, client.ClientSecret);
 
                         // Add model to client info list
                         clientInfos.Add(model);

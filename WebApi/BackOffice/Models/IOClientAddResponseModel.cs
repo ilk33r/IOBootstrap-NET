@@ -4,7 +4,7 @@ using System;
 
 namespace IOBootstrap.NET.WebApi.BackOffice.Models
 {
-    public class IOClientAddResponseModel: IOResponseModel
+    public class IOClientAddResponseModel : IOResponseModel
     {
 
 		#region Properties

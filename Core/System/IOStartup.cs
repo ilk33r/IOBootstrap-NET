@@ -1,4 +1,7 @@
 ﻿using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Entities.AutoIncrements;
+using IOBootstrap.NET.Common.Entities.Clients;
+using IOBootstrap.NET.Common.Entities.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Session;
@@ -7,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Entities.AutoIncrements;
 
 namespace IOBootstrap.NET.Core.System
 {
@@ -88,7 +89,8 @@ namespace IOBootstrap.NET.Core.System
 		{
 			return new Type[] {
 				typeof(IOAutoIncrementsEntity),
-				typeof(IOClientsEntity)
+				typeof(IOClientsEntity),
+                typeof(IOUserEntity)
 			};
 		}
 

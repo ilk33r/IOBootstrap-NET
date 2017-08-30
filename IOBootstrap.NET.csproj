@@ -46,6 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="SupportingFiles\" />
+	<None Remove="SupportingFiles\Configurations\" />
+    <None Remove=".DS_Store" />
+    <None Remove="IOBootstrap.NET.userprefs" />
+    <None Remove="SupportingFiles\.DS_Store" />
+    <None Remove="SupportingFiles\Configurations\appsettings.Development.json" />
+    <None Remove="SupportingFiles\Configurations\appsettings.json" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

@@ -147,10 +147,16 @@ namespace IOBootstrap.NET.Core.Controllers
 
                 // Check client secret
                 if (client.ClientSecret == clientInfo.ClientSecret) {
+					// Dispose realm
+					realm.Dispose();
+
                     // Then return client valid
                     return true;
                 }
             }
+
+			// Dispose realm
+			realm.Dispose();
 
             // Then return invalid clients
             return false;

@@ -87,6 +87,9 @@ namespace IOBootstrap.NET.Core.Controllers
                 return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
             }
 
+            // Dispose realm
+            realm.Dispose();
+
             // Return bad request
             this.Response.StatusCode = 400;
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));

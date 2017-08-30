@@ -35,9 +35,12 @@
     <Folder Include="WebApi\BackOffice\Controllers\" />
     <Folder Include="WebApi\BackOffice\Models\" />
     <Folder Include="Common\Entities\Users\" />
+    <Folder Include="WebApi\Authentication\" />
     <Folder Include="WebApi\User\" />
     <Folder Include="WebApi\User\Controllers\" />
     <Folder Include="WebApi\User\Models\" />
+    <Folder Include="WebApi\Authentication\Controllers\" />
+    <Folder Include="WebApi\Authentication\Models\" />
     <Folder Include="WebApi\KeyGenerator\" />
     <Folder Include="WebApi\KeyGenerator\Controllers\" />
     <Folder Include="WebApi\KeyGenerator\Models\" />

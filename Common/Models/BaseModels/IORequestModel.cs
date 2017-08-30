@@ -1,4 +1,4 @@
-﻿using IOBootstrap.NET.Common.Models.Shared;
+﻿using IOBootstrap.NET.WebApi.BackOffice.Models;
 using System;
 
 namespace IOBootstrap.NET.Common.Models.BaseModels

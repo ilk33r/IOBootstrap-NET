@@ -2,6 +2,7 @@
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -21,18 +22,20 @@ namespace IOBootstrap.NET.Common.Entities.Clients
         public string ClientId { get; set; }
 
         public string ClientSecret { get; set; }
+        public string ClientDescription { get; set; }
 
         #endregion
 
         #region Helper Methods
 
-        public static IOClientsEntity CreateClient(IIODatabase database) {
+        public static IOClientsEntity CreateClient(IIODatabase database, string description) {
             // Create IOClients entity
             IOClientsEntity clientsEntity = new IOClientsEntity()
             {
                 ID = IOAutoIncrementsEntity.IdForClass(database, typeof(IOClientsEntity)),
-                ClientId = IOCommonHelpers.GenerateRandomAlphaNumericString(16),
-                ClientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(48)
+                ClientId = IOCommonHelpers.GenerateRandomAlphaNumericString(32),
+                ClientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(64),
+                ClientDescription = description
             };
 
             // Return clients entity

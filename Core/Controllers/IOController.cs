@@ -1,8 +1,10 @@
 ﻿using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using Realms;
-using IOBootstrap.NET.Common.Entities.Clients;
 
 namespace IOBootstrap.NET.Core.Controllers
 {

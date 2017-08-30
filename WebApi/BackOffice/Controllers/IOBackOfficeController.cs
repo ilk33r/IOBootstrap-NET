@@ -3,7 +3,9 @@ using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace IOBootstrap.NET.Core.Controllers
+namespace IOBootstrap.NET.WebApi.BackOffice.Controller
 {
     public abstract class IOBackOfficeController<TLogger>: IOController<TLogger>
     {
@@ -47,10 +49,11 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Client Methods
 
-        public IOClientAddResponseModel AddClient()
+        [HttpPost]
+        public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
             // Create a client entity
-            IOClientsEntity clientEntity = IOClientsEntity.CreateClient(_database);
+            IOClientsEntity clientEntity = IOClientsEntity.CreateClient(_database, requestModel.ClientDescription);
 
             // Write client to database
             _database.InsertEntity(clientEntity)

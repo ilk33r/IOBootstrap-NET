@@ -1,7 +1,8 @@
-﻿using IOBootstrap.NET.Common.Models.Shared;
+﻿using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Models.Shared;
 using System;
 
-namespace IOBootstrap.NET.Common.Models.BaseModels
+namespace IOBootstrap.NET.WebApi.BackOffice.Models
 {
     public class IOClientAddResponseModel: IOResponseModel
     {

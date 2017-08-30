@@ -74,6 +74,10 @@ namespace IOBootstrap.NET.Common.Entities.Clients
                 }
             }
 
+            // Dispose realm
+            realm.Dispose();
+
+            // Return clients
             return clientInfos;
         }
 

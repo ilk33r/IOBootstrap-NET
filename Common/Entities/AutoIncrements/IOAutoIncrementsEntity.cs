@@ -43,6 +43,9 @@ namespace IOBootstrap.NET.Common.Entities.AutoIncrements
             // Set id for class
             IOAutoIncrementsEntity.SetIdForClass(database, idValue, classType.Name);
 
+            // Dispose realm
+            realm.Dispose();
+
             // Then return id value
             return idValue;
         }

@@ -27,15 +27,15 @@ namespace IOBootstrap.NET.Core.System
 
         public IOStartup(IHostingEnvironment env)
         {
-			// Create builder
-			var builder = new ConfigurationBuilder()
+            // Create builder
+            var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-			// Setup properties
-			Configuration = builder.Build();
+            // Setup properties
+            Configuration = builder.Build();
             Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"));
         }
 
@@ -50,10 +50,10 @@ namespace IOBootstrap.NET.Core.System
             services.AddDistributedMemoryCache();
             services.AddMvc();
             services.AddLogging();
-			services.AddSession(options =>
-			{
-				options.Cookie.Name = ".IO.Session";
-			});
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".IO.Session";
+            });
             services.AddSingleton<IConfiguration>(Configuration);
 
             Database.SetDatabaseObjects(this.DatabaseObjects());
@@ -67,47 +67,61 @@ namespace IOBootstrap.NET.Core.System
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-			// Use session
-			app.UseSession();
+            // Use session
+            app.UseSession();
 
             // Create default routes
             app.UseMvc(routes =>
             {
-				routes.MapRoute("addClient", "backoffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
+                routes.MapRoute("addClient", "backoffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
                 routes.MapRoute("deleteClient", "backoffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
-				routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
-				routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
-				routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
+                routes.MapRoute("deleteUser", "backoffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
+                routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
+#if DEBUG
+                routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", "IOKeyGenerator"));
+#endif
+                routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
+                routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });
         }
 
-		#endregion
+        #endregion
 
-		#region Database
+        #region Database
 
         public virtual Type[] DatabaseObjects()
-		{
-			return new Type[] {
-				typeof(IOAutoIncrementsEntity),
-				typeof(IOClientsEntity),
+        {
+            return new Type[] {
+                typeof(IOAutoIncrementsEntity),
+                typeof(IOClientsEntity),
                 typeof(IOUserEntity)
-			};
-		}
+            };
+        }
 
-		#endregion
+        #endregion
 
 
-		#region Routing
+        #region Routing
 
-		public virtual string BackOfficeControllerName()
-		{
-			return "IOBackOffice";
-		}
+        public virtual string AuthenticationControllerName()
+        {
+            return "IOAuthentication";
+        }
 
-		public virtual string BaseControllerName()
-		{
-			return "IO";
-		}
+        public virtual string BackOfficeControllerName()
+        {
+            return "IOBackOffice";
+        }
+
+        public virtual string BaseControllerName()
+        {
+            return "IO";
+        }
+
+        public virtual string UserControllerName()
+        {
+            return "IOUser";
+        }
 
         #endregion
     }

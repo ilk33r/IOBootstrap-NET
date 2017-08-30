@@ -1,5 +1,6 @@
 ﻿using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
+using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
@@ -14,8 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Controller
+namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 {
     public abstract class IOBackOfficeController<TLogger>: IOController<TLogger>
     {
@@ -33,7 +35,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controller
             if (!this.IsBackOffice())
             {
                 // Obtain response model
-                IOResponseModel responseModel = this.Error400("This ip restricted.");
+                IOResponseModel responseModel = this.Error400("Restricted page.");
 
                 // Override response
                 context.Result = new JsonResult(responseModel);
@@ -113,21 +115,79 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controller
 
         public bool IsBackOffice()
         {
-            // Obtain user ip address
-            string userIP = IOCommonHelpers.GetUserIP(this.Request);
-
-            // Log call
-            _logger.LogDebug("User IP: {0}", userIP);
-
-            // Check user ip is not local address
-            if (userIP.Equals(_configuration.GetValue<string>("IODefaultLocalIPV4Address")) || userIP.Equals(_configuration.GetValue<string>("IODefaultLocalIPV6Address")))
+            // Check back office is open and token exists
+            if (_configuration.GetValue<bool>("IOBackOfficeIsOpen"))
             {
-                // Then return back office
-                return true;
+                // Check authorization token exists
+                if (this.Request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN")) 
+                {
+					// Obtain request authorization value
+					string requestAuthorization = this.Request.Headers["X-IO-AUTHORIZATION-TOKEN"];
+
+					// Convert key and iv to byte array
+					byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
+					byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
+
+                    // Obtain decrypted token value
+                    string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
+
+                    // Split user id and token value
+                    string[] tokenData = decryptedToken.Split('-');
+
+                    // Obtain user id from token data
+                    int userId = int.Parse(tokenData[0]);
+
+                    // Check token data is correct
+                    if (tokenData.Count() > 1) {
+						// Obtain realm instance
+						Realm realm = _database.GetRealmForThread();
+
+						// Obtain user entity from database
+						IOUserEntity userEntity = realm.Find<IOUserEntity>(userId);
+
+						// Check user entity is not null
+						if (userEntity != null)
+						{
+                            // Obtain token life from configuration
+                            int tokenLife = _configuration.GetValue<int>("IOTokenLife");
+
+                            // Calculate token end seconds and current seconds
+                            long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
+                            long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
+
+							// Compare user token
+                            if (currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData[1])) {
+								// Dispose realm
+								realm.Dispose();
+
+								// Return is back office
+                                return true;
+                            }
+
+							// Dispose realm
+							realm.Dispose();
+
+							// Return is not back office
+							return false;
+					    }
+
+                        // Dispose realm
+                        realm.Dispose();
+
+						// Return is not back office
+						return false;
+                    }
+
+					// Return is not back office
+					return false;
+                }
+
+                // Return is not back office
+                return false;
             }
 
-            // Return is not back office
-            return false;
+            // Then return back office
+            return true;
         }
 
         #endregion

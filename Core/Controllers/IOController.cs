@@ -123,7 +123,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 string requestAuthorization = this.Request.Headers["X-IO-AUTHORIZATION"];
 
                 // Check authorization code is equal to configuration value
-                if (requestAuthorization.Equals(_configuration.GetValue<string>("IOAuthorization")))
+                if (requestAuthorization.Equals(_configuration.GetValue<string>("IOAuthorizationKey")))
                 {
                     // Then authorization success
                     return true;

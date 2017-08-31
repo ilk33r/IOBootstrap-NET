@@ -1,5 +1,6 @@
 ﻿using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
@@ -11,7 +12,7 @@ using System.Security.Cryptography;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
-    public class IOKeyGeneratorController : IOController<IOKeyGeneratorController>
+    public class IOKeyGeneratorController : IOController<IOKeyGeneratorController, IOViewModel>
     {
 
         #region Controller Lifecycle

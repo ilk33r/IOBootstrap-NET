@@ -1,23 +1,22 @@
 ﻿using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.AutoIncrements;
 using IOBootstrap.NET.Common.Entities.Users;
-using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.WebApi.BackOffice.Controllers;
 using IOBootstrap.NET.WebApi.User.Models;
+using IOBootstrap.NET.WebApi.User.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Realms;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
-    public abstract class IOUserController<TLogger> : IOBackOfficeController<TLogger>
+    public abstract class IOUserController<TLogger, TViewModel> : IOBackOfficeController<TLogger, TViewModel>
+        where TViewModel : IOUserViewModel, new()
     {
 
         #region Controller Lifecycle
@@ -49,55 +48,27 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
 			// Check client 
-			if (!this.CheckClient(requestModel.ClientInfo))
+            if (!_viewModel.CheckClient(requestModel.ClientInfo))
 			{
 				// Then return invalid clients
 				this.Response.StatusCode = 400;
                 return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS), 0, null);
 			}
 
-			// Obtain realm instance
-			Realm realm = _database.GetRealmForMainThread();
+            // Obtain add user response
+            Tuple<bool, int, string> addUserStatus = _viewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
 
-            // Obtain users entity
-            var usersEntities = realm.All<IOUserEntity>()
-                                                 .Where((arg) => arg.UserName == requestModel.UserName);
-
-			// Check push notification entity exists
-			if (usersEntities.Count() > 0)
-			{
-				// Dispose realm
-				realm.Dispose();
-
-                // Return user exists response
-                this.Response.StatusCode = 400;
-                return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "User exists"), 0, null);
-			}
-
-            // Generate user id
-            int userId = IOAutoIncrementsEntity.IdForClass(_database, typeof(IOUserEntity));
-
-            // Create a users entity 
-            IOUserEntity userEntity = new IOUserEntity()
+            // Check add user is success
+            if (addUserStatus.Item1) 
             {
-                ID = userId,
-                UserName = requestModel.UserName.ToLower(),
-                Password = IOCommonHelpers.HashPassword(requestModel.Password),
-                UserRole = requestModel.UserRole,
-                UserToken = null,
-                TokenDate = DateTime.UtcNow
-            };
+				// Create and return response
+                return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), addUserStatus.Item2, addUserStatus.Item3);
+            }
 
-			// Write user to database
-			_database.InsertEntity(userEntity)
-					 .Subscribe();
-
-			// Dispose realm
-			realm.Dispose();
-
-			// Create and return response
-            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), userId, requestModel.UserName);
-        }
+			// Return user exists response
+			this.Response.StatusCode = 400;
+			return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "User exists"), 0, null);
+		}
 
 		[HttpPost]
         public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
@@ -118,50 +89,19 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
 			// Check client 
-			if (!this.CheckClient(requestModel.ClientInfo))
+			if (!_viewModel.CheckClient(requestModel.ClientInfo))
 			{
 				// Then return invalid clients
 				this.Response.StatusCode = 400;
 				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS));
 			}
 
-			// Obtain realm instance 
-            Realm realm = _database.GetRealmForThread();
-
-            // Obtain user entity
-            var userEntities = realm.All<IOUserEntity>()
-                                           .Where((arg1) => arg1.UserName == requestModel.UserName.ToLower());
-
-            // Check user finded
-            if (userEntities.Count() > 0) {
-                // Obtain user entity
-                IOUserEntity user = userEntities.First();
-
-                // Check user old password is valid
-                if (IOCommonHelpers.VerifyPassword(requestModel.OldPassword, user.Password)) {
-					// Begin write transaction
-					Transaction realmTransaction = realm.BeginWrite();
-
-                    // Update user password properties
-                    user.Password = requestModel.NewPassword;
-                    user.UserToken = null;
-
-                    // Update user password
-                    realm.Add(user, true);
-
-                    // Commit transaction
-                    realmTransaction.Commit();
-
-					// Dispose realm
-					realm.Dispose();
-
-                    // Return response
-                    return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
-				}
+            // Check change password is success
+            if (_viewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword))
+            {
+				// Return response
+				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
             }
-
-            // Dispose realm
-            realm.Dispose();
 
             // Return response
 			this.Response.StatusCode = 400;
@@ -183,7 +123,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
 			// Check client 
-			if (!this.CheckClient(requestModel.ClientInfo))
+            if (!_viewModel.CheckClient(requestModel.ClientInfo))
 			{
 				// Then return invalid clients
 				this.Response.StatusCode = 400;
@@ -235,51 +175,15 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
 			// Check client 
-			if (!this.CheckClient(requestModel.ClientInfo))
+            if (!_viewModel.CheckClient(requestModel.ClientInfo))
 			{
 				// Then return invalid clients
 				this.Response.StatusCode = 400;
                 return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS), null);
 			}
 
-			// Create list for clients
-            List<IOUserInfoModel> users = new List<IOUserInfoModel>();
-
-			// Obtain realm 
-            Realm realm = _database.GetRealmForMainThread();
-
-			// Check real is not null
-			if (realm != null)
-			{
-				// Obtain users from realm
-                var user = realm.All<IOUserEntity>();
-
-				// Check users is not null
-				if (user != null)
-				{
-					// Loop throught clients
-					for (int i = 0; i < user.Count(); i++)
-					{
-						// Obtain users entity
-                        IOUserEntity userEntity = user.ElementAt(i);
-
-						// Create user info model
-                        IOUserInfoModel model = new IOUserInfoModel() {
-                            ID = userEntity.ID,
-                            UserName = userEntity.UserName,
-                            UserRole = userEntity.UserRole,
-                            UserToken = userEntity.UserToken,
-                            TokenDate = userEntity.TokenDate
-                        };
-
-						// Add model to user list
-						users.Add(model);
-					}
-				}
-			}
-
-			// Dispose realm
-			realm.Dispose();
+            // Obtain user list
+            List<IOUserInfoModel> users = _viewModel.ListUsers();
 
 			// Create and return response
 			return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), users);

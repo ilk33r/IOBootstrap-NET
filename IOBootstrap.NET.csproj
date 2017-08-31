@@ -44,6 +44,10 @@
     <Folder Include="WebApi\KeyGenerator\" />
     <Folder Include="WebApi\KeyGenerator\Controllers\" />
     <Folder Include="WebApi\KeyGenerator\Models\" />
+    <Folder Include="Core\ViewModels\" />
+    <Folder Include="WebApi\Authentication\ViewModels\" />
+    <Folder Include="WebApi\BackOffice\ViewModels\" />
+    <Folder Include="WebApi\User\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />

@@ -1,21 +1,19 @@
 ﻿using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
+using IOBootstrap.NET.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using Realms;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TLogger> : Controller
+    public abstract class IOController<TLogger, TViewModel> : Controller 
+        where TViewModel: IOViewModel, new()
     {
 
         #region Properties
@@ -24,6 +22,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public IIODatabase _database { get; }
         public ILogger<TLogger> _logger { get; }
         public ILoggerFactory _loggerFactory { get; }
+        public TViewModel _viewModel { get; }
 
         #endregion
 
@@ -37,13 +36,25 @@ namespace IOBootstrap.NET.Core.Controllers
             _logger = logger;
             _loggerFactory = factory;
 
+            // Initialize view model
+            _viewModel = new TViewModel();
+
+            // Setup view model properties
+            _viewModel.Configuration = configuration;
+            _viewModel.Database = database;
+
             _logger.LogDebug("Request start: {0}", this.GetType().Name);
         }
 
         public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
         {
+            base.OnActionExecuting(context);
+
+            // Update view model request value
+            _viewModel.Request = this.Request;
+
             // Check authorization
-            if (!this.CheckAuthorizationHeader())
+            if (!_viewModel.CheckAuthorizationHeader())
             {
                 // Obtain response model
                 IOResponseModel responseModel = this.Error400("Authorization failed.");
@@ -54,8 +65,6 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
-
-            base.OnActionExecuting(context);
         }
 
         public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {
@@ -114,56 +123,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Helper Methods
 
-        private bool CheckAuthorizationHeader()
-        {
-            // Check authorization header key exists
-            if (this.Request.Headers.ContainsKey("X-IO-AUTHORIZATION"))
-            {
-                // Obtain request authorization value
-                string requestAuthorization = this.Request.Headers["X-IO-AUTHORIZATION"];
-
-                // Check authorization code is equal to configuration value
-                if (requestAuthorization.Equals(_configuration.GetValue<string>("IOAuthorizationKey")))
-                {
-                    // Then authorization success
-                    return true;
-                }
-
-            }
-
-            return false;
-        }
-
-        public bool CheckClient(IOClientInfoModel clientInfo) {
-            // Obtain realm instance
-            Realm realm = _database.GetRealmForMainThread();
-
-            // Find client
-            var clientsEntity = realm.All<IOClientsEntity>().Where((arg1) => arg1.ClientId == clientInfo.ClientID);
-
-            // Check finded client counts is greater than zero
-            if (clientsEntity.Count() > 0) {
-                // Obtain client
-                IOClientsEntity client = clientsEntity.First();
-
-                // Check client secret
-                if (client.ClientSecret == clientInfo.ClientSecret) {
-					// Dispose realm
-					realm.Dispose();
-
-                    // Then return client valid
-                    return true;
-                }
-            }
-
-			// Dispose realm
-			realm.Dispose();
-
-            // Then return invalid clients
-            return false;
-        }
-
-        private string GetControllerName()
+        public string GetControllerName()
         {
             // Obtain class name
             String className = this.GetType().Name;

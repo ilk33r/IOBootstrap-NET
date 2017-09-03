@@ -48,6 +48,9 @@
     <Folder Include="WebApi\Authentication\ViewModels\" />
     <Folder Include="WebApi\BackOffice\ViewModels\" />
     <Folder Include="WebApi\User\ViewModels\" />
+    <Folder Include="Core\APNS\" />
+    <Folder Include="Core\APNS\Models\" />
+    <Folder Include="Core\APNS\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />

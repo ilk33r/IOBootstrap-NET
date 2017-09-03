@@ -6,6 +6,7 @@ using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.WebApi.BackOffice.Controllers;
 using IOBootstrap.NET.WebApi.User.Models;
 using IOBootstrap.NET.WebApi.User.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,12 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         #region Controller Lifecycle
 
-        public IOUserController(ILoggerFactory factory, ILogger<TLogger> logger, IConfiguration configuration, IIODatabase database)
-            : base(factory, logger, configuration, database)
+        public IOUserController(ILoggerFactory factory, 
+                                ILogger<TLogger> logger, 
+                                IConfiguration configuration, 
+                                IIODatabase database,
+                                IHostingEnvironment environment)
+            : base(factory, logger, configuration, database, environment)
         {
         }
 

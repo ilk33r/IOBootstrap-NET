@@ -4,6 +4,7 @@ using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public IConfiguration _configuration { get; }
         public IIODatabase _database { get; }
+        public IHostingEnvironment _environment { get; }
         public ILogger<TLogger> _logger { get; }
         public ILoggerFactory _loggerFactory { get; }
         public TViewModel _viewModel { get; }
@@ -28,11 +30,15 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Controller Lifecycle
 
-        public IOController(ILoggerFactory factory, ILogger<TLogger> logger, IConfiguration configuration, IIODatabase database)
+        public IOController(ILoggerFactory factory, ILogger<TLogger> logger, 
+                            IConfiguration configuration, 
+                            IIODatabase database,
+                            IHostingEnvironment environment)
         {
             // Setup properties
             _configuration = configuration;
             _database = database;
+            _environment = environment;
             _logger = logger;
             _loggerFactory = factory;
 
@@ -42,6 +48,7 @@ namespace IOBootstrap.NET.Core.Controllers
             // Setup view model properties
             _viewModel.Configuration = configuration;
             _viewModel.Database = database;
+            _viewModel.Environment = environment;
             _viewModel.Logger = logger;
 
             _logger.LogDebug("Request start: {0}", this.GetType().Name);

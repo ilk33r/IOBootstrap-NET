@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.WebApi.KeyGenerator.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,8 +18,12 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 
         #region Controller Lifecycle
 
-        public IOKeyGeneratorController(ILoggerFactory factory, ILogger<IOKeyGeneratorController> logger, IConfiguration configuration, IIODatabase database)
-            : base(factory, logger, configuration, database)
+        public IOKeyGeneratorController(ILoggerFactory factory, 
+                                        ILogger<IOKeyGeneratorController> logger, 
+                                        IConfiguration configuration, 
+                                        IIODatabase database,
+                                        IHostingEnvironment environment)
+            : base(factory, logger, configuration, database, environment)
         {
         }
 

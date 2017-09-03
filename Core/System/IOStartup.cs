@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 
 namespace IOBootstrap.NET.Core.System
 {
@@ -20,6 +19,7 @@ namespace IOBootstrap.NET.Core.System
 
         public IConfigurationRoot Configuration { get; }
         public IIODatabase Database { get; }
+        public IHostingEnvironment Environment;
 
         #endregion
 
@@ -58,6 +58,8 @@ namespace IOBootstrap.NET.Core.System
 
             Database.SetDatabaseObjects(this.DatabaseObjects());
             services.AddSingleton<IIODatabase>(Database);
+
+            services.AddSingleton<IHostingEnvironment>(Environment);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

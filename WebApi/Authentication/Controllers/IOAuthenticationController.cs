@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.WebApi.Authentication.Models;
 using IOBootstrap.NET.WebApi.Authentication.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,8 +19,12 @@ namespace IOBootstrap.NET.WebApi.Authentication.Controllers
 
         #region Controller Lifecycle
 
-        public IOAuthenticationController(ILoggerFactory factory, ILogger<TLogger> logger, IConfiguration configuration, IIODatabase database)
-            : base(factory, logger, configuration, database)
+        public IOAuthenticationController(ILoggerFactory factory, 
+                                          ILogger<TLogger> logger, 
+                                          IConfiguration configuration, 
+                                          IIODatabase database,
+                                          IHostingEnvironment environment)
+            : base(factory, logger, configuration, database, environment)
         {
         }
 

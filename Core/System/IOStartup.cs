@@ -37,6 +37,7 @@ namespace IOBootstrap.NET.Core.System
             // Setup properties
             Configuration = builder.Build();
             Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"));
+            Environment = env;
         }
 
         #endregion

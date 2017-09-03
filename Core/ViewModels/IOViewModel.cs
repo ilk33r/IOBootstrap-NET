@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Realms;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -16,6 +17,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         public IConfiguration Configuration { get; set; }
         public IIODatabase Database { get; set; }
+        public ILogger Logger { get; set; }
         public HttpRequest Request { get; set; }
 
         #endregion

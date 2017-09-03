@@ -42,6 +42,7 @@ namespace IOBootstrap.NET.Core.Controllers
             // Setup view model properties
             _viewModel.Configuration = configuration;
             _viewModel.Database = database;
+            _viewModel.Logger = logger;
 
             _logger.LogDebug("Request start: {0}", this.GetType().Name);
         }

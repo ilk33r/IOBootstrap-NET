@@ -58,6 +58,22 @@ namespace IOBootstrap.NET.Core.Controllers
         {
             base.OnActionExecuting(context);
 
+            // Update allow origin
+            Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>("IOAllowedOrigin"));
+            Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+
+            // Check request method is options
+            if (this.Request.Method.Equals("OPTIONS")) {
+                // Create response status model
+                IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK);
+
+                // Return response
+                context.Result = new JsonResult(new IOResponseModel(responseStatus));
+
+                // Do nothing
+                return;
+            }
+
             // Update view model request value
             _viewModel.Request = this.Request;
 

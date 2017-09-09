@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <ReleaseVersion>0.0.1</ReleaseVersion>
+	<SolutionDir>..\</SolutionDir>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -11,10 +12,12 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <LangVersion>Default</LangVersion>
+    <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <LangVersion>Default</LangVersion>
+    <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Common\" />
@@ -58,17 +61,15 @@
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="System.Reactive" Version="4.0.0-preview00001" />
-    <PackageReference Include="Realm" Version="1.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.0" />
+    <PackageReference Include="Realm.Database" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
-    <None Remove="SupportingFiles\" />
-	<None Remove="SupportingFiles\Configurations\" />
     <None Remove=".DS_Store" />
     <None Remove="IOBootstrap.NET.userprefs" />
-    <None Remove="SupportingFiles\.DS_Store" />
-    <None Remove="SupportingFiles\Configurations\appsettings.Development.json" />
-    <None Remove="SupportingFiles\Configurations\appsettings.json" />
+    <None Remove="SupportingFiles\**\*" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

@@ -5,22 +5,22 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Realms;
 using System;
 using System.Linq;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public class IOViewModel
+    public class IOViewModel<TDBContext> 
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Properties
 
-        public IConfiguration Configuration { get; set; }
-        public IIODatabase Database { get; set; }
-        public IHostingEnvironment Environment { get; set; }
-        public ILogger Logger { get; set; }
-        public HttpRequest Request { get; set; }
+        public IConfiguration _configuration { get; set; }
+        public TDBContext _databaseContext { get; set; }
+        public IHostingEnvironment _environment { get; set; }
+        public ILogger _logger { get; set; }
+        public HttpRequest _request { get; set; }
 
         #endregion
 
@@ -37,13 +37,13 @@ namespace IOBootstrap.NET.Core.ViewModels
         public bool CheckAuthorizationHeader()
 		{
 			// Check authorization header key exists
-			if (this.Request.Headers.ContainsKey("X-IO-AUTHORIZATION"))
+			if (_request.Headers.ContainsKey("X-IO-AUTHORIZATION"))
 			{
 				// Obtain request authorization value
-				string requestAuthorization = this.Request.Headers["X-IO-AUTHORIZATION"];
+				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION"];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(this.Configuration.GetValue<string>("IOAuthorizationKey")))
+				if (requestAuthorization.Equals(_configuration.GetValue<string>("IOAuthorizationKey")))
 				{
 					// Then authorization success
 					return true;
@@ -56,11 +56,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 
 		public bool CheckClient(IOClientInfoModel clientInfo)
 		{
-			// Obtain realm instance
-			Realm realm = this.Database.GetRealmForMainThread();
-
-			// Find client
-			var clientsEntity = realm.All<IOClientsEntity>().Where((arg1) => arg1.ClientId == clientInfo.ClientID);
+            // Find client
+            var clientsEntity = _databaseContext.Clients.Where((arg1) => arg1.ClientId == clientInfo.ClientID);
 
 			// Check finded client counts is greater than zero
 			if (clientsEntity.Count() > 0)
@@ -71,16 +68,10 @@ namespace IOBootstrap.NET.Core.ViewModels
 				// Check client secret
 				if (client.ClientSecret == clientInfo.ClientSecret)
 				{
-					// Dispose realm
-					realm.Dispose();
-
 					// Then return client valid
 					return true;
 				}
 			}
-
-			// Dispose realm
-			realm.Dispose();
 
 			// Then return invalid clients
 			return false;

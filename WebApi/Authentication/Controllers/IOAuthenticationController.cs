@@ -1,8 +1,8 @@
-﻿using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Common.Constants;
+﻿using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.WebApi.Authentication.Models;
 using IOBootstrap.NET.WebApi.Authentication.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -13,8 +13,9 @@ using System;
 
 namespace IOBootstrap.NET.WebApi.Authentication.Controllers
 {
-    public abstract class IOAuthenticationController<TLogger, TViewModel> : IOController<TLogger, TViewModel>
-        where TViewModel: IOAuthenticationViewModel, new()
+    public abstract class IOAuthenticationController<TLogger, TViewModel, TDBContext> : IOController<TLogger, TViewModel, TDBContext>
+        where TViewModel : IOAuthenticationViewModel<TDBContext>, new()
+		where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
@@ -22,9 +23,9 @@ namespace IOBootstrap.NET.WebApi.Authentication.Controllers
         public IOAuthenticationController(ILoggerFactory factory, 
                                           ILogger<TLogger> logger, 
                                           IConfiguration configuration, 
-                                          IIODatabase database,
+                                          TDBContext databaseContext,
                                           IHostingEnvironment environment)
-            : base(factory, logger, configuration, database, environment)
+            : base(factory, logger, configuration, databaseContext, environment)
         {
         }
 

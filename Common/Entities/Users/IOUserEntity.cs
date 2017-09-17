@@ -1,17 +1,20 @@
-﻿using System;
-using Realms;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IOBootstrap.NET.Common.Entities.Users
 {
-    public class IOUserEntity : RealmObject
+    public class IOUserEntity
     {
 
 		#region Properties
 
-		[PrimaryKey]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int ID { get; set; }
 
-		[Indexed]
+		[StringLength(255)]
 		public string UserName { get; set; }
 
 		public string Password { get; set; }

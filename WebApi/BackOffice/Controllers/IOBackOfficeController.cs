@@ -14,8 +14,9 @@ using System.Collections.Generic;
 
 namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 {
-    public abstract class IOBackOfficeController<TLogger, TViewModel>: IOController<TLogger, TViewModel>
-        where TViewModel: IOBackOfficeViewModel, new()
+    public abstract class IOBackOfficeController<TLogger, TViewModel, TDBContext>: IOController<TLogger, TViewModel, TDBContext>
+        where TViewModel: IOBackOfficeViewModel<TDBContext>, new()
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
@@ -23,9 +24,9 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
         public IOBackOfficeController(ILoggerFactory factory, 
                                       ILogger<TLogger> logger, 
                                       IConfiguration configuration, 
-                                      IIODatabase database,
+                                      TDBContext databaseContext,
                                       IHostingEnvironment environment)
-            : base(factory, logger, configuration, database, environment)
+            : base(factory, logger, configuration, databaseContext, environment)
         {
         }
 

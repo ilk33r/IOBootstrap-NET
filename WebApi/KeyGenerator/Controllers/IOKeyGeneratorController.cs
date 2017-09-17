@@ -13,17 +13,18 @@ using System.Security.Cryptography;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
-    public class IOKeyGeneratorController : IOController<IOKeyGeneratorController, IOViewModel>
+    public class IOKeyGeneratorController<TLogger, TDBContext> : IOController<TLogger, IOViewModel<TDBContext>, TDBContext>
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
 
         public IOKeyGeneratorController(ILoggerFactory factory, 
-                                        ILogger<IOKeyGeneratorController> logger, 
+                                        ILogger<TLogger> logger, 
                                         IConfiguration configuration, 
-                                        IIODatabase database,
+                                        TDBContext databaseContext,
                                         IHostingEnvironment environment)
-            : base(factory, logger, configuration, database, environment)
+            : base(factory, logger, configuration, databaseContext, environment)
         {
         }
 

@@ -13,14 +13,15 @@ using System.Linq;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TLogger, TViewModel> : Controller 
-        where TViewModel: IOViewModel, new()
+    public abstract class IOController<TLogger, TViewModel, TDBContext> : Controller 
+        where TViewModel : IOViewModel<TDBContext>, new() 
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Properties
 
         public IConfiguration _configuration { get; }
-        public IIODatabase _database { get; }
+        public TDBContext _databaseContext { get; }
         public IHostingEnvironment _environment { get; }
         public ILogger<TLogger> _logger { get; }
         public ILoggerFactory _loggerFactory { get; }
@@ -32,12 +33,12 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public IOController(ILoggerFactory factory, ILogger<TLogger> logger, 
                             IConfiguration configuration, 
-                            IIODatabase database,
+                            TDBContext databaseContext,
                             IHostingEnvironment environment)
         {
             // Setup properties
             _configuration = configuration;
-            _database = database;
+            _databaseContext = databaseContext;
             _environment = environment;
             _logger = logger;
             _loggerFactory = factory;
@@ -46,10 +47,10 @@ namespace IOBootstrap.NET.Core.Controllers
             _viewModel = new TViewModel();
 
             // Setup view model properties
-            _viewModel.Configuration = configuration;
-            _viewModel.Database = database;
-            _viewModel.Environment = environment;
-            _viewModel.Logger = logger;
+            _viewModel._configuration = configuration;
+            _viewModel._databaseContext = databaseContext;
+            _viewModel._environment = environment;
+            _viewModel._logger = logger;
 
             _logger.LogDebug("Request start: {0}", this.GetType().Name);
         }
@@ -75,7 +76,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Update view model request value
-            _viewModel.Request = this.Request;
+            _viewModel._request = this.Request;
 
             // Check authorization
             if (!_viewModel.CheckAuthorizationHeader())
@@ -92,9 +93,6 @@ namespace IOBootstrap.NET.Core.Controllers
         }
 
         public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {
-            // Dispose database
-            _database.Dispose();
-
             base.OnActionExecuted(context);
         }
 

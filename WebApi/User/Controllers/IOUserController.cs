@@ -10,14 +10,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Realms;
 using System;
 using System.Collections.Generic;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
-    public abstract class IOUserController<TLogger, TViewModel> : IOBackOfficeController<TLogger, TViewModel>
-        where TViewModel : IOUserViewModel, new()
+    public abstract class IOUserController<TLogger, TViewModel, TDBContext> : IOBackOfficeController<TLogger, TViewModel, TDBContext>
+        where TViewModel : IOUserViewModel<TDBContext>, new()
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
@@ -25,9 +25,9 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         public IOUserController(ILoggerFactory factory, 
                                 ILogger<TLogger> logger, 
                                 IConfiguration configuration, 
-                                IIODatabase database,
+                                TDBContext databaseContext,
                                 IHostingEnvironment environment)
-            : base(factory, logger, configuration, database, environment)
+            : base(factory, logger, configuration, databaseContext, environment)
         {
         }
 
@@ -135,30 +135,19 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS));
 			}
 
-			// Obtain realm instance 
-			Realm realm = _database.GetRealmForMainThread();
-
-			// Obtain user entity
-            IOUserEntity userEntity = realm.Find<IOUserEntity>(requestModel.UserId);
+            // Obtain user entity
+            IOUserEntity userEntity = _databaseContext.Users.Find(requestModel.UserId);
 
 			// Check user entity is not null
 			if (userEntity != null)
 			{
-				// Begin write transaction
-				Transaction realmTransaction = realm.BeginWrite();
-
-				// Delete all entity
-				realm.Remove(userEntity);
-
-				// Write transaction
-				realmTransaction.Commit();
+                // Delete all entity
+                _databaseContext.Remove(userEntity);
+                _databaseContext.SaveChangesAsync();
 
 				// Then return response
 				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
 			}
-
-			// Dispose realm
-			realm.Dispose();
 
 			// Return bad request
 			this.Response.StatusCode = 400;

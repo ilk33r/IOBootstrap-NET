@@ -1,14 +1,15 @@
-﻿using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.Common.Entities.Users;
+﻿using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.ViewModels;
 using Microsoft.Extensions.Configuration;
-using Realms;
 using System;
 using System.Linq;
 
 namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 {
-    public abstract class IOAuthenticationViewModel : IOViewModel
+    public abstract class IOAuthenticationViewModel<TDBContext> : IOViewModel<TDBContext>
+        where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Initialization Methods
@@ -23,12 +24,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 
         public Tuple<bool, string, DateTimeOffset> AuthenticateUser(string userName, string password) 
         {
-			// Obtain realm instance 
-			Realm realm = this.Database.GetRealmForThread();
-
 			// Obtain user entity
-			var userEntities = realm.All<IOUserEntity>()
-                                    .Where((arg1) => arg1.UserName == userName.ToLower());
+            var userEntities = _databaseContext.Users.Where((arg1) => arg1.UserName == userName.ToLower());
 
 			// Check user finded
 			if (userEntities.Count() > 0)
@@ -39,9 +36,6 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				// Check user password is wrong
 				if (!IOCommonHelpers.VerifyPassword(password, user.Password))
 				{
-					// Dispose realm
-					realm.Dispose();
-
                     // Return response
                     return new Tuple<bool, string, DateTimeOffset>(false, null, DateTime.UtcNow);
 				}
@@ -53,8 +47,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				string decryptedUserToken = String.Format("{0}-{1}", user.ID, userTokenString);
 
 				// Convert key and iv to byte array
-				byte[] key = Convert.FromBase64String(this.Configuration.GetValue<string>("IOEncryptionKey"));
-				byte[] iv = Convert.FromBase64String(this.Configuration.GetValue<string>("IOEncryptionIV"));
+				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
+				byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
 
 				// Encode user token
 				byte[] userTokenData = IOCommonHelpers.EncryptStringToBytes(decryptedUserToken, key, iv);
@@ -66,30 +60,19 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				DateTime tokenDate = DateTime.UtcNow;
 
 				// Obtain token life from configuration
-				int tokenLife = this.Configuration.GetValue<int>("IOTokenLife");
-
-				// Begin write transaction
-				Transaction realmTransaction = realm.BeginWrite();
+				int tokenLife = _configuration.GetValue<int>("IOTokenLife");
 
 				// Update entity properties
 				user.UserToken = userTokenString;
 				user.TokenDate = tokenDate;
 
-				// Delete all entity
-				realm.Add(user, true);
-
-				// Write transaction
-				realmTransaction.Commit();
-
-				// Dispose realm
-				realm.Dispose();
+                // Delete all entity
+                _databaseContext.Users.Add(user);
+                _databaseContext.SaveChangesAsync();
 
                 // Return response
                 return new Tuple<bool, string, DateTimeOffset>(true, userToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)));
 			}
-
-			// Dispose realm
-			realm.Dispose();
 
 			// Return response
 			return new Tuple<bool, string, DateTimeOffset>(false, null, DateTime.UtcNow);

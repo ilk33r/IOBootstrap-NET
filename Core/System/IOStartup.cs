@@ -1,11 +1,9 @@
 ﻿using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Common.Entities.AutoIncrements;
-using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Entities.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -15,13 +13,12 @@ using System.IO;
 
 namespace IOBootstrap.NET.Core.System
 {
-    public abstract class IOStartup
+    public abstract class IOStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Properties
 
         public IConfigurationRoot Configuration { get; }
-        public IIODatabase Database { get; }
         public IHostingEnvironment Environment;
 
         #endregion
@@ -39,7 +36,6 @@ namespace IOBootstrap.NET.Core.System
 
             // Setup properties
             Configuration = builder.Build();
-            Database = new IODatabase(env.ContentRootPath + Configuration.GetValue<string>("IODatabasePath"));
             Environment = env;
         }
 
@@ -51,6 +47,7 @@ namespace IOBootstrap.NET.Core.System
         public virtual void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<TDBContext>(opt => this.DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
             services.AddMvc();
             services.AddLogging();
@@ -59,9 +56,6 @@ namespace IOBootstrap.NET.Core.System
                 options.Cookie.Name = ".IO.Session";
             });
             services.AddSingleton<IConfiguration>(Configuration);
-
-            Database.SetDatabaseObjects(this.DatabaseObjects());
-            services.AddSingleton<IIODatabase>(Database);
 
             services.AddSingleton<IHostingEnvironment>(Environment);
         }
@@ -109,20 +103,6 @@ namespace IOBootstrap.NET.Core.System
 
         #endregion
 
-        #region Database
-
-        public virtual Type[] DatabaseObjects()
-        {
-            return new Type[] {
-                typeof(IOAutoIncrementsEntity),
-                typeof(IOClientsEntity),
-                typeof(IOUserEntity)
-            };
-        }
-
-        #endregion
-
-
         #region Routing
 
         public virtual string AuthenticationControllerName()
@@ -138,6 +118,10 @@ namespace IOBootstrap.NET.Core.System
         public virtual string BaseControllerName()
         {
             return "IO";
+        }
+
+        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options) {
+            options.UseInMemoryDatabase("IOMemory");
         }
 
         public virtual string UserControllerName()

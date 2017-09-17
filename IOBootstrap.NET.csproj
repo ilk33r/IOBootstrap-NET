@@ -63,13 +63,24 @@
     <PackageReference Include="System.Reactive" Version="4.0.0-preview00001" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.0" />
-    <PackageReference Include="Realm.Database" Version="1.6.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".DS_Store" />
     <None Remove="IOBootstrap.NET.userprefs" />
     <None Remove="SupportingFiles\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Core\System\IOProgram.cs" />
+    <Compile Remove="Core\System\Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\System\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

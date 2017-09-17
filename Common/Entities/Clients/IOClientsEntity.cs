@@ -1,18 +1,22 @@
-﻿using Realms;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IOBootstrap.NET.Common.Entities.Clients
 {
-    public class IOClientsEntity : RealmObject
+    public class IOClientsEntity
     {
 
-        #region Properties
+		#region Properties
 
-        [PrimaryKey]
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        [Indexed]
+		[StringLength(32)]
         public string ClientId { get; set; }
 
+		[StringLength(64)]
         public string ClientSecret { get; set; }
         public string ClientDescription { get; set; }
 

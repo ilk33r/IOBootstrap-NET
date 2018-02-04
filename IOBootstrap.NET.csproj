@@ -29,7 +29,6 @@
     <Folder Include="Common\Utilities\" />
     <Folder Include="Core\" />
     <Folder Include="Core\Controllers\" />
-    <Folder Include="Core\System\" />
     <Folder Include="Core\Database\" />
     <Folder Include="Common\Entities\Clients\" />
     <Folder Include="Common\Entities\AutoIncrements\" />
@@ -54,6 +53,7 @@
     <Folder Include="Core\APNS\" />
     <Folder Include="Core\APNS\Models\" />
     <Folder Include="Core\APNS\Utils\" />
+    <Folder Include="Application\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
@@ -70,6 +70,7 @@
     <None Remove=".DS_Store" />
     <None Remove="IOBootstrap.NET.userprefs" />
     <None Remove="SupportingFiles\**\*" />
+    <None Remove="Core\System\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
@@ -77,10 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Core\System\IOProgram.cs" />
-    <Compile Remove="Core\System\Program.cs" />
+    <Compile Remove="Application\Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\System\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <None Include="Application\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

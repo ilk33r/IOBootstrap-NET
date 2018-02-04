@@ -1,15 +1,10 @@
 ﻿using IOBootstrap.NET.Core.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
 
 namespace IOBootstrap.NET.Core.System
 {
@@ -56,7 +51,6 @@ namespace IOBootstrap.NET.Core.System
                 options.Cookie.Name = ".IO.Session";
             });
             services.AddSingleton<IConfiguration>(Configuration);
-
             services.AddSingleton<IHostingEnvironment>(Environment);
         }
 
@@ -70,18 +64,6 @@ namespace IOBootstrap.NET.Core.System
             // Use session
             app.UseSession();
 
-			// Use static files
-			app.UseDefaultFiles();
-			app.UseStaticFiles(new StaticFileOptions()
-			{
-				FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Web")),
-				RequestPath = new PathString("/control"),
-				OnPrepareResponse = ctx =>
-				{
-					ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=3600");
-				}
-			});
-
             // Create default routes
             app.UseMvc(routes =>
             {
@@ -91,11 +73,11 @@ namespace IOBootstrap.NET.Core.System
                 routes.MapRoute("changePassword", "backoffice/users/password/change", new IORoute("ChangePassword", this.UserControllerName()));
                 routes.MapRoute("deleteClient", "backoffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
                 routes.MapRoute("deleteUser", "backoffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
-                routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
-                routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", "IOKeyGenerator"));
 #endif
+                routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
+                routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
                 routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
                 routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });

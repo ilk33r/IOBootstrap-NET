@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.System
+namespace IOBootstrap.NET.Application
 {
     public abstract class IOStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {

@@ -94,70 +94,62 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
 		public bool IsBackOffice()
 		{
-			// Check back office is open and token exists
-			if (_configuration.GetValue<bool>("IOBackOfficeIsPublic"))
+			// Check back office is not open and token exists
+            if (!_configuration.GetValue<bool>("IOBackOfficeIsPublic") && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
 			{
-				// Check authorization token exists
-				if (_request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
-				{
-					// Obtain request authorization value
-					string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
+				// Obtain request authorization value
+				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
 
-					// Convert key and iv to byte array
-					byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
-					byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
+				// Convert key and iv to byte array
+				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
+                byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
 
-					// Obtain decrypted token value
-					string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
+				// Obtain decrypted token value
+				string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
 
-					// Split user id and token value
-					string[] tokenData = decryptedToken.Split('-');
+				// Split user id and token value
+				string[] tokenData = decryptedToken.Split('-');
 
-					// Obtain user id from token data
-					int userId = int.Parse(tokenData[0]);
+				// Obtain user id from token data
+                int userId = int.Parse(tokenData[0]);
 
-					// Check token data is correct
-					if (tokenData.Count() > 1)
-					{
-                        // Obtain user entity from database
-                        IOUserEntity userEntity = _databaseContext.Users.Find(userId);
-
-						// Check user entity is not null
-						if (userEntity != null)
-						{
-							// Obtain token life from configuration
-							int tokenLife = _configuration.GetValue<int>("IOTokenLife");
-
-							// Calculate token end seconds and current seconds
-							long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
-							long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
-
-							// Compare user token
-							if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData[1]))
-							{
-								// Return is back office
-								return true;
-							}
-
-							// Return is not back office
-							return false;
-						}
-
-						// Return is not back office
-						return false;
-					}
-
-					// Return is not back office
-					return false;
-				}
-
-				// Return is not back office
-				return false;
+                // Return back office status
+                return this.checkBackofficeTokenIsValid(tokenData, userId);
 			}
 
 			// Then return back office
 			return true;
 		}
+
+        private bool checkBackofficeTokenIsValid(string[] tokenData, int userId) {
+            // Check token data is correct
+            if (tokenData.Count() > 1)
+            {
+                // Obtain user entity from database
+                IOUserEntity userEntity = _databaseContext.Users.Find(userId);
+
+                // Check user entity is not null
+                if (userEntity != null)
+                {
+                    // Obtain token life from configuration
+                    int tokenLife = _configuration.GetValue<int>("IOTokenLife");
+
+                    // Calculate token end seconds and current seconds
+                    long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
+                    long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
+
+                    // Compare user token
+                    if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData[1]))
+                    {
+                        // Return is back office
+                        return true;
+                    }
+                }
+            }
+
+            // Return is not back office
+            return false;
+        }
 
         #endregion
 

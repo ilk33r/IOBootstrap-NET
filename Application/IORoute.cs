@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Core.System
+namespace IOBootstrap.NET.Application
 {
     public class IORoute
     {

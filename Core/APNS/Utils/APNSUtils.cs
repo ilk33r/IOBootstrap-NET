@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -10,7 +11,6 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.Core.APNS.Utils
 {
@@ -45,12 +45,11 @@ namespace IOBootstrap.NET.Core.APNS.Utils
 
         public void SendNotifications(List<APNSSendPayloadModel> apnsSendPayloads)
         {
-            // Start async task
-            Task.Factory.StartNew(() =>
-            {
-                // Create tcp client
-                TcpClient client = new TcpClient(this.apnsHost, this.apnsPort);
+            // Create tcp client
+            TcpClient client = this.createTcpClientAndConnect();
 
+            // Check client connected 
+            if (client != null) {
                 // Create ssl stream
                 SslStream sslStream = this.CreateAndAuthenticateSslStream(client);
 
@@ -63,10 +62,14 @@ namespace IOBootstrap.NET.Core.APNS.Utils
                         this.SendNotificationToDevice(sslStream, payloadModel);
                     }
 
-					// Close the client connection.
-					client.Close();
+                    // Close ssl stream
+                    sslStream.Close();
+                    sslStream.Dispose();
                 }
-            });
+
+                // Close the client connection.
+                client.Close();
+            }
         }
 
         #endregion
@@ -76,7 +79,7 @@ namespace IOBootstrap.NET.Core.APNS.Utils
         private SslStream CreateAndAuthenticateSslStream(TcpClient client)
         {
             // Load client certificate
-            X509Certificate2Collection certificatesCollection = this.GetCertificatesCollection();
+            X509CertificateCollection certificatesCollection = this.GetCertificatesCollection();
 
             // Create ssl stream
             SslStream sslStream = new SslStream(client.GetStream());
@@ -84,7 +87,8 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             // Authenticate stream
             try
             {
-                sslStream.AuthenticateAsClient(this.apnsHost, certificatesCollection, SslProtocols.Tls, true);
+                sslStream.AuthenticateAsClient(this.apnsHost, certificatesCollection, SslProtocols.Tls12, true);
+                sslStream.ReadTimeout = 30;
             }
             catch (AuthenticationException ex)
             {
@@ -97,17 +101,32 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             return sslStream;
         }
 
-        private X509Certificate2Collection GetCertificatesCollection()
+        private TcpClient createTcpClientAndConnect() {
+            // Create tcp client
+            try
+            {
+                TcpClient client = new TcpClient();
+                client.Connect(this.apnsHost, this.apnsPort);
+                return client;
+            }
+            catch (SocketException ex)
+            {
+                this.logger.LogDebug("An error occurred while connecting to APNS servers. {0}", ex.Message);
+                return null;
+            }
+        }
+
+        private X509CertificateCollection GetCertificatesCollection()
         {
             try {
-				// Load client certificate
-				X509Certificate2 clientCertificate = new X509Certificate2(File.ReadAllBytes(this.certificateFile),
-																		  this.certificatePassword,
-																		  X509KeyStorageFlags.MachineKeySet);
-				X509Certificate2Collection certificatesCollection = new X509Certificate2Collection(clientCertificate);
+                // Load client certificate
+                X509Certificate2 clientCertificate = new X509Certificate2(File.ReadAllBytes(this.certificateFile),
+                                                                          this.certificatePassword,
+                                                                          X509KeyStorageFlags.MachineKeySet);
+                X509CertificateCollection certificatesCollection = new X509CertificateCollection { clientCertificate };
 
-				// Return certificate collection
-				return certificatesCollection;
+                // Return certificate collection
+                return certificatesCollection;
             }
             catch  (Exception ex)
             {
@@ -118,47 +137,70 @@ namespace IOBootstrap.NET.Core.APNS.Utils
 
         private void SendNotificationToDevice(SslStream sslStream, APNSSendPayloadModel apnsPayloadModel)
         {
-			// Encode a message into a byte array.
-			MemoryStream memoryStream = new MemoryStream();
-			BinaryWriter writer = new BinaryWriter(memoryStream);
+            // Encode a message into a byte array.
+            MemoryStream memoryStream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(memoryStream);
 
-			// Write command
-			writer.Write((byte)0);
+            // Write command
+            writer.Write((byte)0);
 
-			// The first byte of the deviceId length (big-endian first byte)
-			writer.Write((byte)0);
+            // The first byte of the deviceId length (big-endian first byte)
+            writer.Write((byte)0);
 
-			// The deviceId length (big-endian second byte)
-			writer.Write((byte)32);
+            // Obtain device token length
+            int deviceTokenLength = apnsPayloadModel.token.Length / 2;
 
-			// Write device token
-			writer.Write(Encoding.ASCII.GetBytes(apnsPayloadModel.token.ToUpper()));
+            // The deviceId length (big-endian second byte)
+            writer.Write((byte)deviceTokenLength);
 
-			// Convert payload to json
-			string payloadJson = JsonConvert.SerializeObject(apnsPayloadModel.payload);
+            //convert Devide token to HEX value.
+            byte[] deviceToken = new byte[deviceTokenLength];
+            for (int i = 0; i < deviceTokenLength; i++) {
+                deviceToken[i] = byte.Parse(apnsPayloadModel.token.Substring(i * 2, 2), NumberStyles.HexNumber);
+            }
+            
+            // Write device token
+            writer.Write(deviceToken);
 
-			// First byte of payload length; (big-endian first byte)
-			writer.Write((byte)0);
+            // First byte of payload length; (big-endian first byte)
+            writer.Write((byte)0);
 
-			// Payload length (big-endian second byte)
-			writer.Write((byte)payloadJson.Length);
+            // Convert payload to json
+            string payloadJson = JsonConvert.SerializeObject(apnsPayloadModel.payload);
 
-			// Convert payload string to bytes
-			byte[] payloadBytes = Encoding.UTF8.GetBytes(payloadJson);
+            // Payload length (big-endian second byte)
+            writer.Write((byte)payloadJson.Length);
 
-			// Write bytes
-			writer.Write(payloadBytes);
-			writer.Flush();
+            // Convert payload string to bytes
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payloadJson);
 
-			// Convert memory stream to byte array
-			byte[] memoryStreamBytes = memoryStream.ToArray();
+            // Write bytes
+            writer.Write(payloadBytes);
+            writer.Flush();
 
-			// Send memory stream to socket
-			sslStream.Write(memoryStreamBytes);
-			sslStream.Flush();
+            // Convert memory stream to byte array
+            byte[] memoryStreamBytes = memoryStream.ToArray();
 
-			// Sleep thread
-			Thread.Sleep(3000);
+            // Send memory stream to socket
+            sslStream.Write(memoryStreamBytes);
+
+            // Check stream can read
+            if (sslStream.CanRead)
+            {
+                try
+                {
+                    byte[] buffer = new byte[6];
+                    sslStream.Read(buffer, 0, buffer.Length);
+                    int status = BitConverter.ToInt32(buffer, 0);
+                }
+                catch (IOException ex)
+                {
+                    this.logger.LogDebug("Apns response failed {0}", ex.Message);
+                }
+            }
+
+            // Sleep thread
+            Thread.Sleep(1000);
         }
 
         #endregion

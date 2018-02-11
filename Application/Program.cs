@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using System;
 
-namespace IOBootstrap.NET.Core.System
+namespace IOBootstrap.NET.Application
 {
     public class Program
     {

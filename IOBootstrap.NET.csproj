@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Remove="Core\System\IOProgram.cs" />
     <Compile Remove="Application\Program.cs" />
+    <Compile Remove="Core\Utils\ThreadUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Application\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />

@@ -34,7 +34,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
 		#region Helper Methods
 
-        public bool CheckAuthorizationHeader()
+        public virtual bool CheckAuthorizationHeader()
 		{
 			// Check authorization header key exists
 			if (_request.Headers.ContainsKey("X-IO-AUTHORIZATION"))
@@ -54,7 +54,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 			return false;
 		}
 
-		public bool CheckClient(IOClientInfoModel clientInfo)
+		public virtual bool CheckClient(IOClientInfoModel clientInfo)
 		{
             // Find client
             var clientsEntity = _databaseContext.Clients.Where((arg1) => arg1.ClientId == clientInfo.ClientID);

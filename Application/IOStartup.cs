@@ -74,7 +74,7 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("deleteClient", "backoffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
                 routes.MapRoute("deleteUser", "backoffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
 #if DEBUG
-                routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", "IOKeyGenerator"));
+                routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif
                 routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
                 routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
@@ -104,6 +104,11 @@ namespace IOBootstrap.NET.Application
 
         public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options) {
             options.UseInMemoryDatabase("IOMemory");
+        }
+
+        public virtual string KeyControllerName() 
+        {
+            return "IOKeyGenerator";
         }
 
         public virtual string UserControllerName()

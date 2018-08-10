@@ -40,7 +40,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             _databaseContext.SaveChanges();
 
 			// Create and return client info
-			return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret);
+            return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription);
         }
 
         public bool DeleteClient(int clientId) 
@@ -81,7 +81,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 					IOClientsEntity client = clients.Skip(i).First();
 
 					// Create back office info model
-					IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, client.ClientId, client.ClientSecret);
+                    IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, client.ClientId, client.ClientSecret, client.ClientDescription);
 
 					// Add model to client info list
 					clientInfos.Add(model);

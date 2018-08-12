@@ -1,100 +1,131 @@
 {
-	"variables": [],
 	"info": {
-		"name": "IOBootstrap",
 		"_postman_id": "d6db1d82-6069-f5b5-b316-6541b9855fbc",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"name": "IOBootstrap",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Index",
 			"request": {
-				"url": "{{url}}/",
 				"method": "GET",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					}
 				],
 				"body": {},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "400",
 			"request": {
-				"url": "{{url}}/",
 				"method": "GET",
 				"header": [],
 				"body": {},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "404",
 			"request": {
-				"url": "{{url}}/error_page_404",
 				"method": "GET",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					}
 				],
 				"body": {},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/error_page_404",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"error_page_404"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Generate/Keys",
 			"request": {
-				"url": "{{url}}/generate/keys",
 				"method": "GET",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"zecme2afylzkfr31wruol9fo4fkv3m8o\",\n\t\t\"ClientSecret\": \"sv56hgxpaghx0vo3qcjqdxupyoizhebcebsklxkgu4d5sin9qh5r3hau1g7syy7v\"\n\t},\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\"\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"zecme2afylzkfr31wruol9fo4fkv3m8o\",\n    \"ClientSecret\": \"sv56hgxpaghx0vo3qcjqdxupyoizhebcebsklxkgu4d5sin9qh5r3hau1g7syy7v\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\"\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/generate/keys",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"generate",
+						"keys"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "88115b0b-2988-4c43-b943-f7151dfb90d3",
-					"name": "response",
+					"id": "2f5528ec-08ba-4b64-b8de-f33665e98694",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -122,7 +153,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -130,73 +160,94 @@
 		{
 			"name": "BackOffiice/Clients/List",
 			"request": {
-				"url": "{{url}}/backoffice/clients/list",
 				"method": "GET",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/clients/list",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"clients",
+						"list"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "BackOffiice/Clients/Add",
 			"request": {
-				"url": "{{url}}/backoffice/clients/add",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientDescription\": \"Test Client\"\n}"
+					"raw": "{\n  \"ClientDescription\": \"Web Client\"\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/clients/add",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"clients",
+						"add"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "9a454bb2-fbf5-438f-9954-7ee8e6060297",
-					"name": "response",
+					"id": "f7723a50-12ce-4b45-a782-3f4d2ce6a83b",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -224,7 +275,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -232,51 +282,65 @@
 		{
 			"name": "BackOffiice/Clients/Delete",
 			"request": {
-				"url": "{{url}}/backoffice/clients/delete",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientId\": 1\n}"
+					"raw": "{\n  \"ClientId\": 1\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/clients/delete",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"clients",
+						"delete"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "41b7b783-35cb-4cd5-89ef-78e7021ce837",
-					"name": "response",
+					"id": "67bb01af-8315-48d7-a223-5da3c2ae5eae",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -304,7 +368,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -312,51 +375,65 @@
 		{
 			"name": "BackOffiice/Users/Add",
 			"request": {
-				"url": "{{url}}/backoffice/users/add",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"{{clientId}}\",\n\t\t\"ClientSecret\": \"{{clientSecret}}\"\n\t},\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\",\n\t\"UserRole\": 0\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\",\n  \"UserRole\": 0\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/users/add",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"add"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "0092b11a-86d9-4bdf-a6d0-408ce164ed7f",
-					"name": "response",
+					"id": "e264ff56-afe3-4280-adda-194b82b65638",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -384,7 +461,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -392,51 +468,65 @@
 		{
 			"name": "BackOffiice/Users/List",
 			"request": {
-				"url": "{{url}}/backoffice/users/list",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"{{clientId}}\",\n\t\t\"ClientSecret\": \"{{clientSecret}}\"\n\t},\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\",\n\t\"UserRole\": 0\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\",\n  \"UserRole\": 0\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/users/list",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"list"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "02cbed90-f3f2-4950-ac96-eb492f89fbf4",
-					"name": "response",
+					"id": "83d53e01-bd19-4bfc-bea8-554ada76ee7f",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -464,7 +554,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -472,51 +561,65 @@
 		{
 			"name": "BackOffiice/Users/Delete",
 			"request": {
-				"url": "{{url}}/backoffice/users/delete",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"{{clientId}}\",\n\t\t\"ClientSecret\": \"{{clientSecret}}\"\n\t},\n\t\"UserId\": 1\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserId\": 1\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/users/delete",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"delete"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "c69f50c1-2c00-4ac9-b196-4fe9983a53ab",
-					"name": "response",
+					"id": "0a74ef0e-f175-4c99-9663-65982d954821",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -544,7 +647,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -552,51 +654,66 @@
 		{
 			"name": "BackOffiice/Users/ChangePassword",
 			"request": {
-				"url": "{{url}}/backoffice/users/password/change",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					},
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
-						"value": "{{token}}",
-						"description": ""
+						"value": "{{token}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"{{clientId}}\",\n\t\t\"ClientSecret\": \"{{clientSecret}}\"\n\t},\n\t\"UserName\": \"root\",\n\t\"OldPassword\": \"1234\",\n\t\"NewPassword\": \"1234\"\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"OldPassword\": \"1234\",\n  \"NewPassword\": \"1234\"\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/users/password/change",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"password",
+						"change"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "5e0e87a7-b981-4528-8263-31ee1a5b24cd",
-					"name": "response",
+					"id": "b5355cfc-0770-450b-b523-e89b2261b440",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -624,7 +741,6 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
@@ -632,46 +748,62 @@
 		{
 			"name": "BackOffiice/Users/Authenticate",
 			"request": {
-				"url": "{{url}}/backoffice/users/password/authenticate",
 				"method": "POST",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
-						"value": "{{authorization}}",
-						"description": ""
+						"value": "{{authorization}}"
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"ClientInfo\": {\n\t\t\"ClientID\": \"{{clientId}}\",\n\t\t\"ClientSecret\": \"{{clientSecret}}\"\n\t},\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\"\n}"
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\"\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{url}}/backoffice/users/password/authenticate",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"password",
+						"authenticate"
+					]
+				}
 			},
 			"response": [
 				{
-					"id": "a28e7005-194c-44ed-896c-d89c3b2568cf",
-					"name": "response",
+					"id": "1064cc1d-1c46-4211-8a37-81f5dbb317c5",
+					"name": "Untitled Example",
 					"originalRequest": {
-						"url": "{{url}}/backoffice/clients/add",
 						"method": "GET",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l",
-								"description": ""
+								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {}
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
 					},
 					"status": "OK",
 					"code": 200,
 					"_postman_previewlanguage": "json",
-					"_postman_previewtype": "text",
 					"header": [
 						{
 							"name": "content-type",
@@ -699,7 +831,96 @@
 						}
 					],
 					"cookie": [],
-					"responseTime": 8518,
+					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
+		},
+		{
+			"name": "BackOffiice/Users/CheckToken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"Token\": \"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/users/password/checktoken",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"password",
+						"checktoken"
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "cbd6117a-bbfb-46ed-bf75-f8982fdd4247",
+					"name": "Untitled Example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "cfb05po8o90mfmj4vg6l"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Kestrel",
+							"description": ""
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": ""
+						}
+					],
+					"cookie": [],
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]

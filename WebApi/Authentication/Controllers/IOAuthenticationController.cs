@@ -71,6 +71,44 @@ namespace IOBootstrap.NET.WebApi.Authentication.Controllers
             return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), authenticationResult.Item2, authenticationResult.Item3);
         }
 
+        [HttpPost]
+        public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null
+                || requestModel.ClientInfo == null
+                || String.IsNullOrEmpty(requestModel.Token)
+               )
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOAuthenticationResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), null, DateTime.Now);
+            }
+
+            // Check client 
+            if (!_viewModel.CheckClient(requestModel.ClientInfo))
+            {
+                // Then return invalid clients
+                this.Response.StatusCode = 400;
+                return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS), null, DateTime.Now);
+            }
+
+            // Check token
+            Tuple<bool, DateTimeOffset> checkTokenResult = _viewModel.CheckToken(requestModel.Token);
+
+            // Check if authentication result is true
+            if (authenticationResult.Item1)
+            {
+                return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), authenticationResult.Item2);
+            }
+
+            // Return response
+            this.Response.StatusCode = 400;
+            return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), DateTime.Now);
+        }
+
         #endregion
 
     }

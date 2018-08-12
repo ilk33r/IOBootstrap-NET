@@ -78,6 +78,11 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 			return new Tuple<bool, string, DateTimeOffset>(false, null, DateTime.UtcNow);
         }
 
+        public Tuple<bool, DateTimeOffset> CheckToken(string token)
+        {
+            
+        }
+
         #endregion
 
     }

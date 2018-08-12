@@ -100,21 +100,11 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 				// Obtain request authorization value
 				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
 
-				// Convert key and iv to byte array
-				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
-                byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
-
-				// Obtain decrypted token value
-				string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
-
-				// Split user id and token value
-				string[] tokenData = decryptedToken.Split('-');
-
-				// Obtain user id from token data
-                int userId = int.Parse(tokenData[0]);
+                // Parse token
+                Tuple<string, int> tokenData = this.parseToken(requestAuthorization);
 
                 // Return back office status
-                return this.checkBackofficeTokenIsValid(tokenData, userId);
+                return this.checkBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
 			}
 
 			// Then return back office
@@ -149,6 +139,24 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
             // Return is not back office
             return false;
+        }
+
+        public Tuple<string, int> parseToken(string token) 
+        {
+            // Convert key and iv to byte array
+            byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
+            byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
+
+            // Obtain decrypted token value
+            string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
+
+            // Split user id and token value
+            string[] tokenData = decryptedToken.Split('-');
+
+            // Obtain user id from token data
+            int userId = int.Parse(tokenData[0]);
+
+            return new Tuple<string, int>(tokenData[1], userId);
         }
 
         #endregion

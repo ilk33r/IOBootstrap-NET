@@ -12,7 +12,8 @@ namespace IOBootstrap.NET.Common.Constants
             "Endpoint could not found.",
             "Bad request",
             "Invalid clients",
-            "Invalid credientals"
+            "Invalid credientals",
+            "Unsupported version"
         };
 
         #endregion
@@ -24,6 +25,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int BAD_REQUEST = 2;
         public static int INVALID_CLIENTS = 3;
         public static int INVALID_CREDIENTALS = 4;
+        public static int UNSUPPORTED_VERSION = 5;
 
         #endregion
     }

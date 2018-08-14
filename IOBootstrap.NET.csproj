@@ -55,6 +55,7 @@
     <Folder Include="Core\APNS\Models\" />
     <Folder Include="Core\APNS\Utils\" />
     <Folder Include="Application\" />
+    <Folder Include="Common\Enumerations\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />

@@ -67,8 +67,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				user.TokenDate = tokenDate;
 
                 // Delete all entity
-                _databaseContext.Users.Add(user);
-                _databaseContext.SaveChanges();
+                _databaseContext.Update(user);
+                _databaseContext.SaveChangesAsync();
 
                 // Return response
                 return new Tuple<bool, string, DateTimeOffset>(true, userToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)));

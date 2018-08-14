@@ -37,7 +37,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
             // Write client to database
             _databaseContext.Clients.Add(clientEntity);
-            _databaseContext.SaveChanges();
+            _databaseContext.SaveChangesAsync();
 
 			// Create and return client info
             return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);

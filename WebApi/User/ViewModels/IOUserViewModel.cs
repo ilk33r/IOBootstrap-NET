@@ -48,7 +48,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
             // Write user to database
             _databaseContext.Add(userEntity);
-            _databaseContext.SaveChanges();
+            _databaseContext.SaveChangesAsync();
 
             // Return status
             return new Tuple<bool, int, string>(true, userEntity.ID, userName);

@@ -40,7 +40,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         {
 			// Validate request
 			if (requestModel == null
-				|| requestModel.ClientInfo == null
                 || String.IsNullOrEmpty(requestModel.UserName)
                 || String.IsNullOrEmpty(requestModel.Password)
                 || requestModel.Password.Length < 4)
@@ -50,14 +49,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
 				// Then return validation error
                 return new IOAddUserResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), 0, null);
-			}
-
-			// Check client 
-            if (!_viewModel.CheckClient(requestModel.ClientInfo))
-			{
-				// Then return invalid clients
-				this.Response.StatusCode = 400;
-                return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS), 0, null);
 			}
 
             // Obtain add user response
@@ -80,7 +71,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         {
 			// Validate request
 			if (requestModel == null
-				|| requestModel.ClientInfo == null
                 || String.IsNullOrEmpty(requestModel.UserName)
                 || String.IsNullOrEmpty(requestModel.OldPassword)
                 || String.IsNullOrEmpty(requestModel.NewPassword)
@@ -91,14 +81,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
                 // Then return validation error
                 return error400;
-			}
-
-			// Check client 
-			if (!_viewModel.CheckClient(requestModel.ClientInfo))
-			{
-				// Then return invalid clients
-				this.Response.StatusCode = 400;
-				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS));
 			}
 
             // Check change password is success
@@ -117,22 +99,13 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         public IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
         {
 			// Validate request
-			if (requestModel == null
-				|| requestModel.ClientInfo == null)
+			if (requestModel == null)
 			{
 				// Obtain 400 error 
 				IOResponseModel error400 = this.Error400("Invalid request data.");
 
                 // Then return validation error
                 return error400;
-			}
-
-			// Check client 
-            if (!_viewModel.CheckClient(requestModel.ClientInfo))
-			{
-				// Then return invalid clients
-				this.Response.StatusCode = 400;
-				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS));
 			}
 
             // Obtain user entity
@@ -154,28 +127,9 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "User not found."));
         }
 
-        [HttpPost]
-        public IOListUserResponseModel ListUsers([FromBody] IOListUserRequestModel requestModel) 
+        [HttpGet]
+        public IOListUserResponseModel ListUsers() 
         {
-			// Validate request
-			if (requestModel == null
-				|| requestModel.ClientInfo == null)
-			{
-				// Obtain 400 error 
-				IOResponseModel error400 = this.Error400("Invalid request data.");
-
-				// Then return validation error
-                return new IOListUserResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), null);
-			}
-
-			// Check client 
-            if (!_viewModel.CheckClient(requestModel.ClientInfo))
-			{
-				// Then return invalid clients
-				this.Response.StatusCode = 400;
-                return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CLIENTS), null);
-			}
-
             // Obtain user list
             List<IOUserInfoModel> users = _viewModel.ListUsers();
 

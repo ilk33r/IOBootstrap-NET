@@ -132,11 +132,11 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 			// Check back office is not open and token exists
             if (!_configuration.GetValue<bool>("IOBackOfficeIsPublic") && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
 			{
-				// Obtain request authorization value
-				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
+                // Obtain token
+                string token = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
 
                 // Parse token
-                Tuple<string, int> tokenData = this.parseToken(requestAuthorization);
+                Tuple<string, int> tokenData = this.parseToken(token);
 
                 // Return back office status
                 return this.checkBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
@@ -146,7 +146,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 			return true;
 		}
 
-        private bool checkBackofficeTokenIsValid(string[] tokenData, int userId) {
+        private bool checkBackofficeTokenIsValid(string tokenData, int userId) {
             // Check token data is correct
             if (tokenData.Count() > 1)
             {
@@ -164,7 +164,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                     long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
 
                     // Compare user token
-                    if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData[1]))
+                    if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData))
                     {
                         // Return is back office
                         return true;
@@ -183,7 +183,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
 
             // Obtain decrypted token value
-            string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(requestAuthorization), key, iv);
+            string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
 
             // Split user id and token value
             string[] tokenData = decryptedToken.Split('-');

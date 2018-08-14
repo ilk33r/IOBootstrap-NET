@@ -1,6 +1,5 @@
 ﻿using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -54,10 +53,10 @@ namespace IOBootstrap.NET.Core.ViewModels
 			return false;
 		}
 
-		public virtual bool CheckClient(IOClientInfoModel clientInfo)
+        public virtual bool CheckClient(string clientId, string clientSecret)
 		{
             // Find client
-            var clientsEntity = _databaseContext.Clients.Where((arg1) => arg1.ClientId == clientInfo.ClientID);
+            var clientsEntity = _databaseContext.Clients.Where((arg1) => arg1.ClientId == clientId);
 
 			// Check finded client counts is greater than zero
 			if (clientsEntity.Count() > 0)
@@ -66,10 +65,25 @@ namespace IOBootstrap.NET.Core.ViewModels
 				IOClientsEntity client = clientsEntity.First();
 
 				// Check client secret
-				if (client.ClientSecret == clientInfo.ClientSecret)
+                if (client.IsEnabled == 1 && client.ClientSecret == clientSecret)
 				{
-					// Then return client valid
-					return true;
+                    // Obtain request counts
+                    int requestCount = client.RequestCount + 1;
+                    int maxRequestCount = client.MaxRequestCount;
+
+                    // Check request counts
+                    if (requestCount <= maxRequestCount)
+                    {
+                        // Update request count
+                        client.RequestCount = requestCount;
+
+                        // Update client 
+                        _databaseContext.Update(client);
+                        _databaseContext.SaveChangesAsync();
+
+                        // Then return client valid
+                        return true;   
+                    }
 				}
 			}
 

@@ -6,6 +6,7 @@ using IOBootstrap.NET.WebApi.User.Models;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace IOBootstrap.NET.WebApi.User.ViewModels
 {
@@ -82,36 +83,6 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
             // Return response
             return false;
-        }
-
-        public Tuple<bool, DateTimeOffset> CheckToken(string token)
-        {
-            // Parse token data
-            Tuple<string, int> tokenData = this.parseToken(token);
-
-            // Obtain user entity from database
-            IOUserEntity userEntity = _databaseContext.Users.Find(tokenData.Item2);
-
-            // Check user entity is not null
-            if (userEntity != null)
-            {
-                // Obtain token life from configuration
-                int tokenLife = _configuration.GetValue<int>("IOTokenLife");
-
-                // Calculate token end seconds and current seconds
-                long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
-                long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
-
-                // Compare user token
-                if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData.Item1))
-                {
-                    // Return status
-                    return new Tuple<bool, DateTimeOffset>(true, userEntity.TokenDate.DateTime);
-                }
-            }
-
-            // Return status
-            return new Tuple<bool, DateTimeOffset>(false, null);
         }
 
         public List<IOUserInfoModel> ListUsers()

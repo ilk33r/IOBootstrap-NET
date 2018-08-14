@@ -90,6 +90,28 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
+
+            // Obtain client info
+            bool checkClientInfo = _configuration.GetValue<bool>("IOCheckClientInfo");
+
+            if (checkClientInfo) 
+            {
+                string clientId = (Request.Headers.ContainsKey("X-IO-CLIENT-ID")) ? (string)Request.Headers["X-IO-CLIENT-ID"] : "";
+                string clientSecret = (Request.Headers.ContainsKey("X-IO-CLIENT-SECRET")) ? (string)Request.Headers["X-IO-CLIENT-SECRET"] : "";
+
+                // Check client info
+                if (!_viewModel.CheckClient(clientId, clientSecret))
+                {
+                    // Obtain response model
+                    IOResponseModel responseModel = this.Error400("Invalid client.");
+
+                    // Override response
+                    context.Result = new JsonResult(responseModel);
+
+                    // Do nothing
+                    return;
+                }
+            }
         }
 
         public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {

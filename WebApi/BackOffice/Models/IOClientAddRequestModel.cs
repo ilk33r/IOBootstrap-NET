@@ -6,6 +6,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
     {
 
         public string ClientDescription { get; set; }
+        public int RequestCount { get; set; }
 
     }
 }

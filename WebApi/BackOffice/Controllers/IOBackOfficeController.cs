@@ -67,7 +67,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             }
 
             // Obtain client info from view model
-            IOClientBackOfficeInfoModel clientInfo = _viewModel.CreateClient(requestModel.ClientDescription);
+            IOClientBackOfficeInfoModel clientInfo = _viewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
 
             // Create and return response
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
@@ -105,6 +105,31 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
+        }
+
+        [HttpPost]
+        public IOResponseModel UpdateClient([FromBody] IOClientUpdateRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Update response status
+                this.Response.StatusCode = 400;
+
+                // Create and return response
+                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+            }
+
+            // Check update client is success
+            if (_viewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount))
+            {
+                // Then create and return response
+                return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+            }
+
+            // Return bad request
+            this.Response.StatusCode = 400;
+            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
         #endregion

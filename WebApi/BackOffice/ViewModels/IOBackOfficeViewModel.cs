@@ -25,7 +25,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
         #region View Model Methods
 
-        public IOClientBackOfficeInfoModel CreateClient(string clientDescription) 
+        public IOClientBackOfficeInfoModel CreateClient(string clientDescription, int maxRequestCount) 
         {
 			// Create a client entity
 			IOClientsEntity clientEntity = new IOClientsEntity()
@@ -40,7 +40,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             _databaseContext.SaveChanges();
 
 			// Create and return client info
-            return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription);
+            return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
         }
 
         public bool DeleteClient(int clientId) 
@@ -81,7 +81,13 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 					IOClientsEntity client = clients.Skip(i).First();
 
 					// Create back office info model
-                    IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, client.ClientId, client.ClientSecret, client.ClientDescription);
+                    IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, 
+                                                                                        client.ClientId, 
+                                                                                        client.ClientSecret, 
+                                                                                        client.ClientDescription, 
+                                                                                        client.IsEnabled,
+                                                                                        client.RequestCount,
+                                                                                        client.MaxRequestCount);
 
 					// Add model to client info list
 					clientInfos.Add(model);
@@ -92,7 +98,36 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 			return clientInfos;
 		}
 
-		public bool IsBackOffice()
+        public bool UpdateClient(int id, string description, int isEnabled, int requestCount, int maxRequestCount)
+        {
+            // Obtain client entity
+            var clientEntities = _databaseContext.Clients.Where((arg1) => arg1.ID == id);
+           
+            // Check client finded
+            if (clientEntities.Count() > 0)
+            {
+                // Obtain user entity
+                IOClientsEntity client = clientEntities.First();
+
+                // Update client properties
+                client.ClientDescription = description;
+                client.IsEnabled = isEnabled;
+                client.RequestCount = requestCount;
+                client.MaxRequestCount = maxRequestCount;
+
+                // Update client
+                _databaseContext.Update(client);
+                _databaseContext.SaveChangesAsync();
+
+                // Return response
+                return true;
+            }
+
+            // Return response
+            return false;
+        }
+
+        public bool IsBackOffice()
 		{
 			// Check back office is not open and token exists
             if (!_configuration.GetValue<bool>("IOBackOfficeIsPublic") && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))

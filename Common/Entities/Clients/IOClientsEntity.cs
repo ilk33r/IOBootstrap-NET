@@ -20,6 +20,10 @@ namespace IOBootstrap.NET.Common.Entities.Clients
         public string ClientSecret { get; set; }
         public string ClientDescription { get; set; }
 
+        public int IsEnabled { get; set; }
+        public int RequestCount { get; set;  }
+        public int MaxRequestCount { get; set; }
+
         #endregion
 
     }

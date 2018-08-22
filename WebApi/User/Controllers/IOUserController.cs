@@ -116,7 +116,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			{
                 // Delete all entity
                 _databaseContext.Remove(userEntity);
-                _databaseContext.SaveChangesAsync();
+                _databaseContext.SaveChanges();
 
 				// Then return response
 				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));

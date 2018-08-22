@@ -32,12 +32,15 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 			{
 				ClientId = IOCommonHelpers.GenerateRandomAlphaNumericString(32),
 				ClientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(64),
-				ClientDescription = clientDescription
+				ClientDescription = clientDescription,
+                IsEnabled = 1,
+                RequestCount = 0,
+                MaxRequestCount = maxRequestCount
 			};
 
             // Write client to database
             _databaseContext.Clients.Add(clientEntity);
-            _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
 
 			// Create and return client info
             return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
@@ -53,7 +56,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 			{
                 // Delete all entity
                 _databaseContext.Remove(clientEntity);
-                _databaseContext.SaveChangesAsync();
+                _databaseContext.SaveChanges();
 
                 // Then success
                 return true;
@@ -117,7 +120,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
                 // Update client
                 _databaseContext.Update(client);
-                _databaseContext.SaveChangesAsync();
+                _databaseContext.SaveChanges();
 
                 // Return response
                 return true;

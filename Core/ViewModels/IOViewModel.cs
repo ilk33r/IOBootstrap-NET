@@ -79,7 +79,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
                         // Update client 
                         _databaseContext.Update(client);
-                        _databaseContext.SaveChangesAsync();
+                        _databaseContext.SaveChanges();
 
                         // Then return client valid
                         return true;   

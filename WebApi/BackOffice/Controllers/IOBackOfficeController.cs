@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             base.OnActionExecuting(context);
 
             // Check is not back office
-            if (!_viewModel.IsBackOffice())
+            if (!this.Request.Method.Equals("OPTIONS") && !_viewModel.IsBackOffice())
             {
                 // Obtain response model
                 IOResponseModel responseModel = this.Error400("Restricted page.");

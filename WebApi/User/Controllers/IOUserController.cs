@@ -63,7 +63,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
 			// Return user exists response
 			this.Response.StatusCode = 400;
-			return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "User exists"), 0, null);
+            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.USER_EXISTS, "User exists"), 0, null);
 		}
 
 		[HttpPost]

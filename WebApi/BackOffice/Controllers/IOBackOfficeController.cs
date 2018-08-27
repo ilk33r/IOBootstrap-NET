@@ -14,16 +14,16 @@ using System.Collections.Generic;
 
 namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 {
-    public abstract class IOBackOfficeController<TLogger, TViewModel, TDBContext>: IOController<TLogger, TViewModel, TDBContext>
-        where TViewModel: IOBackOfficeViewModel<TDBContext>, new()
+    public abstract class IOBackOfficeController<TLogger, TViewModel, TDBContext> : IOController<TLogger, TViewModel, TDBContext>
+        where TViewModel : IOBackOfficeViewModel<TDBContext>, new()
         where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
 
-        public IOBackOfficeController(ILoggerFactory factory, 
-                                      ILogger<TLogger> logger, 
-                                      IConfiguration configuration, 
+        public IOBackOfficeController(ILoggerFactory factory,
+                                      ILogger<TLogger> logger,
+                                      IConfiguration configuration,
                                       TDBContext databaseContext,
                                       IHostingEnvironment environment)
             : base(factory, logger, configuration, databaseContext, environment)
@@ -56,8 +56,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
         public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null 
-                || String.IsNullOrEmpty(requestModel.ClientDescription)) 
+            if (requestModel == null
+                || String.IsNullOrEmpty(requestModel.ClientDescription))
             {
                 // Update response status
                 this.Response.StatusCode = 400;
@@ -71,23 +71,23 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
-		}
+        }
 
         [HttpPost]
-        public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel) 
+        public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel)
         {
-			// Validate request
-			if (requestModel == null)
-			{
-				// Update response status
-				this.Response.StatusCode = 400;
+            // Validate request
+            if (requestModel == null)
+            {
+                // Update response status
+                this.Response.StatusCode = 400;
 
-				// Create and return response
-				return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
-			}
+                // Create and return response
+                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+            }
 
             // Check delete client is success
-            if (_viewModel.DeleteClient(requestModel.ClientId)) 
+            if (_viewModel.DeleteClient(requestModel.ClientId))
             {
                 // Then create and return response
                 return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
@@ -98,6 +98,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
+        [HttpGet]
         public IOClientListResponseModel ListClients()
         {
             // Obtain client infos

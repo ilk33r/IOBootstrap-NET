@@ -26,6 +26,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int INVALID_CLIENTS = 3;
         public static int INVALID_CREDIENTALS = 4;
         public static int UNSUPPORTED_VERSION = 5;
+        public static int USER_EXISTS = 6;
 
         #endregion
     }

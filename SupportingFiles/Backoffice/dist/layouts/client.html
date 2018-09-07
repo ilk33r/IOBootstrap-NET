@@ -1,0 +1,17 @@
+<tr>
+    <td>${id}</td>
+    <td>${clientDescription}</td>
+    <td>${isEnabled}</td>
+    <td>${requestCount}</td>
+    <td>${maxRequestCount}</td>
+    <td>${clientID}</td>
+    <td>${clientSecret}</td>
+    <td>
+        <a class="btn btn-app" href="#!clientsUpdate" data-type="action" data-method="clientUpdate" data-params='[${id}, "${clientDescription}", "${isEnabled}", ${requestCount}, ${maxRequestCount}]'>
+            <i class="fa fa-edit"></i> Edit
+        </a>
+        <a class="btn btn-app" href="#!clientDelete" data-type="action" data-method="clientDelete" data-params="[${id}]">
+            <i class="fa fa-trash"></i> Delete
+        </a>
+    </td>
+</tr>

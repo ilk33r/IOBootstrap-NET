@@ -112,6 +112,22 @@ namespace IOBootstrap.NET.Core.Controllers
                     return;
                 }
             }
+
+            // Check back office page host name
+            string backofficePageHostName = this._configuration.GetValue<string>("IOBackofficePageHostName");
+
+            // Check hostname is back office page
+            if (backofficePageHostName.Equals(this.Request.Host.Host))
+            {
+                // Obtain layout name from configuration
+                string layoutName = this._configuration.GetValue<string>("IOBackofficePageIndexLayoutName");
+
+                // Obtain index page
+                context.Result = this.GetWebIndex(layoutName);
+
+                // Do nothing
+                return;
+            }
         }
 
         public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {
@@ -161,6 +177,29 @@ namespace IOBootstrap.NET.Core.Controllers
 
             // Return response
             return new IOResponseModel(responseStatus);
+        }
+
+        #endregion
+
+        #region Web Page
+
+        public virtual IActionResult GetWebIndex(string layoutName)
+        {
+            // Obtain web root
+            string webRoot = this._environment.WebRootPath;
+
+            // Create file path
+            string layoutPath = webRoot + "/" + layoutName;
+
+            if (System.IO.File.Exists(layoutPath))
+            {
+                // Read file
+                return Content(System.IO.File.ReadAllText(layoutPath), "text/html");
+            }
+            else
+            {
+                return new JsonResult(this.Error404());
+            }
         }
 
         #endregion

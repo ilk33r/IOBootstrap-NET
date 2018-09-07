@@ -9,11 +9,11 @@ namespace IOBootstrap.NET.Core.Database
     public abstract class IODatabaseContext<TContext> : DbContext where TContext: DbContext
     {
 
-        public DbSet<IOClientsEntity> Clients { get; set; }
-        public DbSet<IOUserEntity> Users { get; set; }
-        public DbSet<PushNotificationEntity> PushNotifications { get; set; }
-        public DbSet<PushNotificationMessageEntity> PushNotificationMessageEntity { get; set; }
-        public DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessagesEntity { get; set; }
+        public virtual DbSet<IOClientsEntity> Clients { get; set; }
+        public virtual DbSet<IOUserEntity> Users { get; set; }
+        public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
+        public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessageEntity { get; set; }
+        public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessagesEntity { get; set; }
 
         public IODatabaseContext(DbContextOptions<TContext> options) : base(options)
         {
@@ -22,9 +22,9 @@ namespace IOBootstrap.NET.Core.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IOClientsEntity>().HasIndex(
-                clientEntity => new { clientEntity.ClientId }).IsUnique(false);
+                clientEntity => new { clientEntity.ClientId }).IsUnique(true);
             modelBuilder.Entity<IOUserEntity>().HasIndex(
-                userEntity => new { userEntity.UserName }).IsUnique(false);
+                userEntity => new { userEntity.UserName }).IsUnique(true);
             modelBuilder.Entity<PushNotificationEntity>().HasIndex(
                 pushNotificationEntity => new
                 {
@@ -39,6 +39,7 @@ namespace IOBootstrap.NET.Core.Database
                     pushNotificationMessageEntity.DeviceType,
                     pushNotificationMessageEntity.IsCompleted
                 });
+
         }
     }
 }

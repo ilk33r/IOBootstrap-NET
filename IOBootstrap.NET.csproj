@@ -35,7 +35,6 @@
     <Folder Include="Common\Entities\AutoIncrements\" />
     <Folder Include="WebApi\" />
     <Folder Include="WebApi\BackOffice\" />
-    <Folder Include="WebApi\BackOffice\Controllers\" />
     <Folder Include="WebApi\BackOffice\Models\" />
     <Folder Include="Common\Entities\Users\" />
     <Folder Include="WebApi\Authentication\" />

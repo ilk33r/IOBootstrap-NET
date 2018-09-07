@@ -9,11 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
+namespace IOBootstrap.NET.Core.ViewModels
 {
     public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext>
         where TDBContext : IODatabaseContext<TDBContext>
     {
+
+        #region Publics
+
+        public IOUserEntity userEntity;
+
+        #endregion
 
         #region Initialization Methods
 
@@ -154,7 +160,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             if (tokenData.Count() > 1)
             {
                 // Obtain user entity from database
-                IOUserEntity userEntity = _databaseContext.Users.Find(userId);
+                this.userEntity = _databaseContext.Users.Find(userId);
 
                 // Check user entity is not null
                 if (userEntity != null)

@@ -1,9 +1,9 @@
-﻿using IOBootstrap.NET.Core.Database;
+﻿using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.WebApi.BackOffice.Controllers;
 using IOBootstrap.NET.WebApi.User.Models;
 using IOBootstrap.NET.WebApi.User.ViewModels;
 using Microsoft.AspNetCore.Hosting;

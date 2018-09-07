@@ -1,10 +1,10 @@
 ﻿using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
-using IOBootstrap.NET.WebApi.BackOffice.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
+namespace IOBootstrap.NET.Core.Controllers
 {
     public abstract class IOBackOfficeController<TLogger, TViewModel, TDBContext> : IOController<TLogger, TViewModel, TDBContext>
         where TViewModel : IOBackOfficeViewModel<TDBContext>, new()
@@ -64,6 +64,16 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
                 // Create and return response
                 return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+            }
+
+            // Check user role
+            if (_viewModel.userEntity != null && !UserRoleUtility.CheckRole(UserRoles.SuperAdmin, (UserRoles)_viewModel.userEntity.UserRole))
+            {
+                // Update response status
+                this.Response.StatusCode = 400;
+
+                // Create and return response
+                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Invalid permission"), null);
             }
 
             // Obtain client info from view model

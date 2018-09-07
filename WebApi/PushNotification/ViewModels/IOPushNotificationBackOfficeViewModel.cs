@@ -1,6 +1,6 @@
 ﻿using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.BackOffice.ViewModels;
+using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.PushNotification.Entities;
 using IOBootstrap.NET.WebApi.PushNotification.Models;
 using System;

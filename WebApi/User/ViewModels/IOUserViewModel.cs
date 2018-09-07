@@ -1,7 +1,7 @@
 ﻿using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.BackOffice.ViewModels;
+using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.User.Models;
 using System;
 using System.Linq;

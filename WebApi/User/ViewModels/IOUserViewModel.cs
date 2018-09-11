@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using IOBootstrap.NET.Common.Enumerations;
 
 namespace IOBootstrap.NET.WebApi.User.ViewModels
 {
@@ -24,7 +25,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
         #region View Model Methods
 
-        public Tuple<bool, int, string> AddUser(string userName, string password, int userRole)
+        public virtual Tuple<bool, int, string> AddUser(string userName, string password, int userRole)
         {
 			// Obtain users entity
             var usersEntities = _databaseContext.Users.Where((arg) => arg.UserName == userName);
@@ -119,6 +120,44 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
             // Return users
             return users;
+        }
+
+        public int UpdateUser(IOUpdateUserRequestModel request)
+        {
+            IOUserEntity user = _databaseContext.Users.Find(request.UserId);
+            string userName = request.UserName.ToLower();
+
+            if (!UserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)this.userEntity.UserRole))
+            {
+                return 2;
+            }
+
+            if (user != null) 
+            {
+                var newUsers = _databaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
+                if (newUsers == null || newUsers.Count() == 0)
+                {
+                    return 3;
+                }
+
+                // Update user properties
+                user.UserName = userName;
+                user.UserRole = request.UserRole;
+
+                if (String.IsNullOrEmpty(request.UserPassword))
+                {
+                    user.Password = IOCommonHelpers.HashPassword(request.UserPassword);
+                    user.UserToken = null;
+                }
+
+                // Update user password
+                _databaseContext.Update(user);
+                _databaseContext.SaveChanges();
+
+                return 0;
+            }
+
+            return 1;
         }
 
         #endregion

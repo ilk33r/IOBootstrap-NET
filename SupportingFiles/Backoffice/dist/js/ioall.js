@@ -34,6 +34,7 @@ io.prototype = {
     log: {},
     request: {},
     service: {},
+    userRoles: {},
     selectedMenuItem: null,
     initialize: function () {
         this.layout.footerLayoutData = {
@@ -93,6 +94,7 @@ io.prototype = {
             // Check response
             if (status && response.status.success) {
                 localStorage.setItem('token', response.token);
+                window.ioinstance.token = response.token;
                 window.ioinstance.showDashboard();
             } else {
                 var layoutData = {
@@ -434,13 +436,6 @@ io.prototype.response = {
     }
 };
 
-io.prototype.deviceTypes = {
-    Android: 0,
-    iOS: 1,
-    Generic: 2,
-    Unkown: 999
-};
-
 io.prototype.service = {
     dataTypes: {
         text: 'text',
@@ -472,7 +467,10 @@ io.prototype.service = {
             },
             error: function (error) {
                 var responeData = (dataType == window.ioinstance.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
-                callback(true, responeData, error);
+                if (typeof responeData === 'object' && responeData.status.code == 2) {
+                    window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+                }
+                callback(false, responeData, error);
             }
         });
     },
@@ -513,6 +511,12 @@ io.prototype.service = {
     }
 };
 
+io.prototype.userRoles = {
+    superAdmin: 0,
+    admin: 1,
+    user: 2
+};
+
 /**
  * Format strings like prinf
  * "<h1>%s</h1><p>%s</p>".format("Header", "Just a test!");
@@ -545,6 +549,6 @@ $(document).ready(function () {
         window.ioinstance.checkToken();
     } else {
         // Get dashboard
-        window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+        window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
     }
 });

@@ -1,7 +1,10 @@
-﻿using IOBootstrap.NET.Core.Controllers;
+﻿using System;
+using System.Collections.Generic;
+using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Users;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.WebApi.User.Models;
@@ -10,8 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
@@ -36,7 +37,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         #region User Methods
 
         [HttpPost]
-        public IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
+        public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
         {
 			// Validate request
 			if (requestModel == null
@@ -50,6 +51,19 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 				// Then return validation error
                 return new IOAddUserResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), 0, null);
 			}
+
+            // Check current user role
+            if (!UserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)_viewModel.userEntity.UserRole)) 
+            {
+                // Update response status code
+                this.Response.StatusCode = 401;
+
+                // Create response status model
+                IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Permission denied.");
+
+                // Return response
+                return new IOAddUserResponseModel(responseStatus, 0, null);
+            }
 
             // Obtain add user response
             Tuple<bool, int, string> addUserStatus = _viewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
@@ -135,6 +149,54 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
 			// Create and return response
 			return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), users);
+        }
+
+        [HttpPost]
+        public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOUpdateUserResponseModel(error400.Status);
+            }
+
+            int status = _viewModel.UpdateUser(requestModel);
+            IOResponseStatusModel responseStatus;
+
+            if (status == 3)
+            {
+                // Update response status code
+                this.Response.StatusCode = 400;
+
+                // Obtain 400 error 
+                responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.USER_EXISTS, "User name exists.");
+                return new IOUpdateUserResponseModel(responseStatus);
+            }
+            else if (status == 2)
+            {
+                // Update response status code
+                this.Response.StatusCode = 400;
+
+                // Obtain 400 error 
+                responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Permission denied.");
+                return new IOUpdateUserResponseModel(responseStatus);
+            }
+            else if (status == 1)
+            {
+                // Update response status code
+                this.Response.StatusCode = 400;
+
+                // Obtain 400 error 
+                responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.USER_NOT_FOUND, "User not found.");
+                return new IOUpdateUserResponseModel(responseStatus);
+            }
+
+            responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK);
+            return new IOUpdateUserResponseModel(responseStatus);
         }
 
         #endregion

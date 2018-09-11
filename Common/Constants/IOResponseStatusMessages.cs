@@ -28,6 +28,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int UNSUPPORTED_VERSION = 5;
         public static int USER_EXISTS = 6;
         public static int INVALID_PERMISSION = 7;
+        public static int USER_NOT_FOUND = 8;
 
         #endregion
     }

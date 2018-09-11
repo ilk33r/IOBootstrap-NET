@@ -40,6 +40,9 @@ io.prototype.app.clientsList = function (e, hash) {
                     window.ioinstance.selectMenu(hash);
                 });
             });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
         }
     });
 };
@@ -190,6 +193,9 @@ io.prototype.app.usersList = function (e, hash) {
                     window.ioinstance.selectMenu(hash);
                 });
             });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
         }
     });
 };
@@ -198,14 +204,30 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
     // Show indicator
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('userupdate', false, function () {
+        var roleList = '';
+        var roleNames = ['Super Admin', 'Admin', 'User'];
+
+        for (var i = 0; i < 3; i++) {
+            if (userRole == i) {
+                roleList += '<option value="' + i + '" selected="selected">' + roleNames[i] + '</option>';
+            } else {
+                roleList += '<option value="' + i + '">' + roleNames[i] + '</option>';
+            }
+        }
         window.ioinstance.layout.contentLayoutData = {
             id: id,
             userName: userName,
-            userRole: userRole
+            userRole: userRole,
+            roleList: roleList
         };
 
         window.ioinstance.layout.render();
         window.ioinstance.selectMenu('usersUpdate');
+
+        $('#updateUserForm').submit(function (e) {
+            e.preventDefault();
+
+        });
     });
 };
 
@@ -315,7 +337,7 @@ io.prototype.app.usersAdd = function (e, hash) {
             request.Version = window.ioinstance.version;
             request.UserName = $('#userName').val();
             request.Password = $('#password').val();
-            request.UserRole = $('#role').val();
+            request.UserRole = parseInt($('#role').val());
 
             $('.passwordArea').removeClass('has-error');
             $('.passwordAreaHelp').addClass('hidden');
@@ -356,7 +378,7 @@ io.prototype.app.usersAdd = function (e, hash) {
                     $('.userNameAreaHelp').text(helpText);
                     window.ioinstance.indicator.hide();
                 } else  {
-                    callout.show(calloutcallout.types.danger, error.message, error.detailedMessage);
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });
@@ -392,7 +414,7 @@ io.prototype.app.sendNotification = function (e, hash) {
                     callout.show(callout.types.success, 'Push notification has been send successfully.', '');
                     window.ioinstance.app.sendNotification(null, 'sendNotification');
                 } else  {
-                    callout.show(calloutcallout.types.danger, error.message, error.detailedMessage);
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });

@@ -36,6 +36,7 @@ io.prototype = {
     service: {},
     userRoles: {},
     selectedMenuItem: null,
+    openedWindow: null,
     initialize: function () {
         this.layout.footerLayoutData = {
             version: IOGlobal.version
@@ -45,6 +46,20 @@ io.prototype = {
             var hash = e.target.location.hash;
             window.ioinstance.setHash(hash, e);
         });
+
+        $(window).on('message', function (e) {
+            window.ioinstance.openedWindow.close();
+            window.ioinstance.log.call('Message received');
+            var message = JSON.parse(e.originalEvent.data);
+            window.ioinstance.callMessage(message);
+        });
+    },
+    callMessage: function (message) {
+        var methodName = message.actionName;
+        var method = this.app[methodName];
+        if (typeof method === "function") {
+            method(message.data, methodName);
+        }
     },
     checkToken: function () {
         var request = this.request.CheckTokenRequest;
@@ -106,6 +121,10 @@ io.prototype = {
                 window.ioinstance.showLogin(layoutData);
             }
         });
+    },
+    openWindow: function (hash) {
+        var url = this.layoutApiUrl + '/#!' + hash;
+        this.openedWindow = window.open(url, hash, 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
     },
     showDashboard: function () {
         // Load dashboard
@@ -242,6 +261,23 @@ io.prototype.layout = {
                 method.apply(null, paramsArray);
             }
         });
+
+        $('a[data-type="selection"]').click(function (e) {
+            e.preventDefault();
+            var element = $(this);
+            var actionName = element.attr('data-method');
+            var params = element.attr('data-params');
+            var messageData = {
+                'actionName': actionName,
+                'data': JSON.parse(params)
+            };
+
+            window.opener.postMessage(JSON.stringify(messageData), '*');
+        });
+
+        if (window.opener != null) {
+            $('.sidebar-toggle').click();
+        }
 
         $(document).tree();
     },

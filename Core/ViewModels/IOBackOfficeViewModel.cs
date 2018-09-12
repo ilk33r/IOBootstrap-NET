@@ -1,13 +1,12 @@
-﻿using IOBootstrap.NET.Common.Entities.Clients;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -169,8 +168,8 @@ namespace IOBootstrap.NET.Core.ViewModels
                     int tokenLife = _configuration.GetValue<int>("IOTokenLife");
 
                     // Calculate token end seconds and current seconds
-                    long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
-                    long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
+                    long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
+                    long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
 
                     // Compare user token
                     if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData))
@@ -192,7 +191,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
 
             // Obtain decrypted token value
-            string decryptedToken = IOCommonHelpers.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
+            string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
 
             // Split user id and token value
             string[] tokenData = decryptedToken.Split('-');

@@ -1,10 +1,10 @@
-﻿using IOBootstrap.NET.Common.Entities.Users;
+﻿using System;
+using System.Linq;
+using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 
 namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 {
@@ -34,14 +34,14 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				IOUserEntity user = userEntities.First();
 
 				// Check user password is wrong
-				if (!IOCommonHelpers.VerifyPassword(password, user.Password))
+                if (!IOPasswordUtilities.VerifyPassword(password, user.Password))
 				{
                     // Return response
                     return new Tuple<bool, string, DateTimeOffset>(false, null, DateTime.UtcNow);
 				}
 
 				// Generate token for user
-				string userTokenString = IOCommonHelpers.GenerateRandomAlphaNumericString(32);
+                string userTokenString = IOCommonHelpers.GenerateRandomAlphaNumericString(32);
 
 				// Create decrypted user token string
 				string decryptedUserToken = String.Format("{0}-{1}", user.ID, userTokenString);
@@ -51,7 +51,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
 
 				// Encode user token
-				byte[] userTokenData = IOCommonHelpers.EncryptStringToBytes(decryptedUserToken, key, iv);
+                byte[] userTokenData = IOPasswordUtilities.EncryptStringToBytes(decryptedUserToken, key, iv);
 
 				// Base 64 encode user token data
 				string userToken = Convert.ToBase64String(userTokenData);
@@ -93,8 +93,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
                 int tokenLife = this._configuration.GetValue<int>("IOTokenLife");
 
                 // Calculate token end seconds and current seconds
-                long currentSeconds = IOCommonHelpers.UnixTimeFromDate(DateTime.UtcNow);
-                long tokenEndSeconds = IOCommonHelpers.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
+                long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
+                long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
 
                 // Compare user token
                 if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData.Item1))

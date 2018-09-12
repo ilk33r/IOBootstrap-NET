@@ -41,7 +41,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 			IOUserEntity userEntity = new IOUserEntity()
 			{
 				UserName = userName.ToLower(),
-				Password = IOCommonHelpers.HashPassword(password),
+                Password = IOPasswordUtilities.HashPassword(password),
 				UserRole = userRole,
 				UserToken = null,
 				TokenDate = DateTime.UtcNow
@@ -67,10 +67,10 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 				IOUserEntity user = userEntities.First();
 
 				// Check user old password is valid
-				if (IOCommonHelpers.VerifyPassword(oldPassword, user.Password))
+                if (IOPasswordUtilities.VerifyPassword(oldPassword, user.Password))
 				{
 					// Update user password properties
-                    user.Password = IOCommonHelpers.HashPassword(newPassword);
+                    user.Password = IOPasswordUtilities.HashPassword(newPassword);
 					user.UserToken = null;
 
                     // Update user password
@@ -146,7 +146,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
                 if (String.IsNullOrEmpty(request.UserPassword))
                 {
-                    user.Password = IOCommonHelpers.HashPassword(request.UserPassword);
+                    user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
                     user.UserToken = null;
                 }
 

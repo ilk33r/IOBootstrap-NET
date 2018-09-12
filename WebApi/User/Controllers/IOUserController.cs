@@ -142,7 +142,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         }
 
         [HttpGet]
-        public IOListUserResponseModel ListUsers() 
+        public virtual IOListUserResponseModel ListUsers() 
         {
             // Obtain user list
             List<IOUserInfoModel> users = _viewModel.ListUsers();

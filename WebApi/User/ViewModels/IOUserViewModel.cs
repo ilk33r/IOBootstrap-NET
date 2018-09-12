@@ -86,7 +86,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
             return false;
         }
 
-        public List<IOUserInfoModel> ListUsers()
+        public virtual List<IOUserInfoModel> ListUsers()
         {
 			// Create list for clients
 			List<IOUserInfoModel> users = new List<IOUserInfoModel>();

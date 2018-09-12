@@ -15,6 +15,10 @@ namespace IOBootstrap.NET.WebApi.User.Models
 
 		#region Initialization Methods
 
+        public IOListUserResponseModel(IOResponseStatusModel status) : base(status)
+        {
+        }
+
 		public IOListUserResponseModel(IOResponseStatusModel status, IList<IOUserInfoModel> users): base(status) {
 			// Setup properties
             this.Users = users;

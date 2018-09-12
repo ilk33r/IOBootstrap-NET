@@ -550,7 +550,19 @@ io.prototype.service = {
 io.prototype.userRoles = {
     superAdmin: 0,
     admin: 1,
-    user: 2
+    user: 2,
+    getRoleName: function (roleId) {
+        switch (roleId) {
+            case 0:
+                return 'Super Admin';
+            case 1:
+                return 'Admin';
+            case 2:
+                return 'User';
+            default:
+                return 'Undefined';
+        }
+    }
 };
 
 /**

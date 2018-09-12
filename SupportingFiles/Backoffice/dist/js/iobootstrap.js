@@ -175,11 +175,12 @@ io.prototype.app.usersList = function (e, hash) {
                 var userLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
                 for (var index in response.users) {
                     var user = response.users[index];
+                    var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
                     var userLayoutData = {
                         id: user.id,
                         userName: user.userName,
-                        userRole: user.userRole,
-                        tokenDate: user.tokenDate,
+                        userRole: roleName,
+                        tokenDate: user.tokenDate
                     };
 
                     usersHtml += window.ioinstance.layout.renderLayout(layout, userLayoutData, userLayoutProperties);

@@ -3,7 +3,7 @@ using System;
 
 namespace IOBootstrap.NET.Common.Models.BaseModels
 {
-    public class IOResponseModel
+    public class IOResponseModel : IOModel
     {
 
         #region Properties
@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.Common.Models.BaseModels
 
         #region Initialization Methods
 
-        public IOResponseModel(IOResponseStatusModel status)
+        public IOResponseModel(IOResponseStatusModel status) : base()
         {
             // Setup properties
             this.Status = status;

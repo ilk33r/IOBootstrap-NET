@@ -135,7 +135,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
             if (user != null) 
             {
                 var newUsers = _databaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
-                if (newUsers == null || newUsers.Count() == 0)
+                if (newUsers == null || newUsers.Count() != 0)
                 {
                     return 3;
                 }

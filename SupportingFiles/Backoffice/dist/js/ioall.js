@@ -209,11 +209,25 @@ io.prototype.callout = {
 
 io.prototype.indicator = {
     indicator: $('#pageIndicator'),
+    progressView: $("#progressModal"),
+    progressViewProgress: $('#progressModalProgress'),
+    progressViewTitle: $('#progressModalTitle'),
     show: function () {
         this.indicator.show();
     },
     hide: function () {
         this.indicator.hide();
+    },
+    showProgressModal: function (title) {
+        this.setProgress(0);
+        this.progressViewTitle.html(title);
+        this.progressView.modal({backdrop: 'static', keyboard: false});
+    },
+    setProgress: function (value) {
+        this.progressViewProgress.width(value + '%');
+    },
+    hideProgressModal: function () {
+        this.progressView.modal('hide');
     }
 };
 

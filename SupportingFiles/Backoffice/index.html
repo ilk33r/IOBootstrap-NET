@@ -39,13 +39,33 @@
     <p id="calloutMessage"></p>
 </div>
 
+<div class="modal fade in" id="progressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="progressModalTitle">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" id="progressModalProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
     var IOGlobal = {
-        authorization: "klj77r1a72ekxsd69hl6b1j03d7ooao7",
-        appName: "Boom App",
+        authorization: "",
+        appName: "App",
         backOfficePath: "",
-        clientId: "v19zp7xngog6pb54wbag5b3wemhpqoxv",
-        clientSecret: "r58imkp53pn9s3wsu7i8wcxjxdl3q8wsqkfj2nicm5dfou3apovj5pzf7pk9zlfv",
+        clientId: "",
+        clientSecret: "",
         isDebug: true,
         layoutApiUrl: "http://localhost:8000",
         serviceApiUrl: "http://api.localhost:5000",

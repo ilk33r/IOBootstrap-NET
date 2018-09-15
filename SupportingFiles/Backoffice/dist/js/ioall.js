@@ -166,9 +166,7 @@ io.prototype = {
     },
     setMenuData: function () {
         // Set header data
-        this.layout.menuLayoutData = {
-            userName: localStorage.getItem('userName')
-        };
+        this.layout.menuLayoutData.userName = localStorage.getItem('userName');
     },
     selectMenu: function (id) {
         if (this.selectedMenuItem != null) {
@@ -308,9 +306,25 @@ io.prototype.layout = {
     },
     loadMenu: function () {
         this.menuLayout = null;
-        window.ioinstance.service.loadLayoutText('menu', function (layout) {
-            window.ioinstance.layout.menuLayout = layout;
-            window.ioinstance.layout.menuLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+
+        window.ioinstance.service.get('backoffice/menu/list', function (status, response, error) {
+            // Check response
+            if (status && response.status.success) {
+                window.ioinstance.layout.loadMenuChildLayouts(function (parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout) {
+                    window.ioinstance.layout.prepareMenuLayout(response.items, parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout);
+                });
+            } else {
+                window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+            }
+        });
+    },
+    loadMenuChildLayouts: function(callback) {
+        window.ioinstance.service.loadLayoutText('parentmenuitem', function (parentmenuitemLayout) {
+            window.ioinstance.service.loadLayoutText('parentmenuwithchilditem', function (parentmenuwithchilditemLayout) {
+                window.ioinstance.service.loadLayoutText('childmenuitem', function (childmenuitemLayout) {
+                    callback(parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout);
+                });
+            });
         });
     },
     loadFooter: function () {
@@ -355,6 +369,51 @@ io.prototype.layout = {
         }
 
         return layoutProperties;
+    },
+    prepareMenuLayout: function(menuItems, parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout) {
+        window.ioinstance.service.loadLayoutText('menu', function (menuLayout) {
+            var menuLayoutContent = '';
+            var parentmenuitemLayoutProperties = window.ioinstance.layout.parseLayoutProperties(parentmenuitemLayout);
+            var parentmenuwithchilditemLayoutProperties = window.ioinstance.layout.parseLayoutProperties(parentmenuwithchilditemLayout);
+            var childmenuitemLayoutProperties = window.ioinstance.layout.parseLayoutProperties(childmenuitemLayout);
+
+            for (var parentMenuItemIndex in menuItems) {
+                var menuItem = menuItems[parentMenuItemIndex];
+
+                if (menuItem.childItems.length > 0) {
+                    var childMenuItems = '';
+
+                    for (var childMenuItemIndex in menuItem.childItems) {
+                        var childMenuItem = menuItem.childItems[childMenuItemIndex];
+
+                        var childmenuitemLayoutData = {
+                            action: childMenuItem.action,
+                            cssClass: childMenuItem.cssClass,
+                            name: childMenuItem.name
+                        };
+                        childMenuItems += window.ioinstance.layout.renderLayout(childmenuitemLayout, childmenuitemLayoutData, childmenuitemLayoutProperties);
+                    }
+
+                    var parentmenuitemLayoutData = {
+                        childMenuItems: childMenuItems,
+                        cssClass: menuItem.cssClass,
+                        name: menuItem.name
+                    };
+                    menuLayoutContent += window.ioinstance.layout.renderLayout(parentmenuwithchilditemLayout, parentmenuitemLayoutData, parentmenuwithchilditemLayoutProperties);
+                } else {
+                    var parentmenuitemLayoutData = {
+                        action: menuItem.menuItem,
+                        cssClass: menuItem.cssClass,
+                        name: menuItem.name
+                    };
+                    menuLayoutContent += window.ioinstance.layout.renderLayout(parentmenuitemLayout, parentmenuitemLayoutData, parentmenuitemLayoutProperties);
+                }
+            }
+
+            window.ioinstance.layout.menuLayoutData.menuContent = menuLayoutContent;
+            window.ioinstance.layout.menuLayoutProperties = window.ioinstance.layout.parseLayoutProperties(menuLayout);
+            window.ioinstance.layout.menuLayout = menuLayout;
+        });
     },
     render: function () {
         var baseLayout = this.baseLayout;

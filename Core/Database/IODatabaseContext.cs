@@ -219,7 +219,7 @@ namespace IOBootstrap.NET.Core.Database
                 Name = "List Menu Items",
                 MenuOrder = 13,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 11
+                ParentEntityID = 12
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(menuEditorListMenuEntity);
 
@@ -231,7 +231,7 @@ namespace IOBootstrap.NET.Core.Database
                 Name = "Add Menu Item",
                 MenuOrder = 14,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 11
+                ParentEntityID = 12
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(menuEditorAddMenuEntity);
         }

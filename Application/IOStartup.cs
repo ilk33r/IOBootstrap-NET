@@ -78,6 +78,7 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("deleteUser", "backoffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
                 routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
                 routes.MapRoute("updateUsers", "backoffice/users/update", new IORoute("UpdateUser", this.UserControllerName()));
+                routes.MapRoute("listMenuItems", "backoffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif
@@ -98,6 +99,11 @@ namespace IOBootstrap.NET.Application
         public virtual string BackOfficeControllerName()
         {
             return "IOBackOffice";
+        }
+
+        public virtual string BackOfficeMenuControllerName()
+        {
+            return "IOBackOfficeMenu";
         }
 
         public virtual string BaseControllerName()

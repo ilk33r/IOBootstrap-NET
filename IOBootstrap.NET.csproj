@@ -62,6 +62,7 @@
     <Folder Include="WebApi\PushNotification\Controllers\" />
     <Folder Include="Common\Entities\Configuration\" />
     <Folder Include="Common\Attributes\" />
+    <Folder Include="WebApi\BackOffice\Controllers\" />
     <Folder Include="WebApi\BackOffice\Entities\" />
   </ItemGroup>
   <ItemGroup>

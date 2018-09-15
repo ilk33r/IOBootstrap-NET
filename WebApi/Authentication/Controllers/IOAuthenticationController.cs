@@ -46,20 +46,20 @@ namespace IOBootstrap.NET.WebApi.Authentication.Controllers
                 IOResponseModel error400 = this.Error400("Invalid request data.");
 
                 // Then return validation error
-                return new IOAuthenticationResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), null, DateTime.Now);
+                return new IOAuthenticationResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), null, DateTime.Now, null, 0);
             }
 
             // Authenticate user
-            Tuple<bool, string, DateTimeOffset> authenticationResult = _viewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
+            Tuple<bool, string, DateTimeOffset, string, int> authenticationResult = _viewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
 
             // Check if authentication result is true
             if (authenticationResult.Item1) {
-                return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), authenticationResult.Item2, authenticationResult.Item3);
+                return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4, authenticationResult.Item5);
             }
 
             // Return response
             this.Response.StatusCode = 400;
-            return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), authenticationResult.Item2, authenticationResult.Item3);
+            return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4, authenticationResult.Item5);
         }
 
         [HttpPost]
@@ -73,21 +73,21 @@ namespace IOBootstrap.NET.WebApi.Authentication.Controllers
                 IOResponseModel error400 = this.Error400("Invalid request data.");
 
                 // Then return validation error
-                return new IOCheckTokenResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), DateTime.Now);
+                return new IOCheckTokenResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), DateTime.Now, null, 0);
             }
 
             // Check token
-            Tuple<bool, DateTimeOffset> checkTokenResult = _viewModel.CheckToken(requestModel.Token);
+            Tuple<bool, DateTimeOffset, string, int> checkTokenResult = _viewModel.CheckToken(requestModel.Token);
 
             // Check if authentication result is true
             if (checkTokenResult.Item1)
             {
-                return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), checkTokenResult.Item2);
+                return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), checkTokenResult.Item2, checkTokenResult.Item3, checkTokenResult.Item4);
             }
 
             // Return response
             this.Response.StatusCode = 400;
-            return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), DateTime.Now);
+            return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS, "Invalid user."), DateTime.Now, null, 0);
         }
 
         #endregion

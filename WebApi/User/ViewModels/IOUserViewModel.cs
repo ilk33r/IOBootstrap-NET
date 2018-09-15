@@ -1,12 +1,11 @@
-﻿using IOBootstrap.NET.Common.Entities.Users;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.User.Models;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using IOBootstrap.NET.Common.Enumerations;
 
 namespace IOBootstrap.NET.WebApi.User.ViewModels
@@ -27,18 +26,18 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
         public virtual Tuple<bool, int, string> AddUser(string userName, string password, int userRole)
         {
-			// Obtain users entity
-            var usersEntities = _databaseContext.Users.Where((arg) => arg.UserName == userName);
+            // Obtain users entity
+            IOUserEntity user = IOUserEntity.FindUserFromName(_databaseContext.Users, userName);
 
 			// Check push notification entity exists
-			if (usersEntities.Count() > 0)
+            if (user != null)
 			{
                 // Return user exists response
                 return new Tuple<bool, int, string>(false, 0, null);
 			}
 
 			// Create a users entity 
-			IOUserEntity userEntity = new IOUserEntity()
+			IOUserEntity newUserEntity = new IOUserEntity()
 			{
 				UserName = userName.ToLower(),
                 Password = IOPasswordUtilities.HashPassword(password),
@@ -48,7 +47,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 			};
 
             // Write user to database
-            _databaseContext.Add(userEntity);
+            _databaseContext.Add(newUserEntity);
             _databaseContext.SaveChanges();
 
             // Return status
@@ -57,29 +56,22 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword) 
         {
-			// Obtain user entity
-            var userEntities = _databaseContext.Users.Where((arg1) => arg1.UserName == userName.ToLower());
+            // Obtain user entity
+            IOUserEntity user = IOUserEntity.FindUserFromName(_databaseContext.Users, userName);
 
-			// Check user finded
-			if (userEntities.Count() > 0)
+            // Check user old password is valid
+            if (user != null && ((UserRoles)this.userEntity.UserRole == UserRoles.SuperAdmin || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password)))
 			{
-				// Obtain user entity
-				IOUserEntity user = userEntities.First();
+				// Update user password properties
+                user.Password = IOPasswordUtilities.HashPassword(newPassword);
+			    user.UserToken = null;
 
-				// Check user old password is valid
-                if (IOPasswordUtilities.VerifyPassword(oldPassword, user.Password))
-				{
-					// Update user password properties
-                    user.Password = IOPasswordUtilities.HashPassword(newPassword);
-					user.UserToken = null;
+                // Update user password
+                _databaseContext.Update(user);
+                _databaseContext.SaveChanges();
 
-                    // Update user password
-                    _databaseContext.Update(user);
-                    _databaseContext.SaveChanges();
-
-                    // Return response
-                    return true;
-				}
+                // Return response
+                return true;
 			}
 
             // Return response
@@ -101,16 +93,16 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 				for (int i = 0; i < user.Count(); i++)
 				{
 					// Obtain users entity
-					IOUserEntity userEntity = user.Skip(i).First();
+					IOUserEntity currentUserEntity = user.Skip(i).First();
 
 					// Create user info model
 					IOUserInfoModel model = new IOUserInfoModel()
 					{
-						ID = userEntity.ID,
-						UserName = userEntity.UserName,
-						UserRole = userEntity.UserRole,
-						UserToken = userEntity.UserToken,
-						TokenDate = userEntity.TokenDate
+                        ID = currentUserEntity.ID,
+                        UserName = currentUserEntity.UserName,
+                        UserRole = currentUserEntity.UserRole,
+                        UserToken = currentUserEntity.UserToken,
+                        TokenDate = currentUserEntity.TokenDate
 					};
 
 					// Add model to user list

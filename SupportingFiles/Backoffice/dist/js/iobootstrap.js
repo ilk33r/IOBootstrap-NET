@@ -236,43 +236,49 @@ io.prototype.app.usersUpdate = function (e, hash) {
     window.ioinstance.app.usersList(e, hash);
 };
 
-io.prototype.app.userChangePassword = function (id, userName) {
+io.prototype.app.userChangePassword = function (e, hash) {
     // Show indicator
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('userchangepassword', false, function () {
+        var currentPasswordIsHidden = (window.ioinstance.userRole == window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
         window.ioinstance.layout.contentLayoutData = {
-            id: id,
-            userName: userName
+            userName: localStorage.getItem('userName'),
+            currentPasswordIsHidden: currentPasswordIsHidden
         };
 
         window.ioinstance.layout.render();
         window.ioinstance.selectMenu('usersUpdate');
+        var changePasswordForm = $('#changePasswordForm');
 
-        $('#changePasswordForm').submit(function (e) {
+        changePasswordForm.submit(function (e) {
             e.preventDefault();
+
+            var passwordArea = $('.passwordArea');
+            var passwordAreaHelp = $('.passwordAreaHelp');
+
             var callout = window.ioinstance.callout;
             var repeatedpassword = $('#repeatedpassword').val();
             var request = window.ioinstance.request.UserChangePasswordRequest;
             request.Version = window.ioinstance.version;
-            request.UserName = $('#changePasswordForm').attr('data-id');
+            request.UserName = changePasswordForm.attr('data-id');
             request.OldPassword = $('#currentPassword').val();
             request.NewPassword = $('#password').val();
 
-            $('.passwordArea').removeClass('has-error');
-            $('.passwordAreaHelp').addClass('hidden');
+            passwordArea.removeClass('has-error');
+            passwordAreaHelp.addClass('hidden');
 
-            if (request.OldPassword.length <= 3 || request.NewPassword.length <= 3) {
+            if (request.NewPassword.length <= 3) {
                 callout.show(callout.types.danger, 'Invalid password.', 'Password is too short.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Password is too short.');
+                passwordArea.addClass('has-error');
+                passwordAreaHelp.removeClass('hidden');
+                passwordAreaHelp.text('Password is too short.');
                 window.ioinstance.indicator.hide();
                 return;
             } else if (request.NewPassword != repeatedpassword) {
                 callout.show(callout.types.danger, 'Invalid password.', 'Passwords did not match.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Passwords did not match.');
+                passwordArea.addClass('has-error');
+                passwordAreaHelp.removeClass('hidden');
+                passwordAreaHelp.text('Passwords did not match.');
                 window.ioinstance.indicator.hide();
                 return;
             }
@@ -281,14 +287,13 @@ io.prototype.app.userChangePassword = function (id, userName) {
             window.ioinstance.service.post('backoffice/users/password/change', request, function (status, response, error) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'User password has been changed successfully.', '');
-                    window.ioinstance.app.usersList(null, 'usersList');
                 } else {
                     callout.show(callout.types.danger, 'Invalid password.', 'Current password is incorrect.');
-                    $('.passwordArea').addClass('has-error');
-                    $('.passwordAreaHelp').removeClass('hidden');
-                    $('.passwordAreaHelp').text('Current password is incorrect.');
-                    window.ioinstance.indicator.hide();
+                    passwordArea.addClass('has-error');
+                    passwordAreaHelp.removeClass('hidden');
+                    passwordAreaHelp.text('Current password is incorrect.');
                 }
+                window.ioinstance.indicator.hide();
             });
         });
     });

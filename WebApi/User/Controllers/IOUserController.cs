@@ -76,7 +76,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			// Validate request
 			if (requestModel == null
                 || String.IsNullOrEmpty(requestModel.UserName)
-                || String.IsNullOrEmpty(requestModel.OldPassword)
                 || String.IsNullOrEmpty(requestModel.NewPassword)
                 || requestModel.NewPassword.Length < 4)
 			{

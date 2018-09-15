@@ -7,6 +7,7 @@ var io = function (authorization, appName, backOfficePath, clientId, clientSecre
     this.layoutApiUrl = layoutApiUrl;
     this.serviceApiUrl = serviceApiUrl;
     this.token = localStorage.getItem('token');
+    this.userRole = 0;
     this.version = version;
 
     // Setup client info
@@ -67,6 +68,8 @@ io.prototype = {
         this.service.post('backoffice/users/password/checktoken', request, function(status, response, error) {
             // Check response
             if (status && response.status.success) {
+                localStorage.setItem('userName', response.userName);
+                window.ioinstance.userRole = response.userRole;
                 if (window.ioinstance.checkHash(window.location.hash)) {
                     window.ioinstance.showMasterPage(function () {
                         window.ioinstance.setHash(window.location.hash, null)
@@ -102,14 +105,15 @@ io.prototype = {
     loginApp: function () {
         var request = this.request.AuthenticationRequest;
         var userName = $('#inputEmail3').val();
-        localStorage.setItem("userName", userName);
         request.UserName = userName;
         request.Password = $('#inputPassword3').val();
         this.service.post('backoffice/users/password/authenticate', request, function (status, response, error) {
             // Check response
             if (status && response.status.success) {
                 localStorage.setItem('token', response.token);
+                localStorage.setItem('userName', response.userName);
                 window.ioinstance.token = response.token;
+                window.ioinstance.userRole = response.userRole;
                 window.ioinstance.showDashboard();
             } else {
                 var layoutData = {

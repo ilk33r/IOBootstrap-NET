@@ -160,6 +160,47 @@ io.prototype.app.clientsAdd = function (e, hash) {
     });
 };
 
+io.prototype.app.menuEditorList = function(e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    // Call menu list
+    io.service.get('backoffice/menu/list', function(status, response, error) {
+        if (status && response.status.success) {
+            window.ioinstance.service.loadLayoutText('user', function (layout) {
+                var usersHtml = '';
+                var userLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                for (var index in response.users) {
+                    var user = response.users[index];
+                    var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
+                    var userLayoutData = {
+                        id: user.id,
+                        userName: user.userName,
+                        userRole: roleName,
+                        tokenDate: user.tokenDate
+                    };
+
+                    usersHtml += window.ioinstance.layout.renderLayout(layout, userLayoutData, userLayoutProperties);
+                }
+
+                window.ioinstance.service.loadLayout('userslist', false, function () {
+                    window.ioinstance.layout.contentLayoutData = {
+                        users: usersHtml
+                    };
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+                });
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
+    });
+};
+
 io.prototype.app.usersList = function (e, hash) {
     var io = window.ioinstance;
 

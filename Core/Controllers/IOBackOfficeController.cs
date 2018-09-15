@@ -1,4 +1,6 @@
-﻿using IOBootstrap.NET.Common.Constants;
+﻿using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -7,10 +9,12 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -46,12 +50,46 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
+
+            // Obtain action desctriptor
+            ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            if (actionDescriptor != null)
+            {
+                // Loop throught descriptors
+                foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
+                {
+                    if (descriptor.AttributeType == typeof(IOUserRoleAttribute))
+                    {
+                        object requiredRole = descriptor.ConstructorArguments[0].Value;
+                        IOUserEntity userEntity = _viewModel.userEntity;
+
+                        // Check attribute type
+                        if (requiredRole != null && userEntity != null)
+                        {
+                            // Check role
+                            if (!UserRoleUtility.CheckRole((UserRoles)requiredRole, (UserRoles)userEntity.UserRole))
+                            {
+                                // Obtain response model
+                                IOResponseModel responseModel = this.Error400("Restricted page.");
+
+                                // Override response
+                                context.Result = new JsonResult(responseModel);
+
+                                // Do nothing
+                                return;
+                            }
+                        }   
+                    }
+                }   
+            }
         }
 
         #endregion
 
         #region Client Methods
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
@@ -66,16 +104,6 @@ namespace IOBootstrap.NET.Core.Controllers
                 return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
             }
 
-            // Check user role
-            if (_viewModel.userEntity != null && !UserRoleUtility.CheckRole(UserRoles.SuperAdmin, (UserRoles)_viewModel.userEntity.UserRole))
-            {
-                // Update response status
-                this.Response.StatusCode = 400;
-
-                // Create and return response
-                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Invalid permission"), null);
-            }
-
             // Obtain client info from view model
             IOClientBackOfficeInfoModel clientInfo = _viewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
 
@@ -83,6 +111,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel)
         {
@@ -108,6 +137,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpGet]
         public IOClientListResponseModel ListClients()
         {
@@ -118,6 +148,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOResponseModel UpdateClient([FromBody] IOClientUpdateRequestModel requestModel)
         {

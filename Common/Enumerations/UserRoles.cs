@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace IOBootstrap.NET.Common.Enumerations
 {
     public enum UserRoles

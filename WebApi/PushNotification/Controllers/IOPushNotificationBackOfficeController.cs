@@ -1,4 +1,7 @@
-﻿using IOBootstrap.NET.Common.Constants;
+﻿using System;
+using System.Collections.Generic;
+using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -10,8 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 
 namespace BoomApp.WebApi.PushNotification.Controllers
 {
@@ -37,6 +38,7 @@ namespace BoomApp.WebApi.PushNotification.Controllers
 
 		#region Back Office Methods
 
+        [IOUserRole(UserRoles.User)]
 		[HttpPost("[action]")]
 		public ListPushNotificationResponseModel ListTokens([FromBody] ListPushNotificationRequestModel requestModel)
 		{
@@ -57,6 +59,7 @@ namespace BoomApp.WebApi.PushNotification.Controllers
             return new ListPushNotificationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), devices);
 		}
 
+        [IOUserRole(UserRoles.User)]
         [HttpPost("[action]")]
         public IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
         {

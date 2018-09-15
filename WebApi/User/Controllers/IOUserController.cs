@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
@@ -36,6 +37,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         #region User Methods
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
         {
@@ -52,19 +54,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
                 return new IOAddUserResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage), 0, null);
 			}
 
-            // Check current user role
-            if (!UserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)_viewModel.userEntity.UserRole)) 
-            {
-                // Update response status code
-                this.Response.StatusCode = 401;
-
-                // Create response status model
-                IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Permission denied.");
-
-                // Return response
-                return new IOAddUserResponseModel(responseStatus, 0, null);
-            }
-
             // Obtain add user response
             Tuple<bool, int, string> addUserStatus = _viewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
 
@@ -80,6 +69,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.USER_EXISTS, "User exists"), 0, null);
 		}
 
+        [IOUserRole(UserRoles.User)]
 		[HttpPost]
         public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
         {
@@ -109,6 +99,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid user."));
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
         {
@@ -124,9 +115,10 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
             // Obtain user entity
             IOUserEntity userEntity = _databaseContext.Users.Find(requestModel.UserId);
+            int currentUserRole = _viewModel.userEntity.UserRole;
 
 			// Check user entity is not null
-			if (userEntity != null)
+            if (userEntity != null && currentUserRole <= userEntity.UserRole)
 			{
                 // Delete all entity
                 _databaseContext.Remove(userEntity);
@@ -141,6 +133,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "User not found."));
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpGet]
         public virtual IOListUserResponseModel ListUsers() 
         {
@@ -151,6 +144,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), users);
         }
 
+        [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {

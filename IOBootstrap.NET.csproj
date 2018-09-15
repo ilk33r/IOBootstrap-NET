@@ -61,6 +61,7 @@
     <Folder Include="WebApi\PushNotification\ViewModels\" />
     <Folder Include="WebApi\PushNotification\Controllers\" />
     <Folder Include="Common\Entities\Configuration\" />
+    <Folder Include="Common\Attributes\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />

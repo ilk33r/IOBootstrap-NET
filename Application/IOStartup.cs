@@ -64,6 +64,13 @@ namespace IOBootstrap.NET.Application
             // Use session
             app.UseSession();
 
+            // Log
+            bool useDeveloperLog = this.Configuration.GetValue<bool>("IOUseDeveloperLog");
+            if (useDeveloperLog)
+            {
+                app.UseDeveloperExceptionPage();   
+            }
+
             // Create default routes
             app.UseMvc(routes =>
             {
@@ -88,9 +95,9 @@ namespace IOBootstrap.NET.Application
             });
         }
 
-        #endregion
+#endregion
 
-        #region Routing
+#region Routing
 
         public virtual string AuthenticationControllerName()
         {
@@ -126,6 +133,6 @@ namespace IOBootstrap.NET.Application
             return "IOUser";
         }
 
-        #endregion
+#endregion
     }
 }

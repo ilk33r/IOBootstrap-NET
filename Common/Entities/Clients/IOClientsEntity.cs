@@ -10,7 +10,7 @@ namespace IOBootstrap.NET.Common.Entities.Clients
 		#region Properties
 
 		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
 		[StringLength(32)]

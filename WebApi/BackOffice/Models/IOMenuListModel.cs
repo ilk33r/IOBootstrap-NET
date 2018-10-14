@@ -10,6 +10,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
         #region Properties
 
         public int ID { get; set; }
+        public int MenuOrder { get; set; }
+        public int RequiredRole { get; set; }
         public string Action { get; set; }
         public string CssClass { get; set; }
         public string Name { get; set; }

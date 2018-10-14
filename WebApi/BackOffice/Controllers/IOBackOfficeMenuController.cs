@@ -40,7 +40,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
         public IOMenuListResponseModel ListMenuItems()
         {
             // Obtain menu items
-            IList<IOMenuListModel> menuItems = _viewModel.GetMenuTree();
+            IList<IOMenuListModel> menuItems = _viewModel.GetMenuTree(_viewModel.userEntity.UserRole);
 
             // Create and return response
             return new IOMenuListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), menuItems);

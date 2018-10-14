@@ -22,18 +22,18 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
         #region Menu Methods
 
-        public IList<IOMenuListModel> GetMenuTree()
+        public IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
-            var paremtMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= this.userEntity.UserRole && arg.ParentEntityID == null)
+            var parentMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
                                                       .OrderBy((arg) => arg.MenuOrder);
 
-            if (paremtMenuTree != null)
+            if (parentMenuTree != null)
             {
                 List<IOMenuListModel> menuTree = new List<IOMenuListModel>();
 
-                foreach (IOMenuEntity menuEntity in paremtMenuTree)
+                foreach (IOMenuEntity menuEntity in parentMenuTree)
                 {
-                    var childMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= this.userEntity.UserRole && arg.ParentEntityID == menuEntity.ID)
+                    var childMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == menuEntity.ID)
                                                         .OrderBy((arg) => arg.MenuOrder);
                     List<IOMenuListModel> childMenu = new List<IOMenuListModel>();
 
@@ -56,6 +56,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                     IOMenuListModel parentMenuModel = new IOMenuListModel()
                     {
                         ID = menuEntity.ID,
+                        MenuOrder = menuEntity.MenuOrder,
+                        RequiredRole = menuEntity.RequiredRole,
                         Action = menuEntity.Action,
                         CssClass = menuEntity.CssClass,
                         Name = menuEntity.Name,

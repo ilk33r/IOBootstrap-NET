@@ -1,0 +1,16 @@
+<tr class="${rowClass}">
+    <td>${id}</td>
+    <td>${name}</td>
+    <td>${action}</td>
+    <td>${cssClass}</td>
+    <td>${userRole}</td>
+    <td>${menuOrder}</td>
+    <td>
+        <a class="btn btn-app" href="#!menuEditorUpdate" data-type="action" data-method="menuEditorUpdate" data-params='[${id}, "${name}", "${action}", "${cssClass}", ${userRoleRaw}, ${menuOrder}]'>
+            <i class="fa fa-edit"></i> Edit
+        </a>
+        <a class="btn btn-app" href="#!menuEditorDelete" data-type="action" data-method="menuEditorDelete" data-params="[${id}]">
+            <i class="fa fa-trash"></i> Delete
+        </a>
+    </td>
+</tr>

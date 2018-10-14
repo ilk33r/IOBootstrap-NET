@@ -8,6 +8,11 @@ body {
     bottom: 0;
 }
 
+.breakWord {
+    word-wrap: break-word;
+    max-width: 150px;
+}
+
 #pageIndicator {
     position: fixed;
     top: 0;
@@ -35,4 +40,8 @@ body {
     top: 0;
     width: 100%;
     z-index: 20000;
+}
+
+.menuTable .childmenu {
+    background-color: lightgray;
 }

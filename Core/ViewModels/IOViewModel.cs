@@ -14,6 +14,13 @@ namespace IOBootstrap.NET.Core.ViewModels
         where TDBContext : IODatabaseContext<TDBContext>
     {
 
+        #region Publics
+
+        public string clientId;
+        public string clientDescription;
+
+        #endregion
+
         #region Properties
 
         public IConfiguration _configuration { get; set; }
@@ -89,6 +96,10 @@ namespace IOBootstrap.NET.Core.ViewModels
                     {
                         // Update request count
                         client.RequestCount = requestCount;
+
+                        // Update properties
+                        this.clientId = clientId;
+                        this.clientDescription = client.ClientDescription;
 
                         // Update client 
                         _databaseContext.Update(client);

@@ -7,7 +7,7 @@ var io = function (authorization, appName, backOfficePath, clientId, clientSecre
     this.layoutApiUrl = layoutApiUrl;
     this.serviceApiUrl = serviceApiUrl;
     this.token = localStorage.getItem('token');
-    this.userRole = 0;
+    this.userRole = -1;
     this.version = version;
 
     // Setup client info
@@ -54,7 +54,10 @@ io.prototype = {
             var message = JSON.parse(e.originalEvent.data);
             window.ioinstance.callMessage(message);
         });
+
+        this.inited();
     },
+    inited: function() {},
     callMessage: function (message) {
         var methodName = message.actionName;
         var method = this.app[methodName];
@@ -78,7 +81,7 @@ io.prototype = {
                     window.ioinstance.showDashboard();
                 }
             } else {
-                window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+                window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName });
             }
         });
     },
@@ -107,6 +110,7 @@ io.prototype = {
         var userName = $('#inputEmail3').val();
         request.UserName = userName;
         request.Password = $('#inputPassword3').val();
+        window.location.hash = '';
         this.service.post('backoffice/users/password/authenticate', request, function (status, response, error) {
             // Check response
             if (status && response.status.success) {

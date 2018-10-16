@@ -426,13 +426,13 @@ io.prototype.app.usersUpdate = function (e, hash) {
     window.ioinstance.app.usersList(e, hash);
 };
 
-io.prototype.app.userChangePassword = function (e, hash) {
+io.prototype.app.userChangePassword = function (e, hash, id, userName) {
     // Show indicator
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('userchangepassword', false, function () {
         var currentPasswordIsHidden = (window.ioinstance.userRole == window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
         window.ioinstance.layout.contentLayoutData = {
-            userName: localStorage.getItem('userName'),
+            userName: userName || localStorage.getItem('userName'),
             currentPasswordIsHidden: currentPasswordIsHidden
         };
 
@@ -508,6 +508,14 @@ io.prototype.app.userDelete = function (id) {
             window.ioinstance.app.usersList(null, 'usersList');
         });
     }
+};
+
+io.prototype.app.usersLogout = function (e, hash) {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('token');
+    window.ioinstance.token = '';
+    window.ioinstance.userRole = -1;
+    window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName });
 };
 
 io.prototype.app.usersDelete = function (e, hash) {

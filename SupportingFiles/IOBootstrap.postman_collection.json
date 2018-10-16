@@ -79,6 +79,14 @@
 						"value": "{{authorization}}"
 					},
 					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
 						"key": "Content-Type",
 						"value": "application/json"
 					}
@@ -98,64 +106,7 @@
 					]
 				}
 			},
-			"response": [
-				{
-					"id": "2f5528ec-08ba-4b64-b8de-f33665e98694",
-					"name": "Untitled Example",
-					"originalRequest": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l"
-							}
-						],
-						"body": {},
-						"url": {
-							"raw": "{{url}}/backoffice/clients/add",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"backoffice",
-								"clients",
-								"add"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"name": "content-type",
-							"key": "content-type",
-							"value": "application/json; charset=utf-8",
-							"description": ""
-						},
-						{
-							"name": "date",
-							"key": "date",
-							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
-							"description": ""
-						},
-						{
-							"name": "server",
-							"key": "server",
-							"value": "Kestrel",
-							"description": ""
-						},
-						{
-							"name": "transfer-encoding",
-							"key": "transfer-encoding",
-							"value": "chunked",
-							"description": ""
-						}
-					],
-					"cookie": [],
-					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
-				}
-			]
+			"response": []
 		},
 		{
 			"name": "BackOffiice/Clients/List",
@@ -169,6 +120,18 @@
 					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {},
@@ -184,7 +147,85 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "BackOffiice/Clients/List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "{{authorization}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-AUTHORIZATION-TOKEN",
+								"value": "{{token}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-ID",
+								"value": "{{clientId}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-SECRET",
+								"value": "{{clientSecret}}",
+								"disabled": false
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/list",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"list"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:8000",
+							"name": "Access-Control-Allow-Origin",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 15 Aug 2018 20:04:21 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel",
+							"name": "Server",
+							"description": "A name for the server"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked",
+							"name": "Transfer-Encoding",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+						}
+					],
+					"cookie": [],
+					"body": "{\"clientList\":[{\"id\":1,\"clientID\":\"v19zp7xngog6pb54wbag5b3wemhpqoxv\",\"clientSecret\":\"r58imkp53pn9s3wsu7i8wcxjxdl3q8wsqkfj2nicm5dfou3apovj5pzf7pk9zlfv\",\"clientDescription\":\"Test Client\",\"isEnabled\":1,\"requestCount\":34,\"maxRequestCount\":999},{\"id\":2,\"clientID\":\"jvllxa6pb3sui5dpa2ayknt33d731qlr\",\"clientSecret\":\"7058qiqlt03wn2xnpthi3cgw1hhk33oki0ni05ysbp5kkxg1gjd792ovj96805iq\",\"clientDescription\":\"Test Client\",\"isEnabled\":1,\"requestCount\":17,\"maxRequestCount\":999}],\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
 		},
 		{
 			"name": "BackOffiice/Clients/Add",
@@ -196,17 +237,25 @@
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientDescription\": \"Web Client\"\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientDescription\": \"Test Client\",\n\t\"RequestCount\": 999\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/clients/add",
@@ -222,7 +271,6 @@
 			},
 			"response": [
 				{
-					"id": "f7723a50-12ce-4b45-a782-3f4d2ce6a83b",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -289,17 +337,25 @@
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientId\": 1\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientId\": 1\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/clients/delete",
@@ -315,7 +371,6 @@
 			},
 			"response": [
 				{
-					"id": "67bb01af-8315-48d7-a223-5da3c2ae5eae",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -373,6 +428,520 @@
 			]
 		},
 		{
+			"name": "BackOffice/Clients/Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientId\": 1,\n\t\"ClientDescription\": \"Web Client\",\n    \"IsEnabled\": 1,\n    \"RequestCount\": 0,\n    \"MaxRequestCount\": 999\n}"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/clients/update",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"clients",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BackOffiice/Menu/List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "-"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/menu/list",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"menu",
+						"list"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Untitled Example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "cfb05po8o90mfmj4vg6l"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Kestrel",
+							"description": ""
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
+		},
+		{
+			"name": "BackOffiice/PushNotificationBackOffice/ListTokens",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"Start\": 0,\n\t\"Limit\": 1000\n}"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/pushnotificationbackoffice/listtokens",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"pushnotificationbackoffice",
+						"listtokens"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Untitled Example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "cfb05po8o90mfmj4vg6l"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Kestrel",
+							"description": ""
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				},
+				{
+					"name": "BackOffiice/PushNotificationBackOffice/ListTokens",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "{{authorization}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-AUTHORIZATION-TOKEN",
+								"value": "{{token}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-ID",
+								"value": "{{clientId}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-SECRET",
+								"value": "{{clientSecret}}",
+								"disabled": false
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Start\": 0,\n\t\"Limit\": 1000\n}"
+						},
+						"url": {
+							"raw": "{{url}}/backoffice/pushnotificationbackoffice/listtokens",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"pushnotificationbackoffice",
+								"listtokens"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:8000",
+							"name": "Access-Control-Allow-Origin",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 29 Aug 2018 11:18:20 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel",
+							"name": "Server",
+							"description": "A name for the server"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked",
+							"name": "Transfer-Encoding",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+						}
+					],
+					"cookie": [],
+					"body": "{\"devices\":[],\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
+		},
+		{
+			"name": "BackOffiice/PushNotificationBackOffice/SendNotification",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"DeviceType\": 0,\n\t\"NotificationCategory\": \"\",\n\t\"NotificationData\": \"\",\n\t\"NotificationMessage\": \"\",\n\t\"NotificationTitle\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/pushnotificationbackoffice/sendnotification",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"pushnotificationbackoffice",
+						"sendnotification"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Untitled Example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "cfb05po8o90mfmj4vg6l"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Kestrel",
+							"description": ""
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				},
+				{
+					"name": "BackOffiice/PushNotificationBackOffice/ListTokens",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "{{authorization}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-AUTHORIZATION-TOKEN",
+								"value": "{{token}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-ID",
+								"value": "{{clientId}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-SECRET",
+								"value": "{{clientSecret}}",
+								"disabled": false
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Start\": 0,\n\t\"Limit\": 1000\n}"
+						},
+						"url": {
+							"raw": "{{url}}/backoffice/pushnotificationbackoffice/listtokens",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"pushnotificationbackoffice",
+								"listtokens"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:8000",
+							"name": "Access-Control-Allow-Origin",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 29 Aug 2018 11:18:20 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel",
+							"name": "Server",
+							"description": "A name for the server"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked",
+							"name": "Transfer-Encoding",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+						}
+					],
+					"cookie": [],
+					"body": "{\"devices\":[],\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
+		},
+		{
 			"name": "BackOffiice/Users/Add",
 			"request": {
 				"method": "POST",
@@ -382,17 +951,25 @@
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\",\n  \"UserRole\": 0\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\",\n\t\"UserRole\": 0\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/users/add",
@@ -408,7 +985,6 @@
 			},
 			"response": [
 				{
-					"id": "e264ff56-afe3-4280-adda-194b82b65638",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -468,24 +1044,32 @@
 		{
 			"name": "BackOffiice/Users/List",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
 						"key": "X-IO-AUTHORIZATION",
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\",\n  \"UserRole\": 0\n}"
+					"raw": "-"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/users/list",
@@ -501,7 +1085,6 @@
 			},
 			"response": [
 				{
-					"id": "83d53e01-bd19-4bfc-bea8-554ada76ee7f",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -568,17 +1151,25 @@
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserId\": 1\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserId\": 1\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/users/delete",
@@ -594,7 +1185,6 @@
 			},
 			"response": [
 				{
-					"id": "0a74ef0e-f175-4c99-9663-65982d954821",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -661,17 +1251,25 @@
 						"value": "{{authorization}}"
 					},
 					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
 						"key": "X-IO-AUTHORIZATION-TOKEN",
 						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"OldPassword\": \"1234\",\n  \"NewPassword\": \"1234\"\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserName\": \"root\",\n\t\"OldPassword\": \"1234\",\n\t\"NewPassword\": \"1234\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/users/password/change",
@@ -688,7 +1286,106 @@
 			},
 			"response": [
 				{
-					"id": "b5355cfc-0770-450b-b523-e89b2261b440",
+					"name": "Untitled Example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-IO-AUTHORIZATION",
+								"value": "cfb05po8o90mfmj4vg6l"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/backoffice/clients/add",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"backoffice",
+								"clients",
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Kestrel",
+							"description": ""
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+				}
+			]
+		},
+		{
+			"name": "BackOffiice/Users/UpdateUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserId\": 1,\n\t\"UserName\": \"root\",\n\t\"UserRole\": 0,\n\t\"UserPassword\": \"1234\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/backoffice/users/update",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"backoffice",
+						"users",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",
@@ -747,6 +1444,25 @@
 		},
 		{
 			"name": "BackOffiice/Users/Authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7041599c-6121-4f30-ad1e-9810b9178c99",
+						"type": "text/javascript",
+						"exec": [
+							"try",
+							"{",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"}",
+							"catch(e)",
+							"{",
+							"}"
+						]
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -755,13 +1471,25 @@
 						"value": "{{authorization}}"
 					},
 					{
+						"key": "X-IO-AUTHORIZATION-TOKEN",
+						"value": "{{token}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
 						"key": "Content-Type",
 						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\"\n}"
+					"raw": "{\n    \"Culture\": 0,\n    \"Version\": \"0.0.0\",\n    \"UserName\": \"root\",\n    \"Password\": \"1234\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/backoffice/users/password/authenticate",
@@ -778,26 +1506,50 @@
 			},
 			"response": [
 				{
-					"id": "1064cc1d-1c46-4211-8a37-81f5dbb317c5",
-					"name": "Untitled Example",
+					"name": "BackOffiice/Users/Authenticate",
 					"originalRequest": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "X-IO-AUTHORIZATION",
-								"value": "cfb05po8o90mfmj4vg6l"
+								"value": "{{authorization}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-AUTHORIZATION-TOKEN",
+								"value": "{{token}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-ID",
+								"value": "{{clientId}}",
+								"disabled": false
+							},
+							{
+								"key": "X-IO-CLIENT-SECRET",
+								"value": "{{clientSecret}}",
+								"disabled": false
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
 							}
 						],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Culture\": 0,\n    \"Version\": \"0.0.0\",\n    \"UserName\": \"root\",\n    \"Password\": \"1234\"\n}"
+						},
 						"url": {
-							"raw": "{{url}}/backoffice/clients/add",
+							"raw": "{{url}}/backoffice/users/password/authenticate",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"backoffice",
-								"clients",
-								"add"
+								"users",
+								"password",
+								"authenticate"
 							]
 						}
 					},
@@ -806,32 +1558,38 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
-							"key": "content-type",
+							"key": "Access-Control-Allow-Origin",
+							"value": "http://localhost:8000",
+							"name": "Access-Control-Allow-Origin",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"key": "Content-Type",
 							"value": "application/json; charset=utf-8",
-							"description": ""
+							"name": "Content-Type",
+							"description": "The mime type of this content"
 						},
 						{
-							"name": "date",
-							"key": "date",
-							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
-							"description": ""
+							"key": "Date",
+							"value": "Wed, 15 Aug 2018 20:04:03 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
 						},
 						{
-							"name": "server",
-							"key": "server",
+							"key": "Server",
 							"value": "Kestrel",
-							"description": ""
+							"name": "Server",
+							"description": "A name for the server"
 						},
 						{
-							"name": "transfer-encoding",
-							"key": "transfer-encoding",
+							"key": "Transfer-Encoding",
 							"value": "chunked",
-							"description": ""
+							"name": "Transfer-Encoding",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
 						}
 					],
 					"cookie": [],
-					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
+					"body": "{\"token\":\"1VtoECjRag+430tYRYQS2xNm/eVsE5gMpnyIYVXyvyxI9YsVCdzrDczVgrdlBd+2\",\"tokenLifeTime\":\"2018-08-15T20:04:05.037302+00:00\",\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
 		},
@@ -843,6 +1601,14 @@
 					{
 						"key": "X-IO-AUTHORIZATION",
 						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
 					},
 					{
 						"key": "Content-Type",
@@ -868,7 +1634,6 @@
 			},
 			"response": [
 				{
-					"id": "cbd6117a-bbfb-46ed-bf75-f8982fdd4247",
 					"name": "Untitled Example",
 					"originalRequest": {
 						"method": "GET",

@@ -650,7 +650,7 @@ io.prototype.userRoles = {
  * Format strings like prinf
  * "<h1>%s</h1><p>%s</p>".format("Header", "Just a test!");
  */
-if (!String.prototype.format)  {
+if (!String.prototype.format) {
     String.prototype.format = function()  {
         var newStr = this, i = 0;
         while (/%s/.test(newStr)) {
@@ -658,6 +658,26 @@ if (!String.prototype.format)  {
         }
 
         return newStr;
+    }
+}
+
+if (!String.prototype.escapeHtml) {
+    String.prototype.escapeHtml = function()  {
+        return this
+            .replace(/\"/g, "\\")
+            .replace(/\'/g, "\\'")
+            .replace(/\n/g, "\\n")
+            .replace(/\r/g, "\\r");
+    }
+}
+
+if (!String.prototype.unEscapeHtml) {
+    String.prototype.unEscapeHtml = function()  {
+        return this
+            .replace(/\\\"/g, "\"")
+            .replace(/\\\'/g, "\'")
+            .replace(/\\\n/g, "\n")
+            .replace(/\\r/g, "\r");
     }
 }
 

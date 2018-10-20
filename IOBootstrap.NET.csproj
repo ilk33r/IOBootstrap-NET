@@ -100,9 +100,13 @@
     <Compile Remove="Core\System\IOProgram.cs" />
     <Compile Remove="Application\Program.cs" />
     <Compile Remove="Core\Utils\ThreadUtils.cs" />
+    <Compile Remove="SupportingFiles\Batch\Program.cs" />
+    <Compile Remove="SupportingFiles\Batch\SendApnsPushBatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Application\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <None Include="SupportingFiles\Batch\Program.cs" />
+    <None Include="SupportingFiles\Batch\SendApnsPushBatch.cs" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

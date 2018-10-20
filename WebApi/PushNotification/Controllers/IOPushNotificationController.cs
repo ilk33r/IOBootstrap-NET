@@ -36,7 +36,7 @@ namespace BoomApp.WebApi.PushNotification.Controllers
         #region Api Methods
 
         [HttpPost("[action]")]
-        public AddPushNotificationResponseModel AddToken([FromBody] AddPushNotificationRequestModel requestModel)
+        public virtual AddPushNotificationResponseModel AddToken([FromBody] AddPushNotificationRequestModel requestModel)
         {
             // Validate request
             if (requestModel == null

@@ -40,7 +40,7 @@ io.prototype = {
     openedWindow: null,
     initialize: function () {
         this.layout.footerLayoutData = {
-            version: IOGlobal.version
+            version: window.ioinstance.version
         };
 
         $(window).on('hashchange', function(e) {

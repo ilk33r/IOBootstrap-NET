@@ -51,7 +51,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
             _databaseContext.SaveChanges();
 
             // Return status
-            return new Tuple<bool, int, string>(true, userEntity.ID, userName);
+            return new Tuple<bool, int, string>(true, newUserEntity.ID, userName);
         }
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword) 

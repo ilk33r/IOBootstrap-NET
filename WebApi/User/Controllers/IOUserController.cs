@@ -66,7 +66,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
 			// Return user exists response
 			this.Response.StatusCode = 400;
-            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.USER_EXISTS, "User exists"), 0, null);
+            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.USER_EXISTS, "User exists"), 0, "");
 		}
 
         [IOUserRole(UserRoles.User)]
@@ -100,7 +100,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
-        public IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
+		public virtual IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
         {
 			// Validate request
 			if (requestModel == null)

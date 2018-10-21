@@ -75,6 +75,8 @@
     <Folder Include="Common\Attributes\" />
     <Folder Include="WebApi\BackOffice\Controllers\" />
     <Folder Include="WebApi\BackOffice\Entities\" />
+    <Folder Include="Core\HTTP\" />
+    <Folder Include="Core\HTTP\Enumerations\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />

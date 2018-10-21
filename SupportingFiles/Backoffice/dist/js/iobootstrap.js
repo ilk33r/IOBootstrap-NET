@@ -290,6 +290,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
             window.ioinstance.service.post('backoffice/users/addUserWithClient', request, function (status, response, error) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'User has been added successfully.', '');
+                    window.location.hash = '';
                     window.ioinstance.app.usersList(null, 'usersList');
                 } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
                     var helpText = 'User ' + request.UserName + ' is exists.';

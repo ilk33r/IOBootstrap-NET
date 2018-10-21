@@ -39,8 +39,9 @@ io.prototype = {
     selectedMenuItem: null,
     openedWindow: null,
     initialize: function () {
+        var that = this;
         this.layout.footerLayoutData = {
-            version: window.ioinstance.version
+            version: that.version
         };
 
         $(window).on('hashchange', function(e) {
@@ -583,6 +584,7 @@ io.prototype.service = {
                 callback(true, data, null);
             },
             error: function (error) {
+                window.ioinstance.indicator.hide();
                 var responeData = (dataType == window.ioinstance.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
                 if (typeof responeData === 'object' && responeData.status.code == 2) {
                     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});

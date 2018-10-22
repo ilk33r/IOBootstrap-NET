@@ -1,0 +1,1 @@
+start /wait dotnet d:\home\site\wwwroot\IOAppBatch.dll release d:\home\site\wwwroot\

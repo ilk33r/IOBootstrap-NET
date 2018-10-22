@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
 using Newtonsoft.Json;
 
@@ -43,12 +44,14 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
         public void Call(HttpResponse callback)
         {
+            Task task;
             if (this.requestMethod == IOHTTPClientRequestMethods.GET)
             {
-                this.GetRequest(callback);
+                task = this.GetRequest(callback);
             } else {
-                this.PostRequest(callback);
-            } 
+                task = this.PostRequest(callback);
+            }
+            task.Wait();
         }
 
         public void CallJSON<TObject>(HttpJsonResponse<TObject> callback)
@@ -74,7 +77,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
         #region Privates
 
-        private async void GetRequest(HttpResponse callback)
+        private async Task GetRequest(HttpResponse callback)
         {
             var task = this.httpClient.GetAsync(this.baseUrl);
             var response = await task;
@@ -84,7 +87,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             callback(response.IsSuccessStatusCode, responseBody);
         }
 
-        private async void PostRequest(HttpResponse callback)
+        private async Task PostRequest(HttpResponse callback)
         {
             HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody));
             var task = this.httpClient.PostAsync(this.baseUrl, postContent);

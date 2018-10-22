@@ -566,7 +566,8 @@ io.prototype.service = {
     call: function (isLayout, path, type, data, dataType, callback) {
         var url = '%s/%s';
         var baseUrl = (isLayout) ? window.ioinstance.layoutApiUrl : window.ioinstance.serviceApiUrl;
-        url = url.format(baseUrl, path);
+        var version = (isLayout) ? '?v=' + window.ioinstance.version : '';
+        url = url.format(baseUrl, path) + version;
         var postData = (data != null) ? JSON.stringify(data) : '';
         $.ajax({
             url: url,

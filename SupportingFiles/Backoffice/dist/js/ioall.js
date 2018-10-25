@@ -319,7 +319,7 @@ io.prototype.layout = {
                     window.ioinstance.layout.prepareMenuLayout(response.items, parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout);
                 });
             } else {
-                window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+                window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
             }
         });
     },
@@ -511,6 +511,16 @@ io.prototype.request = {
         IsEnabled: 0,
         RequestCount: 0,
         MaxRequestCount: 0
+    },
+    MenuAddRequestModel: {
+        Culture: 0,
+        Version: '',
+        Action: '',
+        CssClass: '',
+        Name: '',
+        MenuOrder: 0,
+        RequiredRole: 0,
+        ParentEntityID: null
     },
     UserAddRequest: {
         Culture: 0,

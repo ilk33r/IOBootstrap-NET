@@ -72,6 +72,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                                 CssClass = childMenuEntity.CssClass,
                                 Name = childMenuEntity.Name,
                                 MenuOrder = childMenuEntity.MenuOrder,
+                                RequiredRole = childMenuEntity.RequiredRole
                             };
 
                             childMenu.Add(childMenuModel);

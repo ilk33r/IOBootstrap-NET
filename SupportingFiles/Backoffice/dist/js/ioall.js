@@ -604,9 +604,9 @@ io.prototype.userRoles = {
 
         for (var i = 0; i < 3; i++) {
             if (roleId == i) {
-                roleList += '<option value="' + i + '" selected="selected">' + this.getRoleName(roleId) + '</option>';
+                roleList += '<option value="' + i + '" selected="selected">' + this.getRoleName(i) + '</option>';
             } else {
-                roleList += '<option value="' + i + '">' + this.getRoleName(roleId) + '</option>';
+                roleList += '<option value="' + i + '">' + this.getRoleName(i) + '</option>';
             }
         }
 

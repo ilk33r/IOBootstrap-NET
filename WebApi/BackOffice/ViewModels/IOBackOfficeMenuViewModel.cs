@@ -98,6 +98,35 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             return new List<IOMenuListModel>();
         }
 
+        public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)
+        {
+            // Obtain menu item entity
+            IOMenuEntity menuEntity = _databaseContext.Find<IOMenuEntity>(requestModel.ID);
+
+            // Check menu is not exists
+            if (menuEntity == null) {
+                return;
+            }
+
+            // Update menu item entity
+            menuEntity.Action = requestModel.Action;
+            menuEntity.CssClass = requestModel.CssClass;
+            menuEntity.Name = requestModel.Name;
+            menuEntity.MenuOrder = requestModel.MenuOrder;
+            menuEntity.RequiredRole = requestModel.RequiredRole;
+            menuEntity.ParentEntityID = null;
+
+            // Check parent entity defined
+            if (requestModel.ParentEntityID != null && requestModel.ParentEntityID != 0)
+            {
+                menuEntity.ParentEntityID = requestModel.ParentEntityID;
+            }
+
+            // Add menu entity to database
+            _databaseContext.Update(menuEntity);
+            _databaseContext.SaveChanges();
+        }
+
         #endregion
     }
 }

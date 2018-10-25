@@ -1,3 +1,84 @@
+io.prototype.inited = function() {
+};
+
+io.prototype.request.ClientAddRequest = {
+    Culture: 0,
+    Version: '',
+    ClientDescription: '',
+    RequestCount: 0
+};
+
+io.prototype.request.ClientDeleteRequest = {
+    Culture: 0,
+    Version: '',
+    ClientId: 0
+};
+
+io.prototype.request.ClientUpdateRequest = {
+    Culture: 0,
+    Version: '',
+    ClientId: 0,
+    ClientDescription: '',
+    IsEnabled: 0,
+    RequestCount: 0,
+    MaxRequestCount: 0
+};
+
+io.prototype.request.MenuAddRequestModel = {
+    Culture: 0,
+    Version: '',
+    Action: '',
+    CssClass: '',
+    Name: '',
+    MenuOrder: 0,
+    RequiredRole: 0,
+    ParentEntityID: null
+};
+
+io.prototype.request.MenuUpdateRequestModel = {
+    Culture: 0,
+    Version: '',
+    ID: 0,
+    Action: '',
+    CssClass: '',
+    Name: '',
+    MenuOrder: 0,
+    RequiredRole: 0,
+    ParentEntityID: null
+};
+
+io.prototype.request.UserAddRequest = {
+    Culture: 0,
+    Version: '',
+    UserName: '',
+    Password: '',
+    UserRole: 0
+};
+
+io.prototype.request.UserChangePasswordRequest = {
+    Culture: 0,
+    Version: '',
+    UserName: '',
+    OldPassword: '',
+    NewPassword: ''
+};
+
+io.prototype.request.UserDeleteRequest = {
+    Culture: 0,
+    Version: '',
+    UserId: 0
+};
+
+io.prototype.request.SendNotificationRequest = {
+    Culture: 0,
+    Version: '',
+    DeviceType: 0,
+    NotificationCategory: '',
+    NotificationData: '',
+    NotificationMessage: '',
+    NotificationTitle: ''
+};
+
 io.prototype.app.dashboard = function(e, hash) {
     window.ioinstance.service.loadLayout('dashboard', false, function () {
         window.ioinstance.layout.render();
@@ -185,7 +266,9 @@ io.prototype.app.menuEditorList = function(e, hash) {
                         cssClass: menu.cssClass,
                         menuOrder: menu.menuOrder,
                         userRole: roleName,
-                        userRoleRaw: menu.requiredRole
+                        userRoleRaw: menu.requiredRole,
+                        parentMenuName: '',
+                        parentMenuId: 0
                     };
 
                     menuEditorHtml += window.ioinstance.layout.renderLayout(layout, menuLayoutData, menuEditorLayoutProperties);
@@ -203,7 +286,9 @@ io.prototype.app.menuEditorList = function(e, hash) {
                                 cssClass: childMenu.cssClass,
                                 menuOrder: childMenu.menuOrder,
                                 userRole: childMenuRoleName,
-                                userRoleRaw: childMenu.requiredRole
+                                userRoleRaw: childMenu.requiredRole,
+                                parentMenuName: menu.name,
+                                parentMenuId: menu.id
                             };
 
                             menuEditorHtml += window.ioinstance.layout.renderLayout(layout, childMenuLayoutData, menuEditorLayoutProperties);
@@ -295,6 +380,91 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
     });
 };
 
+io.prototype.app.menuEditorSelect = function(e, hash) {
+    var parentMenu = $('#parentMenu');
+    parentMenu.attr('data-parentMenuId', e[0]);
+    parentMenu.val(e[1]);
+};
+
+io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRoleRaw, menuOrder, parentMenuName, parentMenuId) {
+    // Show indicator
+    window.ioinstance.indicator.show();
+    window.ioinstance.service.loadLayout('menueditorupdate', false, function () {
+        var roleList = window.ioinstance.userRoles.getRoleSelection(userRoleRaw);
+        window.ioinstance.layout.contentLayoutData = {
+            id: id,
+            name: name,
+            action: action,
+            cssClass: cssClass,
+            userRoleRaw: userRoleRaw,
+            menuOrder: menuOrder,
+            parentMenuName: parentMenuName,
+            parentMenuId: parentMenuId,
+            roleList: roleList
+        };
+
+        window.ioinstance.layout.render();
+        window.ioinstance.selectMenu('menuEditorList');
+
+        $('#parentMenu').click(function (e) {
+            e.preventDefault();
+
+            // Client select window
+            window.ioinstance.openWindow('menuSelect');
+        }).change(function (e) {
+            if ($(this).val().length == 0) {
+                $(this).attr('data-parentMenuId', '0');
+            }
+        });
+
+        $('#updateMenuForm').submit(function (e) {
+            e.preventDefault();
+            var callout = window.ioinstance.callout;
+            var request = window.ioinstance.request.MenuUpdateRequestModel;
+            request.ID = parseInt($(this).attr('data-menuId'));
+            request.Version = window.ioinstance.version;
+            request.Name = $('#menuName').val();
+            request.Action = $('#menuAction').val();
+            request.CssClass = $('#menuCss').val();
+            request.MenuOrder = parseInt($('#menuOrder').val());
+            request.RequiredRole = parseInt($('#role').val());
+            request.ParentEntityID = parseInt($('#parentMenu').attr('data-parentMenuId'));
+
+            var menuNameArea = $('.menuNameArea').removeClass('has-error');
+            var menuNameAreaHelp = $('.menuNameAreaHelp').addClass('hidden');
+
+            var menuActionArea = $('.menuActionArea').removeClass('has-error');
+            var menuActionAreaHelp = $('.menuActionAreaHelp').addClass('hidden');
+
+            if (request.Name.length < 1) {
+                callout.show(callout.types.danger, 'Invalid name.', '');
+                menuNameArea.addClass('has-error');
+                menuNameAreaHelp.removeClass('hidden');
+                window.ioinstance.indicator.hide();
+                return;
+            } else if (request.Action.length < 1) {
+                callout.show(callout.types.danger, 'Invalid action.', '');
+                menuActionArea.addClass('has-error');
+                menuActionAreaHelp.removeClass('hidden');
+                window.ioinstance.indicator.hide();
+                return;
+            }
+
+            window.ioinstance.indicator.show();
+            window.ioinstance.service.post('backoffice/menu/update', request, function (status, response, error) {
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Menu has been updated successfully.', '');
+                    window.location.hash = '';
+                    window.ioinstance.app.menuEditorList(null, 'menuEditorList');
+                } else  {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
+    });
+};
+
 io.prototype.app.menuSelect = function (e, hash) {
     var io = window.ioinstance;
 
@@ -305,27 +475,54 @@ io.prototype.app.menuSelect = function (e, hash) {
     // Call client list
     io.service.get('backoffice/menu/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('clientselectitem', function (layout) {
-                var clientsHtml = '';
-                var clientLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.clientList) {
-                    var client = response.clientList[index];
-                    var clientLayoutData = {
-                        id: client.id,
-                        clientID: client.clientID,
-                        clientSecret: client.clientSecret,
-                        clientDescription: client.clientDescription,
-                        isEnabled: (client.isEnabled == 1) ? 'YES' : 'NO',
-                        requestCount: client.requestCount,
-                        maxRequestCount: client.maxRequestCount
+            window.ioinstance.service.loadLayoutText('menueditormenuselectitem', function (layout) {
+                var menuEditorHtml = '';
+                var menuEditorLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+
+                for (var index in response.items) {
+                    var menu = response.items[index];
+                    var roleName = window.ioinstance.userRoles.getRoleName(menu.requiredRole);
+                    var menuLayoutData = {
+                        rowClass: '',
+                        id: menu.id,
+                        name: menu.name,
+                        action: menu.action,
+                        cssClass: menu.cssClass,
+                        menuOrder: menu.menuOrder,
+                        userRole: roleName,
+                        userRoleRaw: menu.requiredRole,
+                        parentMenuName: '',
+                        parentMenuId: 0
                     };
 
-                    clientsHtml += window.ioinstance.layout.renderLayout(layout, clientLayoutData, clientLayoutProperties);
+                    menuEditorHtml += window.ioinstance.layout.renderLayout(layout, menuLayoutData, menuEditorLayoutProperties);
+
+                    var childMenuItems = menu.childItems;
+                    if (childMenuItems != null && childMenuItems.length > 0) {
+                        for (var childIndex in childMenuItems) {
+                            var childMenu = childMenuItems[childIndex];
+                            var childMenuRoleName = window.ioinstance.userRoles.getRoleName(childMenu.requiredRole);
+                            var childMenuLayoutData = {
+                                rowClass: 'childmenu',
+                                id: childMenu.id,
+                                name: childMenu.name,
+                                action: childMenu.action,
+                                cssClass: childMenu.cssClass,
+                                menuOrder: childMenu.menuOrder,
+                                userRole: childMenuRoleName,
+                                userRoleRaw: childMenu.requiredRole,
+                                parentMenuName: menu.name,
+                                parentMenuId: menu.id
+                            };
+
+                            menuEditorHtml += window.ioinstance.layout.renderLayout(layout, childMenuLayoutData, menuEditorLayoutProperties);
+                        }
+                    }
                 }
 
-                window.ioinstance.service.loadLayout('clientslist', false, function () {
+                window.ioinstance.service.loadLayout('menueditorlist', false, function () {
                     window.ioinstance.layout.contentLayoutData = {
-                        clients: clientsHtml
+                        menu: menuEditorHtml
                     };
                     window.ioinstance.layout.render();
                     window.ioinstance.selectMenu(hash);
@@ -383,16 +580,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
     // Show indicator
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('userupdate', false, function () {
-        var roleList = '';
-        var roleNames = ['Super Admin', 'Admin', 'User'];
-
-        for (var i = 0; i < 3; i++) {
-            if (userRole == i) {
-                roleList += '<option value="' + i + '" selected="selected">' + roleNames[i] + '</option>';
-            } else {
-                roleList += '<option value="' + i + '">' + roleNames[i] + '</option>';
-            }
-        }
+        var roleList = window.ioinstance.userRoles.getRoleSelection(userRole);
         window.ioinstance.layout.contentLayoutData = {
             id: id,
             userName: userName,

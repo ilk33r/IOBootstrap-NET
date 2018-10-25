@@ -69,6 +69,28 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             return new IOMenuAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOMenuUpdateResponseModel UpdateMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null
+                || String.IsNullOrEmpty(requestModel.Name))
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOMenuUpdateResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.UpdateMenuItem(requestModel);
+
+            // Create and return response
+            return new IOMenuUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
         #endregion
 
     }

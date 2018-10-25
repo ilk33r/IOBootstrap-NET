@@ -491,64 +491,6 @@ io.prototype.request = {
         Culture: 0,
         Version: '',
         Token: ''
-    },
-    ClientAddRequest: {
-        Culture: 0,
-        Version: '',
-        ClientDescription: '',
-        RequestCount: 0
-    },
-    ClientDeleteRequest: {
-        Culture: 0,
-        Version: '',
-        ClientId: 0
-    },
-    ClientUpdateRequest: {
-        Culture: 0,
-        Version: '',
-        ClientId: 0,
-        ClientDescription: '',
-        IsEnabled: 0,
-        RequestCount: 0,
-        MaxRequestCount: 0
-    },
-    MenuAddRequestModel: {
-        Culture: 0,
-        Version: '',
-        Action: '',
-        CssClass: '',
-        Name: '',
-        MenuOrder: 0,
-        RequiredRole: 0,
-        ParentEntityID: null
-    },
-    UserAddRequest: {
-        Culture: 0,
-        Version: '',
-        UserName: '',
-        Password: '',
-        UserRole: 0
-    },
-    UserChangePasswordRequest: {
-        Culture: 0,
-        Version: '',
-        UserName: '',
-        OldPassword: '',
-        NewPassword: ''
-    },
-    UserDeleteRequest: {
-        Culture: 0,
-        Version: '',
-        UserId: 0
-    },
-    SendNotificationRequest: {
-        Culture: 0,
-        Version: '',
-        DeviceType: 0,
-        NotificationCategory: '',
-        NotificationData: '',
-        NotificationMessage: '',
-        NotificationTitle: ''
     }
 };
 
@@ -656,6 +598,19 @@ io.prototype.userRoles = {
             default:
                 return 'Undefined';
         }
+    },
+    getRoleSelection: function (roleId) {
+        var roleList = '';
+
+        for (var i = 0; i < 3; i++) {
+            if (roleId == i) {
+                roleList += '<option value="' + i + '" selected="selected">' + this.getRoleName(roleId) + '</option>';
+            } else {
+                roleList += '<option value="' + i + '">' + this.getRoleName(roleId) + '</option>';
+            }
+        }
+
+        return roleList;
     }
 };
 

@@ -1689,6 +1689,46 @@
 					"body": "{\"client\":{\"id\":1,\"clientID\":\"3nd2enpsa8uft2gu\",\"clientSecret\":\"mv8g5zyyd1sep3754ugqpbyupbn1opqe1k1qkpa3pfodvb37\"},\"status\":{\"code\":0,\"detailedMessage\":\"\",\"message\":\"\",\"success\":true}}"
 				}
 			]
+		},
+		{
+			"name": "PushNotifications/AddToken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-IO-AUTHORIZATION",
+						"value": "{{authorization}}"
+					},
+					{
+						"key": "X-IO-CLIENT-ID",
+						"value": "{{clientId}}"
+					},
+					{
+						"key": "X-IO-CLIENT-SECRET",
+						"value": "{{clientSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"AppBuildNumber\": 17,\n\t\"AppBundleId\": \"com.skoradam.toqmak\",\n\t\"AppVersion\": \"1.0.0\",\n\t\"DeviceId\": \"5678\",\n\t\"DeviceName\": \"some device\",\n\t\"DeviceToken\": \"9F015D81FE24614FA883BBC299783E716B27934E008DE3663FCC34570E2C6616\",\n\t\"DeviceType\": 1\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/iopushnotifications/addtoken",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"iopushnotifications",
+						"addtoken"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

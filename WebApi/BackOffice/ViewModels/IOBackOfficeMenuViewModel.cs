@@ -22,6 +22,30 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
         #region Menu Methods
 
+        public void AddMenuItem(IOMenuAddRequestModel requestModel)
+        {
+            // Create menu item entity
+            IOMenuEntity menuEntity = new IOMenuEntity()
+            {
+                Action = requestModel.Action,
+                CssClass = requestModel.CssClass,
+                Name = requestModel.Name,
+                MenuOrder = requestModel.MenuOrder,
+                RequiredRole = requestModel.RequiredRole,
+                ParentEntityID = null
+            };
+
+            // Check parent entity defined
+            if (requestModel.ParentEntityID != null && requestModel.ParentEntityID != 0)
+            {
+                menuEntity.ParentEntityID = requestModel.ParentEntityID;
+            }
+
+            // Add menu entity to database
+            _databaseContext.Add(menuEntity);
+            _databaseContext.SaveChanges();
+        }
+
         public IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
             var parentMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
@@ -46,7 +70,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                                 ID = childMenuEntity.ID,
                                 Action = childMenuEntity.Action,
                                 CssClass = childMenuEntity.CssClass,
-                                Name = childMenuEntity.Name
+                                Name = childMenuEntity.Name,
+                                MenuOrder = childMenuEntity.MenuOrder,
                             };
 
                             childMenu.Add(childMenuModel);

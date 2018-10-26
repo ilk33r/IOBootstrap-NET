@@ -131,6 +131,62 @@ io.prototype = {
             }
         });
     },
+    messagesHtml: function(callback) {
+        // Call messages list
+        this.service.get('backoffice/messages/list', function(status, response, error) {
+            if (status && response.status.success) {
+                window.ioinstance.service.loadLayoutText('dashboardmessage', function (layout) {
+                    var readedMessagesJSON = localStorage.getItem('readedMessages');
+                    var readedMessages = null;
+                    if (readedMessagesJSON != null && readedMessagesJSON.length > 0) {
+                        readedMessages = JSON.parse(readedMessagesJSON);
+                        var ts = Math.round((new Date()).getTime() / 1000);
+
+                        for (var index in readedMessages) {
+                            var message = readedMessages[index];
+                            // Check message marked as 30 days
+                            if (message.date + 2592000 < ts) {
+                                readedMessages.splice(index, 1);
+                            }
+                        }
+                    }
+
+                    var messagesHtml = '';
+                    var messagesLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                    for (var index in response.messages) {
+                        var message = response.messages[index];
+                        var messageId = message.id;
+                        var messageText = message.message;
+                        var createDate = message.messageCreateDate;
+                        var startStatus = 'fa-star';
+                        if (readedMessages != null) {
+                            var readedMessageObject = readedMessages.find(function(element) {
+                                return element.id == messageId;
+                            });
+
+                            if (readedMessageObject != undefined && readedMessageObject != null) {
+                                startStatus = 'fa-star-o';
+                            }
+                        }
+
+                        var messagesLayoutData = {
+                            id: messageId,
+                            message: messageText,
+                            date: createDate,
+                            startStatus: startStatus
+                        };
+
+                        messagesHtml += window.ioinstance.layout.renderLayout(layout, messagesLayoutData, messagesLayoutProperties);
+                    }
+
+                    callback(messagesHtml);
+                });
+            } else {
+                window.ioinstance.indicator.hide();
+                window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+            }
+        });
+    },
     openWindow: function (hash) {
         var url = this.layoutApiUrl + '/#!' + hash;
         this.openedWindow = window.open(url, hash, 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
@@ -139,7 +195,12 @@ io.prototype = {
         // Load dashboard
         this.showMasterPage(function () {
             window.ioinstance.service.loadLayout('dashboard', false, function () {
-                window.ioinstance.layout.render();
+                window.ioinstance.messagesHtml(function (messages) {
+                    window.ioinstance.layout.contentLayoutData = {
+                        messages: messages
+                    };
+                    window.ioinstance.layout.render();
+                });
             });
         });
     },

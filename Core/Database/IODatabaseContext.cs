@@ -16,6 +16,7 @@ namespace IOBootstrap.NET.Core.Database
         public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
         public virtual DbSet<IOClientsEntity> Clients { get; set; }
         public virtual DbSet<IOMenuEntity> Menu { get; set; }
+        public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
         public virtual DbSet<IOUserEntity> Users { get; set; }
         public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
         public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessageEntity { get; set; }
@@ -49,11 +50,19 @@ namespace IOBootstrap.NET.Core.Database
                     pushNotificationMessageEntity.DeviceType,
                     pushNotificationMessageEntity.IsCompleted
                 });
+            modelBuilder.Entity<IOBackOfficeMessageEntity>().HasIndex(
+            messagesEntity => new
+            {
+                messagesEntity.MessageCreateDate,
+                messagesEntity.MessageEndDate,
+                messagesEntity.MessageStartDate
+            });
 
             this.GenerateClientMenu(modelBuilder);
             this.GenerateUserMenu(modelBuilder);
             this.GenerateNotificationMenu(modelBuilder);
             this.GenerateMenuEditorMenu(modelBuilder);
+            this.GenerateMessagesMenu(modelBuilder);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)
@@ -234,6 +243,45 @@ namespace IOBootstrap.NET.Core.Database
                 ParentEntityID = 12
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(menuEditorAddMenuEntity);
+        }
+
+        private void GenerateMessagesMenu(ModelBuilder modelBuilder)
+        {
+            IOMenuEntity messagesEntity = new IOMenuEntity()
+            {
+                ID = 15,
+                Action = "actionMessages",
+                CssClass = "fa-envelope",
+                Name = "Messages",
+                MenuOrder = 15,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = null
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(messagesEntity);
+
+            IOMenuEntity messagesListEntity = new IOMenuEntity()
+            {
+                ID = 16,
+                Action = "messagesList",
+                CssClass = "fa-circle-o",
+                Name = "List Messages",
+                MenuOrder = 16,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = 15
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(messagesListEntity);
+
+            IOMenuEntity messagesAddEntity = new IOMenuEntity()
+            {
+                ID = 17,
+                Action = "messagesAdd",
+                CssClass = "fa-circle-o",
+                Name = "Add Message",
+                MenuOrder = 17,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = 15
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(messagesAddEntity);
         }
     }
 }

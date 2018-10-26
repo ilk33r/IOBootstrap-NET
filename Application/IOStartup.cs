@@ -88,6 +88,8 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("addMenuItem", "backoffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("listMenuItems", "backoffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("updateMenuItem", "backoffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("addMessagesItem", "backoffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("listMessagesItems", "backoffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif
@@ -115,13 +117,25 @@ namespace IOBootstrap.NET.Application
             return "IOBackOfficeMenu";
         }
 
+        public virtual string BackOfficeMessagesControllerName()
+        {
+            return "IOBackOfficeMessages";
+        }
+
         public virtual string BaseControllerName()
         {
             return "IO";
         }
 
-        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options) {
+        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
+        {
+#if USE_MYSQL_DATABASE
+            options.UseMySql(this.Configuration.GetConnectionString("DefaultConnection"));
+#elif USE_SQLSRV_DATABASE
+            options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+#else
             options.UseInMemoryDatabase("IOMemory");
+#endif
         }
 
         public virtual string KeyControllerName() 

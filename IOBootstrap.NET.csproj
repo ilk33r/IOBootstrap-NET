@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
 	<SolutionDir>..\</SolutionDir>
-	<ReleaseVersion>0.0.1</ReleaseVersion>
+	<ReleaseVersion>0.0.2</ReleaseVersion>
 	<SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
 

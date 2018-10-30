@@ -197,7 +197,16 @@ namespace IOBootstrap.NET.Core.Controllers
             if (System.IO.File.Exists(layoutPath))
             {
                 // Read file
-                return Content(System.IO.File.ReadAllText(layoutPath), "text/html");
+                string fileContent = System.IO.File.ReadAllText(layoutPath);
+
+                // Obtain app version
+                string appVersion = _configuration.GetValue<string>("IOVersion");
+
+                // Set values to content
+                string htmlContent = fileContent.Replace("${environmentName}", _environment.EnvironmentName)
+                                                .Replace("${version}", appVersion);
+
+                return Content(htmlContent, "text/html");
             }
             else
             {

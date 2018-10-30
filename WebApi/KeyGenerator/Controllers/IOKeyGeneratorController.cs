@@ -33,7 +33,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
         public IOKeyGeneratorResponseModel GenerateKeys() 
         {
             // Generate keys
-            string authorizationKey = IOCommonHelpers.GenerateRandomAlphaNumericString(32);
+            string authorizationKey = IORandomUtilities.GenerateRandomAlphaNumericString(32);
 
             // Create encryptor
             RijndaelManaged encryptor = new RijndaelManaged();

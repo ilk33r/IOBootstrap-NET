@@ -140,11 +140,14 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public virtual IOResponseModel Index()
         {
+            // Obtain app version
+            string appVersion = _configuration.GetValue<string>("IOVersion");
+
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK,
-                                                                         "IO Bootstrapt.",
-                                                                         true,
-                                                                         String.Format("Version: {0}", IOCommonHelpers.CurrentVersion));
+                                                                             "IO Bootstrapt.",
+                                                                             true,
+                                                                             String.Format("Version: {0}", appVersion));
 
             // Return response
             return new IOResponseModel(responseStatus);

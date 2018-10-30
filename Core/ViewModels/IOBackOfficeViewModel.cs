@@ -35,8 +35,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 			// Create a client entity
 			IOClientsEntity clientEntity = new IOClientsEntity()
 			{
-				ClientId = IOCommonHelpers.GenerateRandomAlphaNumericString(32),
-				ClientSecret = IOCommonHelpers.GenerateRandomAlphaNumericString(64),
+                ClientId = IORandomUtilities.GenerateRandomAlphaNumericString(32),
+                ClientSecret = IORandomUtilities.GenerateRandomAlphaNumericString(64),
 				ClientDescription = clientDescription,
                 IsEnabled = 1,
                 RequestCount = 0,

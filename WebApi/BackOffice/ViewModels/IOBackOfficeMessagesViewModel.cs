@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.WebApi.BackOffice.Entities;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
 
 namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
@@ -33,6 +34,20 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                 messageModel.MessageCreateDate = input.MessageCreateDate;
                 return messageModel;
             });
+        }
+
+        public void AddMessage(IOMessageAddRequestModel request) 
+        {
+            IOBackOfficeMessageEntity messageEntity = new IOBackOfficeMessageEntity()
+            {
+                Message = request.Message,
+                MessageCreateDate = DateTimeOffset.Now,
+                MessageStartDate = request.MessageStartDate,
+                MessageEndDate = request.MessageEndDate
+            };
+
+            _databaseContext.Add(messageEntity);
+            _databaseContext.SaveChanges();
         }
     }
 }

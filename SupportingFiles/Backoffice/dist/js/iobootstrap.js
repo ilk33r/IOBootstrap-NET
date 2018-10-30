@@ -47,6 +47,14 @@ io.prototype.request.MenuUpdateRequestModel = {
     ParentEntityID: null
 };
 
+io.prototype.request.MessageAddRequestModel = {
+    Culture: 0,
+    Version: '',
+    Message: '',
+    MessageStartDate: '',
+    MessageEndDate: ''
+};
+
 io.prototype.request.UserAddRequest = {
     Culture: 0,
     Version: '',
@@ -556,51 +564,23 @@ io.prototype.app.messagesAdd = function (e, hash) {
         $('#addMessageForm').submit(function (e) {
             e.preventDefault();
             var callout = window.ioinstance.callout;
-            var repeatedpassword = $('#repeatedpassword').val();
-            var request = window.ioinstance.request.UserAddRequest;
+            var request = window.ioinstance.request.MessageAddRequestModel;
             request.Version = window.ioinstance.version;
-            request.UserName = $('#userName').val();
-            request.Password = $('#password').val();
-            request.UserRole = parseInt($('#role').val());
+            request.Message = $('#message').val();
+            request.MessageStartDate = $('#startDate').val();
+            request.MessageEndDate = $('#endDate').val();
 
-            $('.passwordArea').removeClass('has-error');
-            $('.passwordAreaHelp').addClass('hidden');
-
-            if (request.Password.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Password is too short.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Password is too short.');
-                window.ioinstance.indicator.hide();
-                return;
-            } else if (request.Password != repeatedpassword) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Passwords did not match.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Passwords did not match.');
-                window.ioinstance.indicator.hide();
-                return;
-            } else if (request.UserName.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid username.', 'User name is too sort.');
-                $('.userNameArea').addClass('has-error');
-                $('.userNameAreaHelp').removeClass('hidden');
-                $('.userNameAreaHelp').text('User name is too sort.');
+            if (request.Message.length <= 3) {
+                callout.show(callout.types.danger, 'Invalid message.', 'Message is too short.');
                 window.ioinstance.indicator.hide();
                 return;
             }
 
             window.ioinstance.indicator.show();
-            window.ioinstance.service.post('backoffice/users/add', request, function (status, response, error) {
+            window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
                 if (status && response.status.success) {
-                    callout.show(callout.types.success, 'User has been added successfully.', '');
-                    window.ioinstance.app.usersList(null, 'usersList');
-                } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
-                    var helpText = 'User ' + request.UserName + ' is exists.';
-                    callout.show(callout.types.danger, 'Invalid username.', helpText);
-                    $('.userNameArea').addClass('has-error');
-                    $('.userNameAreaHelp').removeClass('hidden');
-                    $('.userNameAreaHelp').text(helpText);
-                    window.ioinstance.indicator.hide();
+                    callout.show(callout.types.success, 'Message has been added successfully.', '');
+                    window.ioinstance.app.messagesList(null, 'messagesList');
                 } else  {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();

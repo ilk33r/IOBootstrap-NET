@@ -194,14 +194,7 @@ io.prototype = {
     showDashboard: function () {
         // Load dashboard
         this.showMasterPage(function () {
-            window.ioinstance.service.loadLayout('dashboard', false, function () {
-                window.ioinstance.messagesHtml(function (messages) {
-                    window.ioinstance.layout.contentLayoutData = {
-                        messages: messages
-                    };
-                    window.ioinstance.layout.render();
-                });
-            });
+            window.ioinstance.app.dashboard(null, null);
         });
     },
     setHeaderData: function () {

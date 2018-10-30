@@ -80,8 +80,15 @@ io.prototype.request.SendNotificationRequest = {
 };
 
 io.prototype.app.dashboard = function(e, hash) {
+    window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('dashboard', false, function () {
-        window.ioinstance.layout.render();
+        window.ioinstance.messagesHtml(function (messages) {
+            window.ioinstance.layout.contentLayoutData = {
+                messages: messages
+            };
+            window.ioinstance.layout.render();
+            window.ioinstance.indicator.hide();
+        });
     });
 };
 

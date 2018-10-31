@@ -79,23 +79,37 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
         private async Task GetRequest(HttpResponse callback)
         {
-            var task = this.httpClient.GetAsync(this.baseUrl);
-            var response = await task;
+            try 
+            {
+                var task = this.httpClient.GetAsync(this.baseUrl);
+                var response = await task;
 
-            // Deserialize the response body.
-            var responseBody = await response.Content.ReadAsStringAsync();
-            callback(response.IsSuccessStatusCode, responseBody);
+                // Deserialize the response body.
+                var responseBody = await response.Content.ReadAsStringAsync();
+                callback(response.IsSuccessStatusCode, responseBody);
+            }
+            catch (Exception e)
+            {
+                callback(false, e.Message);
+            }
         }
 
         private async Task PostRequest(HttpResponse callback)
         {
-            HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody));
-            var task = this.httpClient.PostAsync(this.baseUrl, postContent);
-            var response = await task;
+            try
+            {
+                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody));
+                var task = this.httpClient.PostAsync(this.baseUrl, postContent);
+                var response = await task;
 
-            // Deserialize the response body.
-            var responseBody = await response.Content.ReadAsStringAsync();
-            callback(response.IsSuccessStatusCode, responseBody);
+                // Deserialize the response body.
+                var responseBody = await response.Content.ReadAsStringAsync();
+                callback(response.IsSuccessStatusCode, responseBody);
+            }
+            catch (Exception e)
+            {
+                callback(false, e.Message);
+            }
         }
 
         #endregion

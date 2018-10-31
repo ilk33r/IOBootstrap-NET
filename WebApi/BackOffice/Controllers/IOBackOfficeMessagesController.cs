@@ -45,6 +45,17 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpGet]
+        public IOListMessagesResponseModel ListAllMessages()
+        {
+            // Obtain message items
+            IList<IOMessageModel> messages = _viewModel.GetAllMessages();
+
+            // Create and return response
+            return new IOListMessagesResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), messages);
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMessageAddResponseModel AddMessagesItem([FromBody] IOMessageAddRequestModel requestModel)
         {
@@ -64,6 +75,27 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOMessageAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOMessageDeleteResponseModel DeleteMessagesItem([FromBody] IOMessageDeleteRequestModel requestModel) 
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOMessageDeleteResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.DeleteMessage(requestModel.MessageId);
+
+            // Create and return response
+            return new IOMessageDeleteResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
     }
 }

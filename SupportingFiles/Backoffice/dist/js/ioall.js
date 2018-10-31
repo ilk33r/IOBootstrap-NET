@@ -156,7 +156,7 @@ io.prototype = {
                     for (var index in response.messages) {
                         var message = response.messages[index];
                         var messageId = message.id;
-                        var messageText = message.message;
+                        var messageText = message.message.replace(/\\n/g, "<br />");
                         var startStatus = 'fa-star';
                         if (readedMessages != null) {
                             var readedMessageObject = readedMessages.find(function(element) {
@@ -172,7 +172,7 @@ io.prototype = {
                         var messagesLayoutData = {
                             id: messageId,
                             message: messageText,
-                            date: (createDate.toLocaleDateString != undefined) ? createDate.toLocaleDateString() : message.messageCreateDate,
+                            date: createDate.toLocaleDateString(),
                             startStatus: startStatus
                         };
 

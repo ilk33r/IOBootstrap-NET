@@ -55,6 +55,12 @@ io.prototype.request.MessageAddRequestModel = {
     MessageEndDate: ''
 };
 
+io.prototype.request.MessageDeleteRequestModel = {
+    Culture: 0,
+    Version: '',
+    MessageId: 0
+};
+
 io.prototype.request.UserAddRequest = {
     Culture: 0,
     Version: '',
@@ -550,6 +556,27 @@ io.prototype.app.menuSelect = function (e, hash) {
     });
 };
 
+io.prototype.app.messageDelete = function (id) {
+    var answer = confirm("Are you sure want to delete this message ?");
+    if (answer) {
+        var request = window.ioinstance.request.MessageDeleteRequestModel;
+        request.Version = window.ioinstance.version;
+        request.MessageId = id;
+        window.ioinstance.indicator.show();
+        window.ioinstance.service.post('backoffice/messages/delete', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Message has been deleted successfully.', '');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
+
+            window.ioinstance.app.messagesList(null, 'messagesList');
+        });
+    }
+};
+
 io.prototype.app.messagesAdd = function (e, hash) {
     var io = window.ioinstance;
 
@@ -587,6 +614,50 @@ io.prototype.app.messagesAdd = function (e, hash) {
                 }
             });
         });
+    });
+};
+
+io.prototype.app.messagesList = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    // Call client list
+    io.service.get('backoffice/messages/listall', function(status, response, error) {
+        if (status && response.status.success) {
+            window.ioinstance.service.loadLayoutText('message', function (layout) {
+                var messagesHtml = '';
+                var messageLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                for (var index in response.messages) {
+                    var message = response.messages[index];
+                    var createDate = new Date(message.messageCreateDate);
+                    var startDate = new Date(message.messageStartDate);
+                    var endDate = new Date(message.messageEndDate);
+                    var messageLayoutData = {
+                        id: message.id,
+                        message: message.message.replace(/\\n/g, "<br />"),
+                        createDate: createDate.toLocaleDateString(),
+                        startDate: startDate.toLocaleDateString(),
+                        endDate: endDate.toLocaleDateString()
+                    };
+
+                    messagesHtml += window.ioinstance.layout.renderLayout(layout, messageLayoutData, messageLayoutProperties);
+                }
+
+                window.ioinstance.service.loadLayout('messageslist', false, function () {
+                    window.ioinstance.layout.contentLayoutData = {
+                        messages: messagesHtml
+                    };
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+                });
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
     });
 };
 

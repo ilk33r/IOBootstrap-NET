@@ -8,5 +8,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
         public int ID { get; set; }
         public string Message { get; set; }
         public DateTimeOffset MessageCreateDate { get; set; }
+        public DateTimeOffset MessageStartDate { get; set; }
+        public DateTimeOffset MessageEndDate { get; set; }
     }
 }

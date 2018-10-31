@@ -32,6 +32,24 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                 messageModel.ID = input.ID;
                 messageModel.Message = input.Message;
                 messageModel.MessageCreateDate = input.MessageCreateDate;
+                messageModel.MessageStartDate = input.MessageStartDate;
+                messageModel.MessageEndDate = input.MessageEndDate;
+                return messageModel;
+            });
+        }
+
+        public IList<IOMessageModel> GetAllMessages()
+        {
+            var messages = _databaseContext.Messages.OrderByDescending((arg) => arg.MessageCreateDate);
+
+            return messages.ToList().ConvertAll<IOMessageModel>((input) =>
+            {
+                IOMessageModel messageModel = new IOMessageModel();
+                messageModel.ID = input.ID;
+                messageModel.Message = input.Message;
+                messageModel.MessageCreateDate = input.MessageCreateDate;
+                messageModel.MessageStartDate = input.MessageStartDate;
+                messageModel.MessageEndDate = input.MessageEndDate;
                 return messageModel;
             });
         }
@@ -48,6 +66,17 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
             _databaseContext.Add(messageEntity);
             _databaseContext.SaveChanges();
+        }
+
+        public void DeleteMessage(int messageId)
+        {
+            IOBackOfficeMessageEntity messageEntity = _databaseContext.Messages.Find(messageId);
+
+            if (messageEntity != null) 
+            {
+                _databaseContext.Remove(messageEntity);
+                _databaseContext.SaveChanges();
+            }
         }
     }
 }

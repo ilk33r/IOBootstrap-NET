@@ -78,5 +78,20 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
                 _databaseContext.SaveChanges();
             }
         }
+
+        public void UpdateMessage(IOMessageUpdateRequestModel request)
+        {
+            IOBackOfficeMessageEntity messageEntity = _databaseContext.Messages.Find(request.MessageId);
+
+            if (messageEntity != null)
+            {
+                messageEntity.Message = request.Message;
+                messageEntity.MessageStartDate = request.MessageStartDate;
+                messageEntity.MessageEndDate = request.MessageEndDate;
+
+                _databaseContext.Update(messageEntity);
+                _databaseContext.SaveChanges();
+            }
+        }
     }
 }

@@ -55,6 +55,15 @@ io.prototype.request.MessageAddRequestModel = {
     MessageEndDate: ''
 };
 
+io.prototype.request.MessageUpdateRequestModel = {
+    Culture: 0,
+    Version: '',
+    MessageId: 0,
+    Message: '',
+    MessageStartDate: '',
+    MessageEndDate: ''
+};
+
 io.prototype.request.MessageDeleteRequestModel = {
     Culture: 0,
     Version: '',
@@ -251,7 +260,7 @@ io.prototype.app.clientsAdd = function (e, hash) {
                 var callout = window.ioinstance.callout;
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Client has been added successfully.', '');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -392,7 +401,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
                     callout.show(callout.types.success, 'Menu has been added successfully.', '');
                     window.location.hash = '';
                     window.ioinstance.app.menuEditorList(null, 'menuEditorList');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -477,7 +486,7 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
                     callout.show(callout.types.success, 'Menu has been updated successfully.', '');
                     window.location.hash = '';
                     window.ioinstance.app.menuEditorList(null, 'menuEditorList');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -608,7 +617,7 @@ io.prototype.app.messagesAdd = function (e, hash) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been added successfully.', '');
                     window.ioinstance.app.messagesList(null, 'messagesList');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -685,9 +694,10 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
         $('#updateMessageForm').submit(function (e) {
             e.preventDefault();
             var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.MessageAddRequestModel;
+            var request = window.ioinstance.request.MessageUpdateRequestModel;
             request.Version = window.ioinstance.version;
-            request.Message = $('#message').val().replace(/\\n/g, "<br />");
+            request.MessageId = parseInt($(this).attr('data-messageId'));
+            request.Message = $('#message').val();
             request.MessageStartDate = $('#startDate').val();
             request.MessageEndDate = $('#endDate').val();
 
@@ -702,7 +712,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been updated successfully.', '');
                     window.ioinstance.app.messagesList(null, 'messagesList');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -933,7 +943,7 @@ io.prototype.app.usersAdd = function (e, hash) {
                     $('.userNameAreaHelp').removeClass('hidden');
                     $('.userNameAreaHelp').text(helpText);
                     window.ioinstance.indicator.hide();
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
@@ -969,7 +979,7 @@ io.prototype.app.sendNotification = function (e, hash) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Push notification has been send successfully.', '');
                     window.ioinstance.app.sendNotification(null, 'sendNotification');
-                } else  {
+                } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }

@@ -97,5 +97,26 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             // Create and return response
             return new IOMessageDeleteResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOMessageUpdateResponseModel UpdateMessagesItem([FromBody] IOMessageUpdateRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOMessageUpdateResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.UpdateMessage(requestModel);
+
+            // Create and return response
+            return new IOMessageUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
     }
 }

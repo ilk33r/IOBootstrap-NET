@@ -635,12 +635,19 @@ io.prototype.app.messagesList = function (e, hash) {
                     var createDate = new Date(message.messageCreateDate);
                     var startDate = new Date(message.messageStartDate);
                     var endDate = new Date(message.messageEndDate);
+                    var startDateMonth = (startDate.getMonth() < 10) ? '0' + startDate.getMonth() : startDate.getMonth();
+                    var startDateDay = (startDate.getDay() < 10) ? '0' + startDate.getDay() : startDate.getDay();
+                    var endDateMonth = (endDate.getMonth() < 10) ? '0' + endDate.getMonth() : endDate.getMonth();
+                    var endDateDay = (endDate.getDay() < 10) ? '0' + endDate.getDay() : endDate.getDay();
                     var messageLayoutData = {
                         id: message.id,
-                        message: message.message.replace(/\\n/g, "<br />"),
+                        message: message.message.replace(/\n/g, "<br />"),
+                        messageEscaped: message.message.escapeHtml(),
                         createDate: createDate.toLocaleDateString(),
                         startDate: startDate.toLocaleDateString(),
-                        endDate: endDate.toLocaleDateString()
+                        endDate: endDate.toLocaleDateString(),
+                        startDateFormatted: startDate.getFullYear() + '-' + startDateMonth + '-' + startDateDay,
+                        endDateFormatted: endDate.getFullYear() + '-' + endDateMonth + '-' + endDateDay
                     };
 
                     messagesHtml += window.ioinstance.layout.renderLayout(layout, messageLayoutData, messageLayoutProperties);
@@ -658,6 +665,49 @@ io.prototype.app.messagesList = function (e, hash) {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
         }
+    });
+};
+
+io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
+    // Show indicator
+    window.ioinstance.indicator.show();
+    window.ioinstance.service.loadLayout('messageupdate', false, function () {
+        window.ioinstance.layout.contentLayoutData = {
+            id: id,
+            message: message.unEscapeHtml(),
+            startDate: startDate,
+            endDate: endDate
+        };
+
+        window.ioinstance.layout.render();
+        window.ioinstance.selectMenu('messagesList');
+
+        $('#updateMessageForm').submit(function (e) {
+            e.preventDefault();
+            var callout = window.ioinstance.callout;
+            var request = window.ioinstance.request.MessageAddRequestModel;
+            request.Version = window.ioinstance.version;
+            request.Message = $('#message').val().replace(/\\n/g, "<br />");
+            request.MessageStartDate = $('#startDate').val();
+            request.MessageEndDate = $('#endDate').val();
+
+            if (request.Message.length <= 3) {
+                callout.show(callout.types.danger, 'Invalid message.', 'Message is too short.');
+                window.ioinstance.indicator.hide();
+                return;
+            }
+
+            window.ioinstance.indicator.show();
+            window.ioinstance.service.post('backoffice/messages/update', request, function (status, response, error) {
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Message has been updated successfully.', '');
+                    window.ioinstance.app.messagesList(null, 'messagesList');
+                } else  {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
     });
 };
 

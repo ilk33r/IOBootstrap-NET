@@ -156,7 +156,7 @@ io.prototype = {
                     for (var index in response.messages) {
                         var message = response.messages[index];
                         var messageId = message.id;
-                        var messageText = message.message.replace(/\\n/g, "<br />");
+                        var messageText = message.message.replace(/\n/g, "<br />");
                         var startStatus = 'fa-star';
                         if (readedMessages != null) {
                             var readedMessageObject = readedMessages.find(function(element) {
@@ -686,8 +686,8 @@ if (!String.prototype.format) {
 if (!String.prototype.escapeHtml) {
     String.prototype.escapeHtml = function()  {
         return this
-            .replace(/\"/g, "\\")
-            .replace(/\'/g, "\\'")
+            .replace(/\"/g, "&quot;")
+            .replace(/\'/g, "&apos;")
             .replace(/\n/g, "\\n")
             .replace(/\r/g, "\\r");
     }
@@ -696,8 +696,8 @@ if (!String.prototype.escapeHtml) {
 if (!String.prototype.unEscapeHtml) {
     String.prototype.unEscapeHtml = function()  {
         return this
-            .replace(/\\\"/g, "\"")
-            .replace(/\\\'/g, "\'")
+            .replace(/\&quot\;/g, "\"")
+            .replace(/\&apos\;/g, "\'")
             .replace(/\\\n/g, "\n")
             .replace(/\\r/g, "\r");
     }

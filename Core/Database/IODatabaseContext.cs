@@ -19,8 +19,8 @@ namespace IOBootstrap.NET.Core.Database
         public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
         public virtual DbSet<IOUserEntity> Users { get; set; }
         public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
-        public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessageEntity { get; set; }
-        public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessagesEntity { get; set; }
+        public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessages { get; set; }
+        public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessages { get; set; }
 
         public IODatabaseContext(DbContextOptions<TContext> options) : base(options)
         {
@@ -196,25 +196,49 @@ namespace IOBootstrap.NET.Core.Database
             IOMenuEntity notificationEntity = new IOMenuEntity()
             {
                 ID = 11,
-                Action = "sendNotification",
+                Action = "actionPushNotification",
                 CssClass = "fa-send-o",
-                Name = "Send Push Notification",
+                Name = "Push Notifications",
                 MenuOrder = 11,
                 RequiredRole = (int)UserRoles.User,
                 ParentEntityID = null
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(notificationEntity);
+
+            IOMenuEntity listNotificationEntity = new IOMenuEntity()
+            {
+                ID = 12,
+                Action = "pushNotificationList",
+                CssClass = "fa-circle-o",
+                Name = "List Messages",
+                MenuOrder = 12,
+                RequiredRole = (int)UserRoles.User,
+                ParentEntityID = 11
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(listNotificationEntity);
+
+            IOMenuEntity sendNotificationEntity = new IOMenuEntity()
+            {
+                ID = 13,
+                Action = "pushNotificationSend",
+                CssClass = "fa-circle-o",
+                Name = "Send",
+                MenuOrder = 13,
+                RequiredRole = (int)UserRoles.User,
+                ParentEntityID = 11
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(sendNotificationEntity);
         }
 
         private void GenerateMenuEditorMenu(ModelBuilder modelBuilder)
         {
             IOMenuEntity menuEditorEntity = new IOMenuEntity()
             {
-                ID = 12,
+                ID = 14,
                 Action = "actionMenuEditor",
                 CssClass = "fa-list",
                 Name = "Menu Editor",
-                MenuOrder = 12,
+                MenuOrder = 14,
                 RequiredRole = (int)UserRoles.SuperAdmin,
                 ParentEntityID = null
             };
@@ -222,25 +246,25 @@ namespace IOBootstrap.NET.Core.Database
 
             IOMenuEntity menuEditorListMenuEntity = new IOMenuEntity()
             {
-                ID = 13,
+                ID = 15,
                 Action = "menuEditorList",
                 CssClass = "fa-circle-o",
                 Name = "List Menu Items",
-                MenuOrder = 13,
+                MenuOrder = 15,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 12
+                ParentEntityID = 14
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(menuEditorListMenuEntity);
 
             IOMenuEntity menuEditorAddMenuEntity = new IOMenuEntity()
             {
-                ID = 14,
+                ID = 16,
                 Action = "menuEditorAdd",
                 CssClass = "fa-circle-o",
                 Name = "Add Menu Item",
-                MenuOrder = 14,
+                MenuOrder = 16,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 12
+                ParentEntityID = 14
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(menuEditorAddMenuEntity);
         }
@@ -249,11 +273,11 @@ namespace IOBootstrap.NET.Core.Database
         {
             IOMenuEntity messagesEntity = new IOMenuEntity()
             {
-                ID = 15,
+                ID = 17,
                 Action = "actionMessages",
                 CssClass = "fa-envelope",
                 Name = "Messages",
-                MenuOrder = 15,
+                MenuOrder = 17,
                 RequiredRole = (int)UserRoles.SuperAdmin,
                 ParentEntityID = null
             };
@@ -261,25 +285,25 @@ namespace IOBootstrap.NET.Core.Database
 
             IOMenuEntity messagesListEntity = new IOMenuEntity()
             {
-                ID = 16,
+                ID = 18,
                 Action = "messagesList",
                 CssClass = "fa-circle-o",
                 Name = "List Messages",
-                MenuOrder = 16,
+                MenuOrder = 18,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 15
+                ParentEntityID = 17
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(messagesListEntity);
 
             IOMenuEntity messagesAddEntity = new IOMenuEntity()
             {
-                ID = 17,
+                ID = 19,
                 Action = "messagesAdd",
                 CssClass = "fa-circle-o",
                 Name = "Add Message",
-                MenuOrder = 17,
+                MenuOrder = 19,
                 RequiredRole = (int)UserRoles.SuperAdmin,
-                ParentEntityID = 15
+                ParentEntityID = 17
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(messagesAddEntity);
         }

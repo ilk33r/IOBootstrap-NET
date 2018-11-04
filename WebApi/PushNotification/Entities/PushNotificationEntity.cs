@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using IOBootstrap.NET.Common.Entities.Clients;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IOBootstrap.NET.WebApi.PushNotification.Entities
 {
@@ -14,6 +15,8 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int ID { get; set; }
+
+        public IOClientsEntity Client { get; set; }
 
         public int AppBuildNumber { get; set; }
         public string AppBundleId { get; set; }

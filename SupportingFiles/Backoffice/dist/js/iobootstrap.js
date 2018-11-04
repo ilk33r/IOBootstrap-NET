@@ -70,6 +70,23 @@ io.prototype.request.MessageDeleteRequestModel = {
     MessageId: 0
 };
 
+io.prototype.request.PushNotificationMessageDeleteRequest = {
+    Culture: 0,
+    Version: '',
+    ID: 0
+};
+
+io.prototype.request.SendNotificationRequest = {
+    Culture: 0,
+    Version: '',
+    ClientId: 0,
+    DeviceType: 0,
+    NotificationCategory: '',
+    NotificationData: '',
+    NotificationMessage: '',
+    NotificationTitle: ''
+};
+
 io.prototype.request.UserAddRequest = {
     Culture: 0,
     Version: '',
@@ -90,16 +107,6 @@ io.prototype.request.UserDeleteRequest = {
     Culture: 0,
     Version: '',
     UserId: 0
-};
-
-io.prototype.request.SendNotificationRequest = {
-    Culture: 0,
-    Version: '',
-    DeviceType: 0,
-    NotificationCategory: '',
-    NotificationData: '',
-    NotificationMessage: '',
-    NotificationTitle: ''
 };
 
 io.prototype.app.dashboard = function(e, hash) {
@@ -268,6 +275,55 @@ io.prototype.app.clientsAdd = function (e, hash) {
                 window.ioinstance.app.clientsList(null, 'clientsList');
             });
         });
+    });
+};
+
+io.prototype.app.clientSelect = function (e, hash) {
+    var client = $('#client');
+    client.attr('data-clientId', e[0]);
+    client.val(e[1]);
+};
+
+io.prototype.app.clientsSelect = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    // Call client list
+    io.service.get('backoffice/clients/list', function(status, response, error) {
+        if (status && response.status.success) {
+            window.ioinstance.service.loadLayoutText('clientselectitem', function (layout) {
+                var clientsHtml = '';
+                var clientLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                for (var index in response.clientList) {
+                    var client = response.clientList[index];
+                    var clientLayoutData = {
+                        id: client.id,
+                        clientID: client.clientID,
+                        clientSecret: client.clientSecret,
+                        clientDescription: client.clientDescription,
+                        isEnabled: (client.isEnabled == 1) ? 'YES' : 'NO',
+                        requestCount: client.requestCount,
+                        maxRequestCount: client.maxRequestCount
+                    };
+
+                    clientsHtml += window.ioinstance.layout.renderLayout(layout, clientLayoutData, clientLayoutProperties);
+                }
+
+                window.ioinstance.service.loadLayout('clientslist', false, function () {
+                    window.ioinstance.layout.contentLayoutData = {
+                        clients: clientsHtml
+                    };
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+                });
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
     });
 };
 
@@ -952,22 +1008,102 @@ io.prototype.app.usersAdd = function (e, hash) {
     });
 };
 
-io.prototype.app.sendNotification = function (e, hash) {
+io.prototype.app.pushNotificationList = function (e, hash) {
     var io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
     io.selectMenu(hash);
 
-    io.service.loadLayout('sendnotification', false, function () {
+    // Call client list
+    io.service.get('backoffice/pushnotificationbackoffice/listMessages', function(status, response, error) {
+        if (status && response.status.success) {
+            window.ioinstance.service.loadLayoutText('pushnotificationmessage', function (layout) {
+                var messageHtml = '';
+                var messageLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                for (var index in response.messages) {
+                    var message = response.messages[index];
+                    var notificationDate = new Date(message.notificationDate);
+                    var completed = (message.isCompleted == 0) ? 'Sending' : 'Completed';
+                    var messageLayoutData = {
+                        id: message.id,
+                        client: message.client.clientDescription,
+                        category: message.notificationCategory,
+                        data: message.notificationData,
+                        date: notificationDate.toLocaleDateString(),
+                        message: message.notificationMessage,
+                        title: message.notificationTitle,
+                        completed: completed,
+                        sendedDevice: message.sendedDevices
+                    };
+
+                    messageHtml += window.ioinstance.layout.renderLayout(layout, messageLayoutData, messageLayoutProperties);
+                }
+
+                window.ioinstance.service.loadLayout('pushnotificationmessagelist', false, function () {
+                    window.ioinstance.layout.contentLayoutData = {
+                        messages: messageHtml
+                    };
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+                });
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
+    });
+};
+
+io.prototype.app.pushNotificationMessageDelete = function (id) {
+    var answer = confirm("Are you sure want to delete this message ?");
+    if (answer) {
+        var request = window.ioinstance.request.PushNotificationMessageDeleteRequest;
+        request.Version = window.ioinstance.version;
+        request.ID = id;
+        window.ioinstance.indicator.show();
+        window.ioinstance.service.post('backoffice/pushnotificationbackoffice/deleteMessage', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Message has been deleted successfully.', '');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
+
+            window.ioinstance.app.pushNotificationList(null, 'pushNotificationList');
+        });
+    }
+};
+
+io.prototype.app.pushNotificationSend = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    io.service.loadLayout('pushnotificationsend', false, function () {
         window.ioinstance.layout.render();
         window.ioinstance.selectMenu(hash);
+
+        $('#client').click(function (e) {
+            e.preventDefault();
+
+            // Client select window
+            window.ioinstance.openWindow('clientsSelect');
+        }).change(function (e) {
+            if ($(this).val().length == 0) {
+                $(this).attr('data-clientId', '0');
+            }
+        });
 
         $('#sendNotificationForm').submit(function (e) {
             e.preventDefault();
 
             var request = window.ioinstance.request.SendNotificationRequest;
             request.Version = window.ioinstance.version;
+            request.ClientId = parseInt($('#client').attr('data-clientId'));
             request.DeviceType = parseInt($('#deviceType').val());
             request.NotificationCategory = $('#notificationCategory').val();
             request.NotificationData = $('#notificationData').val();

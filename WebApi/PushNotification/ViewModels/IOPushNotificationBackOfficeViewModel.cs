@@ -1,8 +1,10 @@
-﻿using IOBootstrap.NET.Common.Enumerations;
+﻿using IOBootstrap.NET.Common.Entities.Clients;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.PushNotification.Entities;
 using IOBootstrap.NET.WebApi.PushNotification.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,84 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
         #endregion
 
         #region Back Office Methods
+
+        public void DeleteMessage(int messageId)
+        {
+            // Obtain message 
+            PushNotificationMessageEntity messageEntity = _databaseContext.PushNotificationMessages.Find(messageId);
+
+            // Check message entity
+            if (messageEntity == null)
+            {
+                return;
+            }
+
+            // Set message completed
+            if (messageEntity.IsCompleted == 0) 
+            {
+                messageEntity.IsCompleted = 1;
+                _databaseContext.Update(messageEntity);
+                _databaseContext.SaveChanges();
+            }
+
+            // Obtain delivered messages
+            var deliveredMessages = _databaseContext.PushNotificationDeliveredMessages
+                                                    .Where((arg) => arg.PushNotificationMessage == messageEntity);
+
+            // Loop throught delivered messages
+            foreach (PushNotificationDeliveredMessagesEntity deliveredMessage in deliveredMessages) 
+            {
+                _databaseContext.Remove(deliveredMessage);
+            }
+
+            if (deliveredMessages.Count() > 0)
+            {
+                _databaseContext.SaveChanges();
+            }
+
+            _databaseContext.Remove(messageEntity);
+            _databaseContext.SaveChanges();
+        }
+
+        public List<PushNotificationMessageModel> ListMessages()
+        {
+            // Obtain push notification entity
+            var pushNotificationsEntities = _databaseContext.PushNotificationMessages
+                                                            .OrderBy((arg) => arg.ID)
+                                                            .Include(p => p.Client);
+
+            // Create messages array
+            List<PushNotificationMessageModel> messages = new List<PushNotificationMessageModel>();
+
+            // Loop throught entities
+            foreach (PushNotificationMessageEntity message in pushNotificationsEntities)
+            {
+                // Obtain sended messages
+                var sendedMessages = _databaseContext.PushNotificationDeliveredMessages
+                                                     .Where((arg) => arg.PushNotificationMessage == message);
+
+                // Create push notification model
+                PushNotificationMessageModel pushNotificationModel = new PushNotificationMessageModel()
+                {
+                    ID = message.ID,
+                    Client = message.Client,
+                    DeviceType = message.DeviceType,
+                    NotificationCategory = message.NotificationCategory,
+                    NotificationData = message.NotificationData,
+                    NotificationDate = message.NotificationDate,
+                    NotificationTitle = message.NotificationTitle,
+                    NotificationMessage = message.NotificationMessage,
+                    IsCompleted = message.IsCompleted,
+                    SendedDevices = sendedMessages.Count()
+                };
+
+                // Add model to devices array
+                messages.Add(pushNotificationModel);
+            }
+
+            // Return devices
+            return messages;
+        }
 
         public List<PushNotificationModel> ListTokens(int start, int limit)
         {
@@ -81,21 +161,33 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
             return devices;
         }
 
-        public void SendNotifications(DeviceTypes deviceType, 
-                                      string notificationCategory, 
+        public void SendNotifications(int clientId,
+                                      DeviceTypes deviceType,
+                                      string notificationCategory,
                                       string notificationData,
-                                      string notificationMessage, 
-                                      string notificationTitle) {
+                                      string notificationMessage,
+                                      string notificationTitle)
+        {
+            // Obtain client
+            IOClientsEntity clientsEntity = _databaseContext.Clients.Find(clientId);
+
+            // Check client
+            if (clientsEntity == null)
+            {
+                return;
+            }
+
             // Create push notification message entity
             PushNotificationMessageEntity pushNotificationMessageEntity = new PushNotificationMessageEntity()
             {
+                Client = clientsEntity,
                 DeviceType = (int)deviceType,
                 NotificationCategory = notificationCategory,
                 NotificationData = notificationData,
                 NotificationMessage = notificationMessage,
                 NotificationTitle = notificationTitle,
                 NotificationDate = DateTime.UtcNow,
-                IsCompleted = (int)DeviceTypes.Unkown
+                IsCompleted = 0
             };
 
             // Write message to database

@@ -1,0 +1,14 @@
+<tr>
+    <td>${id}</td>
+    <td>${clientDescription}</td>
+    <td>${isEnabled}</td>
+    <td>${requestCount}</td>
+    <td>${maxRequestCount}</td>
+    <td><div class="breakWord">${clientID}</div></td>
+    <td><div class="breakWord">${clientSecret}</div></td>
+    <td>
+        <a class="btn btn-app" href="#!clientsSelect" data-type="selection" data-method="clientSelect" data-params='[${id}, "${clientDescription}"]'>
+            <i class="fa fa-check"></i> Select
+        </a>
+    </td>
+</tr>

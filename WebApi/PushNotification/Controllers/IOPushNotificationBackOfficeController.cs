@@ -34,9 +34,40 @@ namespace BoomApp.WebApi.PushNotification.Controllers
         {
 		}
 
-		#endregion
+        #endregion
 
-		#region Back Office Methods
+        #region Back Office Methods
+
+        [IOUserRole(UserRoles.User)]
+        [HttpPost("[action]")]
+        public PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new PushNotificationMessageDeleteResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            _viewModel.DeleteMessage(requestModel.ID);
+
+            // Return response
+            return new PushNotificationMessageDeleteResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.User)]
+        [HttpGet("[action]")]
+        public ListPushNotificationMessageResponseModel ListMessages()
+        {
+            // Obtain devices from view model
+            IList<PushNotificationMessageModel> messages = _viewModel.ListMessages();
+
+            // Return response
+            return new ListPushNotificationMessageResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), messages);
+        }
 
         [IOUserRole(UserRoles.User)]
 		[HttpPost("[action]")]
@@ -78,7 +109,8 @@ namespace BoomApp.WebApi.PushNotification.Controllers
             DeviceTypes deviceType = (DeviceTypes)Enum.ToObject(typeof(DeviceTypes), requestModel.DeviceType);
 
             // Send notification to all devices
-            _viewModel.SendNotifications(deviceType, 
+            _viewModel.SendNotifications(requestModel.ClientId,
+                                         deviceType,
                                          requestModel.NotificationCategory,
                                          requestModel.NotificationData,
                                          requestModel.NotificationMessage,

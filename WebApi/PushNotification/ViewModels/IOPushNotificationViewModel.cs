@@ -1,7 +1,9 @@
-﻿using IOBootstrap.NET.Common.Enumerations;
+﻿using IOBootstrap.NET.Common.Entities.Clients;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.PushNotification.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -28,9 +30,23 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
                              string deviceToken, 
                              DeviceTypes deviceType) 
         {
+            // Obtain client
+            var clients = _databaseContext.Clients.Where((arg) => arg.ClientId == this.clientId);
+            IOClientsEntity client;
+
+            // Set client
+            if (clients.Count() > 0)
+            {
+                client = clients.First();
+            } else {
+                return;
+            }
+
+
 			// Obtain push notification entity
             var pushNotificationsEntities = _databaseContext.PushNotifications
-												 .Where((arg) => arg.DeviceId == deviceId && (int)arg.DeviceType == (int)deviceType);
+                                                            .Include(p => p.Client)
+                                                            .Where((arg) => arg.DeviceId == deviceId && (int)arg.DeviceType == (int)deviceType && arg.Client != client);
 
 			// Check push notification entity exists
 			if (pushNotificationsEntities.Count() > 0)
@@ -62,6 +78,7 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 					AppBundleId = appBundleId,
 					AppVersion = appVersion,
 					BadgeCount = 0,
+                    Client = client,
 					DeviceId = deviceId,
 					DeviceName = deviceName,
 					DeviceToken = deviceToken,

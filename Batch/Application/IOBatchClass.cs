@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace IOBootstrap.NET.Application
+namespace IOBootstrap.NET.Batch.Application
 {
     public abstract class IOBatchClass<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {

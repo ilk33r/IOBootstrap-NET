@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using IOBootstrap.NET.Application;
+using IOBootstrap.NET.Batch.Application;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.APNS.Utils;
 using IOBootstrap.NET.Core.APNS.Utils.Models;

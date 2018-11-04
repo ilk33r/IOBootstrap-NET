@@ -79,6 +79,7 @@
     <Folder Include="Core\HTTP\Enumerations\" />
     <Folder Include="Batch\" />
     <Folder Include="Batch\PushNotifications\" />
+    <Folder Include="Batch\Application\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />

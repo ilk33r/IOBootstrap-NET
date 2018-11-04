@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace IOBootstrap.NET.Application
+namespace IOBootstrap.NET.Batch.Application
 {
     public abstract class IOBatchStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {

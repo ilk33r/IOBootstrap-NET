@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
 	<SolutionDir>..\</SolutionDir>
-	<ReleaseVersion>0.0.2</ReleaseVersion>
+	<ReleaseVersion>0.0.3</ReleaseVersion>
 	<SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
 
@@ -77,6 +77,8 @@
     <Folder Include="WebApi\BackOffice\Entities\" />
     <Folder Include="Core\HTTP\" />
     <Folder Include="Core\HTTP\Enumerations\" />
+    <Folder Include="Batch\" />
+    <Folder Include="Batch\PushNotifications\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />

@@ -24,6 +24,29 @@ io.prototype.request.ClientUpdateRequest = {
     MaxRequestCount: 0
 };
 
+io.prototype.request.ConfigurationAddRequest = {
+    Culture: 0,
+    Version: '',
+    ConfigKey: '',
+    IntValue: 0,
+    StrValue: ''
+};
+
+io.prototype.request.ConfigurationDeleteRequest = {
+    Culture: 0,
+    Version: '',
+    ConfigId: 0
+};
+
+io.prototype.request.ConfigurationUpdateRequest = {
+    Culture: 0,
+    Version: '',
+    ConfigId: 0,
+    ConfigKey: '',
+    IntValue: 0,
+    StrValue: ''
+};
+
 io.prototype.request.MenuAddRequestModel = {
     Culture: 0,
     Version: '',
@@ -324,6 +347,168 @@ io.prototype.app.clientsSelect = function (e, hash) {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
         }
+    });
+};
+
+io.prototype.app.configurationDelete = function(id) {
+    var answer = confirm("Are you sure want to delete this configuration ?");
+    if (answer) {
+        var request = window.ioinstance.request.ConfigurationDeleteRequest;
+        request.Version = window.ioinstance.version;
+        request.ConfigId = id;
+        window.ioinstance.indicator.show();
+        window.ioinstance.service.post('backoffice/configurations/delete', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Configuration has been deleted successfully.', '');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
+
+            window.ioinstance.app.configurationsList(null, 'configurationsList');
+        });
+    }
+};
+
+io.prototype.app.configurationsAdd = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    io.service.loadLayout('configurationsadd', false, function () {
+        window.ioinstance.layout.render();
+        window.ioinstance.selectMenu(hash);
+
+        $('#addConfigurationForm').submit(function (e) {
+            e.preventDefault();
+            var callout = window.ioinstance.callout;
+            var request = window.ioinstance.request.ConfigurationAddRequest;
+            request.Version = window.ioinstance.version;
+            request.ConfigKey = $('#configKey').val();
+            request.StrValue = $('#strValue').val();
+            request.IntValue = parseInt($('#intValue').val());
+
+            $('.configKeyArea').removeClass('has-error');
+            $('.configKeyAreaHelp').addClass('hidden');
+
+            if (request.ConfigKey.length <= 3) {
+                callout.show(callout.types.danger, 'Invalid configuration key.', 'Configuration key is too short.');
+                $('.configKeyArea').addClass('has-error');
+                $('.configKeyAreaHelp').removeClass('hidden');
+                $('.configKeyAreaHelp').text('Configuration key is too short.');
+                window.ioinstance.indicator.hide();
+                return;
+            }
+
+            window.ioinstance.indicator.show();
+            window.ioinstance.service.post('backoffice/configurations/add', request, function (status, response, error) {
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Configuration has been added successfully.', '');
+                    window.ioinstance.app.configurationsList(null, 'configurationsList');
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
+    });
+};
+
+io.prototype.app.configurationsList = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    // Call client list
+    io.service.get('backoffice/configurations/list', function(status, response, error) {
+        if (status && response.status.success) {
+            window.ioinstance.service.loadLayoutText('configuration', function (layout) {
+                var configurationHtml = '';
+                var configurationLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                for (var index in response.configurations) {
+                    var configuration = response.configurations[index];
+                    var configurationLayoutData = {
+                        id: configuration.id,
+                        configKey: configuration.configKey,
+                        configIntValue: configuration.configIntValue,
+                        configStringValue: configuration.configStringValue,
+                        configEscapedStringValue: configuration.configStringValue.escapeHtml()
+                    };
+
+                    configurationHtml += window.ioinstance.layout.renderLayout(layout, configurationLayoutData, configurationLayoutProperties);
+                }
+
+                window.ioinstance.service.loadLayout('configurationlist', false, function () {
+                    window.ioinstance.layout.contentLayoutData = {
+                        configurations: configurationHtml
+                    };
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+                });
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
+    });
+};
+
+io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu('configurationsList');
+
+    io.service.loadLayout('configurationsupdate', false, function () {
+        window.ioinstance.layout.contentLayoutData = {
+            id: id,
+            configKey: key,
+            configIntValue: intValue,
+            configStrValue: stringValue.unEscapeHtml()
+        };
+
+        window.ioinstance.layout.render();
+        window.ioinstance.selectMenu('configurationsList');
+
+        $('#updateConfigurationForm').submit(function (e) {
+            e.preventDefault();
+            var callout = window.ioinstance.callout;
+            var request = window.ioinstance.request.ConfigurationUpdateRequest;
+            request.Version = window.ioinstance.version;
+            request.ConfigId = parseInt($(this).attr('data-configId'));
+            request.ConfigKey = $('#configKey').val();
+            request.StrValue = $('#strValue').val();
+            request.IntValue = parseInt($('#intValue').val());
+
+            $('.configKeyArea').removeClass('has-error');
+            $('.configKeyAreaHelp').addClass('hidden');
+
+            if (request.ConfigKey.length <= 3) {
+                callout.show(callout.types.danger, 'Invalid configuration key.', 'Configuration key is too short.');
+                $('.configKeyArea').addClass('has-error');
+                $('.configKeyAreaHelp').removeClass('hidden');
+                $('.configKeyAreaHelp').text('Configuration key is too short.');
+                window.ioinstance.indicator.hide();
+                return;
+            }
+
+            window.ioinstance.indicator.show();
+            window.ioinstance.service.post('backoffice/configurations/update', request, function (status, response, error) {
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Configuration has been updated successfully.', '');
+                    window.ioinstance.app.configurationsList(null, 'configurationsList');
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
     });
 };
 

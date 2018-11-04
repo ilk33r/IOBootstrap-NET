@@ -1,0 +1,61 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>Add Configuration</h1>
+        <ol class="breadcrumb">
+            <li><a href="#!dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#!configurationsList">Configurations</a></li>
+            <li class="active"><a href="#!configurationsAdd">Add Configuration</a></li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Add a new configuration parameter</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal" id="addConfigurationForm">
+                        <div class="box-body">
+                            <div class="form-group configKeyArea">
+                                <label for="configKey" class="col-sm-2 control-label">Config Key</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="configKey" placeholder="Config Key">
+                                    <span class="help-block configKeyAreaHelp hidden">Invalid configuration key.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="intValue" class="col-sm-2 control-label">Integer Value</label>
+
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="intValue" placeholder="Integer Value">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="strValue" class="col-sm-2 control-label">String Value</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="strValue" placeholder="String Value">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-info pull-right">Save</button>
+                        </div>
+                        <!-- /.box-footer -->
+                    </form>
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>

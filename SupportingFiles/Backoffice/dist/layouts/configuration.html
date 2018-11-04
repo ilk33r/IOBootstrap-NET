@@ -1,0 +1,14 @@
+<tr>
+    <td>${id}</td>
+    <td>${configKey}</td>
+    <td>${configIntValue}</td>
+    <td>${configStringValue}</td>
+    <td>
+        <a class="btn btn-app" href="#!configurationUpdate" data-type="action" data-method="configurationUpdate" data-params='[${id}, "${configKey}", ${configIntValue}, "${configEscapedStringValue}"]'>
+            <i class="fa fa-edit"></i> Edit
+        </a>
+        <a class="btn btn-app" href="#!configurationDelete" data-type="action" data-method="configurationDelete" data-params="[${id}]">
+            <i class="fa fa-trash"></i> Delete
+        </a>
+    </td>
+</tr>

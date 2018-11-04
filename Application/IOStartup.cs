@@ -90,9 +90,13 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("updateMenuItem", "backoffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("addMessagesItem", "backoffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("deleteMessagesItem", "backoffice/messages/delete", new IORoute("DeleteMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("updateMessagesItem", "backoffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("listAllMessagesItems", "backoffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("listMessagesItems", "backoffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("updateMessagesItem", "backoffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("addConfigurationItem", "backoffice/configurations/add", new IORoute("AddConfigItem", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("deleteConfigurationItem", "backoffice/configurations/delete", new IORoute("DeleteConfigItem", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("listConfigurationItems", "backoffice/configurations/list", new IORoute("ListConfigurationItems", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("updateConfigurationItem", "backoffice/configurations/update", new IORoute("UpdateConfigItem", this.BackOfficeConfigurationControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif
@@ -108,6 +112,11 @@ namespace IOBootstrap.NET.Application
         public virtual string AuthenticationControllerName()
         {
             return "IOAuthentication";
+        }
+
+        public virtual string BackOfficeConfigurationControllerName()
+        {
+            return "IOBackOfficeConfigurations";
         }
 
         public virtual string BackOfficeControllerName()

@@ -8,6 +8,7 @@ using IOBootstrap.NET.Core.APNS.Utils;
 using IOBootstrap.NET.Core.APNS.Utils.Models;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.WebApi.PushNotification.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -17,7 +18,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         where TDBContext : IODatabaseContext<TDBContext>
     {
 
-        private const int SEND_TOKEN_PER_ENTITY = 20;
+        public const int SEND_TOKEN_PER_ENTITY = 20;
 
         #region Initialization Methods
 
@@ -39,8 +40,9 @@ namespace IOBootstrap.NET.Batch.PushNotifications
 
             // Obtain push notification messages
             var pushNotificationsEntities = _databaseContext.PushNotificationMessages
-                                                .Where((arg) => arg.IsCompleted != 0)
-                                                .OrderByDescending((arg) => arg.NotificationDate);
+                                                            .Where((arg) => arg.IsCompleted == 0)
+                                                            .Include(d => d.Client)
+                                                            .OrderByDescending((arg) => arg.NotificationDate);
 
             // Loop throught messages
             foreach (PushNotificationMessageEntity messageEntity in pushNotificationsEntities)
@@ -70,7 +72,8 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         {
             // Obtain push notification devices
             var devicesForMessage = _databaseContext.PushNotifications
-                                                    .Where((arg) => arg.DeviceType == (int)DeviceTypes.iOS || arg.DeviceType == (int)DeviceTypes.Android || arg.DeviceType == (int)DeviceTypes.Generic)
+                                                    .Where((arg) => arg.Client == messageEntity.Client 
+                                                           && (arg.DeviceType == (int)DeviceTypes.iOS || arg.DeviceType == (int)DeviceTypes.Android || arg.DeviceType == (int)DeviceTypes.Generic))
                                                     .Where((arg) => _databaseContext.PushNotificationDeliveredMessages
                                                            .Where((arg2) => arg2.PushNotification.ID == arg.ID)
                                                            .Where((arg2) => arg2.PushNotificationMessage.ID == messageEntity.ID)
@@ -98,6 +101,11 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                                                                                  messageEntity.NotificationTitle,
                                                                                  entity.DeviceToken);
 
+                if (entity.DeviceType != (int)DeviceTypes.iOS)
+                {
+                    continue;
+                }
+
                 // Update badge count in entity
                 entity.BadgeCount = entity.BadgeCount + 1;
                 entity.LastUpdateTime = DateTime.UtcNow;
@@ -117,13 +125,13 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 _databaseContext.Add(deliveredMessageEntity);
 
                 // Append apns model to list
-                apnsPushNotificationModels.Append(apnsPayloadModel);
+                apnsPushNotificationModels.Add(apnsPayloadModel);
 
                 // Check index is greater than max entity count
                 if (i >= SEND_TOKEN_PER_ENTITY)
                 {
                     // Send push messages
-                    this.SendPushMessages(apnsPushNotificationModels);
+                    this.SendApplePushMessages(apnsPushNotificationModels);
 
                     // Sleep thread
                     Thread.Sleep(1000);
@@ -140,10 +148,10 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             Thread.Sleep(1000);
 
             // Send push messages
-            this.SendPushMessages(apnsPushNotificationModels);
+            this.SendApplePushMessages(apnsPushNotificationModels);
         }
 
-        public virtual void SendPushMessages(List<APNSSendPayloadModel> pushNotificationModels)
+        public virtual void SendApplePushMessages(List<APNSSendPayloadModel> pushNotificationModels)
         {
             // Obtain apns configuration
             string apnsHost = _configuration.GetValue<string>("IOAPNSHost");

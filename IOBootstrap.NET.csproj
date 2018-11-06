@@ -91,14 +91,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".DS_Store" />
     <None Remove="IOBootstrap.NET.userprefs" />
     <None Remove="SupportingFiles\**\*" />
     <None Remove="Core\System\.DS_Store" />
-  </ItemGroup>
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Core\System\IOProgram.cs" />

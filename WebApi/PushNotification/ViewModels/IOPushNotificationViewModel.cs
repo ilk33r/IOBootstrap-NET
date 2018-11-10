@@ -46,7 +46,7 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 			// Obtain push notification entity
             var pushNotificationsEntities = _databaseContext.PushNotifications
                                                             .Include(p => p.Client)
-                                                            .Where((arg) => arg.DeviceId == deviceId && (int)arg.DeviceType == (int)deviceType && arg.Client != client);
+                                                            .Where((arg) => arg.DeviceId == deviceId && (int)arg.DeviceType == (int)deviceType && arg.Client == client);
 
 			// Check push notification entity exists
 			if (pushNotificationsEntities.Count() > 0)

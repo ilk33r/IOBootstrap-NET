@@ -7,6 +7,7 @@ using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.APNS.Utils;
 using IOBootstrap.NET.Core.APNS.Utils.Models;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.Firebase.Models;
 using IOBootstrap.NET.WebApi.PushNotification.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         where TDBContext : IODatabaseContext<TDBContext>
     {
 
-        public const int SEND_TOKEN_PER_ENTITY = 20;
+        public const int SEND_TOKEN_PER_ENTITY = 25;
 
         #region Initialization Methods
 
@@ -51,7 +52,8 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 PushNotificationEntity[] devicesForMessage = this.DevicesForMessage(messageEntity);
 
                 // Send message to devices
-                this.SendEntitiesToDevices(messageEntity, devicesForMessage);
+                this.SendEntitiesToiOSDevices(messageEntity, devicesForMessage);
+                this.SendEntitiesToAndroidDevices(messageEntity, devicesForMessage);
 
                 // Set completed status
                 messageEntity.IsCompleted = 1;
@@ -82,7 +84,72 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             return devicesForMessage.ToArray();
         }
 
-        public virtual void SendEntitiesToDevices(PushNotificationMessageEntity messageEntity,
+        public virtual void SendEntitiesToAndroidDevices(PushNotificationMessageEntity messageEntity,
+                                                         PushNotificationEntity[] pushNotificationsEntities,
+                                                         int startIndex = 0)
+        {
+            // Create push notifications list
+            List<string> registrationIds = new List<string>();
+            FirebaseDataModel firebaseData = new FirebaseDataModel(messageEntity.NotificationTitle, messageEntity.NotificationMessage, "other", messageEntity.ID);
+
+            // Loop throught push notification entities
+            for (int i = startIndex; i < pushNotificationsEntities.Count(); i++)
+            {
+                // Obtain push notification entity
+                PushNotificationEntity entity = pushNotificationsEntities[i];
+
+                if (entity.DeviceType != (int)DeviceTypes.Android)
+                {
+                    continue;
+                }
+
+                // Update badge count in entity
+                entity.BadgeCount = entity.BadgeCount + 1;
+                entity.LastUpdateTime = DateTime.UtcNow;
+
+                // Update entity
+                _databaseContext.Update(entity);
+
+                // Create delivered messages entity
+                PushNotificationDeliveredMessagesEntity deliveredMessageEntity = new PushNotificationDeliveredMessagesEntity
+                {
+                    // Setup model properties
+                    PushNotification = entity,
+                    PushNotificationMessage = messageEntity
+                };
+
+                // Add delivered message entity
+                _databaseContext.Add(deliveredMessageEntity);
+
+                // Append token to list
+                registrationIds.Add(entity.DeviceToken);
+
+                // Check index is greater than max entity count
+                if (i >= SEND_TOKEN_PER_ENTITY)
+                {
+                    // Send push messages
+                    this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
+                        // Sleep thread
+                        Thread.Sleep(1000);
+
+                        // Send entities to devices
+                        this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i);
+                    });
+
+                    // Break the loop
+                    break;
+                }
+            }
+
+            // Sleep thread
+            Thread.Sleep(1000);
+
+            // Send push messages
+            this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
+            });
+        }
+
+        public virtual void SendEntitiesToiOSDevices(PushNotificationMessageEntity messageEntity,
                                                   PushNotificationEntity[] pushNotificationsEntities,
                                                   int startIndex = 0)
         {
@@ -137,7 +204,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                     Thread.Sleep(1000);
 
                     // Send entities to devices
-                    this.SendEntitiesToDevices(messageEntity, pushNotificationsEntities, i);
+                    this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i);
 
                     // Break the loop
                     break;
@@ -150,6 +217,18 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             // Send push messages
             this.SendApplePushMessages(apnsPushNotificationModels);
         }
+
+        public virtual void SendAndroidPushMessages(FirebaseModel firebaseModel, FirebaseSendNotificationHandler handler)
+        {
+            // Obtain apns configuration
+            string firebaseApiUrl = _configuration.GetValue<string>("IOFirebaseApiUrl");
+            string firebaseToken = _configuration.GetValue<string>("IOFirebaseToken");
+
+            // Create apns utils
+            FirebaseUtils firebaseUtils = new FirebaseUtils(firebaseApiUrl, firebaseToken, _logger);
+            firebaseUtils.SendNotifications(firebaseModel, handler);
+        }
+
 
         public virtual void SendApplePushMessages(List<APNSSendPayloadModel> pushNotificationModels)
         {

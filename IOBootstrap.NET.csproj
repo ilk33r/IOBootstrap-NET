@@ -80,6 +80,9 @@
     <Folder Include="Batch\" />
     <Folder Include="Batch\PushNotifications\" />
     <Folder Include="Batch\Application\" />
+    <Folder Include="Core\Firebase\" />
+    <Folder Include="Core\Firebase\Models\" />
+    <Folder Include="Core\Firebase\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
@@ -110,7 +113,6 @@
   <ItemGroup>
     <None Include="Application\Program.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
     <None Include="SupportingFiles\Batch\Program.cs" />
-    <None Include="SupportingFiles\Batch\SendApnsPushBatch.cs" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

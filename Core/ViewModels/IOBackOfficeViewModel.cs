@@ -30,7 +30,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region View Model Methods
 
-        public IOClientBackOfficeInfoModel CreateClient(string clientDescription, int maxRequestCount) 
+        public virtual IOClientBackOfficeInfoModel CreateClient(string clientDescription, int maxRequestCount) 
         {
 			// Create a client entity
 			IOClientsEntity clientEntity = new IOClientsEntity()

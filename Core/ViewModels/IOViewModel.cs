@@ -88,8 +88,8 @@ namespace IOBootstrap.NET.Core.ViewModels
                 if (client.IsEnabled == 1 && client.ClientSecret == clientSecret)
 				{
                     // Obtain request counts
-                    int requestCount = client.RequestCount + 1;
-                    int maxRequestCount = client.MaxRequestCount;
+                    long requestCount = client.RequestCount + 1;
+                    long maxRequestCount = client.MaxRequestCount;
 
                     // Check request counts
                     if (requestCount <= maxRequestCount)

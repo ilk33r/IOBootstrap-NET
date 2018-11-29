@@ -12,14 +12,14 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
 		public string ClientSecret { get; }
         public string ClientDescription { get; }
         public int IsEnabled { get; }
-        public int RequestCount { get; }
-        public int MaxRequestCount { get; }
+        public long RequestCount { get; }
+        public long MaxRequestCount { get; }
 
 		#endregion
 
 		#region Initialization Methods
 
-        public IOClientBackOfficeInfoModel(int id, string clientId, string clientSectet, string clientDescription, int isEnabled, int requestCount, int maxRequestCount)
+        public IOClientBackOfficeInfoModel(int id, string clientId, string clientSectet, string clientDescription, int isEnabled, long requestCount, long maxRequestCount)
 		{
             // Setup properties
             this.Id = id;

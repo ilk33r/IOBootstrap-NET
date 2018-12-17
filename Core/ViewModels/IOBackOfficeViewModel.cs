@@ -30,7 +30,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region View Model Methods
 
-        public virtual IOClientBackOfficeInfoModel CreateClient(string clientDescription, int maxRequestCount) 
+        public virtual IOClientBackOfficeInfoModel CreateClient(string clientDescription, long maxRequestCount) 
         {
 			// Create a client entity
 			IOClientsEntity clientEntity = new IOClientsEntity()
@@ -106,7 +106,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 			return clientInfos;
 		}
 
-        public bool UpdateClient(int id, string description, int isEnabled, int requestCount, int maxRequestCount)
+        public bool UpdateClient(int id, string description, int isEnabled, long requestCount, long maxRequestCount)
         {
             // Obtain client entity
             var clientEntities = _databaseContext.Clients.Where((arg1) => arg1.ID == id);

@@ -11,8 +11,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
         public int ClientId { get; set; }
         public string ClientDescription { get; set; }
         public int IsEnabled { get; set; }
-        public int RequestCount { get; set; }
-        public int MaxRequestCount { get; set; }
+        public long RequestCount { get; set; }
+        public long MaxRequestCount { get; set; }
 
         #endregion
     }

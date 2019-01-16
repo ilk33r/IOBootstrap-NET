@@ -139,10 +139,10 @@ namespace IOBootstrap.NET.Core.ViewModels
         public bool IsBackOffice()
 		{
 			// Check back office is not open and token exists
-            if (!_configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
+            if (!_configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && _request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
 			{
                 // Obtain token
-                string token = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
+                string token = _request.Headers[IORequestHeaderConstants.AuthorizationToken];
 
                 // Parse token
                 Tuple<string, int> tokenData = this.parseToken(token);

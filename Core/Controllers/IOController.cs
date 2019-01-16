@@ -96,8 +96,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
             if (checkClientInfo) 
             {
-                string clientId = (Request.Headers.ContainsKey("X-IO-CLIENT-ID")) ? (string)Request.Headers["X-IO-CLIENT-ID"] : "";
-                string clientSecret = (Request.Headers.ContainsKey("X-IO-CLIENT-SECRET")) ? (string)Request.Headers["X-IO-CLIENT-SECRET"] : "";
+                string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? (string)Request.Headers[IORequestHeaderConstants.ClientId] : "";
+                string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
 
                 // Check client info
                 if (!_viewModel.CheckClient(clientId, clientSecret))

@@ -57,10 +57,10 @@ namespace IOBootstrap.NET.Core.ViewModels
         public virtual bool CheckAuthorizationHeader()
 		{
 			// Check authorization header key exists
-			if (_request.Headers.ContainsKey("X-IO-AUTHORIZATION"))
+			if (_request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
 			{
 				// Obtain request authorization value
-				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION"];
+				string requestAuthorization = _request.Headers[IORequestHeaderConstants.Authorization];
 
 				// Check authorization code is equal to configuration value
 				if (requestAuthorization.Equals(_configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))

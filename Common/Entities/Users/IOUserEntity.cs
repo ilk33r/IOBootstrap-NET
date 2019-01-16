@@ -21,6 +21,8 @@ namespace IOBootstrap.NET.Common.Entities.Users
 
         public string Password { get; set; }
         public int UserRole { get; set; }
+
+        [StringLength(36)]
         public string UserToken { get; set; }
         public DateTimeOffset TokenDate { get; set; }
 

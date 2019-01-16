@@ -38,7 +38,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				}
 
 				// Generate token for user
-                string userTokenString = IORandomUtilities.GenerateRandomAlphaNumericString(32);
+                string userTokenString = IORandomUtilities.GenerateGUIDString();
 
 				// Create decrypted user token string
 				string decryptedUserToken = String.Format("{0}-{1}", user.ID, userTokenString);

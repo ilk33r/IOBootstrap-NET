@@ -6,7 +6,12 @@ namespace IOBootstrap.NET.Common.Utilities
     public static class IORandomUtilities
     {
 
-		#region Random Helpers
+        #region Random Helpers
+
+        public static string GenerateGUIDString()
+        {
+            return Guid.NewGuid().ToString();
+        }
 
         public static string GenerateRandomAlphaNumericString(int characterCount)
         {

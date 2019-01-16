@@ -60,7 +60,7 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuting(context);
 
             // Update allow origin
-            Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>("IOAllowedOrigin"));
+            Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin));
             Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
 
             // Check request method is options
@@ -92,7 +92,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Obtain client info
-            bool checkClientInfo = _configuration.GetValue<bool>("IOCheckClientInfo");
+            bool checkClientInfo = _configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
 
             if (checkClientInfo) 
             {
@@ -114,13 +114,13 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Check back office page host name
-            string backofficePageHostName = this._configuration.GetValue<string>("IOBackofficePageHostName");
+            string backofficePageHostName = this._configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
 
             // Check hostname is back office page
             if (backofficePageHostName.Equals(this.Request.Host.Host))
             {
                 // Obtain layout name from configuration
-                string layoutName = this._configuration.GetValue<string>("IOBackofficePageIndexLayoutName");
+                string layoutName = this._configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
 
                 // Obtain index page
                 context.Result = this.GetWebIndex(layoutName);
@@ -141,7 +141,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual IOResponseModel Index()
         {
             // Obtain app version
-            string appVersion = _configuration.GetValue<string>("IOVersion");
+            string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
 
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK,
@@ -200,7 +200,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 string fileContent = System.IO.File.ReadAllText(layoutPath);
 
                 // Obtain app version
-                string appVersion = _configuration.GetValue<string>("IOVersion");
+                string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
 
                 // Set values to content
                 string htmlContent = fileContent.Replace("${environmentName}", _environment.EnvironmentName)

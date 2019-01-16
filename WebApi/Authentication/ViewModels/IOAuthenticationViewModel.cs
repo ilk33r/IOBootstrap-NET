@@ -1,4 +1,5 @@
 ﻿using System;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
@@ -43,8 +44,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				string decryptedUserToken = String.Format("{0}-{1}", user.ID, userTokenString);
 
 				// Convert key and iv to byte array
-				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
-				byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
+				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
+				byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
 				// Encode user token
                 byte[] userTokenData = IOPasswordUtilities.EncryptStringToBytes(decryptedUserToken, key, iv);
@@ -56,7 +57,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				DateTime tokenDate = DateTime.UtcNow;
 
 				// Obtain token life from configuration
-				int tokenLife = _configuration.GetValue<int>("IOTokenLife");
+				int tokenLife = _configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
 				// Update entity properties
 				user.UserToken = userTokenString;
@@ -86,7 +87,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
             if (findedUserEntity != null)
             {
                 // Obtain token life from configuration
-                int tokenLife = this._configuration.GetValue<int>("IOTokenLife");
+                int tokenLife = this._configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
                 // Calculate token end seconds and current seconds
                 long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);

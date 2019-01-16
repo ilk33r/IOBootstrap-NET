@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Core.Database;
+﻿using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Core.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace IOBootstrap.NET.Application
             app.UseSession();
 
             // Log
-            bool useDeveloperLog = this.Configuration.GetValue<bool>("IOUseDeveloperLog");
+            bool useDeveloperLog = this.Configuration.GetValue<bool>(IOConfigurationConstants.UseDeveloperLog);
             if (useDeveloperLog)
             {
                 app.UseDeveloperExceptionPage();   

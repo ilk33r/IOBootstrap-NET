@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
@@ -138,7 +139,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public bool IsBackOffice()
 		{
 			// Check back office is not open and token exists
-            if (!_configuration.GetValue<bool>("IOBackOfficeIsPublic") && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
+            if (!_configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && _request.Headers.ContainsKey("X-IO-AUTHORIZATION-TOKEN"))
 			{
                 // Obtain token
                 string token = _request.Headers["X-IO-AUTHORIZATION-TOKEN"];
@@ -165,7 +166,7 @@ namespace IOBootstrap.NET.Core.ViewModels
                 if (userEntity != null)
                 {
                     // Obtain token life from configuration
-                    int tokenLife = _configuration.GetValue<int>("IOTokenLife");
+                    int tokenLife = _configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
                     // Calculate token end seconds and current seconds
                     long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
@@ -187,8 +188,8 @@ namespace IOBootstrap.NET.Core.ViewModels
         public Tuple<string, int> parseToken(string token) 
         {
             // Convert key and iv to byte array
-            byte[] key = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionKey"));
-            byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>("IOEncryptionIV"));
+            byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
+            byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
             // Obtain decrypted token value
             string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);

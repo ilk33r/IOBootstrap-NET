@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using IOBootstrap.NET.Batch.Application;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.APNS.Utils;
 using IOBootstrap.NET.Core.APNS.Utils.Models;
@@ -221,8 +222,8 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         public virtual void SendAndroidPushMessages(FirebaseModel firebaseModel, FirebaseSendNotificationHandler handler)
         {
             // Obtain apns configuration
-            string firebaseApiUrl = _configuration.GetValue<string>("IOFirebaseApiUrl");
-            string firebaseToken = _configuration.GetValue<string>("IOFirebaseToken");
+            string firebaseApiUrl = _configuration.GetValue<string>(IOConfigurationConstants.FirebaseApiUrl);
+            string firebaseToken = _configuration.GetValue<string>(IOConfigurationConstants.FirebaseToken);
 
             // Create apns utils
             FirebaseUtils firebaseUtils = new FirebaseUtils(firebaseApiUrl, firebaseToken, _logger);
@@ -233,10 +234,10 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         public virtual void SendApplePushMessages(List<APNSSendPayloadModel> pushNotificationModels)
         {
             // Obtain apns configuration
-            string apnsHost = _configuration.GetValue<string>("IOAPNSHost");
-            int apnsPort = _configuration.GetValue<int>("IOAPNSPort");
-            string certFile = _configurationPath + _configuration.GetValue<string>("IOAPNSCertificatePath");
-            string certPassword = _configuration.GetValue<string>("IOAPNSCertificatePassword");
+            string apnsHost = _configuration.GetValue<string>(IOConfigurationConstants.APNSHost);
+            int apnsPort = _configuration.GetValue<int>(IOConfigurationConstants.APNSPort);
+            string certFile = _configurationPath + _configuration.GetValue<string>(IOConfigurationConstants.APNSCertificatePath);
+            string certPassword = _configuration.GetValue<string>(IOConfigurationConstants.APNSCertificatePassword);
 
             // Create apns utils
             APNSUtils apnsUtils = new APNSUtils(apnsHost, apnsPort, certFile, certPassword, _logger);

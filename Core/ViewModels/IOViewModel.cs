@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Configuration;
 using IOBootstrap.NET.Core.Database;
@@ -62,7 +63,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 				string requestAuthorization = _request.Headers["X-IO-AUTHORIZATION"];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(_configuration.GetValue<string>("IOAuthorizationKey")))
+				if (requestAuthorization.Equals(_configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))
 				{
 					// Then authorization success
 					return true;

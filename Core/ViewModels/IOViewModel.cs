@@ -3,6 +3,7 @@ using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Configuration;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -115,6 +116,11 @@ namespace IOBootstrap.NET.Core.ViewModels
 			// Then return invalid clients
 			return false;
 		}
+
+        public virtual int GetUserRole()
+        {
+            return (int)UserRoles.SuperAdmin;
+        }
 
         #endregion
 

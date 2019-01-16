@@ -119,7 +119,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
             IOUserEntity user = _databaseContext.Users.Find(request.UserId);
             string userName = request.UserName.ToLower();
 
-            if (!UserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)this.userEntity.UserRole))
+            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)this.userEntity.UserRole))
             {
                 return 2;
             }

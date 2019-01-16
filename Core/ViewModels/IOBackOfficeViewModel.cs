@@ -4,6 +4,7 @@ using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Users;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
@@ -201,6 +202,24 @@ namespace IOBootstrap.NET.Core.ViewModels
             int userId = int.Parse(tokenData[0]);
 
             return new Tuple<string, int>(tokenData[1], userId);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        public override int GetUserRole()
+        {
+            IOUserEntity userEntity = this.userEntity;
+
+            // Check user exists
+            if (userEntity != null)
+            {
+                // Return role
+                return userEntity.UserRole;
+            }
+
+            return (int)UserRoles.AnonmyMouse;
         }
 
         #endregion

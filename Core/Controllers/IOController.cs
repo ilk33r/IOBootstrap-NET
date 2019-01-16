@@ -1,4 +1,8 @@
-﻿using IOBootstrap.NET.Common.Constants;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
@@ -6,10 +10,10 @@ using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -55,7 +59,7 @@ namespace IOBootstrap.NET.Core.Controllers
             _logger.LogDebug("Request start: {0}", this.GetType().Name);
         }
 
-        public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
 
@@ -71,6 +75,13 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Return response
                 context.Result = new JsonResult(new IOResponseModel(responseStatus));
 
+                // Do nothing
+                return;
+            }
+
+            // Check user role
+            if (!this.CheckRole(context))
+            {
                 // Do nothing
                 return;
             }
@@ -130,7 +141,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
         }
 
-        public override void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext context) {
+        public override void OnActionExecuted(ActionExecutedContext context) {
             base.OnActionExecuted(context);
         }
 
@@ -217,6 +228,44 @@ namespace IOBootstrap.NET.Core.Controllers
         #endregion
 
         #region Helper Methods
+
+        public bool CheckRole(ActionExecutingContext context)
+        {
+            // Obtain action desctriptor
+            ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            if (actionDescriptor != null)
+            {
+                // Loop throught descriptors
+                foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
+                {
+                    if (descriptor.AttributeType == typeof(IOUserRoleAttribute) || descriptor.AttributeType == typeof(IOUserCustomRoleAttribute))
+                    {
+                        object requiredRole = descriptor.ConstructorArguments[0].Value;
+                        int userRole = _viewModel.GetUserRole();
+
+                        // Check attribute type
+                        if (requiredRole != null)
+                        {
+                            // Check role
+                            if (!IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
+                            {
+                                // Obtain response model
+                                IOResponseModel responseModel = this.Error400("Restricted page.");
+
+                                // Override response
+                                context.Result = new JsonResult(responseModel);
+
+                                // Do nothing
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
 
         public string GetControllerName()
         {

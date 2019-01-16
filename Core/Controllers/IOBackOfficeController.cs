@@ -1,6 +1,7 @@
-﻿using IOBootstrap.NET.Common.Attributes;
+﻿using System;
+using System.Collections.Generic;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -9,12 +10,9 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -34,7 +32,7 @@ namespace IOBootstrap.NET.Core.Controllers
         {
         }
 
-        public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
 
@@ -49,39 +47,6 @@ namespace IOBootstrap.NET.Core.Controllers
 
                 // Do nothing
                 return;
-            }
-
-            // Obtain action desctriptor
-            ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
-
-            if (actionDescriptor != null)
-            {
-                // Loop throught descriptors
-                foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
-                {
-                    if (descriptor.AttributeType == typeof(IOUserRoleAttribute))
-                    {
-                        object requiredRole = descriptor.ConstructorArguments[0].Value;
-                        IOUserEntity userEntity = _viewModel.userEntity;
-
-                        // Check attribute type
-                        if (requiredRole != null && userEntity != null)
-                        {
-                            // Check role
-                            if (!UserRoleUtility.CheckRole((UserRoles)requiredRole, (UserRoles)userEntity.UserRole))
-                            {
-                                // Obtain response model
-                                IOResponseModel responseModel = this.Error400("Restricted page.");
-
-                                // Override response
-                                context.Result = new JsonResult(responseModel);
-
-                                // Do nothing
-                                return;
-                            }
-                        }   
-                    }
-                }   
             }
         }
 

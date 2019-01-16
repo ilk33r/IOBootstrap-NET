@@ -13,7 +13,10 @@ namespace IOBootstrap.NET.Common.Constants
             "Bad request",
             "Invalid clients",
             "Invalid credientals",
-            "Unsupported version"
+            "Unsupported version",
+            "User exists",
+            "Invalid permission",
+            "User not found"
         };
 
         #endregion

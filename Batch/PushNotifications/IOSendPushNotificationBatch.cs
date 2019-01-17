@@ -131,7 +131,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                     // Send push messages
                     this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
                         // Sleep thread
-                        Thread.Sleep(1000);
+                        Thread.Sleep(100);
 
                         // Send entities to devices
                         this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i);
@@ -143,7 +143,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             }
 
             // Sleep thread
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
 
             // Send push messages
             this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
@@ -202,7 +202,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                     this.SendApplePushMessages(apnsPushNotificationModels);
 
                     // Sleep thread
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
 
                     // Send entities to devices
                     this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i);
@@ -213,7 +213,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             }
 
             // Sleep thread
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
 
             // Send push messages
             this.SendApplePushMessages(apnsPushNotificationModels);

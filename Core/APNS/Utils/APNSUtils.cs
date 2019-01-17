@@ -200,7 +200,7 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             }
 
             // Sleep thread
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
         }
 
         #endregion

@@ -41,7 +41,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
                 string userTokenString = IORandomUtilities.GenerateGUIDString();
 
 				// Create decrypted user token string
-				string decryptedUserToken = String.Format("{0}-{1}", user.ID, userTokenString);
+				string decryptedUserToken = String.Format("{0},{1}", user.ID, userTokenString);
 
 				// Convert key and iv to byte array
 				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));

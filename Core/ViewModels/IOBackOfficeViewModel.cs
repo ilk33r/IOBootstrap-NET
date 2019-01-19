@@ -196,7 +196,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
 
             // Split user id and token value
-            string[] tokenData = decryptedToken.Split('-');
+            string[] tokenData = decryptedToken.Split(',');
 
             // Obtain user id from token data
             int userId = int.Parse(tokenData[0]);

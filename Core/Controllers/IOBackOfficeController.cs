@@ -34,7 +34,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
+            // Update view model request value
+            _viewModel._request = this.Request;
 
             // Check is not back office
             if (!this.Request.Method.Equals("OPTIONS") && !_viewModel.IsBackOffice())
@@ -48,6 +49,8 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
+
+            base.OnActionExecuting(context);
         }
 
         #endregion

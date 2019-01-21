@@ -9,6 +9,7 @@ using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -192,16 +193,24 @@ namespace IOBootstrap.NET.Core.ViewModels
             byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
             byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
-            // Obtain decrypted token value
-            string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
+            try
+            {
+                // Obtain decrypted token value
+                string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
 
-            // Split user id and token value
-            string[] tokenData = decryptedToken.Split(',');
+                // Split user id and token value
+                string[] tokenData = decryptedToken.Split(',');
 
-            // Obtain user id from token data
-            int userId = int.Parse(tokenData[0]);
+                // Obtain user id from token data
+                int userId = int.Parse(tokenData[0]);
 
-            return new Tuple<string, int>(tokenData[1], userId);
+                return new Tuple<string, int>(tokenData[1], userId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogDebug(e.StackTrace);
+                return new Tuple<string, int>("", 0);
+            }
         }
 
         #endregion

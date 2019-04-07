@@ -79,6 +79,13 @@ namespace IOBootstrap.NET.Core.Controllers
                 return;
             }
 
+            // Check https is required
+            if (this.checkHttpsRequired(context))
+            {
+                // Do nothing
+                return;
+            }
+
             // Check user role
             if (!this.CheckRole(context))
             {
@@ -265,6 +272,39 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             return true;
+        }
+
+        public bool checkHttpsRequired(ActionExecutingContext context)
+        {
+            // Obtain action desctriptor
+            ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            if (actionDescriptor != null)
+            {
+                // Loop throught descriptors
+                foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
+                {
+                    if (descriptor.AttributeType == typeof(IORequireHTTPSAttribute))
+                    {
+                        bool httpsRequired = _configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
+
+                        // Check attribute type
+                        if (httpsRequired && !this.Request.Scheme.Equals("https"))
+                        {
+                            // Obtain response model
+                            IOResponseModel responseModel = this.Error400("Https required.");
+
+                            // Override response
+                            context.Result = new JsonResult(responseModel);
+
+                            // Do nothing
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         public string GetControllerName()

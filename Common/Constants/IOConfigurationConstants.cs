@@ -20,6 +20,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string FirebaseToken = "IOFirebaseToken";
         public static string EncryptionKey = "IOEncryptionKey";
         public static string EncryptionIV = "IOEncryptionIV";
+        public static string HttpsRequired = "IOHttpsRequired";
         public static string TokenLife = "IOTokenLife";
         public static string UseDeveloperLog = "IOUseDeveloperLog";
         public static string Version = "IOVersion";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
     public class IOHTTPClient
     {
         private string baseUrl;
+        private string contentType;
         private HttpClient httpClient;
         private Object postBody;
         private IOHTTPClientRequestMethods requestMethod;
@@ -58,9 +60,15 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             this.Call((bool status, string response) =>
             {
+                this.SetContentType("application/json");
                 TObject jsonObject = JsonConvert.DeserializeObject<TObject>(response);
                 callback(status, jsonObject);
             });
+        }
+
+        public void SetContentType(string contentType)
+        {
+            this.contentType = contentType;
         }
 
         public void SetPostBody(Object bodyObject)
@@ -98,7 +106,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             try
             {
-                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody));
+                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody), Encoding.UTF8, this.contentType);
                 var task = this.httpClient.PostAsync(this.baseUrl, postContent);
                 var response = await task;
 

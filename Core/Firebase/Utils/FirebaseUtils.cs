@@ -42,7 +42,6 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             // Add headers
             string authorization = "key=" + this.firebaseToken;
             httpClient.AddHeader("Authorization", authorization);
-            httpClient.AddHeader("Content-Type", "application/json");
             httpClient.AddAcceptHeader("application/json");
 
             // Set request method

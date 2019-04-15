@@ -24,6 +24,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Properties
 
+        public bool ActionExecuted = false;
         public IConfiguration _configuration { get; }
         public TDBContext _databaseContext { get; }
         public IHostingEnvironment _environment { get; }
@@ -76,6 +77,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = new JsonResult(new IOResponseModel(responseStatus));
 
                 // Do nothing
+                this.ActionExecuted = true;
                 return;
             }
 
@@ -106,6 +108,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = new JsonResult(responseModel);
 
                 // Do nothing
+                this.ActionExecuted = true;
                 return;
             }
 
@@ -127,6 +130,7 @@ namespace IOBootstrap.NET.Core.Controllers
                     context.Result = new JsonResult(responseModel);
 
                     // Do nothing
+                    this.ActionExecuted = true;
                     return;
                 }
             }
@@ -144,6 +148,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = this.GetWebIndex(layoutName);
 
                 // Do nothing
+                this.ActionExecuted = true;
                 return;
             }
         }

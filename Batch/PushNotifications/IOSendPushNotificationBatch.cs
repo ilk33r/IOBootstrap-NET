@@ -129,12 +129,14 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 if (i >= SEND_TOKEN_PER_ENTITY)
                 {
                     // Send push messages
+                    _databaseContext.SaveChanges();
+                    registrationIds = new List<string>();
                     this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
                         // Sleep thread
                         Thread.Sleep(10);
 
                         // Send entities to devices
-                        this.SendEntitiesToAndroidDevices(messageEntity, pushNotificationsEntities, i);
+                        this.SendEntitiesToAndroidDevices(messageEntity, pushNotificationsEntities, i + 1);
                     });
 
                     // Break the loop
@@ -146,8 +148,13 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             Thread.Sleep(10);
 
             // Send push messages
-            this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) => {
-            });
+            if (registrationIds.Count() > 0)
+            {
+                _databaseContext.SaveChanges();
+                this.SendAndroidPushMessages(new FirebaseModel(registrationIds, firebaseData), (bool status, FirebaseResponseModel responseObject) =>
+                {
+                });
+            }
         }
 
         public virtual void SendEntitiesToiOSDevices(PushNotificationMessageEntity messageEntity,
@@ -199,13 +206,15 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 if (i >= SEND_TOKEN_PER_ENTITY)
                 {
                     // Send push messages
+                    _databaseContext.SaveChanges();
+                    apnsPushNotificationModels = new List<APNSSendPayloadModel>();
                     this.SendApplePushMessages(apnsPushNotificationModels);
 
                     // Sleep thread
                     Thread.Sleep(10);
 
                     // Send entities to devices
-                    this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i);
+                    this.SendEntitiesToiOSDevices(messageEntity, pushNotificationsEntities, i + 1);
 
                     // Break the loop
                     break;
@@ -215,8 +224,12 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             // Sleep thread
             Thread.Sleep(10);
 
-            // Send push messages
-            this.SendApplePushMessages(apnsPushNotificationModels);
+            if (apnsPushNotificationModels.Count() > 0)
+            {
+                // Send push messages
+                _databaseContext.SaveChanges();
+                this.SendApplePushMessages(apnsPushNotificationModels);
+            }
         }
 
         public virtual void SendAndroidPushMessages(FirebaseModel firebaseModel, FirebaseSendNotificationHandler handler)

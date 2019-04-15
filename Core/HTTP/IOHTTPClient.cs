@@ -3,13 +3,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
 using Newtonsoft.Json;
 
 namespace IOBootstrap.NET.Core.HTTP.Utils
 {
     public delegate void HttpResponse(bool status, string response);
-    public delegate void HttpJsonResponse<TObject>(bool status, TObject responseObject);
+    public delegate void HttpJsonResponse<TObject>(bool status, TObject responseObject) where TObject : IOModel, new();
 
     public class IOHTTPClient
     {
@@ -56,13 +57,20 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             task.Wait();
         }
 
-        public void CallJSON<TObject>(HttpJsonResponse<TObject> callback)
+        public void CallJSON<TObject>(HttpJsonResponse<TObject> callback) where TObject : IOModel, new()
         {
             this.Call((bool status, string response) =>
             {
                 this.SetContentType("application/json");
-                TObject jsonObject = JsonConvert.DeserializeObject<TObject>(response);
-                callback(status, jsonObject);
+                try
+                {
+                    TObject jsonObject = JsonConvert.DeserializeObject<TObject>(response);
+                    callback(status, jsonObject);
+                } 
+                catch (Exception)
+                {
+                    callback(status, new TObject());
+                }
             });
         }
 

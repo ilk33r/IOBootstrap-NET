@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using IOBootstrap.NET.Common.Entities.Configuration;
+using IOBootstrap.NET.Core.Cache.Utilities;
 using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.WebApi.BackOffice.Models;
@@ -35,6 +36,9 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             // Add config entity to database
             _databaseContext.Add(configurationEntity);
             _databaseContext.SaveChanges();
+
+            string cacheKey = "IOConfigurationCache" + requestModel.ConfigKey;
+            IOCache.InvalidateCache(cacheKey);
         }
 
         public void DeleteConfigItem(int configurationId)
@@ -44,6 +48,9 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             {
                 _databaseContext.Remove(configuration);
                 _databaseContext.SaveChanges();
+
+                string cacheKey = "IOConfigurationCache" + configuration.ConfigKey;
+                IOCache.InvalidateCache(cacheKey);
             }
         }
 
@@ -72,6 +79,9 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             // Add menu entity to database
             _databaseContext.Update(configurationEntity);
             _databaseContext.SaveChanges();
+
+            string cacheKey = "IOConfigurationCache" + configurationEntity.ConfigKey;
+            IOCache.InvalidateCache(cacheKey);
         }
 
         #endregion

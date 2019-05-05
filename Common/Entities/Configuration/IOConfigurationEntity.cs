@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Core.Cache;
+using IOBootstrap.NET.Core.Cache.Utilities;
 using IOBootstrap.NET.Core.Database;
 using Newtonsoft.Json;
 
@@ -30,11 +32,22 @@ namespace IOBootstrap.NET.Common.Entities.Configuration
         public static IOConfigurationEntity ConfigForKey<TDBContext>(string configKey, TDBContext inContext)
             where TDBContext : IODatabaseContext<TDBContext>
         {
+            string cacheKey = "IOConfigurationCache" + configKey;
+            IOCacheObject cachedObject = IOCache.GetCachedObject(cacheKey);
+            if (cachedObject != null)
+            {
+                IOConfigurationEntity configurationEntity = (IOConfigurationEntity)cachedObject.Value;
+                return configurationEntity;
+            }
+
             var configurations = inContext.Configurations.Where((arg) => arg.ConfigKey.Equals(configKey));
 
             if (configurations.Count() > 0)
             {
-                return configurations.First();
+                IOConfigurationEntity configuration = configurations.First();
+                cachedObject = new IOCacheObject(cacheKey, configuration, 36000);
+                IOCache.CacheObject(cachedObject);
+                return configuration;
             }
 
             return null;

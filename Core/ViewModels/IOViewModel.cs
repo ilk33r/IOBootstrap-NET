@@ -2,7 +2,6 @@
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Entities.Configuration;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.Database;
 using Microsoft.AspNetCore.Hosting;
@@ -42,18 +41,6 @@ namespace IOBootstrap.NET.Core.ViewModels
 		#endregion
 
 		#region Helper Methods
-
-        public virtual IOConfigurationEntity ConfigForKey(string key)
-        {
-            var configurations = _databaseContext.Configurations.Where((arg) => arg.ConfigKey == key);
-
-            if (configurations.Count() > 0)
-            {
-                return configurations.First();
-            }
-
-            return new IOConfigurationEntity();
-        }
 
         public virtual bool CheckAuthorizationHeader()
 		{

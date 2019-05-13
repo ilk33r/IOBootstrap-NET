@@ -34,6 +34,7 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
 
         public static void InvalidateCache(string key)
         {
+            IOCache.InitializeCache();
             int index = IOCache.CachedObjects.FindIndex((obj) => obj.GetKey().Equals(key));
             if (index >= 0)
             {

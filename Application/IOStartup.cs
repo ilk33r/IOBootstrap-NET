@@ -48,7 +48,11 @@ namespace IOBootstrap.NET.Application
             services.AddDbContext<TDBContext>(opt => this.DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
             services.AddMvc();
-            services.AddLogging();
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
             services.AddSession(options =>
             {
                 options.Cookie.Name = ".IO.Session";

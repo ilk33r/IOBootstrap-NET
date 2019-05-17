@@ -48,7 +48,8 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
 
         private static int CacheExists(IOCacheObject cache)
         {
-            int index = IOCache.CachedObjects.FindIndex((obj) => obj.GetCacheID() == cache.GetCacheID());
+			IOCache.InitializeCache();
+            int index = IOCache.CachedObjects.FindIndex((obj) => obj.GetCacheID().Equals(cache.GetCacheID()));
             return index;
         }
 
@@ -77,7 +78,10 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
 
             foreach (int index in forRemoveIndexes)
             {
-                IOCache.CachedObjects.RemoveAt(index);
+                if (index < IOCache.CachedObjects.Count)
+                {
+                    IOCache.CachedObjects.RemoveAt(index);
+                }
             }
         }
 

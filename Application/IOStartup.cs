@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -73,10 +74,6 @@ namespace IOBootstrap.NET.Application
                 }
             });
 
-            // Add console logger
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             // Use session
             app.UseSession();
 
@@ -86,6 +83,9 @@ namespace IOBootstrap.NET.Application
             {
                 app.UseDeveloperExceptionPage();   
             }
+			
+			// Use middleware
+			app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
 
             // Create default routes
             app.UseMvc(routes =>

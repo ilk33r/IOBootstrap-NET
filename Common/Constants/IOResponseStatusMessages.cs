@@ -16,7 +16,8 @@ namespace IOBootstrap.NET.Common.Constants
             "Unsupported version",
             "User exists",
             "Invalid permission",
-            "User not found"
+            "User not found",
+            "General exception"
         };
 
         #endregion
@@ -32,6 +33,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int USER_EXISTS = 6;
         public static int INVALID_PERMISSION = 7;
         public static int USER_NOT_FOUND = 8;
+        public static int GENERAL_EXCEPTION = 9;
 
         #endregion
     }

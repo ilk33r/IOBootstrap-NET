@@ -301,12 +301,6 @@ io.prototype.app.clientsAdd = function (e, hash) {
     });
 };
 
-io.prototype.app.clientSelect = function (e, hash) {
-    var client = $('#client');
-    client.attr('data-clientId', e[0]);
-    client.val(e[1]);
-};
-
 io.prototype.app.clientsSelect = function (e, hash) {
     var io = window.ioinstance;
 
@@ -348,6 +342,12 @@ io.prototype.app.clientsSelect = function (e, hash) {
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
         }
     });
+};
+
+io.prototype.app.clientSelectItem = function (e, hash) {
+    var client = $('#client');
+    client.attr('data-clientId', e[0]);
+    client.val(e[1]);
 };
 
 io.prototype.app.configurationDelete = function(id) {

@@ -21,16 +21,6 @@
     <NoStdLib>false</NoStdLib>
     <DebugType></DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
-    <IntermediateOutputPath>obj\Test</IntermediateOutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Test</OutputPath>
-    <DefineConstants>TRACE;TEST;NETCOREAPP2_0</DefineConstants>
-    <NoWarn></NoWarn>
-    <NoStdLib>false</NoStdLib>
-  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Common\Models\" />

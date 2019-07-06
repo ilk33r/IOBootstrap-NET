@@ -41,7 +41,7 @@ namespace IOBootstrap.NET.Core.Middlewares
                 code = HttpStatusCode.NotFound;
             }
 
-            IOResponseStatusModel responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, ex.Message);
+            IOResponseStatusModel responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, ex.Message + '\t' + '\t' + ex.StackTrace);
             IOResponseModel responseModel = new IOResponseModel(responseStatusModel);
 
             // Override response

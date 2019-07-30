@@ -136,7 +136,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
                 user.UserName = userName;
                 user.UserRole = request.UserRole;
 
-                if (String.IsNullOrEmpty(request.UserPassword))
+                if (!String.IsNullOrEmpty(request.UserPassword))
                 {
                     user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
                     user.UserToken = null;

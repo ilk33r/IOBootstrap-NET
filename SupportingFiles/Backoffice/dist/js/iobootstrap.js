@@ -132,6 +132,14 @@ io.prototype.request.UserDeleteRequest = {
     UserId: 0
 };
 
+io.prototype.request.UserUpdateRequest = {
+    Culture: 0,
+    Version: '',
+    UserId: 0,
+    UserName: '',
+    UserRole: 0
+};
+
 io.prototype.app.dashboard = function(e, hash) {
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('dashboard', false, function () {
@@ -1020,7 +1028,35 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
 
         $('#updateUserForm').submit(function (e) {
             e.preventDefault();
+            var callout = window.ioinstance.callout;
+            var request = window.ioinstance.request.UserUpdateRequest;
+            request.Version = window.ioinstance.version;
+            request.UserId = parseInt($(this).attr('data-id'));
+            request.UserName = $('#userName').val();
+            request.UserRole = parseInt($('#userRole').val());
 
+            if (request.UserName.length <= 3) {
+                callout.show(callout.types.danger, 'Invalid username.', 'User name is too sort.');
+                $('.userNameArea').addClass('has-error');
+                window.ioinstance.indicator.hide();
+                return;
+            }
+
+            window.ioinstance.indicator.show();
+            window.ioinstance.service.post('backoffice/users/update', request, function (status, response, error) {
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'User has been updated successfully.', '');
+                    window.ioinstance.app.usersList(null, 'usersList');
+                } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
+                    var helpText = 'User ' + request.UserName + ' is exists.';
+                    callout.show(callout.types.danger, 'Invalid username.', helpText);
+                    $('.userNameArea').addClass('has-error');
+                    window.ioinstance.indicator.hide();
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
         });
     });
 };

@@ -38,7 +38,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
         [IOUserRole(UserRoles.User)]
         [HttpGet]
-        public IOMenuListResponseModel ListMenuItems()
+        public virtual IOMenuListResponseModel ListMenuItems()
         {
             // Obtain menu items
             IList<IOMenuListModel> menuItems = _viewModel.GetMenuTree(_viewModel.userEntity.UserRole);

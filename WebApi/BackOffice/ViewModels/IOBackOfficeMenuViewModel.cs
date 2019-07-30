@@ -46,7 +46,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             _databaseContext.SaveChanges();
         }
 
-        public IList<IOMenuListModel> GetMenuTree(int requiredRole)
+        public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
             var parentMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
                                                       .OrderBy((arg) => arg.MenuOrder);

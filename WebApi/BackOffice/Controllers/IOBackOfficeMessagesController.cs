@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
         [IOUserRole(UserRoles.User)]
         [HttpGet]
-        public IOListMessagesResponseModel ListMessages()
+        public virtual IOListMessagesResponseModel ListMessages()
         {
             // Obtain message items
             IList<IOMessageModel> messages = _viewModel.GetMessages();

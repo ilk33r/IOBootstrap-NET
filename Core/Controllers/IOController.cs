@@ -241,7 +241,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Helper Methods
 
-        public bool CheckRole(ActionExecutingContext context)
+        public virtual bool CheckRole(ActionExecutingContext context)
         {
             // Obtain action desctriptor
             ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;

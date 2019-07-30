@@ -50,7 +50,9 @@ io.prototype = {
         });
 
         $(window).on('message', function (e) {
-            window.ioinstance.openedWindow.close();
+            if (window.ioinstance.openedWindow != null) {
+                window.ioinstance.openedWindow.close();
+            }
             window.ioinstance.log.call('Message received');
             var message = JSON.parse(e.originalEvent.data);
             window.ioinstance.callMessage(message);
@@ -545,6 +547,9 @@ io.prototype.request = {
         Culture: 0,
         Version: '',
         Token: ''
+    },
+    Clone: function (object) {
+        return Object.assign({}, object);
     }
 };
 

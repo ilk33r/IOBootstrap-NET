@@ -598,6 +598,11 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
     io.selectMenu(hash);
 
     io.service.loadLayout('menueditoradd', false, function () {
+        var roleList = window.ioinstance.userRoles.getRoleSelection(0);
+        window.ioinstance.layout.contentLayoutData = {
+            roleList: roleList
+        };
+
         window.ioinstance.layout.render();
         window.ioinstance.selectMenu(hash);
 
@@ -607,8 +612,9 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
             // Client select window
             window.ioinstance.openWindow('menuSelect');
         }).change(function (e) {
-            if ($(this).val().length == 0) {
-                $(this).attr('data-parentMenuId', '0');
+            var thisElm = $(this);
+            if (thisElm.val().length == 0) {
+                thisElm.attr('data-parentMenuId', '0');
             }
         });
 

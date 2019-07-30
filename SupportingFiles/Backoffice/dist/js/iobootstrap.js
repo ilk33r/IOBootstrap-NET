@@ -1146,28 +1146,30 @@ io.prototype.app.usersAdd = function (e, hash) {
             request.Password = $('#password').val();
             request.UserRole = parseInt($('#role').val());
 
-            $('.passwordArea').removeClass('has-error');
-            $('.passwordAreaHelp').addClass('hidden');
+            var passwordArea = $('.passwordArea');
+            passwordArea.removeClass('has-error');
+            var passwordAreaHelp = $('.passwordAreaHelp');
+            passwordAreaHelp.addClass('hidden');
 
             if (request.Password.length <= 3) {
                 callout.show(callout.types.danger, 'Invalid password.', 'Password is too short.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Password is too short.');
+                passwordArea.addClass('has-error');
+                passwordAreaHelp.removeClass('hidden');
+                passwordAreaHelp.text('Password is too short.');
                 window.ioinstance.indicator.hide();
                 return;
             } else if (request.Password != repeatedpassword) {
                 callout.show(callout.types.danger, 'Invalid password.', 'Passwords did not match.');
-                $('.passwordArea').addClass('has-error');
-                $('.passwordAreaHelp').removeClass('hidden');
-                $('.passwordAreaHelp').text('Passwords did not match.');
+                passwordArea.addClass('has-error');
+                passwordAreaHelp.removeClass('hidden');
+                passwordAreaHelp.text('Passwords did not match.');
                 window.ioinstance.indicator.hide();
                 return;
             } else if (request.UserName.length <= 3) {
                 callout.show(callout.types.danger, 'Invalid username.', 'User name is too sort.');
                 $('.userNameArea').addClass('has-error');
-                $('.userNameAreaHelp').removeClass('hidden');
-                $('.userNameAreaHelp').text('User name is too sort.');
+                passwordAreaHelp.removeClass('hidden');
+                passwordAreaHelp.text('User name is too sort.');
                 window.ioinstance.indicator.hide();
                 return;
             }
@@ -1181,8 +1183,8 @@ io.prototype.app.usersAdd = function (e, hash) {
                     var helpText = 'User ' + request.UserName + ' is exists.';
                     callout.show(callout.types.danger, 'Invalid username.', helpText);
                     $('.userNameArea').addClass('has-error');
-                    $('.userNameAreaHelp').removeClass('hidden');
-                    $('.userNameAreaHelp').text(helpText);
+                    passwordAreaHelp.removeClass('hidden');
+                    passwordAreaHelp.text(helpText);
                     window.ioinstance.indicator.hide();
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);

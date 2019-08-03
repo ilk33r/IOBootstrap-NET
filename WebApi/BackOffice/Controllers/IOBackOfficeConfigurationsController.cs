@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IOBootstrap.NET.Application;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Entities.Configuration;
@@ -109,6 +110,15 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             _viewModel.UpdateConfigItem(requestModel);
 
             // Create and return response
+            return new IOConfigurationUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpGet]
+        public virtual IOConfigurationUpdateResponseModel RestartApp()
+        {
+            // Create and return response
+            // Program.Shutdown();
             return new IOConfigurationUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 

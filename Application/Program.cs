@@ -1,19 +1,27 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using System.Threading;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System;
 
 namespace IOBootstrap.NET.Application
 {
     public class Program
     {
-		public static IWebHost BuildWebHost(string[] args)
+        private static CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+        public static IWebHost BuildWebHost(string[] args)
 		{
 			return WebHost.CreateDefaultBuilder(args).UseStartup<IOStartup>().Build();
 		}
 
         public static void Main(string[] args)
         {
-			BuildWebHost(args).Run();
+            BuildWebHost(args).RunAsync(cancelTokenSource.Token).GetAwaiter().GetResult();
+        }
+
+        public static void Shutdown()
+        {
+            cancelTokenSource.Cancel();
         }
     }
 }

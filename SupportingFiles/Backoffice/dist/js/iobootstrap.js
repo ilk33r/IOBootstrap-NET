@@ -1352,3 +1352,23 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
         });
     });
 };
+
+io.prototype.app.restartApp = function (e, hash) {
+    var io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+    io.selectMenu(hash);
+
+    window.ioinstance.service.get("backoffice/configurations/restartApp", function (status, response, error) {
+        var callout = window.ioinstance.callout;
+        if (status && response.status.success) {
+            callout.show(callout.types.success, 'Application restarted has been send successfully.', '');
+        } else {
+            callout.show(callout.types.danger, error.message, error.detailedMessage);
+        }
+
+        window.location.hash = "";
+        window.location.reload();
+    });
+};

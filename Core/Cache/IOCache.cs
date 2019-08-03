@@ -66,7 +66,7 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
 
             foreach (IOCacheObject cache in IOCache.CachedObjects)
             {
-                if (cache.GetCacheEndTimeStamp() < currentTimeStamp)
+                if (cache.GetCacheEndTimeStamp() > 0 && cache.GetCacheEndTimeStamp() < currentTimeStamp)
                 {
                     int index = IOCache.CacheExists(cache);
                     if (index >= 0)

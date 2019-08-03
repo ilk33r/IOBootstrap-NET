@@ -119,11 +119,23 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
                 routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });
+
+            // Start static caching
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                TDBContext context = services.GetService<TDBContext>();
+                this.ConfigureStaticCaching(context);
+            }
         }
 
-#endregion
+        public virtual void ConfigureStaticCaching(TDBContext databaseContext)
+        {
+        }
 
-#region Routing
+        #endregion
+
+        #region Routing
 
         public virtual string AuthenticationControllerName()
         {
@@ -176,6 +188,6 @@ namespace IOBootstrap.NET.Application
             return "IOUser";
         }
 
-#endregion
+        #endregion
     }
 }

@@ -102,6 +102,7 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
                 routes.MapRoute("updateUsers", "backoffice/users/update", new IORoute("UpdateUser", this.UserControllerName()));
                 routes.MapRoute("addMenuItem", "backoffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("deleteMenuItem", "backoffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("listMenuItems", "backoffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("updateMenuItem", "backoffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("addMessagesItem", "backoffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));

@@ -36,17 +36,6 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
         #region Menu Methods
 
-        [IOUserRole(UserRoles.User)]
-        [HttpGet]
-        public virtual IOMenuListResponseModel ListMenuItems()
-        {
-            // Obtain menu items
-            IList<IOMenuListModel> menuItems = _viewModel.GetMenuTree(_viewModel.userEntity.UserRole);
-
-            // Create and return response
-            return new IOMenuListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), menuItems);
-        }
-
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMenuAddResponseModel AddMenuItem([FromBody] IOMenuAddRequestModel requestModel)
@@ -67,6 +56,38 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOMenuAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error 
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOMenuUpdateResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.DeleteMenuItem(requestModel.ID);
+
+            // Create and return response
+            return new IOMenuUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.User)]
+        [HttpGet]
+        public virtual IOMenuListResponseModel ListMenuItems()
+        {
+            // Obtain menu items
+            IList<IOMenuListModel> menuItems = _viewModel.GetMenuTree(_viewModel.userEntity.UserRole);
+
+            // Create and return response
+            return new IOMenuListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), menuItems);
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]

@@ -46,6 +46,22 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             _databaseContext.SaveChanges();
         }
 
+        public void DeleteMenuItem(int menuId)
+        {
+            // Obtain menu item entity
+            IOMenuEntity menuEntity = _databaseContext.Find<IOMenuEntity>(menuId);
+
+            // Check menu is not exists
+            if (menuEntity == null)
+            {
+                return;
+            }
+
+            // Add menu entity to database
+            _databaseContext.Remove(menuEntity);
+            _databaseContext.SaveChanges();
+        }
+
         public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
             var parentMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)

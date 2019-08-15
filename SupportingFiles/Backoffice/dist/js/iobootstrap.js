@@ -665,6 +665,27 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
     });
 };
 
+io.prototype.app.menuEditorDelete = function (id) {
+    var answer = confirm("Are you sure want to delete this menu ?");
+    if (answer) {
+        var request = window.ioinstance.request.MenuUpdateRequestModel;
+        request.Version = window.ioinstance.version;
+        request.ID = id;
+        window.ioinstance.indicator.show();
+        window.ioinstance.service.post('backoffice/menu/delete', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Menu has been deleted successfully.', '');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
+
+            window.ioinstance.app.menuEditorList(null, 'menuEditorList');
+        });
+    }
+};
+
 io.prototype.app.menuEditorSelect = function(e, hash) {
     var parentMenu = $('#parentMenu');
     parentMenu.attr('data-parentMenuId', e[0]);

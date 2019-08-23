@@ -9,6 +9,7 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
         #region Privates
 
         private static List<IOCacheObject> CachedObjects;
+        private static bool IsInitializing = false;
 
         #endregion
 
@@ -55,6 +56,13 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
 
         private static void InitializeCache()
         {
+            if (IOCache.IsInitializing)
+            {
+                return;
+            }
+
+            IOCache.IsInitializing = true;
+
             if (IOCache.CachedObjects == null)
             {
                 IOCache.CachedObjects = new List<IOCacheObject>();
@@ -83,6 +91,8 @@ namespace IOBootstrap.NET.Core.Cache.Utilities
                     IOCache.CachedObjects.RemoveAt(index);
                 }
             }
+
+            IOCache.IsInitializing = false;
         }
 
         #endregion

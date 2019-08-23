@@ -42,6 +42,11 @@ namespace IOBootstrap.NET.Core.Cache
 
         public long GetCacheEndTimeStamp()
         {
+            if (this.CacheInterval == 0)
+            {
+                return 0;
+            }
+
             return this.CacheTime + this.CacheInterval;
         }
 

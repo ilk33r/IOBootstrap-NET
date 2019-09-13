@@ -13,11 +13,11 @@ namespace IOBootstrap.NET.Common.Entities.Clients
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-		[StringLength(36)]
+		[StringLength(48)]
         public string ClientId { get; set; }
 
 
-		[StringLength(36)]
+		[StringLength(48)]
         public string ClientSecret { get; set; }
         public string ClientDescription { get; set; }
 

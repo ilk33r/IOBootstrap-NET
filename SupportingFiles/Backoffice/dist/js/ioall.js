@@ -35,8 +35,13 @@ io.prototype = {
     layout: {},
     log: {},
     request: {},
+    response: {},
     service: {},
+    ui: {},
     userRoles: {},
+    validationRuleTypes: {
+        minLength: 'MinLengthRule'
+    },
     selectedMenuItem: null,
     openedWindow: null,
     initialize: function () {
@@ -687,6 +692,216 @@ io.prototype.service.loadedLayoutData.prototype = {
     value: '',
 };
 
+io.prototype.ui = {
+    breadcrumb: function (activeNavigationId, activeNavigationName, breadcrumbNavigations) {
+        this.activeNavigationId = activeNavigationId;
+        this.activeNavigationName = activeNavigationName;
+        this.breadcrumbNavigations = breadcrumbNavigations;
+    },
+    breadcrumbNavigation: function (navigationId, navigationName) {
+        this.navigationId = navigationId;
+        this.navigationName = navigationName;
+    },
+    formData: function (formDataType, id, name, requestKey) {
+        this.formDataType = formDataType;
+        this.id = id;
+        this.name = name;
+        this.requestKey = requestKey;
+        this.value = '';
+        this.options = [];
+        this.validations = [];
+    },
+    formDataOptions: function (name, value) {
+        this.name = name;
+        this.value = value;
+    },
+    formDataTypes: {
+        select: 'SelectType',
+        text: 'TextType'
+    },
+    loadedFormDatas: null,
+    checkFormDatasLoaded: function(callback) {
+        var layoutHtml = '';
+        for (var key in this.loadedFormDatas) {
+            var layoutData = this.loadedFormDatas[key];
+            if (layoutData == null) {
+                setTimeout(function () {
+                    window.ioinstance.ui.checkFormDatasLoaded(callback);
+                }, 500);
+
+                break
+            } else {
+                layoutHtml += layoutData;
+            }
+        }
+
+        callback(layoutHtml);
+    },
+    createBreadcrumb: function (breadcrumb, callback) {
+        window.ioinstance.service.loadLayoutText('breadcrumbLayout', function (layout) {
+            var breadcrumbHtml = '';
+
+            for (var i = 0; i < breadcrumb.breadcrumbNavigations.length; i++) {
+                var breadcrumbLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+                var breadcrumbLayoutData = breadcrumb.breadcrumbNavigations[i];
+
+                breadcrumbHtml += window.ioinstance.layout.renderLayout(layout, breadcrumbLayoutData, breadcrumbLayoutProperties);
+            }
+
+            callback(breadcrumbHtml);
+        });
+    },
+    createForm: function (hash, breadcrumb, formName, formDataArray, submitButtonName, onRendered, callback) {
+        var io = window.ioinstance;
+
+        // Show indicator
+        io.indicator.show();
+        io.selectMenu(hash);
+
+        // Load all form data
+        this.loadAllFormData(formDataArray);
+
+        // Create breadcrumb
+        this.createBreadcrumb(breadcrumb, function (breadcrumbHtml) {
+            // Load all form data
+            window.ioinstance.ui.checkFormDatasLoaded(function (formLayoutHtml) {
+                // Load form layout
+                window.ioinstance.service.loadLayout('formLayout', false, function () {
+                    // Prepare form layout
+                    window.ioinstance.layout.contentLayoutData = {
+                        activeNavigationName: breadcrumb.activeNavigationName,
+                        activeNavigationId: breadcrumb.activeNavigationId,
+                        breadcrumbLayout: breadcrumbHtml,
+                        formName: formName,
+                        formData: formLayoutHtml,
+                        submitButtonName: submitButtonName
+                    };
+
+                    // Render layout
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+
+                    onRendered();
+
+                    window.ioinstance.ui.listenFormSubmit(formName, formDataArray, callback);
+                });
+            });
+        });
+    },
+    createFormWithSelectType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithSelectLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var optionsHtml = '';
+
+            for (var i = 0; i < formData.options.length; i++) {
+                var option = formData.options[i];
+                if (option.value === formData.value) {
+                    optionsHtml += '<option value="' + option.value + '" selected="selected">' + option.name + '</option>';
+                } else {
+                    optionsHtml += '<option value="' + option.value + '">' + option.name + '</option>';
+                }
+            }
+
+            var formLayoutData = {
+                formDataId: formData.id,
+                formDataName: formData.name,
+                options: optionsHtml,
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    createFormWithTextType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithTextLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message'
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    listenFormSubmit: function (formName, formDataArray, callback) {
+        $('#' + formName).submit(function (e) {
+            e.preventDefault();
+
+            var request = {};
+            for (var i = 0; i < formDataArray.length; i++) {
+                var formData = formDataArray[i];
+
+                if (!window.ioinstance.ui.validateFormData(formData.validations)) {
+                    window.ioinstance.indicator.hide();
+                    return;
+                }
+
+                request[formData.requestKey] = $('#' + formData.id).val();
+            }
+
+            callback(request)
+        });
+    },
+    loadAllFormData: function (formDataArray) {
+        this.loadedFormDatas = {};
+
+        for (var i = 0; i < formDataArray.length; i++) {
+            var formData = formDataArray[i];
+            var methodName = 'createFormWith' + formData.formDataType;
+            var method = this[methodName];
+            if (typeof method === "function") {
+                let formDataName = formData.name;
+                this.loadedFormDatas[formDataName] = null;
+                method(formData, function (layout) {
+                    window.ioinstance.ui.loadedFormDatas[formDataName] = layout;
+                });
+            } else {
+                window.ioinstance.log.call('Form method ' + methodName + ' could not found.');
+            }
+        }
+    },
+    validateFormData: function (validations) {
+        for (var i = 0; i < validations.length; i++) {
+            var validation = validations[i];
+            if (!validation.validate()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+
+io.prototype.ui.breadcrumb.prototype = {
+    activeNavigationName: '',
+    activeNavigationId: '',
+    breadcrumbNavigations: []
+};
+
+io.prototype.ui.breadcrumbNavigation.prototype = {
+    navigationId: '',
+    navigationName: ''
+};
+
+io.prototype.ui.formData.prototype = {
+    formDataType: '',
+    id: '',
+    name: '',
+    options: null,
+    requestKey: '',
+    value: '',
+    validations: null
+};
+
+io.prototype.ui.formDataOptions.prototype = {
+    name: '',
+    value: ''
+};
+
 io.prototype.userRoles = {
     superAdmin: 0,
     admin: 1,
@@ -715,6 +930,56 @@ io.prototype.userRoles = {
         }
 
         return roleList;
+    }
+};
+
+var ioValidation = function(ruleType, errorMessage, validatableId, alternateMessage) {
+    this.ruleName = ruleType;
+    this.alternateMessage = alternateMessage;
+    this.errorMessage = errorMessage;
+    this.validatableId = validatableId;
+};
+
+ioValidation.prototype = {
+    alternateMessage: '',
+    errorMessage: '',
+    length: 0,
+    ruleName: '',
+    validatableId: '',
+    constructor: ioValidation,
+    validate: function () {
+        var methodName = 'validate' + this.ruleName;
+        var method = this[methodName];
+        if (typeof method === "function") {
+            return method(this);
+        }
+
+        window.ioinstance.log.call('Validation rule ' + this.ruleName + ' could not found.');
+        return false;
+    },
+    validateMinLengthRule: function (self) {
+        var validatableId = self.validatableId;
+        var validatable = $('#' + validatableId);
+        var value = validatable.val();
+
+        var callout = window.ioinstance.callout;
+
+        var areaElement = $('.' + validatableId + 'Area');
+        areaElement.removeClass('has-error');
+
+        var messageElement = $('.' + validatableId + 'Message');
+        messageElement.addClass('hidden');
+
+        if (self.length > value.length) {
+            callout.show(callout.types.danger, self.errorMessage, self.alternateMessage);
+            areaElement.addClass('has-error');
+            messageElement.removeClass('hidden');
+            messageElement.text(self.errorMessage);
+
+            return false;
+        }
+
+        return true;
     }
 };
 

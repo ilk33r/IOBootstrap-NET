@@ -30,6 +30,7 @@ var io = function (authorization, appName, backOfficePath, clientId, clientSecre
 io.prototype = {
     constructor: io,
     app: {},
+    callout: {},
     indicator: {},
     layout: {},
     log: {},
@@ -574,6 +575,11 @@ io.prototype.service = {
         get: 'get',
         post: 'post'
     },
+    loadedLayoutData: function (name, value) {
+        this.name = name;
+        this.value = value;
+    },
+    loadedLayouts: [],
     call: function (isLayout, path, type, data, dataType, callback) {
         var url = '%s/%s';
         var baseUrl = (isLayout) ? window.ioinstance.layoutApiUrl : window.ioinstance.serviceApiUrl;
@@ -596,8 +602,9 @@ io.prototype.service = {
                 callback(true, data, null);
             },
             error: function (error) {
-                window.ioinstance.indicator.hide();
-                var responeData = (dataType == window.ioinstance.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
+                var io = window.ioinstance;
+                io.indicator.hide();
+                var responeData = (dataType == io.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
                 if (typeof responeData === 'object' && responeData.status.code == 2) {
                     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
                 }
@@ -608,10 +615,34 @@ io.prototype.service = {
     get: function (path, callback) {
         this.call(false, path, this.types.get, null, this.dataTypes.json, callback);
     },
+    layoutFromCache: function(layoutName) {
+        for (var i = 0; i < this.loadedLayouts.length; i++) {
+            var layoutData = this.loadedLayouts[i];
+            if (layoutData.name === layoutName) {
+                return layoutData.value;
+            }
+        }
+
+        return null;
+    },
     loadLayout: function (layoutName, isBaseLayout, callback) {
+        var cachedLayout = this.layoutFromCache(layoutName);
+        if (cachedLayout != null) {
+            if (isBaseLayout) {
+                window.ioinstance.layout.setBaseLayout(cachedLayout, callback);
+            } else {
+                window.ioinstance.layout.setContentLayout(cachedLayout, callback);
+            }
+
+            return;
+        }
+
         var path = '%s/dist/layouts/%s.html';
         this.call(true, path.format(window.ioinstance.backOfficePath, layoutName), this.types.get, null, this.dataTypes.text, function (status, response, error) {
             if (status) {
+                var layoutData = new window.ioinstance.service.loadedLayoutData(layoutName, response);
+                window.ioinstance.service.loadedLayouts.push(layoutData);
+
                 if (isBaseLayout) {
                     window.ioinstance.layout.setBaseLayout(response, callback);
                 } else {
@@ -625,9 +656,18 @@ io.prototype.service = {
         });
     },
     loadLayoutText: function (layoutName, callback) {
+        var cachedLayout = this.layoutFromCache(layoutName);
+        if (cachedLayout != null) {
+            callback(cachedLayout);
+            return;
+        }
+
         var path = '%s/dist/layouts/%s.html';
         this.call(true, path.format(window.ioinstance.backOfficePath, layoutName), this.types.get, null, this.dataTypes.text, function (status, response, error) {
             if (status) {
+                var layoutData = new window.ioinstance.service.loadedLayoutData(layoutName, response);
+                window.ioinstance.service.loadedLayouts.push(layoutData);
+
                 callback(response);
             } else {
                 var logMessage = 'loadLayout %s returns error. Code: %s, message: %s';
@@ -640,6 +680,11 @@ io.prototype.service = {
         request.Version = window.ioinstance.version;
         this.call(false, path, this.types.post, request, this.dataTypes.json, callback);
     }
+};
+
+io.prototype.service.loadedLayoutData.prototype = {
+    name: '',
+    value: '',
 };
 
 io.prototype.userRoles = {

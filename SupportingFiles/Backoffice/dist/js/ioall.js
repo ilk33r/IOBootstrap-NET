@@ -711,6 +711,8 @@ io.prototype.ui = {
         this.value = '';
         this.options = [];
         this.validations = [];
+        this.params = '';
+        this.methodName = '';
     },
     formDataOptions: function (name, value) {
         this.name = name;
@@ -718,6 +720,8 @@ io.prototype.ui = {
     },
     formDataTypes: {
         date: 'DateType',
+        number: 'NumberType',
+        popupSelection: 'PopupSelectionType',
         select: 'SelectType',
         textArea: 'TextAreaType',
         text: 'TextType'
@@ -786,6 +790,7 @@ io.prototype.ui = {
 
                     onRendered();
 
+                    window.ioinstance.ui.listenPopupSelect(formDataArray);
                     window.ioinstance.ui.listenFormSubmit(formName, formDataArray, callback);
                 });
             });
@@ -800,6 +805,38 @@ io.prototype.ui = {
                 formDataName: formData.name,
                 formDataValue: formData.value,
                 formDataIdMessage: formData.id + 'Message'
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    createFormWithNumberType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithNumberLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message'
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    createFormWithPopupSelectionType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('createFormWithPopupSelectionLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message',
+                formDataParams: formData.params,
+                formDataMethodName: formData.methodName
             };
 
             var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
@@ -960,6 +997,25 @@ io.prototype.ui = {
             callback(request)
         });
     },
+    listenPopupSelect: function (formDataArray) {
+        for (var index in formDataArray) {
+            var formData = formDataArray[index];
+
+            if (formData.formDataType === window.ioinstance.ui.formDataTypes.popupSelection) {
+                $('#' + formData.id).click(function (e) {
+                    e.preventDefault();
+
+                    // Client select window
+                    window.ioinstance.openWindow(formData.methodName);
+                }).change(function (e) {
+                    var thisElm = $(this);
+                    if (thisElm.val().length === 0) {
+                        thisElm.attr('data-params', '');
+                    }
+                });
+            }
+        }
+    },
     loadAllFormData: function (formDataArray) {
         this.loadedFormDatas = {};
 
@@ -1004,8 +1060,10 @@ io.prototype.ui.breadcrumbNavigation.prototype = {
 io.prototype.ui.formData.prototype = {
     formDataType: '',
     id: '',
+    methodName: '',
     name: '',
     options: null,
+    params: '',
     requestKey: '',
     value: '',
     validations: null

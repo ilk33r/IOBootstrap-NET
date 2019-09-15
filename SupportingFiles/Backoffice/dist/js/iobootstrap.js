@@ -70,23 +70,6 @@ io.prototype.request.MenuUpdateRequestModel = {
     ParentEntityID: null
 };
 
-io.prototype.request.MessageAddRequestModel = {
-    Culture: 0,
-    Version: '',
-    Message: '',
-    MessageStartDate: '',
-    MessageEndDate: ''
-};
-
-io.prototype.request.MessageUpdateRequestModel = {
-    Culture: 0,
-    Version: '',
-    MessageId: 0,
-    Message: '',
-    MessageStartDate: '',
-    MessageEndDate: ''
-};
-
 io.prototype.request.MessageDeleteRequestModel = {
     Culture: 0,
     Version: '',
@@ -867,38 +850,39 @@ io.prototype.app.messagesAdd = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    io.service.loadLayout('messagesadd', false, function () {
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu(hash);
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
+    var formBreadcrumb = new io.ui.breadcrumb('messagesAdd', 'Add a new message', [ breadcrumbNavigation ]);
 
-        $('#addMessageForm').submit(function (e) {
-            e.preventDefault();
-            var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.MessageAddRequestModel;
-            request.Version = window.ioinstance.version;
-            request.Message = $('#message').val();
-            request.MessageStartDate = $('#startDate').val();
-            request.MessageEndDate = $('#endDate').val();
+    var messageFormData = new io.ui.formData(io.ui.formDataTypes.textArea, 'message', 'Message', 'Message');
+    var messageValidation = new ioValidation(io.validationRuleTypes.minLength, 'Message is too short.', 'message', 'Invalid message.');
+    messageValidation.length = 3;
+    messageFormData.validations = [ messageValidation ];
 
-            if (request.Message.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid message.', 'Message is too short.');
-                window.ioinstance.indicator.hide();
-                return;
-            }
+    var startDateFormData = new io.ui.formData(io.ui.formDataTypes.date, 'startDate', 'Start Date', 'MessageStartDate');
+    var endDateFormData = new io.ui.formData(io.ui.formDataTypes.date, 'endDate', 'End Date', 'MessageEndDate');
 
-            window.ioinstance.indicator.show();
+    var formDatas = [
+        messageFormData,
+        startDateFormData,
+        endDateFormData
+    ];
+
+    io.ui.createForm(hash, formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
+        },
+        function (request) {
             window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
+                var callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been added successfully.', '');
+                    window.location.hash = '';
                     window.ioinstance.app.messagesList(null, 'messagesList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });
-        });
     });
 };
 
@@ -954,46 +938,47 @@ io.prototype.app.messagesList = function (e, hash) {
 };
 
 io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
+    var io = window.ioinstance;
+
     // Show indicator
-    window.ioinstance.indicator.show();
-    window.ioinstance.service.loadLayout('messageupdate', false, function () {
-        window.ioinstance.layout.contentLayoutData = {
-            id: id,
-            message: message.unEscapeHtml(),
-            startDate: startDate,
-            endDate: endDate
-        };
+    io.indicator.show();
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu('messagesList');
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
+    var formBreadcrumb = new io.ui.breadcrumb('messagesAdd', 'Add a new message', [ breadcrumbNavigation ]);
 
-        $('#updateMessageForm').submit(function (e) {
-            e.preventDefault();
-            var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.MessageUpdateRequestModel;
-            request.Version = window.ioinstance.version;
-            request.MessageId = parseInt($(this).attr('data-messageId'));
-            request.Message = $('#message').val();
-            request.MessageStartDate = $('#startDate').val();
-            request.MessageEndDate = $('#endDate').val();
+    var messageFormData = new io.ui.formData(io.ui.formDataTypes.textArea, 'message', 'Message', 'Message');
+    var messageValidation = new ioValidation(io.validationRuleTypes.minLength, 'Message is too short.', 'message', 'Invalid message.');
+    messageValidation.length = 3;
+    messageFormData.validations = [ messageValidation ];
+    messageFormData.value = message.unEscapeHtml();
 
-            if (request.Message.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid message.', 'Message is too short.');
-                window.ioinstance.indicator.hide();
-                return;
-            }
+    var startDateFormData = new io.ui.formData(io.ui.formDataTypes.date, 'startDate', 'Start Date', 'MessageStartDate');
+    startDateFormData.value = startDate;
+    var endDateFormData = new io.ui.formData(io.ui.formDataTypes.date, 'endDate', 'End Date', 'MessageEndDate');
+    endDateFormData.value = endDate;
 
-            window.ioinstance.indicator.show();
-            window.ioinstance.service.post('backoffice/messages/update', request, function (status, response, error) {
+    var formDatas = [
+        messageFormData,
+        startDateFormData,
+        endDateFormData
+    ];
+
+    io.ui.createForm('messagesList', formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+            request.MessageId = id;
+            window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
+                var callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been updated successfully.', '');
+                    window.location.hash = '';
                     window.ioinstance.app.messagesList(null, 'messagesList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });
-        });
     });
 };
 

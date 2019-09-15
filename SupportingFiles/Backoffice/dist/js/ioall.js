@@ -827,7 +827,7 @@ io.prototype.ui = {
         });
     },
     createFormWithPopupSelectionType: function (formData, callback) {
-        window.ioinstance.service.loadLayoutText('createFormWithPopupSelectionLayout', function (layout) {
+        window.ioinstance.service.loadLayoutText('formWithPopupSelectionLayout', function (layout) {
             var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
             var formLayoutData = {
                 formDataIdArea: formData.id + 'Area',
@@ -897,7 +897,7 @@ io.prototype.ui = {
             callback(formHtml);
         });
     },
-    createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, onRendered) {
+    createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, onRendered) {
         var io = window.ioinstance;
 
         // Show indicator
@@ -939,7 +939,9 @@ io.prototype.ui = {
                     var deleteParamsHtml = btoa(deleteParamsJSONString);
                     var updateIsHidden = (updateMethodName != null && updateMethodName !== '') ? '' : 'hidden';
                     var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
+                    var hasRowClass = (hasRowClasses != null && hasRowClasses.length > index) ? hasRowClasses[index] : false;
                     var itemsLayoutData = {
+                        rowClass: (hasRowClass) ? 'childmenu' : '',
                         singleItemHtml: singleItemHtml,
                         updateIsHidden: updateIsHidden,
                         updateMethodName: (updateMethodName != null) ? updateMethodName : '',

@@ -497,63 +497,92 @@ io.prototype.app.menuEditorList = function(e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    // Call menu list
+    var breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
+
+    // Call client list
     io.service.get('backoffice/menu/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('menueditormenu', function (layout) {
-                var menuEditorHtml = '';
-                var menuEditorLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var listData = [];
+            var updateParams = [];
+            var deleteParams = [];
+            var hasRowClasses = [];
 
-                for (var index in response.items) {
-                    var menu = response.items[index];
-                    var roleName = window.ioinstance.userRoles.getRoleName(menu.requiredRole);
-                    var menuLayoutData = {
-                        rowClass: '',
-                        id: menu.id,
-                        name: menu.name,
-                        action: menu.action,
-                        cssClass: menu.cssClass,
-                        menuOrder: menu.menuOrder,
-                        userRole: roleName,
-                        userRoleRaw: menu.requiredRole,
-                        parentMenuName: '',
-                        parentMenuId: 0
-                    };
+            for (var index in response.items) {
+                var menu = response.items[index];
 
-                    menuEditorHtml += window.ioinstance.layout.renderLayout(layout, menuLayoutData, menuEditorLayoutProperties);
+                var roleName = window.ioinstance.userRoles.getRoleName(menu.requiredRole);
+                var itemListData = [
+                    menu.id,
+                    menu.name,
+                    menu.action,
+                    menu.cssClass,
+                    roleName,
+                    menu.menuOrder,
+                ];
 
-                    var childMenuItems = menu.childItems;
-                    if (childMenuItems != null && childMenuItems.length > 0) {
-                        for (var childIndex in childMenuItems) {
-                            var childMenu = childMenuItems[childIndex];
-                            var childMenuRoleName = window.ioinstance.userRoles.getRoleName(childMenu.requiredRole);
-                            var childMenuLayoutData = {
-                                rowClass: 'childmenu',
-                                id: childMenu.id,
-                                name: childMenu.name,
-                                action: childMenu.action,
-                                cssClass: childMenu.cssClass,
-                                menuOrder: childMenu.menuOrder,
-                                userRole: childMenuRoleName,
-                                userRoleRaw: childMenu.requiredRole,
-                                parentMenuName: menu.name,
-                                parentMenuId: menu.id
-                            };
+                listData.push(itemListData);
 
-                            menuEditorHtml += window.ioinstance.layout.renderLayout(layout, childMenuLayoutData, menuEditorLayoutProperties);
-                        }
+                var itemUpdateData = [
+                    menu.id,
+                    menu.name,
+                    menu.action,
+                    menu.cssClass,
+                    menu.requiredRole,
+                    menu.menuOrder,
+                    '',
+                    ''
+                ];
+
+                updateParams.push(itemUpdateData);
+                deleteParams.push([menu.id]);
+                hasRowClasses.push(false);
+
+                var childMenuItems = menu.childItems;
+                if (childMenuItems != null && childMenuItems.length > 0) {
+                    for (var childIndex in childMenuItems) {
+                        var childMenu = childMenuItems[childIndex];
+                        var childMenuRoleName = window.ioinstance.userRoles.getRoleName(childMenu.requiredRole);
+                        var childItemListData = [
+                            childMenu.id,
+                            childMenu.name,
+                            childMenu.action,
+                            childMenu.cssClass,
+                            childMenuRoleName,
+                            childMenu.menuOrder,
+                        ];
+
+                        listData.push(childItemListData);
+
+                        var itemUpdateData = [
+                            childMenu.id,
+                            childMenu.name,
+                            childMenu.action,
+                            childMenu.cssClass,
+                            childMenu.requiredRole,
+                            childMenu.menuOrder,
+                            menu.name,
+                            menu.id
+                        ];
+
+                        updateParams.push(itemUpdateData);
+                        deleteParams.push([childMenu.id]);
+                        hasRowClasses.push(true);
                     }
                 }
+            }
 
-                window.ioinstance.service.loadLayout('menueditorlist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        menu: menuEditorHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+            var listDataHeaders = [
+                'ID',
+                'Name',
+                'Action',
+                'Css Class',
+                'Role',
+                'Order',
+                'Options'
+            ];
+
+            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'menuEditorUpdate', updateParams, 'menuEditorDelete', deleteParams, hasRowClasses, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -601,12 +630,14 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
         parentMenuFormData
     ];
 
-    io.ui.createForm(hash, formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
+    io.ui.createForm(hash, formBreadcrumb, 'addMenuForm', formDatas, 'Save', function () {
         },
         function (request) {
 
             if (request.ParentEntityID === '') {
                 request.ParentEntityID = null;
+            } else {
+                request.ParentEntityID = parseInt($('#parentMenu').attr('data-params'));
             }
 
             window.ioinstance.service.post('backoffice/menu/add', request, function (status, response, error) {
@@ -615,7 +646,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Menu has been added successfully.', '');
                     window.location.hash = '';
-                    window.ioinstance.app.messagesList(null, 'menuEditorList');
+                    window.ioinstance.app.menuEditorList(null, 'menuEditorList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
@@ -647,76 +678,70 @@ io.prototype.app.menuEditorDelete = function (id) {
 
 io.prototype.app.menuEditorSelect = function(e, hash) {
     var parentMenu = $('#parentMenu');
-    parentMenu.attr('data-parentMenuId', e[0]);
+    parentMenu.attr('data-params', e[0]);
     parentMenu.val(e[1]);
 };
 
 io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRoleRaw, menuOrder, parentMenuName, parentMenuId) {
+    var io = window.ioinstance;
+
     // Show indicator
-    window.ioinstance.indicator.show();
-    window.ioinstance.service.loadLayout('menueditorupdate', false, function () {
-        var roleList = window.ioinstance.userRoles.getRoleSelection(userRoleRaw);
-        window.ioinstance.layout.contentLayoutData = {
-            id: id,
-            name: name,
-            action: action,
-            cssClass: cssClass,
-            userRoleRaw: userRoleRaw,
-            menuOrder: menuOrder,
-            parentMenuName: parentMenuName,
-            parentMenuId: parentMenuId,
-            roleList: roleList
-        };
+    io.indicator.show();
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu('menuEditorList');
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
+    var formBreadcrumb = new io.ui.breadcrumb('menuEditorUpdate', 'Update Menu Item', [ breadcrumbNavigation ]);
 
-        $('#parentMenu').click(function (e) {
-            e.preventDefault();
+    var nameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuName', 'Name', 'Name');
+    var nameValidation = new ioValidation(io.validationRuleTypes.minLength, 'Name is too short.', 'menuName', 'Invalid menu name.');
+    nameValidation.length = 1;
+    nameFormData.validations = [ nameValidation ];
+    nameFormData.value = name;
 
-            // Client select window
-            window.ioinstance.openWindow('menuSelect');
-        }).change(function (e) {
-            if ($(this).val().length == 0) {
-                $(this).attr('data-parentMenuId', '0');
-            }
-        });
+    var actionFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuAction', 'Action', 'Action');
+    var actionValidation = new ioValidation(io.validationRuleTypes.minLength, 'Action is too short.', 'menuAction', 'Invalid menu action.');
+    actionValidation.length = 1;
+    actionFormData.validations = [ actionValidation ];
+    actionFormData.value = action;
 
-        $('#updateMenuForm').submit(function (e) {
-            e.preventDefault();
-            var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.MenuUpdateRequestModel;
-            request.ID = parseInt($(this).attr('data-menuId'));
-            request.Version = window.ioinstance.version;
-            request.Name = $('#menuName').val();
-            request.Action = $('#menuAction').val();
-            request.CssClass = $('#menuCss').val();
-            request.MenuOrder = parseInt($('#menuOrder').val());
-            request.RequiredRole = parseInt($('#role').val());
-            request.ParentEntityID = parseInt($('#parentMenu').attr('data-parentMenuId'));
+    var cssClassNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuCss', 'CSS Class Name', 'CssClass');
+    cssClassNameFormData.value = cssClass;
 
-            var menuNameArea = $('.menuNameArea').removeClass('has-error');
-            var menuNameAreaHelp = $('.menuNameAreaHelp').addClass('hidden');
+    var rolesOptions = window.ioinstance.userRoles.getRoleList();
+    var rolesFormData = new io.ui.formData(io.ui.formDataTypes.select, 'role', 'Required Role', 'RequiredRole');
+    rolesFormData.value = userRoleRaw;
+    rolesFormData.options = rolesOptions;
 
-            var menuActionArea = $('.menuActionArea').removeClass('has-error');
-            var menuActionAreaHelp = $('.menuActionAreaHelp').addClass('hidden');
+    var menuOrderFormData = new io.ui.formData(io.ui.formDataTypes.number, 'menuOrder', 'Menu Order', 'MenuOrder');
+    menuOrderFormData.value = menuOrder;
 
-            if (request.Name.length < 1) {
-                callout.show(callout.types.danger, 'Invalid name.', '');
-                menuNameArea.addClass('has-error');
-                menuNameAreaHelp.removeClass('hidden');
-                window.ioinstance.indicator.hide();
-                return;
-            } else if (request.Action.length < 1) {
-                callout.show(callout.types.danger, 'Invalid action.', '');
-                menuActionArea.addClass('has-error');
-                menuActionAreaHelp.removeClass('hidden');
-                window.ioinstance.indicator.hide();
-                return;
+    var parentMenuFormData = new io.ui.formData(io.ui.formDataTypes.popupSelection, 'parentMenu', 'Parent Menu', 'ParentEntityID');
+    parentMenuFormData.params = parentMenuId;
+    parentMenuFormData.methodName = 'menuSelect';
+    parentMenuFormData.value = parentMenuName;
+
+    var formDatas = [
+        nameFormData,
+        actionFormData,
+        cssClassNameFormData,
+        rolesFormData,
+        menuOrderFormData,
+        parentMenuFormData
+    ];
+
+    io.ui.createForm('menuEditorUpdate', formBreadcrumb, 'updateMenuForm', formDatas, 'Update', function () {
+        },
+        function (request) {
+            request.ID = id;
+
+            if (request.ParentEntityID === '') {
+                request.ParentEntityID = null;
+            } else {
+                request.ParentEntityID = parseInt($('#parentMenu').attr('data-params'));
             }
 
-            window.ioinstance.indicator.show();
             window.ioinstance.service.post('backoffice/menu/update', request, function (status, response, error) {
+                var callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Menu has been updated successfully.', '');
                     window.location.hash = '';
@@ -727,7 +752,6 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
                 }
             });
         });
-    });
 };
 
 io.prototype.app.menuSelect = function (e, hash) {
@@ -920,15 +944,15 @@ io.prototype.app.messagesList = function (e, hash) {
             }
 
             var listDataHeaders = [
-                "ID",
-                "Message",
-                "Create Date",
-                "Start Date",
-                "End Date",
-                "Options"
+                'ID',
+                'Message',
+                'Create Date',
+                'Start Date',
+                'End Date',
+                'Options'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'messageUpdate', updateParams, 'messageDelete', deleteParams, function () {
+            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'messageUpdate', updateParams, 'messageDelete', deleteParams, null, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -963,7 +987,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
         endDateFormData
     ];
 
-    io.ui.createForm('messagesList', formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
+    io.ui.createForm('messagesUpdate', formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
         },
         function (request) {
             request.MessageId = id;

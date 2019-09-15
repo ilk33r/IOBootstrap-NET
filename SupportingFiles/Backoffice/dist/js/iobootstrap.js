@@ -891,44 +891,68 @@ io.prototype.app.messagesList = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
+
+    var breadcrumb = new io.ui.breadcrumb('messagesList', 'Messages', []);
 
     // Call client list
     io.service.get('backoffice/messages/listall', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('message', function (layout) {
-                var messagesHtml = '';
-                var messageLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.messages) {
-                    var message = response.messages[index];
-                    var createDate = new Date(message.messageCreateDate);
-                    var startDate = new Date(message.messageStartDate);
-                    var endDate = new Date(message.messageEndDate);
-                    var startDateMonth = (startDate.getMonth() < 10) ? '0' + startDate.getMonth() : startDate.getMonth();
-                    var startDateDay = (startDate.getDay() < 10) ? '0' + startDate.getDay() : startDate.getDay();
-                    var endDateMonth = (endDate.getMonth() < 10) ? '0' + endDate.getMonth() : endDate.getMonth();
-                    var endDateDay = (endDate.getDay() < 10) ? '0' + endDate.getDay() : endDate.getDay();
-                    var messageLayoutData = {
-                        id: message.id,
-                        message: message.message.replace(/\n/g, "<br />"),
-                        messageEscaped: message.message.escapeHtml(),
-                        createDate: createDate.toLocaleDateString(),
-                        startDate: startDate.toLocaleDateString(),
-                        endDate: endDate.toLocaleDateString(),
-                        startDateFormatted: startDate.getFullYear() + '-' + startDateMonth + '-' + startDateDay,
-                        endDateFormatted: endDate.getFullYear() + '-' + endDateMonth + '-' + endDateDay
-                    };
+            var listData = [];
+            var updateParams = [];
+            var deleteParams = [];
 
-                    messagesHtml += window.ioinstance.layout.renderLayout(layout, messageLayoutData, messageLayoutProperties);
-                }
+            for (var index in response.messages) {
+                var message = response.messages[index];
+                var createDate = new Date(message.messageCreateDate);
+                var startDate = new Date(message.messageStartDate);
+                var endDate = new Date(message.messageEndDate);
 
-                window.ioinstance.service.loadLayout('messageslist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        messages: messagesHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+                var itemListData = [
+                    message.id,
+                    message.message.replace(/\n/g, "<br />"),
+                    createDate.toLocaleDateString(),
+                    startDate.toLocaleDateString(),
+                    endDate.toLocaleDateString()
+                ];
+
+                listData.push(itemListData);
+
+                var startDateMonthValue = startDate.getMonth() + 1;
+                var startDateMonth = (startDateMonthValue < 10) ? '0' + startDateMonthValue : startDateMonthValue;
+
+                var startDateDayValue = startDate.getDay() + 1;
+                var startDateDay = (startDateDayValue < 10) ? '0' + startDateDayValue : startDateDayValue;
+
+                var endDateMonthValue = endDate.getMonth() + 1;
+                var endDateMonth = (endDateMonthValue < 10) ? '0' + endDateMonthValue : endDateMonthValue;
+
+                var endDateDayValue = endDate.getDay() + 1;
+                var endDateDay = (endDateDayValue < 10) ? '0' + endDateDayValue : endDateDayValue;
+
+                var startDateString = startDate.getFullYear() + '-' + startDateMonth + '-' + startDateDay;
+                var endDateString = endDate.getFullYear() + '-' + endDateMonth + '-' + endDateDay;
+
+                var itemUpdateData = [
+                    message.id,
+                    message.message,
+                    startDateString,
+                    endDateString
+                ];
+
+                updateParams.push(itemUpdateData);
+                deleteParams.push([message.id]);
+            }
+
+            var listDataHeaders = [
+                "ID",
+                "Message",
+                "Create Date",
+                "Start Date",
+                "End Date",
+                "Options"
+            ];
+
+            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'messageUpdate', updateParams, 'messageDelete', deleteParams, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -950,7 +974,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
     var messageValidation = new ioValidation(io.validationRuleTypes.minLength, 'Message is too short.', 'message', 'Invalid message.');
     messageValidation.length = 3;
     messageFormData.validations = [ messageValidation ];
-    messageFormData.value = message.unEscapeHtml();
+    messageFormData.value = message;
 
     var startDateFormData = new io.ui.formData(io.ui.formDataTypes.date, 'startDate', 'Start Date', 'MessageStartDate');
     startDateFormData.value = startDate;
@@ -967,7 +991,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
         },
         function (request) {
             request.MessageId = id;
-            window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
+            window.ioinstance.service.post('backoffice/messages/update', request, function (status, response, error) {
                 var callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {

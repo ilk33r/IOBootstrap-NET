@@ -50,13 +50,7 @@ io.prototype.request.ConfigurationUpdateRequest = {
 io.prototype.request.MenuUpdateRequestModel = {
     Culture: 0,
     Version: '',
-    ID: 0,
-    Action: '',
-    CssClass: '',
-    Name: '',
-    MenuOrder: 0,
-    RequiredRole: 0,
-    ParentEntityID: null
+    ID: 0
 };
 
 io.prototype.request.MessageDeleteRequestModel = {
@@ -759,63 +753,65 @@ io.prototype.app.menuSelect = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
+
+    var breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
 
     // Call client list
     io.service.get('backoffice/menu/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('menueditormenuselectitem', function (layout) {
-                var menuEditorHtml = '';
-                var menuEditorLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var listData = [];
+            var hasRowClasses = [];
+            var selectionParams = [];
 
-                for (var index in response.items) {
-                    var menu = response.items[index];
-                    var roleName = window.ioinstance.userRoles.getRoleName(menu.requiredRole);
-                    var menuLayoutData = {
-                        rowClass: '',
-                        id: menu.id,
-                        name: menu.name,
-                        action: menu.action,
-                        cssClass: menu.cssClass,
-                        menuOrder: menu.menuOrder,
-                        userRole: roleName,
-                        userRoleRaw: menu.requiredRole,
-                        parentMenuName: '',
-                        parentMenuId: 0
-                    };
+            for (var index in response.items) {
+                var menu = response.items[index];
 
-                    menuEditorHtml += window.ioinstance.layout.renderLayout(layout, menuLayoutData, menuEditorLayoutProperties);
+                var roleName = window.ioinstance.userRoles.getRoleName(menu.requiredRole);
+                var itemListData = [
+                    menu.id,
+                    menu.name,
+                    menu.action,
+                    menu.cssClass,
+                    roleName,
+                    menu.menuOrder,
+                ];
 
-                    var childMenuItems = menu.childItems;
-                    if (childMenuItems != null && childMenuItems.length > 0) {
-                        for (var childIndex in childMenuItems) {
-                            var childMenu = childMenuItems[childIndex];
-                            var childMenuRoleName = window.ioinstance.userRoles.getRoleName(childMenu.requiredRole);
-                            var childMenuLayoutData = {
-                                rowClass: 'childmenu',
-                                id: childMenu.id,
-                                name: childMenu.name,
-                                action: childMenu.action,
-                                cssClass: childMenu.cssClass,
-                                menuOrder: childMenu.menuOrder,
-                                userRole: childMenuRoleName,
-                                userRoleRaw: childMenu.requiredRole,
-                                parentMenuName: menu.name,
-                                parentMenuId: menu.id
-                            };
+                listData.push(itemListData);
+                selectionParams.push([menu.id, menu.name]);
+                hasRowClasses.push(false);
 
-                            menuEditorHtml += window.ioinstance.layout.renderLayout(layout, childMenuLayoutData, menuEditorLayoutProperties);
-                        }
+                var childMenuItems = menu.childItems;
+                if (childMenuItems != null && childMenuItems.length > 0) {
+                    for (var childIndex in childMenuItems) {
+                        var childMenu = childMenuItems[childIndex];
+                        var childMenuRoleName = window.ioinstance.userRoles.getRoleName(childMenu.requiredRole);
+                        var childItemListData = [
+                            childMenu.id,
+                            childMenu.name,
+                            childMenu.action,
+                            childMenu.cssClass,
+                            childMenuRoleName,
+                            childMenu.menuOrder,
+                        ];
+
+                        listData.push(childItemListData);
+                        selectionParams.push([childMenu.id, childMenu.name]);
+                        hasRowClasses.push(true);
                     }
                 }
+            }
 
-                window.ioinstance.service.loadLayout('menueditorlist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        menu: menuEditorHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+            var listDataHeaders = [
+                'ID',
+                'Name',
+                'Action',
+                'Css Class',
+                'Role',
+                'Order',
+                'Options'
+            ];
+
+            io.ui.createPopupSelection(hash, breadcrumb, listDataHeaders, listData, 'menuEditorSelect', selectionParams, hasRowClasses, function () {
             });
         } else {
             window.ioinstance.indicator.hide();

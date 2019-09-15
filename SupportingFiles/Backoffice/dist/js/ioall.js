@@ -351,9 +351,10 @@ io.prototype.layout = {
             var element = $(this);
             var actionName = element.attr('data-method');
             var params = element.attr('data-params');
+            var paramsJson = atob(params);
             var messageData = {
                 'actionName': actionName,
-                'data': JSON.parse(params)
+                'data': JSON.parse(paramsJson)
             };
 
             window.opener.postMessage(JSON.stringify(messageData), '*');
@@ -898,6 +899,9 @@ io.prototype.ui = {
         });
     },
     createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, onRendered) {
+        this.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, null, null, onRendered);
+    },
+    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, selectMethodName, selectParams, onRendered) {
         var io = window.ioinstance;
 
         // Show indicator
@@ -915,6 +919,7 @@ io.prototype.ui = {
                     var listDataItems = listData[index];
                     var itemUpdateParams = (updateParams != null && updateParams.length > index) ? updateParams[index] : [];
                     var itemDeleteParams = (deleteParams != null && deleteParams.length > index) ? deleteParams[index] : [];
+                    var itemSelectParams = (selectParams != null && selectParams.length > index) ? selectParams[index] : [];
                     var singleItemHtml = '';
 
                     for (var itemIndex in listDataItems) {
@@ -935,10 +940,19 @@ io.prototype.ui = {
                         deleteParamsJSONString = '[]';
                     }
 
+                    var selectParamsJSONString = '';
+                    if (itemSelectParams.length > 0) {
+                        selectParamsJSONString = JSON.stringify(itemSelectParams);
+                    } else {
+                        selectParamsJSONString = '[]';
+                    }
+
                     var updateParamsHtml = btoa(updateParamsJSONString);
                     var deleteParamsHtml = btoa(deleteParamsJSONString);
+                    var selectParamsHtml = btoa(selectParamsJSONString);
                     var updateIsHidden = (updateMethodName != null && updateMethodName !== '') ? '' : 'hidden';
                     var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
+                    var selectIsHidden = (selectMethodName != null && selectMethodName !== '') ? '' : 'hidden';
                     var hasRowClass = (hasRowClasses != null && hasRowClasses.length > index) ? hasRowClasses[index] : false;
                     var itemsLayoutData = {
                         rowClass: (hasRowClass) ? 'childmenu' : '',
@@ -948,7 +962,10 @@ io.prototype.ui = {
                         updateParamsHtml: updateParamsHtml,
                         deleteIsHidden: deleteIsHidden,
                         deleteMethodName: (deleteMethodName != null) ? deleteMethodName : '',
-                        deleteParamsHtml: deleteParamsHtml
+                        deleteParamsHtml: deleteParamsHtml,
+                        selectIsHidden:  selectIsHidden,
+                        selectMethodName: (selectMethodName != null) ? selectMethodName : '',
+                        selectParamsHtml: selectParamsHtml
                     };
 
                     itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
@@ -979,6 +996,9 @@ io.prototype.ui = {
 
             });
         });
+    },
+    createPopupSelection: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, onRendered) {
+        this.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, selectMethodName, selectionParams, onRendered);
     },
     listenFormSubmit: function (formName, formDataArray, callback) {
         $('#' + formName).submit(function (e) {

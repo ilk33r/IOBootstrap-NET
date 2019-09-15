@@ -337,10 +337,11 @@ io.prototype.layout = {
             var element = $(this);
             var actionName = element.attr('data-method');
             var params = element.attr('data-params');
+            var paramsJson = atob(params);
             var method = window.ioinstance.app[actionName];
 
             if (typeof method === "function") {
-                var paramsArray = JSON.parse(params);
+                var paramsArray = JSON.parse(paramsJson);
                 method.apply(null, paramsArray);
             }
         });
@@ -857,6 +858,87 @@ io.prototype.ui = {
 
             var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
             callback(formHtml);
+        });
+    },
+    createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, onRendered) {
+        var io = window.ioinstance;
+
+        // Show indicator
+        io.indicator.show();
+        io.selectMenu(hash);
+
+        // Create breadcrumb
+        this.createBreadcrumb(breadcrumb, function (breadcrumbHtml) {
+            // Load item layout
+            window.ioinstance.service.loadLayoutText('listItemLayout', function (layout) {
+                var itemsHtml = '';
+                var itemsLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+
+                for (var index in listData) {
+                    var listDataItems = listData[index];
+                    var itemUpdateParams = (updateParams != null && updateParams.length > index) ? updateParams[index] : [];
+                    var itemDeleteParams = (deleteParams != null && deleteParams.length > index) ? deleteParams[index] : [];
+                    var singleItemHtml = '';
+
+                    for (var itemIndex in listDataItems) {
+                        singleItemHtml += '<td><div class="breakWord">' + listDataItems[itemIndex] + '</div></td>';
+                    }
+
+                    var updateParamsJSONString = '';
+                    if (itemUpdateParams.length > 0) {
+                        updateParamsJSONString = JSON.stringify(itemUpdateParams);
+                    } else {
+                        updateParamsJSONString = '[]';
+                    }
+
+                    var deleteParamsJSONString = '';
+                    if (itemDeleteParams.length > 0) {
+                        deleteParamsJSONString = JSON.stringify(itemDeleteParams);
+                    } else {
+                        deleteParamsJSONString = '[]';
+                    }
+
+                    var updateParamsHtml = btoa(updateParamsJSONString);
+                    var deleteParamsHtml = btoa(deleteParamsJSONString);
+                    var updateIsHidden = (updateMethodName != null && updateMethodName !== '') ? '' : 'hidden';
+                    var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
+                    var itemsLayoutData = {
+                        singleItemHtml: singleItemHtml,
+                        updateIsHidden: updateIsHidden,
+                        updateMethodName: (updateMethodName != null) ? updateMethodName : '',
+                        updateParamsHtml: updateParamsHtml,
+                        deleteIsHidden: deleteIsHidden,
+                        deleteMethodName: (deleteMethodName != null) ? deleteMethodName : '',
+                        deleteParamsHtml: deleteParamsHtml
+                    };
+
+                    itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
+                }
+
+                var headersHtml = '';
+                for (var headerItem in listDataHeaders) {
+                    headersHtml += '<th>' + listDataHeaders[headerItem] + '</th>';
+                }
+
+                // Load form layout
+                window.ioinstance.service.loadLayout('listLayout', false, function () {
+                    // Prepare form layout
+                    window.ioinstance.layout.contentLayoutData = {
+                        activeNavigationName: breadcrumb.activeNavigationName,
+                        activeNavigationId: breadcrumb.activeNavigationId,
+                        breadcrumbLayout: breadcrumbHtml,
+                        listData: itemsHtml,
+                        headersHtml: headersHtml
+                    };
+
+                    // Render layout
+                    window.ioinstance.layout.render();
+                    window.ioinstance.selectMenu(hash);
+
+                    onRendered();
+                });
+
+            });
         });
     },
     listenFormSubmit: function (formName, formDataArray, callback) {

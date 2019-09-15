@@ -716,7 +716,9 @@ io.prototype.ui = {
         this.value = value;
     },
     formDataTypes: {
+        date: 'DateType',
         select: 'SelectType',
+        textArea: 'TextAreaType',
         text: 'TextType'
     },
     loadedFormDatas: null,
@@ -788,6 +790,21 @@ io.prototype.ui = {
             });
         });
     },
+    createFormWithDateType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithDateLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message'
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
     createFormWithSelectType: function (formData, callback) {
         window.ioinstance.service.loadLayoutText('formWithSelectLayout', function (layout) {
             var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
@@ -806,6 +823,21 @@ io.prototype.ui = {
                 formDataId: formData.id,
                 formDataName: formData.name,
                 options: optionsHtml,
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    createFormWithTextAreaType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithTextAreaLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message'
             };
 
             var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);

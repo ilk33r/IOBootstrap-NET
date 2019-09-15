@@ -1090,6 +1090,16 @@ io.prototype.userRoles = {
                 return 'Undefined';
         }
     },
+    getRoleList: function () {
+        var roleList = [];
+
+        for (var i = 0; i < 3; i++) {
+            var roleName = this.getRoleName(i);
+            roleList.push(window.ioinstance.ui.formDataOptions(roleName, i));
+        }
+
+        return roleList;
+    },
     getRoleSelection: function (roleId) {
         var roleList = '';
 

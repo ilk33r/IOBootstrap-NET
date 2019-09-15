@@ -47,17 +47,6 @@ io.prototype.request.ConfigurationUpdateRequest = {
     StrValue: ''
 };
 
-io.prototype.request.MenuAddRequestModel = {
-    Culture: 0,
-    Version: '',
-    Action: '',
-    CssClass: '',
-    Name: '',
-    MenuOrder: 0,
-    RequiredRole: 0,
-    ParentEntityID: null
-};
-
 io.prototype.request.MenuUpdateRequestModel = {
     Culture: 0,
     Version: '',
@@ -578,74 +567,61 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    io.service.loadLayout('menueditoradd', false, function () {
-        var roleList = window.ioinstance.userRoles.getRoleSelection(0);
-        window.ioinstance.layout.contentLayoutData = {
-            roleList: roleList
-        };
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
+    var formBreadcrumb = new io.ui.breadcrumb('menuEditorAdd', 'Add a menu item', [ breadcrumbNavigation ]);
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu(hash);
+    var nameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuName', 'Name', 'Name');
+    var nameValidation = new ioValidation(io.validationRuleTypes.minLength, 'Name is too short.', 'menuName', 'Invalid menu name.');
+    nameValidation.length = 1;
+    nameFormData.validations = [ nameValidation ];
 
-        $('#parentMenu').click(function (e) {
-            e.preventDefault();
+    var actionFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuAction', 'Action', 'Action');
+    var actionValidation = new ioValidation(io.validationRuleTypes.minLength, 'Action is too short.', 'menuAction', 'Invalid menu action.');
+    actionValidation.length = 1;
+    actionFormData.validations = [ actionValidation ];
 
-            // Client select window
-            window.ioinstance.openWindow('menuSelect');
-        }).change(function (e) {
-            var thisElm = $(this);
-            if (thisElm.val().length == 0) {
-                thisElm.attr('data-parentMenuId', '0');
-            }
-        });
+    var cssClassNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuCss', 'CSS Class Name', 'CssClass');
 
-        $('#addMenuForm').submit(function (e) {
-            e.preventDefault();
-            var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.MenuAddRequestModel;
-            request.Version = window.ioinstance.version;
-            request.Name = $('#menuName').val();
-            request.Action = $('#menuAction').val();
-            request.CssClass = $('#menuCss').val();
-            request.MenuOrder = parseInt($('#menuOrder').val());
-            request.RequiredRole = parseInt($('#role').val());
-            request.ParentEntityID = parseInt($('#parentMenu').attr('data-parentMenuId'));
+    var rolesOptions = window.ioinstance.userRoles.getRoleList();
+    var rolesFormData = new io.ui.formData(io.ui.formDataTypes.select, 'role', 'Required Role', 'RequiredRole');
+    rolesFormData.options = rolesOptions;
 
-            var menuNameArea = $('.menuNameArea').removeClass('has-error');
-            var menuNameAreaHelp = $('.menuNameAreaHelp').addClass('hidden');
+    var menuOrderFormData = new io.ui.formData(io.ui.formDataTypes.number, 'menuOrder', 'Menu Order', 'MenuOrder');
+    var parentMenuFormData = new io.ui.formData(io.ui.formDataTypes.popupSelection, 'parentMenu', 'Parent Menu', 'ParentEntityID');
+    parentMenuFormData.params = '';
+    parentMenuFormData.methodName = 'menuSelect';
 
-            var menuActionArea = $('.menuActionArea').removeClass('has-error');
-            var menuActionAreaHelp = $('.menuActionAreaHelp').addClass('hidden');
+    var formDatas = [
+        nameFormData,
+        actionFormData,
+        cssClassNameFormData,
+        rolesFormData,
+        menuOrderFormData,
+        parentMenuFormData
+    ];
 
-            if (request.Name.length < 1) {
-                callout.show(callout.types.danger, 'Invalid name.', '');
-                menuNameArea.addClass('has-error');
-                menuNameAreaHelp.removeClass('hidden');
-                window.ioinstance.indicator.hide();
-                return;
-            } else if (request.Action.length < 1) {
-                callout.show(callout.types.danger, 'Invalid action.', '');
-                menuActionArea.addClass('has-error');
-                menuActionAreaHelp.removeClass('hidden');
-                window.ioinstance.indicator.hide();
-                return;
+    io.ui.createForm(hash, formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+
+            if (request.ParentEntityID === '') {
+                request.ParentEntityID = null;
             }
 
-            window.ioinstance.indicator.show();
             window.ioinstance.service.post('backoffice/menu/add', request, function (status, response, error) {
+                var callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Menu has been added successfully.', '');
                     window.location.hash = '';
-                    window.ioinstance.app.menuEditorList(null, 'menuEditorList');
+                    window.ioinstance.app.messagesList(null, 'menuEditorList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });
         });
-    });
 };
 
 io.prototype.app.menuEditorDelete = function (id) {

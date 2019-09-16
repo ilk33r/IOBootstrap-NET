@@ -1024,19 +1024,22 @@ io.prototype.ui = {
             var formData = formDataArray[index];
 
             if (formData.formDataType === window.ioinstance.ui.formDataTypes.popupSelection) {
-                $('#' + formData.id).click(function (e) {
-                    e.preventDefault();
-
-                    // Client select window
-                    window.ioinstance.openWindow(formData.methodName);
-                }).change(function (e) {
-                    var thisElm = $(this);
-                    if (thisElm.val().length === 0) {
-                        thisElm.attr('data-params', '');
-                    }
-                });
+                this.listenPopupSelectClick(formData.id, formData.methodName);
             }
         }
+    },
+    listenPopupSelectClick: function (id, methodName) {
+        $('#' + id).click(function (e) {
+            e.preventDefault();
+
+            // Client select window
+            window.ioinstance.openWindow(methodName);
+        }).change(function (e) {
+            var thisElm = $(this);
+            if (thisElm.val().length === 0) {
+                thisElm.attr('data-params', '');
+            }
+        });
     },
     loadAllFormData: function (formDataArray) {
         this.loadedFormDatas = {};

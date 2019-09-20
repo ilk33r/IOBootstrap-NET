@@ -337,7 +337,7 @@ io.prototype.layout = {
             var element = $(this);
             var actionName = element.attr('data-method');
             var params = element.attr('data-params');
-            var paramsJson = atob(params);
+            var paramsJson = params.b64decode();
             var method = window.ioinstance.app[actionName];
 
             if (typeof method === "function") {
@@ -947,9 +947,9 @@ io.prototype.ui = {
                         selectParamsJSONString = '[]';
                     }
 
-                    var updateParamsHtml = btoa(updateParamsJSONString);
-                    var deleteParamsHtml = btoa(deleteParamsJSONString);
-                    var selectParamsHtml = btoa(selectParamsJSONString);
+                    var updateParamsHtml = updateParamsJSONString.b64encode();
+                    var deleteParamsHtml = deleteParamsJSONString.b64encode();
+                    var selectParamsHtml = selectParamsJSONString.b64encode();
                     var updateIsHidden = (updateMethodName != null && updateMethodName !== '') ? '' : 'hidden';
                     var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
                     var selectIsHidden = (selectMethodName != null && selectMethodName !== '') ? '' : 'hidden';
@@ -1188,6 +1188,14 @@ ioValidation.prototype = {
 
         return true;
     }
+};
+
+String.prototype.b64encode = function() {
+    return btoa(unescape(encodeURIComponent(this)));
+};
+
+String.prototype.b64decode = function() {
+    return decodeURIComponent(escape(atob(this)));
 };
 
 /**

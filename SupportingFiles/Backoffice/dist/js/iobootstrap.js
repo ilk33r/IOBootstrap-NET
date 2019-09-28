@@ -1,27 +1,10 @@
 io.prototype.inited = function() {
 };
 
-io.prototype.request.ClientAddRequest = {
-    Culture: 0,
-    Version: '',
-    ClientDescription: '',
-    RequestCount: 0
-};
-
 io.prototype.request.ClientDeleteRequest = {
     Culture: 0,
     Version: '',
     ClientId: 0
-};
-
-io.prototype.request.ClientUpdateRequest = {
-    Culture: 0,
-    Version: '',
-    ClientId: 0,
-    ClientDescription: '',
-    IsEnabled: 0,
-    RequestCount: 0,
-    MaxRequestCount: 0
 };
 
 io.prototype.request.ConfigurationAddRequest = {
@@ -124,36 +107,55 @@ io.prototype.app.clientsList = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    // Call client list
+    var breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+
     io.service.get('backoffice/clients/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('client', function (layout) {
-                var clientsHtml = '';
-                var clientLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.clientList) {
-                    var client = response.clientList[index];
-                    var clientLayoutData = {
-                        id: client.id,
-                        clientID: client.clientID,
-                        clientSecret: client.clientSecret,
-                        clientDescription: client.clientDescription,
-                        isEnabled: (client.isEnabled == 1) ? 'YES' : 'NO',
-                        requestCount: client.requestCount,
-                        maxRequestCount: client.maxRequestCount
-                    };
+            var listData = [];
+            var updateParams = [];
+            var deleteParams = [];
 
-                    clientsHtml += window.ioinstance.layout.renderLayout(layout, clientLayoutData, clientLayoutProperties);
-                }
+            for (var index in response.clientList) {
+                var client = response.clientList[index];
 
-                window.ioinstance.service.loadLayout('clientslist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        clients: clientsHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+                var isEnabled = (client.isEnabled === 1) ? 'YES' : 'NO';
+                var itemListData = [
+                    client.id,
+                    client.clientDescription,
+                    isEnabled,
+                    client.requestCount,
+                    client.maxRequestCount,
+                    client.clientID,
+                    client.clientSecret
+                ];
+
+                listData.push(itemListData);
+
+                var itemUpdateData = [
+                    client.id,
+                    client.clientDescription,
+                    client.isEnabled,
+                    client.requestCount,
+                    client.maxRequestCount
+                ];
+
+                updateParams.push(itemUpdateData);
+                deleteParams.push([client.id]);
+            }
+
+            var listDataHeaders = [
+                'ID',
+                'Description',
+                'Enabled',
+                'Request Count',
+                'Max Request Count',
+                'Client ID',
+                'Secret',
+                'Options'
+            ];
+
+            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'clientsUpdate', updateParams, 'clientDelete', deleteParams, null, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -162,59 +164,60 @@ io.prototype.app.clientsList = function (e, hash) {
     });
 };
 
-io.prototype.app.clientUpdate = function (id, clientDescription, isEnabled, requestCount, maxRequestCount) {
+io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, requestCount, maxRequestCount) {
+    var io = window.ioinstance;
+
     // Show indicator
-    window.ioinstance.indicator.show();
-    window.ioinstance.service.loadLayout('clientupdate', false, function () {
-        var options = '';
+    io.indicator.show();
 
-        if (isEnabled == 'YES') {
-            options += '<option value="0">NO</option>';
-            options += '<option value="1" selected="selected">YES</option>';
-        } else {
-            options += '<option value="0" selected="selected">NO</option>';
-            options += '<option value="1">YES</option>';
-        }
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
+    var formBreadcrumb = new io.ui.breadcrumb('clientsUpdate', 'Update client.', [ breadcrumbNavigation ]);
 
-        window.ioinstance.layout.contentLayoutData = {
-            id: id,
-            clientDescription: clientDescription,
-            requestCount: requestCount,
-            maxRequestCount: maxRequestCount,
-            options: options
-        };
+    var isEnabledFormData = new io.ui.formData(io.ui.formDataTypes.select, 'clientIsEnabled', 'Is Enabled', 'IsEnabled');
+    isEnabledFormData.value = isEnabled;
+    isEnabledFormData.options = [
+        new io.ui.formDataOptions('NO', 0),
+        new io.ui.formDataOptions('YES', 1)
+    ];
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu('clientsUpdate');
+    var clientDescriptionFormData = new io.ui.formData(io.ui.formDataTypes.text, 'clientDescription', 'Description', 'ClientDescription');
+    var clientDescriptionValidation = new ioValidation(io.validationRuleTypes.minLength, 'Client name is too sort.', 'clientDescription', 'Invalid client name.');
+    clientDescriptionValidation.length = 1;
+    clientDescriptionFormData.validations = [ clientDescriptionValidation ];
+    clientDescriptionFormData.value = clientDescription;
 
-        $('#updateClientForm').submit(function (e) {
-            e.preventDefault();
-            var request = window.ioinstance.request.ClientUpdateRequest;
-            request.Version = window.ioinstance.version;
-            request.ClientId = parseInt($('#updateClientForm').attr('data-id'));
-            request.ClientDescription = $('#clientDescription').val();
-            request.IsEnabled = parseInt($('#clientIsEnabled').val());
-            request.RequestCount = parseInt($('#clientRequestCount').val());
-            request.MaxRequestCount = parseInt($('#clientMaxRequestCount').val());
+    var requestCountFormData = new io.ui.formData(io.ui.formDataTypes.number, 'clientRequestCount', 'Request Count', 'RequestCount');
+    requestCountFormData.value = requestCount;
 
-            window.ioinstance.indicator.show();
-            window.ioinstance.service.post('backoffice/clients/update', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
-                if (status && response.status.success) {
-                    callout.show(callout.types.success, 'Client has been updated successfully.', '');
-                } else {
-                    callout.show(callout.types.danger, error.message, error.detailedMessage);
-                    window.ioinstance.indicator.hide();
-                }
+    var maxRequestCountFormData = new io.ui.formData(io.ui.formDataTypes.number, 'clientMaxRequestCount', 'Max Request Count', 'MaxRequestCount');
+    maxRequestCountFormData.value = maxRequestCount;
 
+    var formDatas = [
+        isEnabledFormData,
+        clientDescriptionFormData,
+        requestCountFormData,
+        maxRequestCountFormData
+    ];
+
+    io.ui.createForm('clientsUpdate', formBreadcrumb, 'updateClientForm', formDatas, 'Save', function () {
+    }, function (request) {
+
+        request.ClientId = id;
+        request.IsEnabled = parseInt(request.IsEnabled);
+
+        window.ioinstance.service.post('backoffice/clients/update', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Client has been updated successfully.', '');
+                window.location.hash = '';
                 window.ioinstance.app.clientsList(null, 'clientsList');
-            });
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
         });
     });
-};
-
-io.prototype.app.clientsUpdate = function (e, hash) {
-    window.ioinstance.app.clientsList(e, hash);
 };
 
 io.prototype.app.clientDelete = function (id) {
@@ -238,39 +241,40 @@ io.prototype.app.clientDelete = function (id) {
     }
 };
 
-io.prototype.app.clientsDelete = function (e, hash) {
-    window.ioinstance.app.clientsList(e, hash);
-};
-
 io.prototype.app.clientsAdd = function (e, hash) {
     var io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    io.service.loadLayout('clientsadd', false, function () {
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu(hash);
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
+    var formBreadcrumb = new io.ui.breadcrumb('clientsAdd', 'Add a client.', [ breadcrumbNavigation ]);
 
-        $('#addClientForm').submit(function (e) {
-            e.preventDefault();
-            var request = window.ioinstance.request.ClientAddRequest;
-            request.Version = window.ioinstance.version;
-            request.ClientDescription = $('#clientDescription').val();
-            request.RequestCount = $('#clientRequestCount').val();
-            window.ioinstance.indicator.show();
-            window.ioinstance.service.post('backoffice/clients/add', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
-                if (status && response.status.success) {
-                    callout.show(callout.types.success, 'Client has been added successfully.', '');
-                } else {
-                    callout.show(callout.types.danger, error.message, error.detailedMessage);
-                    window.ioinstance.indicator.hide();
-                }
+    var clientDescriptionFormData = new io.ui.formData(io.ui.formDataTypes.text, 'clientDescription', 'Description', 'ClientDescription');
+    var clientDescriptionValidation = new ioValidation(io.validationRuleTypes.minLength, 'Client name is too sort.', 'clientDescription', 'Invalid client name.');
+    clientDescriptionValidation.length = 1;
+    clientDescriptionFormData.validations = [ clientDescriptionValidation ];
 
+    var requestCountFormData = new io.ui.formData(io.ui.formDataTypes.number, 'clientRequestCount', 'Request Count', 'RequestCount');
+
+    var formDatas = [
+        clientDescriptionFormData,
+        requestCountFormData
+    ];
+
+    io.ui.createForm(hash, formBreadcrumb, 'addClientForm', formDatas, 'Save', function () {
+    }, function (request) {
+        window.ioinstance.service.post('backoffice/clients/add', request, function (status, response, error) {
+            var callout = window.ioinstance.callout;
+
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Client has been added successfully.', '');
+                window.location.hash = '';
                 window.ioinstance.app.clientsList(null, 'clientsList');
-            });
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
         });
     });
 };

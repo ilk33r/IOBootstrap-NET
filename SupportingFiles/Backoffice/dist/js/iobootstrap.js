@@ -199,7 +199,7 @@ io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, req
         maxRequestCountFormData
     ];
 
-    io.ui.createForm('clientsUpdate', formBreadcrumb, 'updateClientForm', formDatas, 'Save', function () {
+    io.ui.createForm('clientsUpdate', formBreadcrumb, 'updateClientForm', formDatas, 'Update', function () {
     }, function (request) {
 
         request.ClientId = id;
@@ -284,36 +284,53 @@ io.prototype.app.clientsSelect = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    // Call client list
+    var breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+
     io.service.get('backoffice/clients/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('clientselectitem', function (layout) {
-                var clientsHtml = '';
-                var clientLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.clientList) {
-                    var client = response.clientList[index];
-                    var clientLayoutData = {
-                        id: client.id,
-                        clientID: client.clientID,
-                        clientSecret: client.clientSecret,
-                        clientDescription: client.clientDescription,
-                        isEnabled: (client.isEnabled == 1) ? 'YES' : 'NO',
-                        requestCount: client.requestCount,
-                        maxRequestCount: client.maxRequestCount
-                    };
+            var listData = [];
+            var selectionParams = [];
 
-                    clientsHtml += window.ioinstance.layout.renderLayout(layout, clientLayoutData, clientLayoutProperties);
-                }
+            for (var index in response.clientList) {
+                var client = response.clientList[index];
 
-                window.ioinstance.service.loadLayout('clientslist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        clients: clientsHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+                var isEnabled = (client.isEnabled === 1) ? 'YES' : 'NO';
+                var itemListData = [
+                    client.id,
+                    client.clientDescription,
+                    isEnabled,
+                    client.requestCount,
+                    client.maxRequestCount,
+                    client.clientID,
+                    client.clientSecret
+                ];
+
+                listData.push(itemListData);
+
+                var itemUpdateData = [
+                    client.id,
+                    client.clientDescription,
+                    client.isEnabled,
+                    client.requestCount,
+                    client.maxRequestCount
+                ];
+
+                selectionParams.push([client.id, client.clientDescription]);
+            }
+
+            var listDataHeaders = [
+                'ID',
+                'Description',
+                'Enabled',
+                'Request Count',
+                'Max Request Count',
+                'Client ID',
+                'Secret',
+                'Options'
+            ];
+
+            io.ui.createPopupSelection(hash, breadcrumb, listDataHeaders, listData, 'clientSelectItem', selectionParams, null, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -324,7 +341,7 @@ io.prototype.app.clientsSelect = function (e, hash) {
 
 io.prototype.app.clientSelectItem = function (e, hash) {
     var client = $('#client');
-    client.attr('data-clientId', e[0]);
+    client.attr('data-params', e[0]);
     client.val(e[1]);
 };
 

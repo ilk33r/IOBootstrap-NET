@@ -631,7 +631,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
             if (request.ParentEntityID === '') {
                 request.ParentEntityID = null;
             } else {
-                request.ParentEntityID = parseInt($('#parentMenu').attr('data-params'));
+                request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
             }
 
             window.ioinstance.service.post('backoffice/menu/add', request, function (status, response, error) {
@@ -730,7 +730,7 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
             if (request.ParentEntityID === '') {
                 request.ParentEntityID = null;
             } else {
-                request.ParentEntityID = parseInt($('#parentMenu').attr('data-params'));
+                request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
             }
 
             window.ioinstance.service.post('backoffice/menu/update', request, function (status, response, error) {

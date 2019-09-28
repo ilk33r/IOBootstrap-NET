@@ -142,30 +142,6 @@ namespace IOBootstrap.NET.Core.Database
                 ParentEntityID = 6
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(userAddEntity);
-
-            IOMenuEntity userUpdateEntity = new IOMenuEntity()
-            {
-                ID = 9,
-                Action = "usersUpdate",
-                CssClass = "fa-circle-o",
-                Name = "Update User",
-                MenuOrder = 9,
-                RequiredRole = (int)UserRoles.Admin,
-                ParentEntityID = 6
-            };
-            modelBuilder.Entity<IOMenuEntity>().HasData(userUpdateEntity);
-
-            IOMenuEntity userDeleteEntity = new IOMenuEntity()
-            {
-                ID = 10,
-                Action = "usersDelete",
-                CssClass = "fa-circle-o",
-                Name = "Delete User",
-                MenuOrder = 10,
-                RequiredRole = (int)UserRoles.Admin,
-                ParentEntityID = 6
-            };
-            modelBuilder.Entity<IOMenuEntity>().HasData(userDeleteEntity);
         }
 
         private void GenerateConfigurationMenu(ModelBuilder modelBuilder)

@@ -78,7 +78,7 @@ io.prototype.app.dashboard = function(e, hash) {
 };
 
 io.prototype.app.clientsList = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -119,7 +119,7 @@ io.prototype.app.clientsList = function (e, hash) {
                 deleteParams.push([client.id]);
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Description',
                 'Enabled',
@@ -139,7 +139,7 @@ io.prototype.app.clientsList = function (e, hash) {
 };
 
 io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, requestCount, maxRequestCount) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -216,7 +216,7 @@ io.prototype.app.clientDelete = function (id) {
 };
 
 io.prototype.app.clientsAdd = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -254,7 +254,7 @@ io.prototype.app.clientsAdd = function (e, hash) {
 };
 
 io.prototype.app.clientsSelect = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -293,7 +293,7 @@ io.prototype.app.clientsSelect = function (e, hash) {
                 selectionParams.push([client.id, client.clientDescription]);
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Description',
                 'Enabled',
@@ -340,7 +340,7 @@ io.prototype.app.configurationDelete = function(id) {
 };
 
 io.prototype.app.configurationsAdd = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -382,7 +382,7 @@ io.prototype.app.configurationsAdd = function (e, hash) {
 };
 
 io.prototype.app.configurationsList = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -418,7 +418,7 @@ io.prototype.app.configurationsList = function (e, hash) {
                 deleteParams.push([configuration.id]);
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Key',
                 'Int Value',
@@ -435,7 +435,7 @@ io.prototype.app.configurationsList = function (e, hash) {
 };
 
 io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -482,7 +482,7 @@ io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue)
 };
 
 io.prototype.app.menuEditorList = function(e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -561,7 +561,7 @@ io.prototype.app.menuEditorList = function(e, hash) {
                 }
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Name',
                 'Action',
@@ -580,7 +580,7 @@ io.prototype.app.menuEditorList = function(e, hash) {
 };
 
 io.prototype.app.menuEditorAdd = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -671,7 +671,7 @@ io.prototype.app.menuEditorSelect = function(e, hash) {
 };
 
 io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRoleRaw, menuOrder, parentMenuName, parentMenuId) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -743,7 +743,7 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
 };
 
 io.prototype.app.menuSelect = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -795,7 +795,7 @@ io.prototype.app.menuSelect = function (e, hash) {
                 }
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Name',
                 'Action',
@@ -835,7 +835,7 @@ io.prototype.app.messageDelete = function (id) {
 };
 
 io.prototype.app.messagesAdd = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -876,7 +876,7 @@ io.prototype.app.messagesAdd = function (e, hash) {
 };
 
 io.prototype.app.messagesList = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -932,7 +932,7 @@ io.prototype.app.messagesList = function (e, hash) {
                 deleteParams.push([message.id]);
             }
 
-            var listDataHeaders = [
+            let listDataHeaders = [
                 'ID',
                 'Message',
                 'Create Date',
@@ -950,7 +950,7 @@ io.prototype.app.messagesList = function (e, hash) {
 };
 
 io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -995,38 +995,57 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
 };
 
 io.prototype.app.usersList = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    // Call client list
+    var breadcrumb = new io.ui.breadcrumb('usersList', 'Users', []);
+
     io.service.get('backoffice/users/list', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('user', function (layout) {
-                var usersHtml = '';
-                var userLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.users) {
-                    var user = response.users[index];
-                    var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
-                    var userLayoutData = {
-                        id: user.id,
-                        userName: user.userName,
-                        userRole: roleName,
-                        tokenDate: user.tokenDate
-                    };
+            var listData = [];
+            var updateParams = [];
+            var deleteParams = [];
+            var extraParams = [];
 
-                    usersHtml += window.ioinstance.layout.renderLayout(layout, userLayoutData, userLayoutProperties);
-                }
+            for (var index in response.users) {
+                var user = response.users[index];
 
-                window.ioinstance.service.loadLayout('userslist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        users: usersHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+                var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
+                var itemListData = [
+                    user.id,
+                    user.userName,
+                    roleName,
+                    user.tokenDate
+                ];
+
+                listData.push(itemListData);
+
+                var itemUpdateData = [
+                    user.id,
+                    user.userName,
+                    user.userRole
+                ];
+
+                updateParams.push(itemUpdateData);
+                deleteParams.push([user.id]);
+
+                let itemExtraParams = [
+                    new io.ui.extraParam('Change Password', 'fa-key', 'userChangePassword', [user.id, user.userName])
+                ];
+
+                extraParams.push(itemExtraParams);
+            }
+
+            let listDataHeaders = [
+                'ID',
+                'Name',
+                'Role',
+                'Last Login Date'
+            ];
+
+            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, 'userUpdate', updateParams, 'userDelete', deleteParams, null, null, null, extraParams, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -1186,7 +1205,7 @@ io.prototype.app.usersDelete = function (e, hash) {
 };
 
 io.prototype.app.usersAdd = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -1244,7 +1263,7 @@ io.prototype.app.usersAdd = function (e, hash) {
 };
 
 io.prototype.app.pushNotificationList = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -1312,7 +1331,7 @@ io.prototype.app.pushNotificationMessageDelete = function (id) {
 };
 
 io.prototype.app.pushNotificationSend = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
@@ -1360,7 +1379,7 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
 };
 
 io.prototype.app.restartApp = function (e, hash) {
-    var io = window.ioinstance;
+    let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();

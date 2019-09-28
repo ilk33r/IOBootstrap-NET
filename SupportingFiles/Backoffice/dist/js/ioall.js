@@ -40,6 +40,7 @@ io.prototype = {
     ui: {},
     userRoles: {},
     validationRuleTypes: {
+        matchRule: 'MatchRule',
         minLength: 'MinLengthRule'
     },
     selectedMenuItem: null,
@@ -722,6 +723,7 @@ io.prototype.ui = {
     formDataTypes: {
         date: 'DateType',
         number: 'NumberType',
+        password: 'PasswordType',
         popupSelection: 'PopupSelectionType',
         select: 'SelectType',
         textArea: 'TextAreaType',
@@ -814,6 +816,21 @@ io.prototype.ui = {
     },
     createFormWithNumberType: function (formData, callback) {
         window.ioinstance.service.loadLayoutText('formWithNumberLayout', function (layout) {
+            var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var formLayoutData = {
+                formDataIdArea: formData.id + 'Area',
+                formDataId: formData.id,
+                formDataName: formData.name,
+                formDataValue: formData.value,
+                formDataIdMessage: formData.id + 'Message'
+            };
+
+            var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);
+            callback(formHtml);
+        });
+    },
+    createFormWithPasswordType: function (formData, callback) {
+        window.ioinstance.service.loadLayoutText('formWithPasswordLayout', function (layout) {
             var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
             var formLayoutData = {
                 formDataIdArea: formData.id + 'Area',
@@ -1016,7 +1033,9 @@ io.prototype.ui = {
                     return;
                 }
 
-                request[formData.requestKey] = $('#' + formData.id).val();
+                if (formData.requestKey != null) {
+                    request[formData.requestKey] = $('#' + formData.id).val();
+                }
             }
 
             callback(request)
@@ -1127,19 +1146,6 @@ io.prototype.userRoles = {
         }
 
         return roleList;
-    },
-    getRoleSelection: function (roleId) {
-        var roleList = '';
-
-        for (var i = 0; i < 3; i++) {
-            if (roleId == i) {
-                roleList += '<option value="' + i + '" selected="selected">' + this.getRoleName(i) + '</option>';
-            } else {
-                roleList += '<option value="' + i + '">' + this.getRoleName(i) + '</option>';
-            }
-        }
-
-        return roleList;
     }
 };
 
@@ -1154,6 +1160,7 @@ ioValidation.prototype = {
     alternateMessage: '',
     errorMessage: '',
     length: 0,
+    otherInput: '',
     ruleName: '',
     validatableId: '',
     constructor: ioValidation,
@@ -1166,6 +1173,32 @@ ioValidation.prototype = {
 
         window.ioinstance.log.call('Validation rule ' + this.ruleName + ' could not found.');
         return false;
+    },
+    validateMatchRule: function (self) {
+        var validatableId = self.validatableId;
+        var validatable = $('#' + validatableId);
+        var value = validatable.val();
+
+        var callout = window.ioinstance.callout;
+
+        var areaElement = $('.' + validatableId + 'Area');
+        areaElement.removeClass('has-error');
+
+        var messageElement = $('.' + validatableId + 'Message');
+        messageElement.addClass('hidden');
+
+        var otherElementVal = $('#' + this.otherInput).val();
+
+        if (value !== otherElementVal) {
+            callout.show(callout.types.danger, self.errorMessage, self.alternateMessage);
+            areaElement.addClass('has-error');
+            messageElement.removeClass('hidden');
+            messageElement.text(self.errorMessage);
+
+            return false;
+        }
+
+        return true;
     },
     validateMinLengthRule: function (self) {
         var validatableId = self.validatableId;

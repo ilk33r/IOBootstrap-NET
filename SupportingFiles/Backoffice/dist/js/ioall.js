@@ -97,7 +97,7 @@ io.prototype = {
     },
     checkHash: function (hash) {
         if (hash.startsWith('#!')) {
-            var methodName = hash.substr(2, hash.length);
+            let methodName = hash.substr(2, hash.length);
             var method = this.app[methodName];
             if (typeof method === "function") {
                 return true;
@@ -116,7 +116,7 @@ io.prototype = {
         }
     },
     loginApp: function () {
-        var request = this.request.AuthenticationRequest;
+        let request = this.request.AuthenticationRequest;
         var userName = $('#inputEmail3').val();
         request.UserName = userName;
         request.Password = $('#inputPassword3').val();
@@ -610,7 +610,7 @@ io.prototype.service = {
                 callback(true, data, null);
             },
             error: function (error) {
-                var io = window.ioinstance;
+                let io = window.ioinstance;
                 io.indicator.hide();
                 var responeData = (dataType == io.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
                 if (typeof responeData === 'object' && responeData.status.code == 2) {
@@ -705,6 +705,12 @@ io.prototype.ui = {
         this.navigationId = navigationId;
         this.navigationName = navigationName;
     },
+    extraParam: function (name, icon, methodName, methodArguments) {
+        this.name = name;
+        this.icon = icon;
+        this.methodName = methodName;
+        this.methodArguments = methodArguments;
+    },
     formData: function (formDataType, id, name, requestKey) {
         this.formDataType = formDataType;
         this.id = id;
@@ -762,7 +768,7 @@ io.prototype.ui = {
         });
     },
     createForm: function (hash, breadcrumb, formName, formDataArray, submitButtonName, onRendered, callback) {
-        var io = window.ioinstance;
+        let io = window.ioinstance;
 
         // Show indicator
         io.indicator.show();
@@ -916,10 +922,10 @@ io.prototype.ui = {
         });
     },
     createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, onRendered) {
-        this.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, null, null, onRendered);
+        this.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, null, null, null, onRendered);
     },
-    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, selectMethodName, selectParams, onRendered) {
-        var io = window.ioinstance;
+    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, selectMethodName, selectParams, extraParams, onRendered) {
+        let io = window.ioinstance;
 
         // Show indicator
         io.indicator.show();
@@ -937,6 +943,7 @@ io.prototype.ui = {
                     var itemUpdateParams = (updateParams != null && updateParams.length > index) ? updateParams[index] : [];
                     var itemDeleteParams = (deleteParams != null && deleteParams.length > index) ? deleteParams[index] : [];
                     var itemSelectParams = (selectParams != null && selectParams.length > index) ? selectParams[index] : [];
+                    var itemExtraParams = (extraParams != null && extraParams.length > index) ? extraParams[index] : [];
                     var singleItemHtml = '';
 
                     for (var itemIndex in listDataItems) {
@@ -971,6 +978,17 @@ io.prototype.ui = {
                     var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
                     var selectIsHidden = (selectMethodName != null && selectMethodName !== '') ? '' : 'hidden';
                     var hasRowClass = (hasRowClasses != null && hasRowClasses.length > index) ? hasRowClasses[index] : false;
+                    var extraParamsHtml = '';
+
+                    if (itemExtraParams != null && itemExtraParams.length > 0) {
+                        for (var extraParamIndex in itemExtraParams) {
+                            var extraParam = itemExtraParams[extraParamIndex];
+                            var extraParamsB64 = JSON.stringify(extraParam.methodArguments).b64encode();
+                            extraParamsHtml += '<a class="btn btn-app" href="#!' + extraParam.methodName + '" data-type="action" data-method="' + extraParam.methodName + '" data-params="' + extraParamsB64 + '">';
+                            extraParamsHtml += '<i class="fa ' + extraParam.icon + '"></i> ' + extraParam.name + '</a>';
+                        }
+                    }
+
                     var itemsLayoutData = {
                         rowClass: (hasRowClass) ? 'childmenu' : '',
                         singleItemHtml: singleItemHtml,
@@ -982,14 +1000,15 @@ io.prototype.ui = {
                         deleteParamsHtml: deleteParamsHtml,
                         selectIsHidden:  selectIsHidden,
                         selectMethodName: (selectMethodName != null) ? selectMethodName : '',
-                        selectParamsHtml: selectParamsHtml
+                        selectParamsHtml: selectParamsHtml,
+                        extraParams: extraParamsHtml
                     };
 
                     itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
                 }
 
                 var headersHtml = '';
-                for (var headerItem in listDataHeaders) {
+                for (let headerItem in listDataHeaders) {
                     headersHtml += '<th>' + listDataHeaders[headerItem] + '</th>';
                 }
 
@@ -1015,7 +1034,7 @@ io.prototype.ui = {
         });
     },
     createPopupSelection: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, onRendered) {
-        this.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, selectMethodName, selectionParams, onRendered);
+        this.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, selectMethodName, selectionParams, null, onRendered);
     },
     getPopupSelectionValue: function(id) {
         return parseInt($('#' + id).attr('data-params'));
@@ -1102,6 +1121,13 @@ io.prototype.ui.breadcrumb.prototype = {
 io.prototype.ui.breadcrumbNavigation.prototype = {
     navigationId: '',
     navigationName: ''
+};
+
+io.prototype.ui.extraParam.prototype = {
+    name: '',
+    icon: '',
+    methodName: '',
+    methodArguments: []
 };
 
 io.prototype.ui.formData.prototype = {

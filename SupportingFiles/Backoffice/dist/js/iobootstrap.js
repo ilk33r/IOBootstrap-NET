@@ -143,8 +143,7 @@ io.prototype.app.clientsList = function (e, hash) {
                 'Request Count',
                 'Max Request Count',
                 'Client ID',
-                'Secret',
-                'Options'
+                'Secret'
             ];
 
             io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'clientsUpdate', updateParams, 'clientDelete', deleteParams, null, function () {
@@ -318,8 +317,7 @@ io.prototype.app.clientsSelect = function (e, hash) {
                 'Request Count',
                 'Max Request Count',
                 'Client ID',
-                'Secret',
-                'Options'
+                'Secret'
             ];
 
             io.ui.createPopupSelection(hash, breadcrumb, listDataHeaders, listData, 'clientSelectItem', selectionParams, null, function () {
@@ -585,8 +583,7 @@ io.prototype.app.menuEditorList = function(e, hash) {
                 'Action',
                 'Css Class',
                 'Role',
-                'Order',
-                'Options'
+                'Order'
             ];
 
             io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'menuEditorUpdate', updateParams, 'menuEditorDelete', deleteParams, hasRowClasses, function () {
@@ -820,8 +817,7 @@ io.prototype.app.menuSelect = function (e, hash) {
                 'Action',
                 'Css Class',
                 'Role',
-                'Order',
-                'Options'
+                'Order'
             ];
 
             io.ui.createPopupSelection(hash, breadcrumb, listDataHeaders, listData, 'menuEditorSelect', selectionParams, hasRowClasses, function () {
@@ -957,8 +953,7 @@ io.prototype.app.messagesList = function (e, hash) {
                 'Message',
                 'Create Date',
                 'Start Date',
-                'End Date',
-                'Options'
+                'End Date'
             ];
 
             io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'messageUpdate', updateParams, 'messageDelete', deleteParams, null, function () {

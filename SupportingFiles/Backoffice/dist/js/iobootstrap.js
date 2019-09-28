@@ -59,14 +59,6 @@ io.prototype.request.SendNotificationRequest = {
     NotificationTitle: ''
 };
 
-io.prototype.request.UserAddRequest = {
-    Culture: 0,
-    Version: '',
-    UserName: '',
-    Password: '',
-    UserRole: 0
-};
-
 io.prototype.request.UserChangePasswordRequest = {
     Culture: 0,
     Version: '',
@@ -1219,67 +1211,55 @@ io.prototype.app.usersAdd = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    io.service.loadLayout('usersadd', false, function () {
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu(hash);
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    var formBreadcrumb = new io.ui.breadcrumb('usersAdd', 'Add a new user', [ breadcrumbNavigation ]);
 
-        $('#addUserForm').submit(function (e) {
-            e.preventDefault();
+    var userNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'userName', 'User Name', 'UserName');
+    var userNameValidation = new ioValidation(io.validationRuleTypes.minLength, 'User name is too short.', 'userName', 'Invalid user name.');
+    userNameValidation.length = 3;
+    userNameFormData.validations = [ userNameValidation ];
+
+    var passwordFormData = new io.ui.formData(io.ui.formDataTypes.password, 'password', 'Password', 'Password');
+    var passwordMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Password is too short.', 'password', 'Invalid password.');
+    passwordMinLengthValidation.length = 3;
+    passwordFormData.validations = [ passwordMinLengthValidation ];
+
+    var passwordRepeatFormData = new io.ui.formData(io.ui.formDataTypes.password, 'repeatedPassword', 'Password (Repeat)', 'PasswordRepeated');
+    var passwordRepeatMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Password is too short.', 'repeatedPassword', 'Invalid password.');
+    passwordRepeatMinLengthValidation.length = 3;
+    var passwordMatchValidation = new ioValidation(io.validationRuleTypes.matchRule, 'Passwords did not match.', 'repeatedPassword', 'Invalid password.');
+    passwordMatchValidation.otherInput = 'password';
+    passwordRepeatFormData.validations = [ passwordRepeatMinLengthValidation, passwordMatchValidation ];
+
+    var roleFormData = new io.ui.formData(io.ui.formDataTypes.select, 'role', 'Role', 'UserRole');
+    roleFormData.options = io.userRoles.getRoleList();
+
+    var formDatas = [
+        userNameFormData,
+        passwordFormData,
+        passwordRepeatFormData,
+        roleFormData
+    ];
+
+    io.ui.createForm(hash, formBreadcrumb, 'addUserForm', formDatas, 'Save', function () {
+    },
+    function (request) {
+        window.ioinstance.service.post('backoffice/users/add', request, function (status, response, error) {
             var callout = window.ioinstance.callout;
-            var repeatedpassword = $('#repeatedpassword').val();
-            var request = window.ioinstance.request.UserAddRequest;
-            request.Version = window.ioinstance.version;
-            request.UserName = $('#userName').val();
-            request.Password = $('#password').val();
-            request.UserRole = parseInt($('#role').val());
 
-            var passwordArea = $('.passwordArea');
-            passwordArea.removeClass('has-error');
-            var passwordAreaHelp = $('.passwordAreaHelp');
-            passwordAreaHelp.addClass('hidden');
-
-            if (request.Password.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Password is too short.');
-                passwordArea.addClass('has-error');
-                passwordAreaHelp.removeClass('hidden');
-                passwordAreaHelp.text('Password is too short.');
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'User has been added successfully.', '');
+                window.location.hash = '';
+                window.ioinstance.app.usersList(null, 'usersList');
+            } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
+                var helpText = 'User ' + request.UserName + ' is exists.';
+                callout.show(callout.types.danger, 'Invalid username.', helpText);
                 window.ioinstance.indicator.hide();
-                return;
-            } else if (request.Password != repeatedpassword) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Passwords did not match.');
-                passwordArea.addClass('has-error');
-                passwordAreaHelp.removeClass('hidden');
-                passwordAreaHelp.text('Passwords did not match.');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
                 window.ioinstance.indicator.hide();
-                return;
-            } else if (request.UserName.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid username.', 'User name is too sort.');
-                $('.userNameArea').addClass('has-error');
-                passwordAreaHelp.removeClass('hidden');
-                passwordAreaHelp.text('User name is too sort.');
-                window.ioinstance.indicator.hide();
-                return;
             }
-
-            window.ioinstance.indicator.show();
-            window.ioinstance.service.post('backoffice/users/add', request, function (status, response, error) {
-                if (status && response.status.success) {
-                    callout.show(callout.types.success, 'User has been added successfully.', '');
-                    window.ioinstance.app.usersList(null, 'usersList');
-                } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
-                    var helpText = 'User ' + request.UserName + ' is exists.';
-                    callout.show(callout.types.danger, 'Invalid username.', helpText);
-                    $('.userNameArea').addClass('has-error');
-                    passwordAreaHelp.removeClass('hidden');
-                    passwordAreaHelp.text(helpText);
-                    window.ioinstance.indicator.hide();
-                } else {
-                    callout.show(callout.types.danger, error.message, error.detailedMessage);
-                    window.ioinstance.indicator.hide();
-                }
-            });
         });
     });
 };

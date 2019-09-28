@@ -1000,6 +1000,9 @@ io.prototype.ui = {
     createPopupSelection: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, onRendered) {
         this.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, selectMethodName, selectionParams, onRendered);
     },
+    getPopupSelectionValue: function(id) {
+        return parseInt($('#' + id).attr('data-params'));
+    },
     listenFormSubmit: function (formName, formDataArray, callback) {
         $('#' + formName).submit(function (e) {
             e.preventDefault();

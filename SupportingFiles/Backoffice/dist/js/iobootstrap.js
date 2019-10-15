@@ -56,14 +56,6 @@ io.prototype.request.UserDeleteRequest = {
     UserId: 0
 };
 
-io.prototype.request.UserUpdateRequest = {
-    Culture: 0,
-    Version: '',
-    UserId: 0,
-    UserName: '',
-    UserRole: 0
-};
-
 io.prototype.app.dashboard = function(e, hash) {
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('dashboard', false, function () {
@@ -1055,45 +1047,45 @@ io.prototype.app.usersList = function (e, hash) {
 };
 
 io.prototype.app.userUpdate = function (id, userName, userRole) {
+    let io = window.ioinstance;
+
     // Show indicator
-    window.ioinstance.indicator.show();
-    window.ioinstance.service.loadLayout('userupdate', false, function () {
-        var roleList = window.ioinstance.userRoles.getRoleSelection(userRole);
-        window.ioinstance.layout.contentLayoutData = {
-            id: id,
-            userName: userName,
-            userRole: userRole,
-            roleList: roleList
-        };
+    io.indicator.show();
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu('usersUpdate');
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    var formBreadcrumb = new io.ui.breadcrumb('userUpdate', 'Update user', [ breadcrumbNavigation ]);
 
-        $('#updateUserForm').submit(function (e) {
-            e.preventDefault();
-            var callout = window.ioinstance.callout;
-            var request = window.ioinstance.request.UserUpdateRequest;
-            request.Version = window.ioinstance.version;
-            request.UserId = parseInt($(this).attr('data-id'));
-            request.UserName = $('#userName').val();
-            request.UserRole = parseInt($('#userRole').val());
+    var userNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'userName', 'User Name', 'UserName');
+    var userNameValidation = new ioValidation(io.validationRuleTypes.minLength, 'User name is too short.', 'userName', 'Invalid user name.');
+    userNameValidation.length = 3;
+    userNameFormData.validations = [ userNameValidation ];
+    userNameFormData.value = userName;
 
-            if (request.UserName.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid username.', 'User name is too sort.');
-                $('.userNameArea').addClass('has-error');
-                window.ioinstance.indicator.hide();
-                return;
-            }
+    var roleFormData = new io.ui.formData(io.ui.formDataTypes.select, 'role', 'Role', 'UserRole');
+    roleFormData.value = userRole;
+    roleFormData.options = io.userRoles.getRoleList();
 
-            window.ioinstance.indicator.show();
+    var formDatas = [
+        userNameFormData,
+        roleFormData
+    ];
+
+    io.ui.createForm('userUpdate', formBreadcrumb, 'updateUserForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+
+            request.UserId = id;
+
             window.ioinstance.service.post('backoffice/users/update', request, function (status, response, error) {
+                var callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'User has been updated successfully.', '');
+                    window.location.hash = '';
                     window.ioinstance.app.usersList(null, 'usersList');
                 } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
                     var helpText = 'User ' + request.UserName + ' is exists.';
                     callout.show(callout.types.danger, 'Invalid username.', helpText);
-                    $('.userNameArea').addClass('has-error');
                     window.ioinstance.indicator.hide();
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
@@ -1101,7 +1093,6 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
                 }
             });
         });
-    });
 };
 
 io.prototype.app.userChangePassword = function (e, hash, id, userName) {

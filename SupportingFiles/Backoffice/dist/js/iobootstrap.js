@@ -172,7 +172,7 @@ io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, req
         request.IsEnabled = parseInt(request.IsEnabled);
 
         window.ioinstance.service.post('backoffice/clients/update', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Client has been updated successfully.', '');
@@ -194,7 +194,7 @@ io.prototype.app.clientDelete = function (id) {
         request.ClientId = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/clients/delete', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Client has been deleted successfully.', '');
             } else {
@@ -231,7 +231,7 @@ io.prototype.app.clientsAdd = function (e, hash) {
     io.ui.createForm(hash, formBreadcrumb, 'addClientForm', formDatas, 'Save', function () {
     }, function (request) {
         window.ioinstance.service.post('backoffice/clients/add', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Client has been added successfully.', '');
@@ -318,7 +318,7 @@ io.prototype.app.configurationDelete = function(id) {
         request.ConfigId = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/configurations/delete', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Configuration has been deleted successfully.', '');
             } else {
@@ -359,7 +359,7 @@ io.prototype.app.configurationsAdd = function (e, hash) {
         request.IntValue = parseInt(request.IntValue);
 
         window.ioinstance.service.post('backoffice/configurations/add', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Configuration parameter has been added successfully.', '');
@@ -459,7 +459,7 @@ io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue)
         request.IntValue = parseInt(request.IntValue);
 
         window.ioinstance.service.post('backoffice/configurations/update', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Configuration parameter has been updated successfully.', '');
@@ -621,7 +621,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
             }
 
             window.ioinstance.service.post('backoffice/menu/add', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Menu has been added successfully.', '');
@@ -643,7 +643,7 @@ io.prototype.app.menuEditorDelete = function (id) {
         request.ID = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/menu/delete', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Menu has been deleted successfully.', '');
             } else {
@@ -720,7 +720,7 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
             }
 
             window.ioinstance.service.post('backoffice/menu/update', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Menu has been updated successfully.', '');
@@ -813,7 +813,7 @@ io.prototype.app.messageDelete = function (id) {
         request.MessageId = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/messages/delete', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Message has been deleted successfully.', '');
             } else {
@@ -853,7 +853,7 @@ io.prototype.app.messagesAdd = function (e, hash) {
         },
         function (request) {
             window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been added successfully.', '');
@@ -972,7 +972,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
         function (request) {
             request.MessageId = id;
             window.ioinstance.service.post('backoffice/messages/update', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Message has been updated successfully.', '');
@@ -1077,7 +1077,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
             request.UserId = id;
 
             window.ioinstance.service.post('backoffice/users/update', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'User has been updated successfully.', '');
@@ -1115,7 +1115,7 @@ io.prototype.app.userChangePassword = function (e, hash, id, userName) {
             var passwordArea = $('.passwordArea');
             var passwordAreaHelp = $('.passwordAreaHelp');
 
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             var repeatedpassword = $('#repeatedpassword').val();
             var request = window.ioinstance.request.UserChangePasswordRequest;
             request.Version = window.ioinstance.version;
@@ -1166,7 +1166,7 @@ io.prototype.app.userDelete = function (id) {
         request.UserId = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/users/delete', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'User has been deleted successfully.', '');
             } else {
@@ -1227,7 +1227,7 @@ io.prototype.app.usersAdd = function (e, hash) {
     },
     function (request) {
         window.ioinstance.service.post('backoffice/users/add', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'User has been added successfully.', '');
@@ -1300,7 +1300,7 @@ io.prototype.app.pushNotificationMessageDelete = function (id) {
         request.ID = id;
         window.ioinstance.indicator.show();
         window.ioinstance.service.post('backoffice/pushnotificationbackoffice/deleteMessage', request, function (status, response, error) {
-            var callout = window.ioinstance.callout;
+            let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Message has been deleted successfully.', '');
             } else {
@@ -1348,7 +1348,7 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
             request.NotificationTitle = $('#notificationTitle').val();
 
             window.ioinstance.service.post('backoffice/pushnotificationbackoffice/sendnotification', request, function (status, response, error) {
-                var callout = window.ioinstance.callout;
+                let callout = window.ioinstance.callout;
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Push notification has been send successfully.', '');
                     window.ioinstance.app.sendNotification(null, 'sendNotification');
@@ -1369,7 +1369,7 @@ io.prototype.app.restartApp = function (e, hash) {
     io.selectMenu(hash);
 
     window.ioinstance.service.get("backoffice/configurations/restartApp", function (status, response, error) {
-        var callout = window.ioinstance.callout;
+        let callout = window.ioinstance.callout;
         if (status && response.status.success) {
             callout.show(callout.types.success, 'Application restarted has been send successfully.', '');
         } else {

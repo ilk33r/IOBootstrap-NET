@@ -1205,7 +1205,7 @@ ioValidation.prototype = {
         var validatable = $('#' + validatableId);
         var value = validatable.val();
 
-        var callout = window.ioinstance.callout;
+        let callout = window.ioinstance.callout;
 
         var areaElement = $('.' + validatableId + 'Area');
         areaElement.removeClass('has-error');
@@ -1231,7 +1231,7 @@ ioValidation.prototype = {
         var validatable = $('#' + validatableId);
         var value = validatable.val();
 
-        var callout = window.ioinstance.callout;
+        let callout = window.ioinstance.callout;
 
         var areaElement = $('.' + validatableId + 'Area');
         areaElement.removeClass('has-error');

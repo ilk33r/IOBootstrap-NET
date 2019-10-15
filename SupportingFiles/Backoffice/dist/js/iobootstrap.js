@@ -1032,7 +1032,7 @@ io.prototype.app.usersList = function (e, hash) {
                 deleteParams.push([user.id]);
 
                 let itemExtraParams = [
-                    new io.ui.extraParam('Change Password', 'fa-key', 'userChangePassword', [user.id, user.userName])
+                    new io.ui.extraParam('Change Password', 'fa-key', 'userChangePassword', [null, 'usersUpdate', user.id, user.userName])
                 ];
 
                 extraParams.push(itemExtraParams);
@@ -1104,15 +1104,11 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
     });
 };
 
-io.prototype.app.usersUpdate = function (e, hash) {
-    window.ioinstance.app.usersList(e, hash);
-};
-
 io.prototype.app.userChangePassword = function (e, hash, id, userName) {
     // Show indicator
     window.ioinstance.indicator.show();
     window.ioinstance.service.loadLayout('userchangepassword', false, function () {
-        var currentPasswordIsHidden = (window.ioinstance.userRole == window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
+        var currentPasswordIsHidden = (window.ioinstance.userRole === window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
         window.ioinstance.layout.contentLayoutData = {
             userName: userName || localStorage.getItem('userName'),
             currentPasswordIsHidden: currentPasswordIsHidden
@@ -1198,10 +1194,6 @@ io.prototype.app.usersLogout = function (e, hash) {
     window.ioinstance.token = '';
     window.ioinstance.userRole = -1;
     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName });
-};
-
-io.prototype.app.usersDelete = function (e, hash) {
-    window.ioinstance.app.usersList(e, hash);
 };
 
 io.prototype.app.usersAdd = function (e, hash) {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IOBootstrap.NET.Batch.Application
 {
@@ -30,7 +31,25 @@ namespace IOBootstrap.NET.Batch.Application
             this.IsDevelopment = development;
             this.Configuration = this.GetConfigurations(configFilePath);
             this.ConfigurationPath = configFilePath;
-			this.Logger = new ConsoleLogger(this.BatchName(), null, true);
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder => builder
+                .AddConsole()
+                .AddFilter(level => level >= LogLevel.Debug)
+            );
+            var loggerFactory = serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
+            this.Logger = loggerFactory.CreateLogger(this.BatchName());
+
+            /*
+                 * And in .NET Core 3.0, you can use LoggerFactory.Create:
+
+                var loggerFactory = LoggerFactory.Create(builder => {
+                    builder.AddFilter("Microsoft", LogLevel.Warning)
+                    .AddFilter("System", LogLevel.Warning)
+                    .AddFilter("SampleApp.Program", LogLevel.Debug)
+                    .AddConsole();
+                }
+                );
+            */
 
             // Create database context
             DbContextOptionsBuilder databaseOptionBuilder = new DbContextOptionsBuilder();

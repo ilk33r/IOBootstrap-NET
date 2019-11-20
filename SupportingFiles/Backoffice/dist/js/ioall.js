@@ -609,11 +609,11 @@ io.prototype.service = {
             success: function (data) {
                 callback(true, data, null);
             },
-            error: function (error) {
+            error: function (request, status, error) {
                 let io = window.ioinstance;
                 io.indicator.hide();
-                var responeData = (dataType == io.service.dataTypes.json) ? JSON.parse(error.responseText) : error.responseText;
-                if (typeof responeData === 'object' && responeData.status.code == 2) {
+                var responeData = (dataType === io.service.dataTypes.json) ? request.responseJSON : request.responseText;
+                if (typeof responeData === 'object' && responeData.status.code === 2) {
                     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
                 }
                 callback(false, responeData, error);
@@ -1213,7 +1213,7 @@ ioValidation.prototype = {
         var messageElement = $('.' + validatableId + 'Message');
         messageElement.addClass('hidden');
 
-        var otherElementVal = $('#' + this.otherInput).val();
+        var otherElementVal = $('#' + self.otherInput).val();
 
         if (value !== otherElementVal) {
             callout.show(callout.types.danger, self.errorMessage, self.alternateMessage);

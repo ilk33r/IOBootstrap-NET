@@ -42,14 +42,6 @@ io.prototype.request.SendNotificationRequest = {
     NotificationTitle: ''
 };
 
-io.prototype.request.UserChangePasswordRequest = {
-    Culture: 0,
-    Version: '',
-    UserName: '',
-    OldPassword: '',
-    NewPassword: ''
-};
-
 io.prototype.request.UserDeleteRequest = {
     Culture: 0,
     Version: '',
@@ -1096,66 +1088,60 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
 };
 
 io.prototype.app.userChangePassword = function (e, hash, id, userName) {
+    let io = window.ioinstance;
+
     // Show indicator
-    window.ioinstance.indicator.show();
-    window.ioinstance.service.loadLayout('userchangepassword', false, function () {
-        var currentPasswordIsHidden = (window.ioinstance.userRole === window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
-        window.ioinstance.layout.contentLayoutData = {
-            userName: userName || localStorage.getItem('userName'),
-            currentPasswordIsHidden: currentPasswordIsHidden
-        };
+    io.indicator.show();
 
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu('usersUpdate');
-        var changePasswordForm = $('#changePasswordForm');
+    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    var formBreadcrumb = new io.ui.breadcrumb('userUpdate', 'Change password', [ breadcrumbNavigation ]);
 
-        changePasswordForm.submit(function (e) {
-            e.preventDefault();
+    var currentPasswordFormData = new io.ui.formData(io.ui.formDataTypes.password, 'currentPassword', 'Current Password', 'OldPassword');
+    var currentPasswordMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Password is too short.', 'currentPassword', 'Invalid password.');
+    currentPasswordMinLengthValidation.length = 3;
+    currentPasswordFormData.validations = [ currentPasswordMinLengthValidation ];
 
-            var passwordArea = $('.passwordArea');
-            var passwordAreaHelp = $('.passwordAreaHelp');
+    var passwordFormData = new io.ui.formData(io.ui.formDataTypes.password, 'password', 'Password', 'NewPassword');
+    var passwordMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Password is too short.', 'password', 'Invalid password.');
+    passwordMinLengthValidation.length = 1;
+    passwordFormData.validations = [ passwordMinLengthValidation ];
 
-            let callout = window.ioinstance.callout;
-            var repeatedpassword = $('#repeatedpassword').val();
-            var request = window.ioinstance.request.UserChangePasswordRequest;
-            request.Version = window.ioinstance.version;
-            request.UserName = changePasswordForm.attr('data-id');
-            request.OldPassword = $('#currentPassword').val();
-            request.NewPassword = $('#password').val();
+    var passwordRepeatFormData = new io.ui.formData(io.ui.formDataTypes.password, 'repeatedPassword', 'Password (Repeat)', 'PasswordRepeated');
+    var passwordRepeatMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Password is too short.', 'repeatedPassword', 'Invalid password.');
+    passwordRepeatMinLengthValidation.length = 3;
+    var passwordMatchValidation = new ioValidation(io.validationRuleTypes.matchRule, 'Passwords did not match.', 'repeatedPassword', 'Invalid password.');
+    passwordMatchValidation.otherInput = 'password';
+    passwordRepeatFormData.validations = [ passwordRepeatMinLengthValidation, passwordMatchValidation ];
 
-            passwordArea.removeClass('has-error');
-            passwordAreaHelp.addClass('hidden');
+    var currentPasswordIsHidden = (window.ioinstance.userRole === window.ioinstance.userRoles.superAdmin) ? 'hidden' : '';
+    var formDatas = [];
 
-            if (request.NewPassword.length <= 3) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Password is too short.');
-                passwordArea.addClass('has-error');
-                passwordAreaHelp.removeClass('hidden');
-                passwordAreaHelp.text('Password is too short.');
-                window.ioinstance.indicator.hide();
-                return;
-            } else if (request.NewPassword != repeatedpassword) {
-                callout.show(callout.types.danger, 'Invalid password.', 'Passwords did not match.');
-                passwordArea.addClass('has-error');
-                passwordAreaHelp.removeClass('hidden');
-                passwordAreaHelp.text('Passwords did not match.');
-                window.ioinstance.indicator.hide();
-                return;
-            }
+    if (!currentPasswordIsHidden) {
+        formDatas.push(currentPasswordFormData);
+    }
 
-            window.ioinstance.indicator.show();
+    formDatas.push(passwordFormData);
+    formDatas.push(passwordRepeatFormData);
+
+    io.ui.createForm(hash, formBreadcrumb, 'changePasswordForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+
+            request.UserName = userName || localStorage.getItem('userName');
+
             window.ioinstance.service.post('backoffice/users/password/change', request, function (status, response, error) {
+                let callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'User password has been changed successfully.', '');
+                    window.location.hash = '';
+                    window.ioinstance.app.usersList(null, 'usersList');
                 } else {
                     callout.show(callout.types.danger, 'Invalid password.', 'Current password is incorrect.');
-                    passwordArea.addClass('has-error');
-                    passwordAreaHelp.removeClass('hidden');
-                    passwordAreaHelp.text('Current password is incorrect.');
+                    window.ioinstance.indicator.hide();
                 }
-                window.ioinstance.indicator.hide();
             });
         });
-    });
 };
 
 io.prototype.app.userDelete = function (id) {

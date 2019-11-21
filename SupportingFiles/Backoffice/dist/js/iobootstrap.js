@@ -67,7 +67,7 @@ io.prototype.app.clientsList = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+    let breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
 
     io.service.get('backoffice/clients/list', function(status, response, error) {
         if (status && response.status.success) {
@@ -128,7 +128,7 @@ io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, req
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
     var formBreadcrumb = new io.ui.breadcrumb('clientsUpdate', 'Update client.', [ breadcrumbNavigation ]);
 
     var isEnabledFormData = new io.ui.formData(io.ui.formDataTypes.select, 'clientIsEnabled', 'Is Enabled', 'IsEnabled');
@@ -205,7 +205,7 @@ io.prototype.app.clientsAdd = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('clientsList', 'Clients');
     var formBreadcrumb = new io.ui.breadcrumb('clientsAdd', 'Add a client.', [ breadcrumbNavigation ]);
 
     var clientDescriptionFormData = new io.ui.formData(io.ui.formDataTypes.text, 'clientDescription', 'Description', 'ClientDescription');
@@ -243,7 +243,7 @@ io.prototype.app.clientsSelect = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+    let breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
 
     io.service.get('backoffice/clients/list', function(status, response, error) {
         if (status && response.status.success) {
@@ -329,7 +329,7 @@ io.prototype.app.configurationsAdd = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('configurationsList', 'Configurations');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('configurationsList', 'Configurations');
     var formBreadcrumb = new io.ui.breadcrumb('configurationsAdd', 'Add a configuration parameter.', [ breadcrumbNavigation ]);
 
     var configKeyFormData = new io.ui.formData(io.ui.formDataTypes.text, 'configKey', 'Config Key', 'ConfigKey');
@@ -371,7 +371,7 @@ io.prototype.app.configurationsList = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('configurationsList', 'Configurations', []);
+    let breadcrumb = new io.ui.breadcrumb('configurationsList', 'Configurations', []);
 
     io.service.get('backoffice/configurations/list', function(status, response, error) {
         if (status && response.status.success) {
@@ -424,7 +424,7 @@ io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue)
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('configurationsList', 'Configurations');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('configurationsList', 'Configurations');
     var formBreadcrumb = new io.ui.breadcrumb('configurationUpdate', 'Update configuration parameter.', [ breadcrumbNavigation ]);
 
     var configKeyFormData = new io.ui.formData(io.ui.formDataTypes.text, 'configKey', 'Config Key', 'ConfigKey');
@@ -471,7 +471,7 @@ io.prototype.app.menuEditorList = function(e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
+    let breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
 
     // Call client list
     io.service.get('backoffice/menu/list', function(status, response, error) {
@@ -569,7 +569,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
     var formBreadcrumb = new io.ui.breadcrumb('menuEditorAdd', 'Add a menu item', [ breadcrumbNavigation ]);
 
     var nameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuName', 'Name', 'Name');
@@ -660,7 +660,7 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('menuEditorList', 'Menu Editor');
     var formBreadcrumb = new io.ui.breadcrumb('menuEditorUpdate', 'Update Menu Item', [ breadcrumbNavigation ]);
 
     var nameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'menuName', 'Name', 'Name');
@@ -732,7 +732,7 @@ io.prototype.app.menuSelect = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
+    let breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
 
     // Call client list
     io.service.get('backoffice/menu/list', function(status, response, error) {
@@ -824,7 +824,7 @@ io.prototype.app.messagesAdd = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
     var formBreadcrumb = new io.ui.breadcrumb('messagesAdd', 'Add a new message', [ breadcrumbNavigation ]);
 
     var messageFormData = new io.ui.formData(io.ui.formDataTypes.textArea, 'message', 'Message', 'Message');
@@ -865,7 +865,7 @@ io.prototype.app.messagesList = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('messagesList', 'Messages', []);
+    let breadcrumb = new io.ui.breadcrumb('messagesList', 'Messages', []);
 
     // Call client list
     io.service.get('backoffice/messages/listall', function(status, response, error) {
@@ -939,7 +939,7 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('messagesList', 'Messages');
     var formBreadcrumb = new io.ui.breadcrumb('messagesAdd', 'Add a new message', [ breadcrumbNavigation ]);
 
     var messageFormData = new io.ui.formData(io.ui.formDataTypes.textArea, 'message', 'Message', 'Message');
@@ -984,7 +984,7 @@ io.prototype.app.usersList = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumb = new io.ui.breadcrumb('usersList', 'Users', []);
+    let breadcrumb = new io.ui.breadcrumb('usersList', 'Users', []);
 
     io.service.get('backoffice/users/list', function(status, response, error) {
         if (status && response.status.success) {
@@ -1044,7 +1044,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
     var formBreadcrumb = new io.ui.breadcrumb('userUpdate', 'Update user', [ breadcrumbNavigation ]);
 
     var userNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'userName', 'User Name', 'UserName');
@@ -1093,7 +1093,7 @@ io.prototype.app.userChangePassword = function (e, hash, id, userName) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
     var formBreadcrumb = new io.ui.breadcrumb('userUpdate', 'Change password', [ breadcrumbNavigation ]);
 
     var currentPasswordFormData = new io.ui.formData(io.ui.formDataTypes.password, 'currentPassword', 'Current Password', 'OldPassword');
@@ -1179,7 +1179,7 @@ io.prototype.app.usersAdd = function (e, hash) {
     // Show indicator
     io.indicator.show();
 
-    var breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('usersList', 'Users');
     var formBreadcrumb = new io.ui.breadcrumb('usersAdd', 'Add a new user', [ breadcrumbNavigation ]);
 
     var userNameFormData = new io.ui.formData(io.ui.formDataTypes.text, 'userName', 'User Name', 'UserName');

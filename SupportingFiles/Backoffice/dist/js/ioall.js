@@ -61,8 +61,10 @@ io.prototype = {
                 window.ioinstance.openedWindow.close();
             }
             window.ioinstance.log.call('Message received');
-            var message = JSON.parse(e.originalEvent.data);
-            window.ioinstance.callMessage(message);
+            if (e.originalEvent.data.startsWith('{') || e.originalEvent.data.startsWith('[')) {
+                var message = JSON.parse(e.originalEvent.data);
+                window.ioinstance.callMessage(message);
+            }
         });
 
         this.inited();

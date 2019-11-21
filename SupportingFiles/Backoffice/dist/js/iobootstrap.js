@@ -31,17 +31,6 @@ io.prototype.request.PushNotificationMessageDeleteRequest = {
     ID: 0
 };
 
-io.prototype.request.SendNotificationRequest = {
-    Culture: 0,
-    Version: '',
-    ClientId: 0,
-    DeviceType: 0,
-    NotificationCategory: '',
-    NotificationData: '',
-    NotificationMessage: '',
-    NotificationTitle: ''
-};
-
 io.prototype.request.UserDeleteRequest = {
     Culture: 0,
     Version: '',
@@ -1236,40 +1225,48 @@ io.prototype.app.pushNotificationList = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    // Call client list
+    let breadcrumb = new io.ui.breadcrumb('pushNotificationList', 'Push Notification Messages', []);
+
     io.service.get('backoffice/pushnotificationbackoffice/listMessages', function(status, response, error) {
         if (status && response.status.success) {
-            window.ioinstance.service.loadLayoutText('pushnotificationmessage', function (layout) {
-                var messageHtml = '';
-                var messageLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-                for (var index in response.messages) {
-                    var message = response.messages[index];
-                    var notificationDate = new Date(message.notificationDate);
-                    var completed = (message.isCompleted == 0) ? 'Sending' : 'Completed';
-                    var messageLayoutData = {
-                        id: message.id,
-                        client: message.client.clientDescription,
-                        category: message.notificationCategory,
-                        data: message.notificationData,
-                        date: notificationDate.toLocaleDateString(),
-                        message: message.notificationMessage,
-                        title: message.notificationTitle,
-                        completed: completed,
-                        sendedDevice: message.sendedDevices
-                    };
+            var listData = [];
+            var deleteParams = [];
 
-                    messageHtml += window.ioinstance.layout.renderLayout(layout, messageLayoutData, messageLayoutProperties);
-                }
+            for (var index in response.messages) {
+                var message = response.messages[index];
 
-                window.ioinstance.service.loadLayout('pushnotificationmessagelist', false, function () {
-                    window.ioinstance.layout.contentLayoutData = {
-                        messages: messageHtml
-                    };
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-                });
+                var completed = (message.isCompleted === 0) ? 'Sending' : 'Completed';
+                var notificationDate = new Date(message.notificationDate);
+                var itemListData = [
+                    message.id,
+                    message.client.clientDescription,
+                    notificationDate.toLocaleDateString(),
+                    message.notificationCategory,
+                    message.notificationData,
+                    message.notificationMessage,
+                    message.notificationTitle,
+                    completed,
+                    message.sendedDevices
+                ];
+
+                listData.push(itemListData);
+                deleteParams.push([message.id]);
+            }
+
+            let listDataHeaders = [
+                'ID',
+                'Client',
+                'Date',
+                'Category',
+                'Data',
+                'Message',
+                'Title',
+                'Status',
+                'Sended Devices'
+            ];
+
+            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, null, null, null, function () {
             });
         } else {
             window.ioinstance.indicator.hide();
@@ -1304,47 +1301,62 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
 
     // Show indicator
     io.indicator.show();
-    io.selectMenu(hash);
 
-    io.service.loadLayout('pushnotificationsend', false, function () {
-        window.ioinstance.layout.render();
-        window.ioinstance.selectMenu(hash);
+    let breadcrumb = new io.ui.breadcrumb('sendNotification', 'Send Push Notification', []);
 
-        $('#client').click(function (e) {
-            e.preventDefault();
+    var deviceTypeFormData = new io.ui.formData(io.ui.formDataTypes.select, 'deviceType', 'Device Type', 'DeviceType');
+    deviceTypeFormData.value = 2;
+    deviceTypeFormData.options = [
+        new io.ui.formDataOptions('Android', 0),
+        new io.ui.formDataOptions('iOS', 1),
+        new io.ui.formDataOptions('Generic', 2)
+    ];
 
-            // Client select window
-            window.ioinstance.openWindow('clientsSelect');
-        }).change(function (e) {
-            if ($(this).val().length == 0) {
-                $(this).attr('data-clientId', '0');
-            }
-        });
+    var clientFormData = new io.ui.formData(io.ui.formDataTypes.popupSelection, 'client', 'Client', 'ClientId');
+    clientFormData.params = '';
+    clientFormData.methodName = 'clientsSelect';
+    var clientMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Client is not selected.', 'client', 'Invalid client.');
+    clientMinLengthValidation.length = 1;
+    clientFormData.validations = [ clientMinLengthValidation ];
 
-        $('#sendNotificationForm').submit(function (e) {
-            e.preventDefault();
+    var categoryFormData = new io.ui.formData(io.ui.formDataTypes.select, 'notificationCategory', 'Category', 'NotificationCategory');;
+    categoryFormData.options = io.pushNotificationCategories.getCategoryList();
 
-            var request = window.ioinstance.request.SendNotificationRequest;
-            request.Version = window.ioinstance.version;
-            request.ClientId = parseInt($('#client').attr('data-clientId'));
-            request.DeviceType = parseInt($('#deviceType').val());
-            request.NotificationCategory = $('#notificationCategory').val();
-            request.NotificationData = $('#notificationData').val();
-            request.NotificationMessage = $('#notificationMessage').val();
-            request.NotificationTitle = $('#notificationTitle').val();
+    var titleFormData = new io.ui.formData(io.ui.formDataTypes.text, 'notificationTitle', 'Title', 'NotificationTitle');
+    var messageFormData = new io.ui.formData(io.ui.formDataTypes.text, 'notificationMessage', 'Message', 'NotificationMessage');
+    var messageMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Message is too short.', 'notificationMessage', 'Invalid notification message.');
+    messageMinLengthValidation.length = 3;
+    messageFormData.validations = [ messageMinLengthValidation ];
+
+    var dataFormData = new io.ui.formData(io.ui.formDataTypes.text, 'notificationData', 'Data', 'NotificationData');
+
+    var formDatas = [
+        deviceTypeFormData,
+        clientFormData,
+        categoryFormData,
+        titleFormData,
+        messageFormData,
+        dataFormData
+    ];
+
+    io.ui.createForm(hash, breadcrumb, 'sendNotificationForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+            request.ClientId = window.ioinstance.ui.getPopupSelectionValue('client');
 
             window.ioinstance.service.post('backoffice/pushnotificationbackoffice/sendnotification', request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
+
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Push notification has been send successfully.', '');
-                    window.ioinstance.app.sendNotification(null, 'sendNotification');
+                    window.location.hash = '';
+                    window.ioinstance.app.pushNotificationList(null, 'pushNotificationList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();
                 }
             });
         });
-    });
 };
 
 io.prototype.app.restartApp = function (e, hash) {

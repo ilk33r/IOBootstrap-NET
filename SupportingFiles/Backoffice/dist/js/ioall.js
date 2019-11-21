@@ -547,6 +547,12 @@ io.prototype.log = {
     }
 };
 
+io.prototype.pushNotificationCategories = {
+    getCategoryList: function () {
+        return [ new window.ioinstance.ui.formDataOptions('-', '') ];
+    }
+};
+
 io.prototype.request = {
     AuthenticationRequest: {
         Culture: 0,

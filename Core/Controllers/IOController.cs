@@ -75,7 +75,9 @@ namespace IOBootstrap.NET.Core.Controllers
                 IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK);
 
                 // Return response
-                context.Result = new JsonResult(JsonConvert.SerializeObject(new IOResponseModel(responseStatus)));
+                JsonResult result = new JsonResult(new IOResponseModel(responseStatus));
+                result.StatusCode = 200;
+                context.Result = result;
 
                 // Do nothing
                 this.ActionExecuted = true;
@@ -106,7 +108,9 @@ namespace IOBootstrap.NET.Core.Controllers
                 IOResponseModel responseModel = this.Error400("Authorization failed.");
 
                 // Override response
-                context.Result = new JsonResult(JsonConvert.SerializeObject(responseModel));
+                JsonResult result = new JsonResult(responseModel);
+                result.StatusCode = 400;
+                context.Result = result;
 
                 // Do nothing
                 this.ActionExecuted = true;
@@ -128,7 +132,9 @@ namespace IOBootstrap.NET.Core.Controllers
                     IOResponseModel responseModel = this.Error400("Invalid client.");
 
                     // Override response
-                    context.Result = new JsonResult(JsonConvert.SerializeObject(responseModel));
+                    JsonResult result = new JsonResult(responseModel);
+                    result.StatusCode = 400;
+                    context.Result = result;
 
                     // Do nothing
                     this.ActionExecuted = true;
@@ -234,7 +240,9 @@ namespace IOBootstrap.NET.Core.Controllers
             }
             else
             {
-                return new JsonResult(JsonConvert.SerializeObject(this.Error404()));
+                JsonResult result = new JsonResult(this.Error404());
+                result.StatusCode = 400;
+                return result;
             }
         }
 
@@ -267,7 +275,9 @@ namespace IOBootstrap.NET.Core.Controllers
                                 IOResponseModel responseModel = this.Error400("Restricted page.");
 
                                 // Override response
-                                context.Result = new JsonResult(JsonConvert.SerializeObject(responseModel));
+                                JsonResult result = new JsonResult(responseModel);
+                                result.StatusCode = 400;
+                                context.Result = result;
 
                                 // Do nothing
                                 return false;
@@ -301,7 +311,9 @@ namespace IOBootstrap.NET.Core.Controllers
                             IOResponseModel responseModel = this.Error400("Https required.");
 
                             // Override response
-                            context.Result = new JsonResult(JsonConvert.SerializeObject(responseModel));
+                            JsonResult result = new JsonResult(responseModel);
+                            result.StatusCode = 400;
+                            context.Result = result;
 
                             // Do nothing
                             return true;

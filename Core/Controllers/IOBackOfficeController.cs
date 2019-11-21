@@ -40,11 +40,17 @@ namespace IOBootstrap.NET.Core.Controllers
             // Check is not back office
             if (!this.Request.Method.Equals("OPTIONS") && !_viewModel.IsBackOffice())
             {
+                // Update allow origin
+                Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin));
+                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+
                 // Obtain response model
                 IOResponseModel responseModel = this.Error400("Restricted page.");
 
                 // Override response
-                context.Result = new JsonResult(responseModel);
+                JsonResult result = new JsonResult(responseModel);
+                result.StatusCode = 400;
+                context.Result = result;
 
                 // Do nothing
                 return;

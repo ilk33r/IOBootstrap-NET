@@ -41,8 +41,13 @@ namespace IOBootstrap.NET.Core.Controllers
             if (!this.Request.Method.Equals("OPTIONS") && !_viewModel.IsBackOffice())
             {
                 // Update allow origin
-                Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin));
-                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+                String allowedOrigins = _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+                String requestOrigin = this.Request.Headers["Origin"];
+                if (requestOrigin != null && allowedOrigins.Contains(requestOrigin))
+                {
+                    Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
+                    Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+                }
 
                 // Obtain response model
                 IOResponseModel responseModel = this.Error400("Restricted page.");

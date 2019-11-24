@@ -65,8 +65,12 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuting(context);
 
             // Update allow origin
-            Response.Headers.Add("Access-Control-Allow-Origin", _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin));
-            Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+            String allowedOrigins = _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+            String requestOrigin = this.Request.Headers["Origin"];
+            if (requestOrigin != null && allowedOrigins.Contains(requestOrigin)) {
+                Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
+                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+            }
 
             // Check request method is options
             if (this.Request.Method.Equals("OPTIONS")) {

@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Common.Constants;
+﻿using System;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.BaseModels;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
@@ -9,9 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 
-namespace BoomApp.WebApi.PushNotification.Controllers
+namespace IOBootstrap.WebApi.PushNotification.Controllers
 {
 
     [Route("api/[controller]")]

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace BoomApp.WebApi.PushNotification.Controllers
+namespace IOBootstrap.WebApi.PushNotification.Controllers
 {
     
     [Route("backoffice/[controller]")]

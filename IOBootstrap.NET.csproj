@@ -33,7 +33,6 @@
     <Folder Include="Core\Controllers\" />
     <Folder Include="Core\Database\" />
     <Folder Include="Common\Entities\Clients\" />
-    <Folder Include="Common\Entities\AutoIncrements\" />
     <Folder Include="WebApi\" />
     <Folder Include="WebApi\BackOffice\" />
     <Folder Include="WebApi\BackOffice\Models\" />

@@ -1359,6 +1359,55 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
         });
 };
 
+io.prototype.app.resourceAdd = function (e, hash) {
+    let io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('resourcesList', 'Resources');
+    var formBreadcrumb = new io.ui.breadcrumb('resourceAdd', 'Add a resource', [ breadcrumbNavigation ]);
+
+    var resourceKey = new io.ui.formData(io.ui.formDataTypes.text, 'resourceKey', 'Key', 'ResourceKey');
+    var keyValidation = new ioValidation(io.validationRuleTypes.minLength, 'Key is too short.', 'resourceKey', 'Invalid resource key.');
+    keyValidation.length = 1;
+    resourceKey.validations = [ keyValidation ];
+
+    var resourceValue = new io.ui.formData(io.ui.formDataTypes.text, 'resourceValue', 'Value', 'ResourceValue');
+    var valueValidation = new ioValidation(io.validationRuleTypes.minLength, 'Value is too short.', 'resourceValue', 'Invalid resource value.');
+    valueValidation.length = 1;
+    resourceValue.validations = [ valueValidation ];
+
+    var formDatas = [
+        resourceKey,
+        resourceValue
+    ];
+
+    io.ui.createForm(hash, formBreadcrumb, 'addMenuForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+
+            if (request.ParentEntityID === '') {
+                request.ParentEntityID = null;
+            } else {
+                request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
+            }
+
+            window.ioinstance.service.post('backOffice/resources/add', request, function (status, response, error) {
+                let callout = window.ioinstance.callout;
+
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Resource has been added successfully.', '');
+                    window.location.hash = '';
+                    window.ioinstance.app.menuEditorList(null, 'resourceList');
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
+};
+
 io.prototype.app.restartApp = function (e, hash) {
     let io = window.ioinstance;
 

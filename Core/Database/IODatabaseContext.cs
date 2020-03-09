@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Entities.Configuration;
+using IOBootstrap.NET.Common.Entities.Resource;
 using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.WebApi.BackOffice.Entities;
@@ -21,6 +22,7 @@ namespace IOBootstrap.NET.Core.Database
         public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
         public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessages { get; set; }
         public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessages { get; set; }
+        public virtual DbSet<IOResourceEntity> Resources { get; set; }
 
         public IODatabaseContext(DbContextOptions<TContext> options) : base(options)
         {
@@ -57,6 +59,8 @@ namespace IOBootstrap.NET.Core.Database
                 messagesEntity.MessageEndDate,
                 messagesEntity.MessageStartDate
             });
+            modelBuilder.Entity<IOResourceEntity>().HasIndex(
+                resourceEntity => new { resourceEntity.ResourceKey }).IsUnique(true);
 
             this.GenerateClientMenu(modelBuilder);
             this.GenerateUserMenu(modelBuilder);
@@ -64,6 +68,7 @@ namespace IOBootstrap.NET.Core.Database
             this.GenerateMenuEditorMenu(modelBuilder);
             this.GenerateMessagesMenu(modelBuilder);
             this.GenerateNotificationMenu(modelBuilder);
+            this.GenerateResourceMenu(modelBuilder);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)
@@ -310,6 +315,45 @@ namespace IOBootstrap.NET.Core.Database
                 ParentEntityID = 21
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(sendNotificationEntity);
+        }
+
+        private void GenerateResourceMenu(ModelBuilder modelBuilder)
+        {
+            IOMenuEntity resourceEntity = new IOMenuEntity()
+            {
+                ID = 24,
+                Action = "actionResource",
+                CssClass = "fa-address-book",
+                Name = "Resources",
+                MenuOrder = 24,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = null
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(resourceEntity);
+
+            IOMenuEntity resourceListEntity = new IOMenuEntity()
+            {
+                ID = 25,
+                Action = "resourcesList",
+                CssClass = "fa-circle-o",
+                Name = "Edit Resources",
+                MenuOrder = 25,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = 24
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(resourceListEntity);
+
+            IOMenuEntity resourceAddEntity = new IOMenuEntity()
+            {
+                ID = 26,
+                Action = "resourceAdd",
+                CssClass = "fa-circle-o",
+                Name = "Add Resource",
+                MenuOrder = 26,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = 24
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(resourceAddEntity);
         }
     }
 }

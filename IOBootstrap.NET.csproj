@@ -73,6 +73,7 @@
     <Folder Include="Core\Firebase\Models\" />
     <Folder Include="Core\Firebase\Utils\" />
     <Folder Include="Core\Cache\" />
+    <Folder Include="Common\Entities\Resource\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />

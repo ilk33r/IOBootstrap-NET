@@ -90,31 +90,32 @@ namespace IOBootstrap.NET.Application
             // Create default routes
             app.UseMvc(routes =>
             {
-                routes.MapRoute("authenticate", "backoffice/users/password/authenticate", new IORoute("Authenticate", this.AuthenticationControllerName()));
-                routes.MapRoute("checktoken", "backoffice/users/password/checktoken", new IORoute("CheckToken", this.AuthenticationControllerName()));
-                routes.MapRoute("addClient", "backoffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
-                routes.MapRoute("deleteClient", "backoffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
-                routes.MapRoute("listClient", "backoffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
-                routes.MapRoute("updateClient", "backoffice/clients/update", new IORoute("UpdateClient", this.BackOfficeControllerName()));
-                routes.MapRoute("addUser", "backoffice/users/add", new IORoute("AddUser", this.UserControllerName()));
-                routes.MapRoute("changePassword", "backoffice/users/password/change", new IORoute("ChangePassword", this.UserControllerName()));
-                routes.MapRoute("deleteUser", "backoffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
-                routes.MapRoute("listUsers", "backoffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
-                routes.MapRoute("updateUsers", "backoffice/users/update", new IORoute("UpdateUser", this.UserControllerName()));
-                routes.MapRoute("addMenuItem", "backoffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("deleteMenuItem", "backoffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("listMenuItems", "backoffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("updateMenuItem", "backoffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("addMessagesItem", "backoffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("deleteMessagesItem", "backoffice/messages/delete", new IORoute("DeleteMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("listAllMessagesItems", "backoffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("listMessagesItems", "backoffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("updateMessagesItem", "backoffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("addConfigurationItem", "backoffice/configurations/add", new IORoute("AddConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("deleteConfigurationItem", "backoffice/configurations/delete", new IORoute("DeleteConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("listConfigurationItems", "backoffice/configurations/list", new IORoute("ListConfigurationItems", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("updateConfigurationItem", "backoffice/configurations/update", new IORoute("UpdateConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("restartApp", "backoffice/configurations/restartApp", new IORoute("RestartApp", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("authenticate", "backOffice/users/password/authenticate", new IORoute("Authenticate", this.AuthenticationControllerName()));
+                routes.MapRoute("checktoken", "backOffice/users/password/checktoken", new IORoute("CheckToken", this.AuthenticationControllerName()));
+                routes.MapRoute("addClient", "backOffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
+                routes.MapRoute("deleteClient", "backOffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
+                routes.MapRoute("listClient", "backOffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
+                routes.MapRoute("updateClient", "backOffice/clients/update", new IORoute("UpdateClient", this.BackOfficeControllerName()));
+                routes.MapRoute("addUser", "backOffice/users/add", new IORoute("AddUser", this.UserControllerName()));
+                routes.MapRoute("changePassword", "backOffice/users/password/change", new IORoute("ChangePassword", this.UserControllerName()));
+                routes.MapRoute("deleteUser", "backOffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
+                routes.MapRoute("listUsers", "backOffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
+                routes.MapRoute("updateUsers", "backOffice/users/update", new IORoute("UpdateUser", this.UserControllerName()));
+                routes.MapRoute("addMenuItem", "backOffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("deleteMenuItem", "backOffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("listMenuItems", "backOffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("updateMenuItem", "backOffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
+                routes.MapRoute("addMessagesItem", "backOffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("deleteMessagesItem", "backOffice/messages/delete", new IORoute("DeleteMessagesItem", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("listAllMessagesItems", "backOffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("listMessagesItems", "backOffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("updateMessagesItem", "backOffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
+                routes.MapRoute("addConfigurationItem", "backOffice/configurations/add", new IORoute("AddConfigItem", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("deleteConfigurationItem", "backOffice/configurations/delete", new IORoute("DeleteConfigItem", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("listConfigurationItems", "backOffice/configurations/list", new IORoute("ListConfigurationItems", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("updateConfigurationItem", "backOffice/configurations/update", new IORoute("UpdateConfigItem", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("restartApp", "backOffice/configurations/restartApp", new IORoute("RestartApp", this.BackOfficeConfigurationControllerName()));
+                routes.MapRoute("addResource", "backOffice/resources/add", new IORoute("AddResource", this.ResourcesControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif
@@ -133,6 +134,17 @@ namespace IOBootstrap.NET.Application
 
         public virtual void ConfigureStaticCaching(TDBContext databaseContext)
         {
+        }
+
+        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
+        {
+#if USE_MYSQL_DATABASE
+            options.UseMySql(this.Configuration.GetConnectionString("DefaultConnection"));
+#elif USE_SQLSRV_DATABASE
+            options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+#else
+            options.UseInMemoryDatabase("IOMemory");
+#endif
         }
 
         #endregion
@@ -169,20 +181,14 @@ namespace IOBootstrap.NET.Application
             return "IO";
         }
 
-        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
-        {
-#if USE_MYSQL_DATABASE
-            options.UseMySql(this.Configuration.GetConnectionString("DefaultConnection"));
-#elif USE_SQLSRV_DATABASE
-            options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
-#else
-            options.UseInMemoryDatabase("IOMemory");
-#endif
-        }
-
         public virtual string KeyControllerName() 
         {
             return "IOKeyGenerator";
+        }
+
+        public virtual string ResourcesControllerName()
+        {
+            return "IOBackOfficeResources";
         }
 
         public virtual string UserControllerName()

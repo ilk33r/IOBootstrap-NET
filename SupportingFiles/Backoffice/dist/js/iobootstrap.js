@@ -1383,7 +1383,7 @@ io.prototype.app.resourceAdd = function (e, hash) {
         resourceValue
     ];
 
-    io.ui.createForm(hash, formBreadcrumb, 'addMenuForm', formDatas, 'Save', function () {
+    io.ui.createForm(hash, formBreadcrumb, 'addResourceForm', formDatas, 'Save', function () {
         },
         function (request) {
 
@@ -1399,7 +1399,103 @@ io.prototype.app.resourceAdd = function (e, hash) {
                 if (status && response.status.success) {
                     callout.show(callout.types.success, 'Resource has been added successfully.', '');
                     window.location.hash = '';
-                    window.ioinstance.app.menuEditorList(null, 'resourceList');
+                    window.ioinstance.app.resourcesList(null, 'resourceList');
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                    window.ioinstance.indicator.hide();
+                }
+            });
+        });
+};
+
+io.prototype.app.resourcesList = function (e, hash) {
+    let io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+
+    let breadcrumb = new io.ui.breadcrumb('resourcesList', 'Resources', []);
+
+    io.service.get('backOffice/resources/all', function(status, response, error) {
+        if (status && response.status.success) {
+            let listData = [];
+            let updateParams = [];
+            let deleteParams = [];
+
+            for (let index in response.resources) {
+                var resource = response.resources[index];
+
+                var itemListData = [
+                    resource.resourceID,
+                    resource.resourceKey,
+                    resource.resourceValue
+                ];
+
+                listData.push(itemListData);
+
+                var itemUpdateData = [
+                    resource.resourceID,
+                    resource.resourceKey,
+                    resource.resourceValue
+                ];
+
+                updateParams.push(itemUpdateData);
+                deleteParams.push([resource.resourceID]);
+            }
+
+            let listDataHeaders = [
+                'ID',
+                'Key',
+                'Value'
+            ];
+
+            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'resourceUpdate', updateParams, 'resourceDelete', deleteParams, null, function () {
+            });
+        } else {
+            window.ioinstance.indicator.hide();
+            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
+        }
+    });
+};
+
+io.prototype.app.resourceUpdate = function (resourceID, resourceKeyData, resourceValueData) {
+    let io = window.ioinstance;
+
+    // Show indicator
+    io.indicator.show();
+
+    let breadcrumbNavigation = new io.ui.breadcrumbNavigation('resourcesList', 'Resources');
+    var formBreadcrumb = new io.ui.breadcrumb('resourceUpdate', 'Update a resource', [ breadcrumbNavigation ]);
+
+    var resourceKey = new io.ui.formData(io.ui.formDataTypes.text, 'resourceKey', 'Key', 'ResourceKey');
+    var keyValidation = new ioValidation(io.validationRuleTypes.minLength, 'Key is too short.', 'resourceKey', 'Invalid resource key.');
+    keyValidation.length = 1;
+    resourceKey.value = resourceKeyData;
+    resourceKey.validations = [ keyValidation ];
+
+    var resourceValue = new io.ui.formData(io.ui.formDataTypes.text, 'resourceValue', 'Value', 'ResourceValue');
+    var valueValidation = new ioValidation(io.validationRuleTypes.minLength, 'Value is too short.', 'resourceValue', 'Invalid resource value.');
+    valueValidation.length = 1;
+    resourceValue.value = resourceValueData;
+    resourceValue.validations = [ valueValidation ];
+
+    var formDatas = [
+        resourceKey,
+        resourceValue
+    ];
+
+    io.ui.createForm('resourceUpdate', formBreadcrumb, 'addMenuForm', formDatas, 'Save', function () {
+        },
+        function (request) {
+            request.ResourceID = resourceID;
+
+            window.ioinstance.service.post('backOffice/resources/update', request, function (status, response, error) {
+                let callout = window.ioinstance.callout;
+
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, 'Resource has been updated successfully.', '');
+                    window.location.hash = '';
+                    window.ioinstance.app.resourcesList(null, 'resourceList');
                 } else {
                     callout.show(callout.types.danger, error.message, error.detailedMessage);
                     window.ioinstance.indicator.hide();

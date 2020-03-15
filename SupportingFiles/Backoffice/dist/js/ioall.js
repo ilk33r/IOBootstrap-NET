@@ -35,6 +35,7 @@ io.prototype = {
     layout: {},
     log: {},
     request: {},
+    resources: {},
     response: {},
     service: {},
     ui: {},
@@ -569,6 +570,35 @@ io.prototype.request = {
         return Object.assign({}, object);
     }
 };
+
+io.prototype.resources = {
+    allResources: [],
+    get: function (resourceKey) {
+        for (var i = 0; i < this.allResources.length; i++) {
+            let resource = this.allResources[i];
+            if (resource.resourceKey == resourceKey) {
+                return resource.resourceValue;
+            }
+        }
+
+        return resourceKey;
+    },
+    getResources: function (resources, callback) {
+        let request = {
+            ResourceKeys: resources
+        }
+        window.ioinstance.service.post('backOffice/resources/get', request, function(status, response, error) {
+            if (status && response.status.success) {
+                window.ioinstance.resources.allResources = response.resources;
+                callback();
+                return;
+            }
+
+            window.ioinstance.resources.allResources = [];
+            callback();
+        });
+    }
+}
 
 io.prototype.response = {
     StatusCodes: {

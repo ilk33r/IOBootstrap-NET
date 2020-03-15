@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
@@ -32,7 +33,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
         #endregion
 
-        #region Configuration Methods
+        #region Resource Methods
+        
 
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
@@ -54,6 +56,60 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOResourceAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpGet]
+        public IOGetResourcesResponseModel GetAllResources()
+        {
+            // Add menu
+            IList<IOResourceModel> resources = _viewModel.GetAllResources();
+
+            // Create and return response
+            return new IOGetResourcesResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), resources);
+        }
+
+        [IOUserRole(UserRoles.User)]
+        [HttpPost]
+        public IOGetResourcesResponseModel GetResources([FromBody] IOGetResourcesRequestModel requestModel)
+        {
+            // Validate request
+            if (requestModel == null
+                || requestModel.ResourceKeys == null)
+            {
+                // Obtain 400 error
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOGetResourcesResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            IList<IOResourceModel> resources = _viewModel.GetResources(requestModel.ResourceKeys);
+
+            // Create and return response
+            return new IOGetResourcesResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), resources);
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOResourceUpdateResponseModel UpdateResource([FromBody] IOResourceUpdateRequestModel requestModel) {
+            // Validate request
+            if (requestModel == null
+                || String.IsNullOrEmpty(requestModel.ResourceKey))
+            {
+                // Obtain 400 error
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOResourceUpdateResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.UpdateResourceItem(requestModel);
+
+            // Create and return response
+            return new IOResourceUpdateResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 
         #endregion

@@ -116,6 +116,9 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("updateConfigurationItem", "backOffice/configurations/update", new IORoute("UpdateConfigItem", this.BackOfficeConfigurationControllerName()));
                 routes.MapRoute("restartApp", "backOffice/configurations/restartApp", new IORoute("RestartApp", this.BackOfficeConfigurationControllerName()));
                 routes.MapRoute("addResource", "backOffice/resources/add", new IORoute("AddResource", this.ResourcesControllerName()));
+                routes.MapRoute("getAllResources", "backOffice/resources/all", new IORoute("GetAllResources", this.ResourcesControllerName()));
+                routes.MapRoute("getResources", "backOffice/resources/get", new IORoute("GetResources", this.ResourcesControllerName()));
+                routes.MapRoute("updateResource", "backOffice/resources/update", new IORoute("UpdateResource", this.ResourcesControllerName()));
 #if DEBUG
                 routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
 #endif

@@ -80,7 +80,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Edit",
                 ResourceValue = "Edit",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(editEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(editEntity);
 
             IOResourceEntity deleteEntity = new IOResourceEntity()
             {
@@ -88,7 +88,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Delete",
                 ResourceValue = "Delete",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(deleteEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(deleteEntity);
 
             IOResourceEntity optionsEntity = new IOResourceEntity()
             {
@@ -96,7 +96,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Options",
                 ResourceValue = "Options",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(optionsEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(optionsEntity);
 
             IOResourceEntity selectEntity = new IOResourceEntity()
             {
@@ -104,7 +104,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Select",
                 ResourceValue = "Select",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(selectEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(selectEntity);
 
             IOResourceEntity homeEntity = new IOResourceEntity()
             {
@@ -112,7 +112,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Home",
                 ResourceValue = "Home",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(homeEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(homeEntity);
 
             IOResourceEntity usersEntity = new IOResourceEntity()
             {
@@ -120,7 +120,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Users",
                 ResourceValue = "Users",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(usersEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(usersEntity);
 
             IOResourceEntity changePasswordEntity = new IOResourceEntity()
             {
@@ -128,7 +128,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.ChangePassword",
                 ResourceValue = "Change Password",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(changePasswordEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(changePasswordEntity);
 
             IOResourceEntity idEntity = new IOResourceEntity()
             {
@@ -136,7 +136,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.ID",
                 ResourceValue = "ID",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(idEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(idEntity);
 
             IOResourceEntity nameEntity = new IOResourceEntity()
             {
@@ -144,7 +144,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Name",
                 ResourceValue = "Name",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(nameEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(nameEntity);
 
             IOResourceEntity roleEntity = new IOResourceEntity()
             {
@@ -152,7 +152,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Role",
                 ResourceValue = "Role",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(roleEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(roleEntity);
 
             IOResourceEntity lastLoginDateEntity = new IOResourceEntity()
             {
@@ -160,7 +160,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.LastLoginDate",
                 ResourceValue = "Last Login Date",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(lastLoginDateEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(lastLoginDateEntity);
 
             IOResourceEntity errorEntity = new IOResourceEntity()
             {
@@ -168,7 +168,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Error",
                 ResourceValue = "An error occured.",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(errorEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(errorEntity);
 
             IOResourceEntity pushNotificationMessagesEntity = new IOResourceEntity()
             {
@@ -176,7 +176,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.PushNotificationMessages",
                 ResourceValue = "Push Notification Messages",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(pushNotificationMessagesEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(pushNotificationMessagesEntity);
 
             IOResourceEntity sendingEntity = new IOResourceEntity()
             {
@@ -184,7 +184,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Sending",
                 ResourceValue = "Sending",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(sendingEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(sendingEntity);
 
             IOResourceEntity completedEntity = new IOResourceEntity()
             {
@@ -192,7 +192,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Completed",
                 ResourceValue = "Completed",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(completedEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(completedEntity);
 
             IOResourceEntity clientEntity = new IOResourceEntity()
             {
@@ -200,7 +200,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Client",
                 ResourceValue = "Client",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(clientEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(clientEntity);
 
             IOResourceEntity dateEntity = new IOResourceEntity()
             {
@@ -208,7 +208,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Date",
                 ResourceValue = "Date",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(dateEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(dateEntity);
 
             IOResourceEntity categoryEntity = new IOResourceEntity()
             {
@@ -216,7 +216,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Category",
                 ResourceValue = "Category",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(categoryEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(categoryEntity);
 
             IOResourceEntity dataEntity = new IOResourceEntity()
             {
@@ -224,7 +224,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Data",
                 ResourceValue = "Data",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(dataEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(dataEntity);
 
             IOResourceEntity messageEntity = new IOResourceEntity()
             {
@@ -232,7 +232,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Message",
                 ResourceValue = "Message",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(messageEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(messageEntity);
 
             IOResourceEntity titleEntity = new IOResourceEntity()
             {
@@ -240,7 +240,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Title",
                 ResourceValue = "Title",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(titleEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(titleEntity);
 
             IOResourceEntity statusEntity = new IOResourceEntity()
             {
@@ -248,7 +248,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.Status",
                 ResourceValue = "Status",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(statusEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(statusEntity);
 
             IOResourceEntity sendedDevicesEntity = new IOResourceEntity()
             {
@@ -256,7 +256,7 @@ namespace IOBootstrap.NET.Core.Database
                 ResourceKey = "BackOffice.SendedDevices",
                 ResourceValue = "Sended Devices",
             };
-            modelBuilder.Entity<IOMenuEntity>().HasData(sendedDevicesEntity);
+            modelBuilder.Entity<IOResourceEntity>().HasData(sendedDevicesEntity);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)

@@ -584,12 +584,31 @@ io.prototype.resources = {
         return resourceKey;
     },
     getResources: function (resources, callback) {
+        var requestResources = [];
+
+        for (var i = 0; i < resources.length; i++) {
+            let currentResource = resources[i];
+            if (!this.resourceExists(currentResource)) {
+                requestResources.push(currentResource);
+            }
+        }
+
+        if (requestResources.length == 0) {
+            callback();
+            return;
+        }
+
         let request = {
-            ResourceKeys: resources
+            ResourceKeys: requestResources
         }
         window.ioinstance.service.post('backOffice/resources/get', request, function(status, response, error) {
             if (status && response.status.success) {
-                window.ioinstance.resources.allResources = response.resources;
+                for (var j = 0; j < response.resources.length; j++) {
+                    let currentResource = response.resources[j];
+                    if (!window.ioinstance.resources.resourceExists(currentResource.resourceKey)) {
+                        window.ioinstance.resources.allResources.push(currentResource);
+                    }
+                }
                 callback();
                 return;
             }
@@ -597,6 +616,16 @@ io.prototype.resources = {
             window.ioinstance.resources.allResources = [];
             callback();
         });
+    },
+    resourceExists: function(key) {
+        for (var i = 0; i < this.allResources.length; i++) {
+            let currentResource = this.allResources[i];
+            if (currentResource.resourceKey == key) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

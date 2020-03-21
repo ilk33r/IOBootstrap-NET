@@ -1248,11 +1248,6 @@ io.prototype.app.pushNotificationList = function (e, hash) {
     let io = window.ioinstance;
 
     let resources = [
-        'BackOffice.Edit',
-        'BackOffice.Delete',
-        'BackOffice.Options',
-        'BackOffice.Select',
-        'BackOffice.Home',
         'BackOffice.PushNotificationMessages',
         'BackOffice.Sending',
         'BackOffice.Completed',
@@ -1312,14 +1307,7 @@ io.prototype.app.pushNotificationList = function (e, hash) {
                     io.resources.get('BackOffice.SendedDevices')
                 ];
 
-                let resources = io.ui.resourcesModel;
-                resources.edit = io.resources.get('BackOffice.Edit');
-                resources.delete = io.resources.get('BackOffice.Delete');
-                resources.home = io.resources.get('BackOffice.Home');
-                resources.options = io.resources.get('BackOffice.Options');
-                resources.select = io.resources.get('BackOffice.Select');
-
-                io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, resources, null, null, null, function () {
+                io.ui.createList(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, function () {
                 });
             } else {
                 window.ioinstance.indicator.hide();

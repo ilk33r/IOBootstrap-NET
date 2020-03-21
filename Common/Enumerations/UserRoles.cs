@@ -7,6 +7,7 @@ namespace IOBootstrap.NET.Common.Enumerations
         SuperAdmin = 0,
         Admin = 1,
         User = 2,
+        CustomUser = 600,
         AnonmyMouse = 999
     }
 }

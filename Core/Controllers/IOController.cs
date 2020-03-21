@@ -275,7 +275,7 @@ namespace IOBootstrap.NET.Core.Controllers
                             if (!IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                             {
                                 // Obtain response model
-                                IOResponseModel responseModel = this.Error400("Restricted page.");
+                                IOResponseModel responseModel = this.Error400("Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
 
                                 // Override response
                                 JsonResult result = new JsonResult(responseModel);

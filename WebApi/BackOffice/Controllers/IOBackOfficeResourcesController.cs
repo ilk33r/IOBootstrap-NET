@@ -69,7 +69,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
             return new IOGetResourcesResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), resources);
         }
 
-        [IOUserRole(UserRoles.User)]
+        [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOGetResourcesResponseModel GetResources([FromBody] IOGetResourcesRequestModel requestModel)
         {

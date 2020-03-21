@@ -763,6 +763,13 @@ io.prototype.service.loadedLayoutData.prototype = {
 };
 
 io.prototype.ui = {
+    resourcesModel: {
+        edit: '',
+        delete: '',
+        home: '',
+        options: '',
+        select: ''
+    },
     breadcrumb: function (activeNavigationId, activeNavigationName, breadcrumbNavigations) {
         this.activeNavigationId = activeNavigationId;
         this.activeNavigationName = activeNavigationName;
@@ -989,9 +996,38 @@ io.prototype.ui = {
         });
     },
     createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, onRendered) {
-        this.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, null, null, null, onRendered);
+        let resources = this.resourcesModel;
+        resources.edit = 'BackOffice.Edit';
+        resources.delete = 'BackOffice.Delete';
+        resources.home = 'BackOffice.Home';
+        resources.options = 'BackOffice.Options';
+        resources.select = 'BackOffice.Select';
+
+        this.createListWithResourceKeys(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, onRendered);
     },
-    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, selectMethodName, selectParams, extraParams, onRendered) {
+    createListWithResourceKeys: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resourceKeys, onRendered) {
+        let io = window.ioinstance;
+
+        let requestResourceKeys = [
+            resourceKeys.edit,
+            resourceKeys.delete,
+            resourceKeys.home,
+            resourceKeys.options,
+            resourceKeys.select
+        ];
+
+        io.resources.getResources(requestResourceKeys, function() {
+            let resources = Object.assign({}, io.resourcesModel);
+            resources.edit = io.resources.get(resourceKeys.edit);
+            resources.delete = io.resources.get(resourceKeys.delete);
+            resources.home = io.resources.get(resourceKeys.home);
+            resources.options = io.resources.get(resourceKeys.options);
+            resources.select = io.resources.get(resourceKeys.select);
+
+            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, null, null, null, onRendered);
+        });
+    },
+    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, selectMethodName, selectParams, extraParams, onRendered) {
         let io = window.ioinstance;
 
         // Show indicator
@@ -1068,7 +1104,10 @@ io.prototype.ui = {
                         selectIsHidden:  selectIsHidden,
                         selectMethodName: (selectMethodName != null) ? selectMethodName : '',
                         selectParamsHtml: selectParamsHtml,
-                        extraParams: extraParamsHtml
+                        extraParams: extraParamsHtml,
+                        resourceEdit: resources.edit,
+                        resourcesDelete: resources.delete,
+                        resourcesSelect: resources.select
                     };
 
                     itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
@@ -1087,7 +1126,9 @@ io.prototype.ui = {
                         activeNavigationId: breadcrumb.activeNavigationId,
                         breadcrumbLayout: breadcrumbHtml,
                         listData: itemsHtml,
-                        headersHtml: headersHtml
+                        headersHtml: headersHtml,
+                        resourcesOptions: resources.options,
+                        resourcesHome: resources.home
                     };
 
                     // Render layout
@@ -1101,7 +1142,36 @@ io.prototype.ui = {
         });
     },
     createPopupSelection: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, onRendered) {
-        this.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, selectMethodName, selectionParams, null, onRendered);
+        let resources = this.resourcesModel;
+        resources.edit = 'BackOffice.Edit';
+        resources.delete = 'BackOffice.Delete';
+        resources.home = 'BackOffice.Home';
+        resources.options = 'BackOffice.Options';
+        resources.select = 'BackOffice.Select';
+
+        this.createPopupSelectionWithResourceKeys(hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, resources, onRendered);
+    },
+    createPopupSelectionWithResourceKeys: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, resourceKeys, onRendered) {
+        let io = window.ioinstance;
+
+        let requestResourceKeys = [
+            resourceKeys.edit,
+            resourceKeys.delete,
+            resourceKeys.home,
+            resourceKeys.options,
+            resourceKeys.select
+        ];
+
+        io.resources.getResources(requestResourceKeys, function() {
+            let resources = Object.assign({}, io.resourcesModel);
+            resources.edit = io.resources.get(resourceKeys.edit);
+            resources.delete = io.resources.get(resourceKeys.delete);
+            resources.home = io.resources.get(resourceKeys.home);
+            resources.options = io.resources.get(resourceKeys.options);
+            resources.select = io.resources.get(resourceKeys.select);
+
+            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, resources, selectMethodName, selectionParams, null, onRendered);
+        });
     },
     getPopupSelectionValue: function(id) {
         return parseInt($('#' + id).attr('data-params'));

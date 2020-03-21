@@ -4,7 +4,7 @@
     <section class="content-header">
         <h1>${activeNavigationName}</h1>
         <ol class="breadcrumb">
-            <li><a href="#!dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#!dashboard"><i class="fa fa-dashboard"></i> ${resourcesHome}</a></li>
             ${breadcrumbLayout}
             <li class="active"><a href="#!${activeNavigationId}">${activeNavigationName}</a></li>
         </ol>
@@ -21,7 +21,7 @@
                             <thead>
                             <tr>
                                 ${headersHtml}
-                                <th>Options</th>
+                                <th>${resourcesOptions}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -30,7 +30,7 @@
                             <tfoot>
                             <tr>
                                 ${headersHtml}
-                                <th>Options</th>
+                                <th>${resourcesOptions}</th>
                             </tr>
                             </tfoot>
                         </table>

@@ -2,13 +2,13 @@
     ${singleItemHtml}
     <td>
         <a class="btn btn-app ${updateIsHidden}" href="#!${updateMethodName}" data-type="action" data-method="${updateMethodName}" data-params="${updateParamsHtml}">
-            <i class="fa fa-edit"></i> Edit
+            <i class="fa fa-edit"></i> ${resourceEdit}
         </a>
         <a class="btn btn-app ${deleteIsHidden}" href="#!${deleteMethodName}" data-type="action" data-method="${deleteMethodName}" data-params="${deleteParamsHtml}">
-            <i class="fa fa-trash"></i> Delete
+            <i class="fa fa-trash"></i> ${resourcesDelete}
         </a>
         <a class="btn btn-app ${selectIsHidden}" href="#!${selectMethodName}" data-type="selection" data-method="${selectMethodName}" data-params='${selectParamsHtml}'>
-            <i class="fa fa-check"></i> Select
+            <i class="fa fa-check"></i> ${resourcesSelect}
         </a>
         ${extraParams}
     </td>

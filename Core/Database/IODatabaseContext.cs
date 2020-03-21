@@ -62,13 +62,201 @@ namespace IOBootstrap.NET.Core.Database
             modelBuilder.Entity<IOResourceEntity>().HasIndex(
                 resourceEntity => new { resourceEntity.ResourceKey }).IsUnique(true);
 
-            this.GenerateClientMenu(modelBuilder);
-            this.GenerateUserMenu(modelBuilder);
-            this.GenerateConfigurationMenu(modelBuilder);
-            this.GenerateMenuEditorMenu(modelBuilder);
-            this.GenerateMessagesMenu(modelBuilder);
-            this.GenerateNotificationMenu(modelBuilder);
-            this.GenerateResourceMenu(modelBuilder);
+            AddResources(modelBuilder);
+            GenerateClientMenu(modelBuilder);
+            GenerateUserMenu(modelBuilder);
+            GenerateConfigurationMenu(modelBuilder);
+            GenerateMenuEditorMenu(modelBuilder);
+            GenerateMessagesMenu(modelBuilder);
+            GenerateNotificationMenu(modelBuilder);
+            GenerateResourceMenu(modelBuilder);
+        }
+
+        private void AddResources(ModelBuilder modelBuilder)
+        {
+            IOResourceEntity editEntity = new IOResourceEntity()
+            {
+                ID = 1,
+                ResourceKey = "BackOffice.Edit",
+                ResourceValue = "Edit",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(editEntity);
+
+            IOResourceEntity deleteEntity = new IOResourceEntity()
+            {
+                ID = 2,
+                ResourceKey = "BackOffice.Delete",
+                ResourceValue = "Delete",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(deleteEntity);
+
+            IOResourceEntity optionsEntity = new IOResourceEntity()
+            {
+                ID = 3,
+                ResourceKey = "BackOffice.Options",
+                ResourceValue = "Options",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(optionsEntity);
+
+            IOResourceEntity selectEntity = new IOResourceEntity()
+            {
+                ID = 4,
+                ResourceKey = "BackOffice.Select",
+                ResourceValue = "Select",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(selectEntity);
+
+            IOResourceEntity homeEntity = new IOResourceEntity()
+            {
+                ID = 5,
+                ResourceKey = "BackOffice.Home",
+                ResourceValue = "Home",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(homeEntity);
+
+            IOResourceEntity usersEntity = new IOResourceEntity()
+            {
+                ID = 6,
+                ResourceKey = "BackOffice.Users",
+                ResourceValue = "Users",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(usersEntity);
+
+            IOResourceEntity changePasswordEntity = new IOResourceEntity()
+            {
+                ID = 7,
+                ResourceKey = "BackOffice.ChangePassword",
+                ResourceValue = "Change Password",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(changePasswordEntity);
+
+            IOResourceEntity idEntity = new IOResourceEntity()
+            {
+                ID = 8,
+                ResourceKey = "BackOffice.ID",
+                ResourceValue = "ID",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(idEntity);
+
+            IOResourceEntity nameEntity = new IOResourceEntity()
+            {
+                ID = 9,
+                ResourceKey = "BackOffice.Name",
+                ResourceValue = "Name",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(nameEntity);
+
+            IOResourceEntity roleEntity = new IOResourceEntity()
+            {
+                ID = 10,
+                ResourceKey = "BackOffice.Role",
+                ResourceValue = "Role",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(roleEntity);
+
+            IOResourceEntity lastLoginDateEntity = new IOResourceEntity()
+            {
+                ID = 11,
+                ResourceKey = "BackOffice.LastLoginDate",
+                ResourceValue = "Last Login Date",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(lastLoginDateEntity);
+
+            IOResourceEntity errorEntity = new IOResourceEntity()
+            {
+                ID = 12,
+                ResourceKey = "BackOffice.Error",
+                ResourceValue = "An error occured.",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(errorEntity);
+
+            IOResourceEntity pushNotificationMessagesEntity = new IOResourceEntity()
+            {
+                ID = 13,
+                ResourceKey = "BackOffice.PushNotificationMessages",
+                ResourceValue = "Push Notification Messages",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(pushNotificationMessagesEntity);
+
+            IOResourceEntity sendingEntity = new IOResourceEntity()
+            {
+                ID = 14,
+                ResourceKey = "BackOffice.Sending",
+                ResourceValue = "Sending",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(sendingEntity);
+
+            IOResourceEntity completedEntity = new IOResourceEntity()
+            {
+                ID = 15,
+                ResourceKey = "BackOffice.Completed",
+                ResourceValue = "Completed",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(completedEntity);
+
+            IOResourceEntity clientEntity = new IOResourceEntity()
+            {
+                ID = 16,
+                ResourceKey = "BackOffice.Client",
+                ResourceValue = "Client",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(clientEntity);
+
+            IOResourceEntity dateEntity = new IOResourceEntity()
+            {
+                ID = 17,
+                ResourceKey = "BackOffice.Date",
+                ResourceValue = "Date",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(dateEntity);
+
+            IOResourceEntity categoryEntity = new IOResourceEntity()
+            {
+                ID = 18,
+                ResourceKey = "BackOffice.Category",
+                ResourceValue = "Category",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(categoryEntity);
+
+            IOResourceEntity dataEntity = new IOResourceEntity()
+            {
+                ID = 19,
+                ResourceKey = "BackOffice.Data",
+                ResourceValue = "Data",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(dataEntity);
+
+            IOResourceEntity messageEntity = new IOResourceEntity()
+            {
+                ID = 20,
+                ResourceKey = "BackOffice.Message",
+                ResourceValue = "Message",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(messageEntity);
+
+            IOResourceEntity titleEntity = new IOResourceEntity()
+            {
+                ID = 21,
+                ResourceKey = "BackOffice.Title",
+                ResourceValue = "Title",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(titleEntity);
+
+            IOResourceEntity statusEntity = new IOResourceEntity()
+            {
+                ID = 22,
+                ResourceKey = "BackOffice.Status",
+                ResourceValue = "Status",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(statusEntity);
+
+            IOResourceEntity sendedDevicesEntity = new IOResourceEntity()
+            {
+                ID = 23,
+                ResourceKey = "BackOffice.SendedDevices",
+                ResourceValue = "Sended Devices",
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(sendedDevicesEntity);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)

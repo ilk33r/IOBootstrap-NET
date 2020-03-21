@@ -970,60 +970,84 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
 io.prototype.app.usersList = function (e, hash) {
     let io = window.ioinstance;
 
+    let resources = [
+        'BackOffice.Edit',
+        'BackOffice.Delete',
+        'BackOffice.Options',
+        'BackOffice.Select',
+        'BackOffice.Home',
+        'BackOffice.Users',
+        'BackOffice.ChangePassword',
+        'BackOffice.ID',
+        'BackOffice.Name',
+        'BackOffice.Role',
+        'BackOffice.LastLoginDate',
+        'BackOffice.Error'
+    ];
+
     // Show indicator
     io.indicator.show();
 
-    let breadcrumb = new io.ui.breadcrumb('usersList', 'Users', []);
+    io.resources.getResources(resources, function() {
+        let breadcrumb = new io.ui.breadcrumb('usersList', io.resources.get('BackOffice.Users'), []);
 
-    io.service.get('backoffice/users/list', function(status, response, error) {
-        if (status && response.status.success) {
-            var listData = [];
-            var updateParams = [];
-            var deleteParams = [];
-            var extraParams = [];
+        io.service.get('backoffice/users/list', function(status, response, error) {
+            if (status && response.status.success) {
+                var listData = [];
+                var updateParams = [];
+                var deleteParams = [];
+                var extraParams = [];
 
-            for (var index in response.users) {
-                var user = response.users[index];
+                for (var index in response.users) {
+                    var user = response.users[index];
+    
+                    var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
+                    var itemListData = [
+                        user.id,
+                        user.userName,
+                        roleName,
+                        user.tokenDate
+                    ];
+    
+                    listData.push(itemListData);
+    
+                    var itemUpdateData = [
+                        user.id,
+                        user.userName,
+                        user.userRole
+                    ];
+    
+                    updateParams.push(itemUpdateData);
+                    deleteParams.push([user.id]);
+    
+                    let itemExtraParams = [
+                        new io.ui.extraParam(io.resources.get('BackOffice.ChangePassword'), 'fa-key', 'userChangePassword', [null, 'usersUpdate', user.id, user.userName])
+                    ];
+    
+                    extraParams.push(itemExtraParams);
+                }
 
-                var roleName = window.ioinstance.userRoles.getRoleName(user.userRole);
-                var itemListData = [
-                    user.id,
-                    user.userName,
-                    roleName,
-                    user.tokenDate
+                let listDataHeaders = [
+                    io.resources.get('BackOffice.ID'),
+                    io.resources.get('BackOffice.Name'),
+                    io.resources.get('BackOffice.Role'),
+                    io.resources.get('BackOffice.LastLoginDate')
                 ];
 
-                listData.push(itemListData);
-
-                var itemUpdateData = [
-                    user.id,
-                    user.userName,
-                    user.userRole
-                ];
-
-                updateParams.push(itemUpdateData);
-                deleteParams.push([user.id]);
-
-                let itemExtraParams = [
-                    new io.ui.extraParam('Change Password', 'fa-key', 'userChangePassword', [null, 'usersUpdate', user.id, user.userName])
-                ];
-
-                extraParams.push(itemExtraParams);
+                let resources = io.ui.resourcesModel;
+                resources.edit = io.resources.get('BackOffice.Edit');
+                resources.delete = io.resources.get('BackOffice.Delete');
+                resources.home = io.resources.get('BackOffice.Home');
+                resources.options = io.resources.get('BackOffice.Options');
+                resources.select = io.resources.get('BackOffice.Select');
+    
+                io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, 'userUpdate', updateParams, 'userDelete', deleteParams, null, resources, null, null, extraParams, function () {
+                });
+            } else {
+                window.ioinstance.indicator.hide();
+                window.ioinstance.callout.show(window.ioinstance.callout.types.danger, io.resources.get('BackOffice.Error'), '');
             }
-
-            let listDataHeaders = [
-                'ID',
-                'Name',
-                'Role',
-                'Last Login Date'
-            ];
-
-            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, 'userUpdate', updateParams, 'userDelete', deleteParams, null, null, null, extraParams, function () {
-            });
-        } else {
-            window.ioinstance.indicator.hide();
-            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
-        }
+        });
     });
 };
 
@@ -1223,55 +1247,85 @@ io.prototype.app.usersAdd = function (e, hash) {
 io.prototype.app.pushNotificationList = function (e, hash) {
     let io = window.ioinstance;
 
+    let resources = [
+        'BackOffice.Edit',
+        'BackOffice.Delete',
+        'BackOffice.Options',
+        'BackOffice.Select',
+        'BackOffice.Home',
+        'BackOffice.PushNotificationMessages',
+        'BackOffice.Sending',
+        'BackOffice.Completed',
+        'BackOffice.ID',
+        'BackOffice.Client',
+        'BackOffice.Date',
+        'BackOffice.Category',
+        'BackOffice.Data',
+        'BackOffice.Message',
+        'BackOffice.Title',
+        'BackOffice.Status',
+        'BackOffice.SendedDevices',
+        'BackOffice.Error'
+    ];
+
     // Show indicator
     io.indicator.show();
 
-    let breadcrumb = new io.ui.breadcrumb('pushNotificationList', 'Push Notification Messages', []);
+    io.resources.getResources(resources, function() {
+        let breadcrumb = new io.ui.breadcrumb('pushNotificationList', io.resources.get('BackOffice.PushNotificationMessages'), []);
 
-    io.service.get('backoffice/pushnotificationbackoffice/listMessages', function(status, response, error) {
-        if (status && response.status.success) {
-            var listData = [];
-            var deleteParams = [];
+        io.service.get('backoffice/pushnotificationbackoffice/listMessages', function(status, response, error) {
+            if (status && response.status.success) {
+                var listData = [];
+                var deleteParams = [];
 
-            for (var index in response.messages) {
-                var message = response.messages[index];
+                for (var index in response.messages) {
+                    var message = response.messages[index];
+    
+                    var completed = (message.isCompleted === 0) ? io.resources.get('BackOffice.Sending') : io.resources.get('BackOffice.Completed');
+                    var notificationDate = new Date(message.notificationDate);
+                    var itemListData = [
+                        message.id,
+                        message.client.clientDescription,
+                        notificationDate.toLocaleDateString(),
+                        message.notificationCategory,
+                        message.notificationData,
+                        message.notificationMessage,
+                        message.notificationTitle,
+                        completed,
+                        message.sendedDevices
+                    ];
+    
+                    listData.push(itemListData);
+                    deleteParams.push([message.id]);
+                }
 
-                var completed = (message.isCompleted === 0) ? 'Sending' : 'Completed';
-                var notificationDate = new Date(message.notificationDate);
-                var itemListData = [
-                    message.id,
-                    message.client.clientDescription,
-                    notificationDate.toLocaleDateString(),
-                    message.notificationCategory,
-                    message.notificationData,
-                    message.notificationMessage,
-                    message.notificationTitle,
-                    completed,
-                    message.sendedDevices
+                let listDataHeaders = [
+                    io.resources.get('BackOffice.ID'),
+                    io.resources.get('BackOffice.Client'),
+                    io.resources.get('BackOffice.Date'),
+                    io.resources.get('BackOffice.Category'),
+                    io.resources.get('BackOffice.Data'),
+                    io.resources.get('BackOffice.Message'),
+                    io.resources.get('BackOffice.Title'),
+                    io.resources.get('BackOffice.Status'),
+                    io.resources.get('BackOffice.SendedDevices')
                 ];
 
-                listData.push(itemListData);
-                deleteParams.push([message.id]);
+                let resources = io.ui.resourcesModel;
+                resources.edit = io.resources.get('BackOffice.Edit');
+                resources.delete = io.resources.get('BackOffice.Delete');
+                resources.home = io.resources.get('BackOffice.Home');
+                resources.options = io.resources.get('BackOffice.Options');
+                resources.select = io.resources.get('BackOffice.Select');
+
+                io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, resources, null, null, null, function () {
+                });
+            } else {
+                window.ioinstance.indicator.hide();
+                window.ioinstance.callout.show(window.ioinstance.callout.types.danger, io.resources.get('BackOffice.Error'), '');
             }
-
-            let listDataHeaders = [
-                'ID',
-                'Client',
-                'Date',
-                'Category',
-                'Data',
-                'Message',
-                'Title',
-                'Status',
-                'Sended Devices'
-            ];
-
-            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, null, null, null, function () {
-            });
-        } else {
-            window.ioinstance.indicator.hide();
-            window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
-        }
+        });
     });
 };
 

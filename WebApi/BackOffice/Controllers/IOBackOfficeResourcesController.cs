@@ -59,6 +59,27 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Controllers
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
+        [HttpPost]
+        public IOResourceDeleteResponseModel DeleteResource([FromBody] IOResourceDeleteRequestModel requestModel) 
+        {
+            // Validate request
+            if (requestModel == null)
+            {
+                // Obtain 400 error
+                IOResponseModel error400 = this.Error400("Invalid request data.");
+
+                // Then return validation error
+                return new IOResourceDeleteResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+            }
+
+            // Add menu
+            _viewModel.DeleteResourceItem(requestModel.ID);
+
+            // Create and return response
+            return new IOResourceDeleteResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+        }
+
+        [IOUserRole(UserRoles.SuperAdmin)]
         [HttpGet]
         public IOGetResourcesResponseModel GetAllResources()
         {

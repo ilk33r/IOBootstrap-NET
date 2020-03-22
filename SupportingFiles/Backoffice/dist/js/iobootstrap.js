@@ -31,6 +31,12 @@ io.prototype.request.PushNotificationMessageDeleteRequest = {
     ID: 0
 };
 
+io.prototype.request.ResourceDeleteRequestModel = {
+    Culture: 0,
+    Version: '',
+    ID: 0
+};
+
 io.prototype.request.UserDeleteRequest = {
     Culture: 0,
     Version: '',
@@ -1449,6 +1455,27 @@ io.prototype.app.resourceAdd = function (e, hash) {
             });
         });
 };
+
+io.prototype.app.resourceDelete = function (resourceID) {
+    var answer = confirm("Are you sure want to delete this resource ?");
+    if (answer) {
+        var request = window.ioinstance.request.ResourceDeleteRequestModel;
+        request.Version = window.ioinstance.version;
+        request.ID = resourceID;
+        window.ioinstance.indicator.show();
+        window.ioinstance.service.post('backOffice/resources/delete', request, function (status, response, error) {
+            let callout = window.ioinstance.callout;
+            if (status && response.status.success) {
+                callout.show(callout.types.success, 'Resource has been deleted successfully.', '');
+            } else {
+                callout.show(callout.types.danger, error.message, error.detailedMessage);
+                window.ioinstance.indicator.hide();
+            }
+
+            window.ioinstance.app.resourcesList(null, 'resourcesList');
+        });
+    }
+}
 
 io.prototype.app.resourcesList = function (e, hash) {
     let io = window.ioinstance;

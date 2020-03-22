@@ -38,6 +38,21 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             IOCache.InvalidateCache(cacheKey);
         }
 
+        public void DeleteResourceItem(int resourceId)
+        {
+            IOResourceEntity resource = _databaseContext.Resources.Find(resourceId);
+            if (resource == null) {
+                return;
+            }
+
+            string cacheKey = "IOResourceCache" + resource.ResourceKey;
+
+            _databaseContext.Remove(resource);
+            _databaseContext.SaveChanges();
+
+            IOCache.InvalidateCache(cacheKey);
+        }
+
         public IList<IOResourceModel> GetAllResources()
         {
             List<IOResourceModel> resouces = new List<IOResourceModel>();

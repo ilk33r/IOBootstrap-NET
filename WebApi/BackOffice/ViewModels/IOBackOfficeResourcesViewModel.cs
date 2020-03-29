@@ -32,7 +32,11 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
             // Add resource entity to database
             _databaseContext.Add(resourceEntity);
-            _databaseContext.SaveChanges();
+
+            try {
+                _databaseContext.SaveChanges();
+            } catch {
+            }
 
             string cacheKey = "IOResourceCache" + requestModel.ResourceKey;
             IOCache.InvalidateCache(cacheKey);

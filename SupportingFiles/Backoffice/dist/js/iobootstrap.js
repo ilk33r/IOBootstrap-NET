@@ -460,6 +460,36 @@ io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue)
     });
 };
 
+io.prototype.app.deleteItem = function(url, request, alertMessageResourceKey, successMessageResourceKey, callback) {
+    let io = window.ioinstance;
+
+    let resources = [
+        alertMessageResourceKey,
+        successMessageResourceKey
+    ];
+
+    io.indicator.show();
+
+    io.resources.getResources(resources, function() {
+        var answer = confirm(io.resources.get(alertMessageResourceKey));
+        if (answer) {
+            io.service.post(url, request, function (status, response, error) {
+                let callout = io.callout;
+                if (status && response.status.success) {
+                    callout.show(callout.types.success, io.resources.get(successMessageResourceKey), '');
+                } else {
+                    callout.show(callout.types.danger, error.message, error.detailedMessage);
+                }
+
+                io.indicator.hide();
+                callback();
+            });
+        } else {
+            io.indicator.hide();
+        }
+    });
+};
+
 io.prototype.app.menuEditorList = function(e, hash) {
     let io = window.ioinstance;
 

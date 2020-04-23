@@ -146,16 +146,30 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Check back office page host name
-            string backofficePageHostName = this._configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
+            string backofficePageHostName = _configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
 
             // Check hostname is back office page
-            if (backofficePageHostName.Equals(this.Request.Host.Host))
+            if (backofficePageHostName.Equals(Request.Host.Host))
             {
+                bool httpsRequired = _configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
+
+                // Check attribute type
+                if (httpsRequired && !Request.Scheme.Equals("https")) {
+                    // Obtain response model
+                    IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK, "");
+                    IOResponseModel responseModel = new IOResponseModel(responseStatus);
+                    JsonResult result = new JsonResult(responseModel);
+                    Response.Headers.Add("Location", "https://" + Request.Host.Host);
+                    result.StatusCode = 301;
+                    context.Result = result;
+                    return;
+                }
+
                 // Obtain layout name from configuration
-                string layoutName = this._configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
+                string layoutName = _configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
 
                 // Obtain index page
-                context.Result = this.GetWebIndex(layoutName);
+                context.Result = GetWebIndex(layoutName);
 
                 // Do nothing
                 this.ActionExecuted = true;

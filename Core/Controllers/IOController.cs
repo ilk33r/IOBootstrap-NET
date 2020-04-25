@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using IOBootstrap.NET.Common.Attributes;
@@ -73,7 +74,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Check request method is options
-            if (this.Request.Method.Equals("OPTIONS")) {
+            if (Request.Method.Equals("OPTIONS")) {
                 // Create response status model
                 IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK);
 
@@ -83,32 +84,32 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = result;
 
                 // Do nothing
-                this.ActionExecuted = true;
+                ActionExecuted = true;
                 return;
             }
 
             // Check https is required
-            if (this.checkHttpsRequired(context))
+            if (checkHttpsRequired(context))
             {
                 // Do nothing
                 return;
             }
 
             // Check user role
-            if (!this.CheckRole(context))
+            if (!CheckRole(context))
             {
                 // Do nothing
                 return;
             }
 
             // Update view model request value
-            _viewModel._request = this.Request;
+            _viewModel._request = Request;
 
             // Check authorization
             if (!_viewModel.CheckAuthorizationHeader())
             {
                 // Obtain response model
-                IOResponseModel responseModel = this.Error400("Authorization failed.");
+                IOResponseModel responseModel = Error400("Authorization failed.");
 
                 // Override response
                 JsonResult result = new JsonResult(responseModel);
@@ -116,7 +117,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = result;
 
                 // Do nothing
-                this.ActionExecuted = true;
+                ActionExecuted = true;
                 return;
             }
 
@@ -132,7 +133,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 if (!_viewModel.CheckClient(clientId, clientSecret))
                 {
                     // Obtain response model
-                    IOResponseModel responseModel = this.Error400("Invalid client.");
+                    IOResponseModel responseModel = Error400("Invalid client.");
 
                     // Override response
                     JsonResult result = new JsonResult(responseModel);
@@ -140,7 +141,7 @@ namespace IOBootstrap.NET.Core.Controllers
                     context.Result = result;
 
                     // Do nothing
-                    this.ActionExecuted = true;
+                    ActionExecuted = true;
                     return;
                 }
             }
@@ -172,7 +173,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = GetWebIndex(layoutName);
 
                 // Do nothing
-                this.ActionExecuted = true;
+                ActionExecuted = true;
                 return;
             }
         }
@@ -246,12 +247,19 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Read file
                 string fileContent = System.IO.File.ReadAllText(layoutPath);
 
-                // Obtain app version
-                string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
+                // Obtain web values
+                Hashtable webValues = GetWebValues(layoutName);
 
-                // Set values to content
-                string htmlContent = fileContent.Replace("${environmentName}", _environment.EnvironmentName)
-                                                .Replace("${version}", appVersion);
+                // Create html content
+                string htmlContent = fileContent;
+
+                // Loop throught web values
+                foreach (DictionaryEntry webValue in webValues) 
+                {
+                    // Set values to content
+                    string contentKey = string.Format("${{{0}}}", webValue.Key);
+                    htmlContent = htmlContent.Replace(contentKey, (string)webValue.Value);
+                }
 
                 return Content(htmlContent, "text/html");
             }
@@ -261,6 +269,18 @@ namespace IOBootstrap.NET.Core.Controllers
                 result.StatusCode = 400;
                 return result;
             }
+        }
+
+        public virtual Hashtable GetWebValues(string layoutName)
+        {
+            Hashtable webValues = new Hashtable();
+            webValues.Add("environmentName", _environment.EnvironmentName);
+
+            // Obtain app version
+            string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
+            webValues.Add("version", appVersion);
+
+            return webValues;
         }
 
         #endregion

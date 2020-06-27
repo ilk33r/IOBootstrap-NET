@@ -795,6 +795,7 @@ io.prototype.ui = {
         this.validations = [];
         this.params = '';
         this.methodName = '';
+        this.enabled = true
     },
     formDataOptions: function (name, value) {
         this.name = name;
@@ -983,12 +984,14 @@ io.prototype.ui = {
     createFormWithTextType: function (formData, callback) {
         window.ioinstance.service.loadLayoutText('formWithTextLayout', function (layout) {
             var formLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            let enabledHtml = (formData.enabled) ? '' : 'disabled="disabled"';
             var formLayoutData = {
                 formDataIdArea: formData.id + 'Area',
                 formDataId: formData.id,
                 formDataName: formData.name,
                 formDataValue: formData.value,
-                formDataIdMessage: formData.id + 'Message'
+                formDataIdMessage: formData.id + 'Message',
+                formDataEnabled: enabledHtml
             };
 
             var formHtml = window.ioinstance.layout.renderLayout(layout, formLayoutData, formLayoutProperties);

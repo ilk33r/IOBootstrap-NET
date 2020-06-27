@@ -2,7 +2,7 @@
     <label for="${formDataId}" class="col-sm-2 control-label">${formDataName}</label>
 
     <div class="col-sm-9">
-        <input type="text" class="form-control" id="${formDataId}" value="${formDataValue}" placeholder="${formDataName}">
+        <input type="text" class="form-control" id="${formDataId}" value="${formDataValue}" placeholder="${formDataName}" ${formDataEnabled}>
         <span class="help-block ${formDataIdMessage} hidden"></span>
     </div>
 </div>

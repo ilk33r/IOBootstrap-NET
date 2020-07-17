@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace IOBootstrap.NET.Application
 {
@@ -9,14 +11,17 @@ namespace IOBootstrap.NET.Application
     {
         private static CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
-        public static IWebHost BuildWebHost(string[] args)
+        public static IHostBuilder BuildWebHost(string[] args)
 		{
-			return WebHost.CreateDefaultBuilder(args).UseStartup<IOStartup>().Build();
+            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<IOStartup>();
+            });
 		}
 
         public static void Main(string[] args)
         {
-            BuildWebHost(args).RunAsync(cancelTokenSource.Token).GetAwaiter().GetResult();
+            BuildWebHost(args).Build().RunAsync(cancelTokenSource.Token).GetAwaiter().GetResult();
         }
 
         public static void Shutdown()

@@ -1,8 +1,9 @@
-﻿using IOBootstrap.NET.Common.Enumerations;
+﻿using System;
+using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Common.Models.Shared;
-using System;
 
-namespace IOBootstrap.NET.Common.Models.BaseModels
+namespace IOBootstrap.NET.Common.Messages
 {
     public class IORequestModel : IOModel
     {

@@ -1,7 +1,8 @@
-﻿using IOBootstrap.NET.Common.Models.Shared;
-using System;
+﻿using System;
+using IOBootstrap.NET.Common.Models.Base;
+using IOBootstrap.NET.Common.Models.Shared;
 
-namespace IOBootstrap.NET.Common.Models.BaseModels
+namespace IOBootstrap.NET.Common.Messages
 {
     public class IOResponseModel : IOModel
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IOBootstrap.NET.Core.Cache.Utilities
+namespace IOBootstrap.NET.Common.Cache
 {
     public static class IOCache
     {

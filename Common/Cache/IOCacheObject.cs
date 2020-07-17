@@ -1,7 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Utilities;
 
-namespace IOBootstrap.NET.Core.Cache
+namespace IOBootstrap.NET.Common.Cache
 {
     public class IOCacheObject
     {

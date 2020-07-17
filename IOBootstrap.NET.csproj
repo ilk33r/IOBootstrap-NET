@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 	<SolutionDir>..\</SolutionDir>
-	<ReleaseVersion>0.0.3</ReleaseVersion>
+	<ReleaseVersion>0.0.4</ReleaseVersion>
 	<SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
 

@@ -1,34 +1,31 @@
 ﻿using System;
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.Clients;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public class IOViewModel<TDBContext> 
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Publics
 
-        public string clientId;
-        public string clientDescription;
+        public string ClientId;
+        public string ClientDescription;
 
         #endregion
 
         #region Properties
 
-        public IConfiguration _configuration { get; set; }
-        public TDBContext _databaseContext { get; set; }
-        public IHostingEnvironment _environment { get; set; }
-        public ILogger _logger { get; set; }
-        public HttpRequest _request { get; set; }
+        public IConfiguration Configuration { get; set; }
+        public TDBContext DatabaseContext { get; set; }
+        public IWebHostEnvironment Environment { get; set; }
+        public HttpRequest Request { get; set; }
 
         #endregion
 
@@ -45,13 +42,13 @@ namespace IOBootstrap.NET.Core.ViewModels
         public virtual bool CheckAuthorizationHeader()
 		{
 			// Check authorization header key exists
-			if (_request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
+			if (Request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
 			{
 				// Obtain request authorization value
-				string requestAuthorization = _request.Headers[IORequestHeaderConstants.Authorization];
+				string requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(_configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))
+				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))
 				{
 					// Then authorization success
 					return true;
@@ -65,7 +62,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public virtual bool CheckClient(string clientId, string clientSecret)
 		{
             // Find client
-            var clientsEntity = _databaseContext.Clients.Where((arg1) => arg1.ClientId == clientId);
+            var clientsEntity = DatabaseContext.Clients.Where((arg1) => arg1.ClientId == clientId);
 
 			// Check finded client counts is greater than zero
 			if (clientsEntity.Count() > 0)
@@ -87,12 +84,12 @@ namespace IOBootstrap.NET.Core.ViewModels
                         client.RequestCount = requestCount;
 
                         // Update properties
-                        this.clientId = clientId;
-                        this.clientDescription = client.ClientDescription;
+                        ClientId = clientId;
+                        ClientDescription = client.ClientDescription;
 
                         // Update client 
-                        _databaseContext.Update(client);
-                        _databaseContext.SaveChanges();
+                        DatabaseContext.Update(client);
+                        DatabaseContext.SaveChanges();
 
                         // Then return client valid
                         return true;   

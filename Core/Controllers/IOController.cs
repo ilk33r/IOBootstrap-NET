@@ -4,61 +4,50 @@ using System.Linq;
 using System.Reflection;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TLogger, TViewModel, TDBContext> : Controller 
-        where TViewModel : IOViewModel<TDBContext>, new() 
-        where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOController<TViewModel, TDBContext> : Controller where TViewModel : IOViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Properties
 
         public bool ActionExecuted = false;
-        public IConfiguration _configuration { get; }
-        public TDBContext _databaseContext { get; }
-        public IHostingEnvironment _environment { get; }
-        public ILogger<TLogger> _logger { get; }
-        public ILoggerFactory _loggerFactory { get; }
-        public TViewModel _viewModel { get; }
+        public IConfiguration Configuration { get; set; }
+        public TDBContext DatabaseContext { get; }
+        public IWebHostEnvironment Environment { get; }
+        public TViewModel ViewModel { get; }
 
         #endregion
 
         #region Controller Lifecycle
 
-        public IOController(ILoggerFactory factory, ILogger<TLogger> logger, 
-                            IConfiguration configuration, 
+        public IOController(IConfiguration configuration, 
                             TDBContext databaseContext,
-                            IHostingEnvironment environment)
+                            IWebHostEnvironment environment)
         {
             // Setup properties
-            _configuration = configuration;
-            _databaseContext = databaseContext;
-            _environment = environment;
-            _logger = logger;
-            _loggerFactory = factory;
+            Configuration = configuration;
+            DatabaseContext = databaseContext;
+            Environment = environment;
 
             // Initialize view model
-            _viewModel = new TViewModel();
+            ViewModel = new TViewModel();
 
             // Setup view model properties
-            _viewModel._configuration = configuration;
-            _viewModel._databaseContext = databaseContext;
-            _viewModel._environment = environment;
-            _viewModel._logger = logger;
-
-            _logger.LogDebug("Request start: {0}", this.GetType().Name);
+            ViewModel.Configuration = configuration;
+            ViewModel.DatabaseContext = databaseContext;
+            ViewModel.Environment = environment;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -66,8 +55,8 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuting(context);
 
             // Update allow origin
-            String allowedOrigins = _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
-            String requestOrigin = this.Request.Headers["Origin"];
+            String allowedOrigins = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+            String requestOrigin = Request.Headers["Origin"];
             if (requestOrigin != null && allowedOrigins.Contains(requestOrigin)) {
                 Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
                 Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
@@ -92,6 +81,7 @@ namespace IOBootstrap.NET.Core.Controllers
             if (checkHttpsRequired(context))
             {
                 // Do nothing
+                ActionExecuted = true;
                 return;
             }
 
@@ -99,14 +89,15 @@ namespace IOBootstrap.NET.Core.Controllers
             if (!CheckRole(context))
             {
                 // Do nothing
+                ActionExecuted = true;
                 return;
             }
 
             // Update view model request value
-            _viewModel._request = Request;
+            ViewModel.Request = Request;
 
             // Check authorization
-            if (!_viewModel.CheckAuthorizationHeader())
+            if (!ViewModel.CheckAuthorizationHeader())
             {
                 // Obtain response model
                 IOResponseModel responseModel = Error400("Authorization failed.");
@@ -122,15 +113,14 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Obtain client info
-            bool checkClientInfo = _configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
-
+            bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
             if (checkClientInfo) 
             {
                 string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? (string)Request.Headers[IORequestHeaderConstants.ClientId] : "";
                 string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
 
                 // Check client info
-                if (!_viewModel.CheckClient(clientId, clientSecret))
+                if (!ViewModel.CheckClient(clientId, clientSecret))
                 {
                     // Obtain response model
                     IOResponseModel responseModel = Error400("Invalid client.");
@@ -147,12 +137,12 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Check back office page host name
-            string backofficePageHostName = _configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
+            string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
 
             // Check hostname is back office page
             if (backofficePageHostName.Equals(Request.Host.Host))
             {
-                bool httpsRequired = _configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
+                bool httpsRequired = Configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
 
                 // Check attribute type
                 if (httpsRequired && !Request.Scheme.Equals("https")) {
@@ -167,7 +157,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 }
 
                 // Obtain layout name from configuration
-                string layoutName = _configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
+                string layoutName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
 
                 // Obtain index page
                 context.Result = GetWebIndex(layoutName);
@@ -189,7 +179,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual IOResponseModel Index()
         {
             // Obtain app version
-            string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
+            string appVersion = Configuration.GetValue<string>(IOConfigurationConstants.Version);
 
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK,
@@ -208,7 +198,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual IOResponseModel Error400(string errorMessage = "")
         {
             // Update response status code
-            this.Response.StatusCode = 400;
+            Response.StatusCode = 400;
 
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, errorMessage);
@@ -220,11 +210,11 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual IOResponseModel Error404()
         {
             // Update response status code
-            this.Response.StatusCode = 404;
+            Response.StatusCode = 404;
 
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.ENDPOINT_FAILURE,
-                                                                         String.Format("Path {0} is invalid.", this.Request.Path));
+                                                                         String.Format("Path {0} is invalid.", Request.Path));
 
             // Return response
             return new IOResponseModel(responseStatus);
@@ -237,7 +227,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual IActionResult GetWebIndex(string layoutName)
         {
             // Obtain web root
-            string webRoot = this._environment.WebRootPath;
+            string webRoot = Environment.WebRootPath;
 
             // Create file path
             string layoutPath = webRoot + "/" + layoutName;
@@ -265,7 +255,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
             else
             {
-                JsonResult result = new JsonResult(this.Error404());
+                JsonResult result = new JsonResult(Error404());
                 result.StatusCode = 400;
                 return result;
             }
@@ -274,10 +264,10 @@ namespace IOBootstrap.NET.Core.Controllers
         public virtual Hashtable GetWebValues(string layoutName)
         {
             Hashtable webValues = new Hashtable();
-            webValues.Add("environmentName", _environment.EnvironmentName);
+            webValues.Add("environmentName", Environment.EnvironmentName);
 
             // Obtain app version
-            string appVersion = _configuration.GetValue<string>(IOConfigurationConstants.Version);
+            string appVersion = Configuration.GetValue<string>(IOConfigurationConstants.Version);
             webValues.Add("version", appVersion);
 
             return webValues;
@@ -300,7 +290,7 @@ namespace IOBootstrap.NET.Core.Controllers
                     if (descriptor.AttributeType == typeof(IOUserRoleAttribute) || descriptor.AttributeType == typeof(IOUserCustomRoleAttribute))
                     {
                         object requiredRole = descriptor.ConstructorArguments[0].Value;
-                        int userRole = _viewModel.GetUserRole();
+                        int userRole = ViewModel.GetUserRole();
 
                         // Check attribute type
                         if (requiredRole != null)
@@ -309,7 +299,7 @@ namespace IOBootstrap.NET.Core.Controllers
                             if (!IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                             {
                                 // Obtain response model
-                                IOResponseModel responseModel = this.Error400("Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
+                                IOResponseModel responseModel = Error400("Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
 
                                 // Override response
                                 JsonResult result = new JsonResult(responseModel);
@@ -339,13 +329,13 @@ namespace IOBootstrap.NET.Core.Controllers
                 {
                     if (descriptor.AttributeType == typeof(IORequireHTTPSAttribute))
                     {
-                        bool httpsRequired = _configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
+                        bool httpsRequired = Configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
 
                         // Check attribute type
-                        if (httpsRequired && !this.Request.Scheme.Equals("https"))
+                        if (httpsRequired && !Request.Scheme.Equals("https"))
                         {
                             // Obtain response model
-                            IOResponseModel responseModel = this.Error400("Https required.");
+                            IOResponseModel responseModel = Error400("Https required.");
 
                             // Override response
                             JsonResult result = new JsonResult(responseModel);
@@ -365,7 +355,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public string GetControllerName()
         {
             // Obtain class name
-            String className = this.GetType().Name;
+            String className = GetType().Name;
 
             // Substract controller word
             string[] controllerName = className.Split(new string[] { "Controller" }, StringSplitOptions.None);

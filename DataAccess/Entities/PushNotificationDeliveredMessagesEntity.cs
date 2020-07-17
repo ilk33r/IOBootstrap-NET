@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IOBootstrap.NET.WebApi.PushNotification.Entities
+namespace IOBootstrap.NET.DataAccess.Entities
 {
     public class PushNotificationDeliveredMessagesEntity
     {

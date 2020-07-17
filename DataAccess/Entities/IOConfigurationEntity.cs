@@ -2,13 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Core.Cache;
-using IOBootstrap.NET.Core.Cache.Utilities;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Models.Base;
+using IOBootstrap.NET.DataAccess.Context;
 using Newtonsoft.Json;
 
-namespace IOBootstrap.NET.Common.Entities.Configuration
+namespace IOBootstrap.NET.DataAccess.Entities
 {
     public class IOConfigurationEntity
     {
@@ -29,10 +29,9 @@ namespace IOBootstrap.NET.Common.Entities.Configuration
 
         #region Helper Methods
 
-        public static IOConfigurationEntity ConfigForKey<TDBContext>(string configKey, TDBContext inContext)
-            where TDBContext : IODatabaseContext<TDBContext>
+        public static IOConfigurationEntity ConfigForKey<TDBContext>(string configKey, TDBContext inContext) where TDBContext : IODatabaseContext<TDBContext>
         {
-            string cacheKey = "IOConfigurationCache" + configKey;
+            string cacheKey = IOCacheKeys.ConfigurationCacheKey + configKey;
             IOCacheObject cachedObject = IOCache.GetCachedObject(cacheKey);
             if (cachedObject != null)
             {

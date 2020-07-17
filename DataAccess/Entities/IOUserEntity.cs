@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IOBootstrap.NET.Common.Entities.Users
+namespace IOBootstrap.NET.DataAccess.Entities
 {
     public class IOUserEntity
     {

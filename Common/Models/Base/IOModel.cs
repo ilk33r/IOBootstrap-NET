@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Common.Models.Shared
+namespace IOBootstrap.NET.Common.Models.Base
 {
     public class IOModel
     {

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Entities.Configuration;
-using IOBootstrap.NET.Common.Entities.Resource;
-using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.WebApi.BackOffice.Entities;
-using IOBootstrap.NET.WebApi.PushNotification.Entities;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOBootstrap.NET.Core.Database
+namespace IOBootstrap.NET.DataAccess.Context
 {
     public abstract class IODatabaseContext<TContext> : DbContext where TContext : DbContext
     {

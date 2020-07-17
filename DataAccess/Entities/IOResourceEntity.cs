@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using IOBootstrap.NET.Core.Cache;
-using IOBootstrap.NET.Core.Cache.Utilities;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.DataAccess.Context;
 
-namespace IOBootstrap.NET.Common.Entities.Resource
+namespace IOBootstrap.NET.DataAccess.Entities
 {
     public class IOResourceEntity
     {
@@ -25,10 +25,9 @@ namespace IOBootstrap.NET.Common.Entities.Resource
 
         #region Helper Methods
 
-        public static IOResourceEntity ResourceForKey<TDBContext>(string resourceKey, TDBContext inContext)
-            where TDBContext : IODatabaseContext<TDBContext>
+        public static IOResourceEntity ResourceForKey<TDBContext>(string resourceKey, TDBContext inContext) where TDBContext : IODatabaseContext<TDBContext>
         {
-            string cacheKey = "IOResourceCache" + resourceKey;
+            string cacheKey = IOCacheKeys.ResourceCacheKey + resourceKey;
             IOCacheObject cachedObject = IOCache.GetCachedObject(cacheKey);
             if (cachedObject != null)
             {

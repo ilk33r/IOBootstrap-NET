@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Clients;
+using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -16,52 +18,16 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOBackOfficeController<TLogger, TViewModel, TDBContext> : IOController<TLogger, TViewModel, TDBContext>
-        where TViewModel : IOBackOfficeViewModel<TDBContext>, new()
-        where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOBackOfficeViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Controller Lifecycle
 
-        public IOBackOfficeController(ILoggerFactory factory,
-                                      ILogger<TLogger> logger,
-                                      IConfiguration configuration,
+        public IOBackOfficeController(IConfiguration configuration,
                                       TDBContext databaseContext,
-                                      IHostingEnvironment environment)
-            : base(factory, logger, configuration, databaseContext, environment)
+                                      IWebHostEnvironment environment,
+                                      ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
         {
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            // Update view model request value
-            _viewModel._request = this.Request;
-
-            // Check is not back office
-            if (!this.Request.Method.Equals("OPTIONS") && !_viewModel.IsBackOffice())
-            {
-                // Update allow origin
-                String allowedOrigins = _configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
-                String requestOrigin = this.Request.Headers["Origin"];
-                if (requestOrigin != null && allowedOrigins.Contains(requestOrigin))
-                {
-                    Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
-                    Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
-                }
-
-                // Obtain response model
-                IOResponseModel responseModel = this.Error400("Restricted page.");
-
-                // Override response
-                JsonResult result = new JsonResult(responseModel);
-                result.StatusCode = 400;
-                context.Result = result;
-
-                // Do nothing
-                return;
-            }
-
-            base.OnActionExecuting(context);
         }
 
         #endregion
@@ -76,15 +42,12 @@ namespace IOBootstrap.NET.Core.Controllers
             if (requestModel == null
                 || String.IsNullOrEmpty(requestModel.ClientDescription))
             {
-                // Update response status
-                this.Response.StatusCode = 400;
-
                 // Create and return response
-                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
             // Obtain client info from view model
-            IOClientBackOfficeInfoModel clientInfo = _viewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
+            IOClientInfoModel clientInfo = ViewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
 
             // Create and return response
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
@@ -97,22 +60,18 @@ namespace IOBootstrap.NET.Core.Controllers
             // Validate request
             if (requestModel == null)
             {
-                // Update response status
-                this.Response.StatusCode = 400;
-
                 // Create and return response
-                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
             // Check delete client is success
-            if (_viewModel.DeleteClient(requestModel.ClientId))
+            if (ViewModel.DeleteClient(requestModel.ClientId))
             {
                 // Then create and return response
                 return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
             }
 
             // Return bad request
-            this.Response.StatusCode = 400;
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
@@ -121,7 +80,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public IOClientListResponseModel ListClients()
         {
             // Obtain client infos
-            List<IOClientBackOfficeInfoModel> clientInfos = _viewModel.GetClients();
+            List<IOClientInfoModel> clientInfos = ViewModel.GetClients();
 
             // Create and return response
             return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
@@ -134,26 +93,35 @@ namespace IOBootstrap.NET.Core.Controllers
             // Validate request
             if (requestModel == null)
             {
-                // Update response status
-                this.Response.StatusCode = 400;
-
                 // Create and return response
-                return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid request data"), null);
+                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
             // Check update client is success
-            if (_viewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount))
+            if (ViewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount))
             {
                 // Then create and return response
                 return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
             }
 
             // Return bad request
-            this.Response.StatusCode = 400;
             return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
         }
 
         #endregion
 
+        #region Helper Methods
+
+        public override bool CheckAccessControl(ActionExecutingContext context)
+        {
+            if (!ViewModel.IsBackOffice())
+            {
+                return base.CheckAccessControl(context);
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 }

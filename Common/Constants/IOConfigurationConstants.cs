@@ -12,6 +12,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string APNSHost = "IOAPNSHost";
         public static string APNSPort = "IOAPNSPort";
         public static string AuthorizationKey = "IOAuthorizationKey";
+        public static string BackOfficeControllerNameKey = "IOBackOfficeControllerName";
         public static string BackOfficeIsPublic = "IOBackOfficeIsPublic";
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";

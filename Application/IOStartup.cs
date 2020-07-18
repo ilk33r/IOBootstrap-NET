@@ -97,12 +97,21 @@ namespace IOBootstrap.NET.Application
             // Use routing 
             app.UseRouting();
 
-            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
             IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
+            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
+            string backofficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            IORoute addClientRoute = new IORoute("AddClient", backofficeControllerName);
+            IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
+            IORoute listClientRoute = new IORoute("ListClients", backofficeControllerName);
+            IORoute updateClientRoute = new IORoute("UpdateClient", backofficeControllerName);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+                endpoints.MapControllerRoute("addClient", addClientRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
+                endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
 
 #if DEBUG
                 endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
@@ -145,10 +154,6 @@ namespace IOBootstrap.NET.Application
             {
                 routes.MapRoute("authenticate", "backOffice/users/password/authenticate", new IORoute("Authenticate", this.AuthenticationControllerName()));
                 routes.MapRoute("checktoken", "backOffice/users/password/checktoken", new IORoute("CheckToken", this.AuthenticationControllerName()));
-                routes.MapRoute("addClient", "backOffice/clients/add", new IORoute("AddClient", this.BackOfficeControllerName()));
-                routes.MapRoute("deleteClient", "backOffice/clients/delete", new IORoute("DeleteClient", this.BackOfficeControllerName()));
-                routes.MapRoute("listClient", "backOffice/clients/list", new IORoute("ListClients", this.BackOfficeControllerName()));
-                routes.MapRoute("updateClient", "backOffice/clients/update", new IORoute("UpdateClient", this.BackOfficeControllerName()));
                 routes.MapRoute("addUser", "backOffice/users/add", new IORoute("AddUser", this.UserControllerName()));
                 routes.MapRoute("changePassword", "backOffice/users/password/change", new IORoute("ChangePassword", this.UserControllerName()));
                 routes.MapRoute("deleteUser", "backOffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));

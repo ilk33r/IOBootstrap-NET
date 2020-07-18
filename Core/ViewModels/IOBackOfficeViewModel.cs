@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Publics
 
-        public IOUserEntity userEntity;
+        public IOUserEntity UserEntity;
 
         #endregion
 
@@ -33,87 +31,81 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region View Model Methods
 
-        public virtual IOClientBackOfficeInfoModel CreateClient(string clientDescription, long maxRequestCount) 
+        public virtual IOClientInfoModel CreateClient(string clientDescription, long maxRequestCount)
         {
-			// Create a client entity
-			IOClientsEntity clientEntity = new IOClientsEntity()
-			{
+            // Create a client entity
+            IOClientsEntity clientEntity = new IOClientsEntity()
+            {
                 ClientId = IORandomUtilities.GenerateGUIDString(),
                 ClientSecret = IORandomUtilities.GenerateGUIDString(),
-				ClientDescription = clientDescription,
+                ClientDescription = clientDescription,
                 IsEnabled = 1,
                 RequestCount = 0,
                 MaxRequestCount = maxRequestCount
-			};
+            };
 
             // Write client to database
-            _databaseContext.Clients.Add(clientEntity);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Clients.Add(clientEntity);
+            DatabaseContext.SaveChanges();
 
-			// Create and return client info
-            return new IOClientBackOfficeInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
+            // Create and return client info
+            return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
         }
 
-        public bool DeleteClient(int clientId) 
+        public bool DeleteClient(int clientId)
         {
             // Obtain client entity
-            IOClientsEntity clientEntity = _databaseContext.Clients.Find(clientId);
+            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(clientId);
 
-			// Check client entity is not null
-			if (clientEntity != null)
-			{
+            // Check client entity is not null
+            if (clientEntity != null)
+            {
                 // Delete all entity
-                _databaseContext.Remove(clientEntity);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Remove(clientEntity);
+                DatabaseContext.SaveChanges();
 
                 // Then success
                 return true;
-			}
+            }
 
             // Return delete operation is failed
             return false;
         }
 
-		public List<IOClientBackOfficeInfoModel> GetClients()
-		{
-			// Create list for clients
-			List<IOClientBackOfficeInfoModel> clientInfos = new List<IOClientBackOfficeInfoModel>();
+        public List<IOClientInfoModel> GetClients()
+        {
+            // Create list for clients
+            List<IOClientInfoModel> clientInfos = new List<IOClientInfoModel>();
 
             // Obtain clients from realm
-            var clients = _databaseContext.Clients;
+            var clients = DatabaseContext.Clients;
 
-			// Check clients is not null
-			if (clients != null)
-			{
-				// Loop throught clients
-				for (int i = 0; i < clients.Count(); i++)
-				{
-					// Obtain client entity
-					IOClientsEntity client = clients.Skip(i).First();
+            // Check clients is not null
+            if (clients != null)
+            {
+                List<IOClientsEntity> clientsEntity = clients.ToList();
+                clientInfos = clientsEntity.ConvertAll(client =>
+                {
+                    // Create back office info model
+                    return new IOClientInfoModel(client.ID,
+                                                client.ClientId,
+                                                client.ClientSecret,
+                                                client.ClientDescription,
+                                                client.IsEnabled,
+                                                client.RequestCount,
+                                                client.MaxRequestCount);
+                });
+            }
 
-					// Create back office info model
-                    IOClientBackOfficeInfoModel model = new IOClientBackOfficeInfoModel(client.ID, 
-                                                                                        client.ClientId, 
-                                                                                        client.ClientSecret, 
-                                                                                        client.ClientDescription, 
-                                                                                        client.IsEnabled,
-                                                                                        client.RequestCount,
-                                                                                        client.MaxRequestCount);
-
-					// Add model to client info list
-					clientInfos.Add(model);
-				}
-			}
-
-			// Return clients
-			return clientInfos;
-		}
+            // Return clients
+            return clientInfos;
+        }
 
         public bool UpdateClient(int id, string description, int isEnabled, long requestCount, long maxRequestCount)
         {
             // Obtain client entity
-            var clientEntities = _databaseContext.Clients.Where((arg1) => arg1.ID == id);
-           
+            var clientEntities = DatabaseContext.Clients.Where(arg1 => arg1.ID == id);
+
             // Check client finded
             if (clientEntities.Count() > 0)
             {
@@ -127,8 +119,8 @@ namespace IOBootstrap.NET.Core.ViewModels
                 client.MaxRequestCount = maxRequestCount;
 
                 // Update client
-                _databaseContext.Update(client);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Update(client);
+                DatabaseContext.SaveChanges();
 
                 // Return response
                 return true;
@@ -139,43 +131,44 @@ namespace IOBootstrap.NET.Core.ViewModels
         }
 
         public bool IsBackOffice()
-		{
-			// Check back office is not open and token exists
-            if (!_configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && _request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
-			{
+        {
+            // Check back office is not open and token exists
+            if (!Configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+            {
                 // Obtain token
-                string token = _request.Headers[IORequestHeaderConstants.AuthorizationToken];
+                string token = Request.Headers[IORequestHeaderConstants.AuthorizationToken];
 
                 // Parse token
-                Tuple<string, int> tokenData = this.parseToken(token);
+                Tuple<string, int> tokenData = ParseToken(token);
 
                 // Return back office status
-                return this.checkBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
-			}
+                return CheckBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
+            }
 
-			// Then return back office
-			return true;
-		}
+            // Then return back office
+            return true;
+        }
 
-        private bool checkBackofficeTokenIsValid(string tokenData, int userId) {
+        private bool CheckBackofficeTokenIsValid(string tokenData, int userId)
+        {
             // Check token data is correct
             if (tokenData.Count() > 1)
             {
                 // Obtain user entity from database
-                this.userEntity = _databaseContext.Users.Find(userId);
+                UserEntity = DatabaseContext.Users.Find(userId);
 
                 // Check user entity is not null
-                if (userEntity != null)
+                if (UserEntity != null)
                 {
                     // Obtain token life from configuration
-                    int tokenLife = _configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+                    int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
                     // Calculate token end seconds and current seconds
                     long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
-                    long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(userEntity.TokenDate.DateTime) + tokenLife;
+                    long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(UserEntity.TokenDate.DateTime) + tokenLife;
 
                     // Compare user token
-                    if (userEntity.UserToken != null && currentSeconds < tokenEndSeconds && userEntity.UserToken.Equals(tokenData))
+                    if (UserEntity.UserToken != null && currentSeconds < tokenEndSeconds && UserEntity.UserToken.Equals(tokenData))
                     {
                         // Return is back office
                         return true;
@@ -187,11 +180,11 @@ namespace IOBootstrap.NET.Core.ViewModels
             return false;
         }
 
-        public Tuple<string, int> parseToken(string token) 
+        public Tuple<string, int> ParseToken(string token)
         {
             // Convert key and iv to byte array
-            byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
-            byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
+            byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
+            byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
             try
             {
@@ -208,7 +201,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             }
             catch (Exception e)
             {
-                _logger.LogDebug(e.StackTrace);
+                Logger.LogDebug(e.StackTrace);
                 return new Tuple<string, int>("", 0);
             }
         }
@@ -219,7 +212,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         public override int GetUserRole()
         {
-            IOUserEntity userEntity = this.userEntity;
+            IOUserEntity userEntity = UserEntity;
 
             // Check user exists
             if (userEntity != null)

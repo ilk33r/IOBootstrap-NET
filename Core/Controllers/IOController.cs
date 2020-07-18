@@ -174,25 +174,6 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #endregion
 
-        #region Default
-
-        public virtual IOResponseModel Index()
-        {
-            // Obtain app version
-            string appVersion = Configuration.GetValue<string>(IOConfigurationConstants.Version);
-
-            // Create response status model
-            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK,
-                                                                             "IO Bootstrapt.",
-                                                                             true,
-                                                                             String.Format("Version: {0}", appVersion));
-
-            // Return response
-            return new IOResponseModel(responseStatus);
-        }
-
-        #endregion
-
         #region Errors
 
         public virtual IOResponseModel Error400(string errorMessage = "")

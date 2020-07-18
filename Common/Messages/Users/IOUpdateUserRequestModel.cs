@@ -1,7 +1,7 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.WebApi.User.Models
+namespace IOBootstrap.NET.Common.Messages.Users
 {
 	public class IOUpdateUserRequestModel : IORequestModel
     {

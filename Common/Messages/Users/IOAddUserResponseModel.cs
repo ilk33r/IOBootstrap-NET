@@ -1,8 +1,8 @@
-﻿using IOBootstrap.NET.Common.Models.BaseModels;
+﻿using System;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
-using System;
 
-namespace IOBootstrap.NET.WebApi.User.Models
+namespace IOBootstrap.NET.Common.Messages.Users
 {
     public class IOAddUserResponseModel : IOResponseModel
     {
@@ -18,11 +18,15 @@ namespace IOBootstrap.NET.WebApi.User.Models
 
         public IOAddUserResponseModel(IOResponseStatusModel status, int userId, string userName): base(status) {
 			// Setup properties
-            this.UserId = userId;
-            this.UserName = userName;
+            UserId = userId;
+            UserName = userName;
 		}
 
-		#endregion
+        public IOAddUserResponseModel(int responseStatusMessage) : base(responseStatusMessage)
+        {
+        }
 
-	}
+        #endregion
+
+    }
 }

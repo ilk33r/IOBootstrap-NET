@@ -16,6 +16,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackOfficeIsPublic = "IOBackOfficeIsPublic";
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
+        public static string BackofficeUserControllerNameKey = "IOBackofficeUserControllerName";
         public static string CheckClientInfo = "IOCheckClientInfo";
         public static string FirebaseApiUrl = "IOFirebaseApiUrl";
         public static string FirebaseToken = "IOFirebaseToken";

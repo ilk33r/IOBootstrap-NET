@@ -1,9 +1,10 @@
-﻿using IOBootstrap.NET.Common.Models.BaseModels;
-using IOBootstrap.NET.Common.Models.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Users;
 
-namespace IOBootstrap.NET.WebApi.User.Models
+namespace IOBootstrap.NET.Common.Messages.Users
 {
     public class IOListUserResponseModel : IOResponseModel
     {
@@ -21,7 +22,7 @@ namespace IOBootstrap.NET.WebApi.User.Models
 
 		public IOListUserResponseModel(IOResponseStatusModel status, IList<IOUserInfoModel> users): base(status) {
 			// Setup properties
-            this.Users = users;
+            Users = users;
 		}
 
 		#endregion

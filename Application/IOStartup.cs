@@ -99,15 +99,29 @@ namespace IOBootstrap.NET.Application
 
             IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
             IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
+            
             string backofficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IORoute addClientRoute = new IORoute("AddClient", backofficeControllerName);
             IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
             IORoute listClientRoute = new IORoute("ListClients", backofficeControllerName);
             IORoute updateClientRoute = new IORoute("UpdateClient", backofficeControllerName);
+
+            string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
+            IORoute addUserRoute = new IORoute("AddUser", userControllerName);
+            IORoute changePasswordRoute = new IORoute("ChangePassword", userControllerName);
+            IORoute deleteUserRoute = new IORoute("DeleteUser", userControllerName);
+            IORoute listUsersRoute = new IORoute("ListUsers", userControllerName);
+            IORoute updateUsersRoute = new IORoute("UpdateUser", userControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+                endpoints.MapControllerRoute("addUser", addUserRoute.GetRouteString());
+                endpoints.MapControllerRoute("changePassword", changePasswordRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteUser", deleteUserRoute.GetRouteString());
+                endpoints.MapControllerRoute("listUsers", listUsersRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateUsers", updateUsersRoute.GetRouteString());
                 endpoints.MapControllerRoute("addClient", addClientRoute.GetRouteString());
                 endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
                 endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
@@ -154,11 +168,6 @@ namespace IOBootstrap.NET.Application
             {
                 routes.MapRoute("authenticate", "backOffice/users/password/authenticate", new IORoute("Authenticate", this.AuthenticationControllerName()));
                 routes.MapRoute("checktoken", "backOffice/users/password/checktoken", new IORoute("CheckToken", this.AuthenticationControllerName()));
-                routes.MapRoute("addUser", "backOffice/users/add", new IORoute("AddUser", this.UserControllerName()));
-                routes.MapRoute("changePassword", "backOffice/users/password/change", new IORoute("ChangePassword", this.UserControllerName()));
-                routes.MapRoute("deleteUser", "backOffice/users/delete", new IORoute("DeleteUser", this.UserControllerName()));
-                routes.MapRoute("listUsers", "backOffice/users/list", new IORoute("ListUsers", this.UserControllerName()));
-                routes.MapRoute("updateUsers", "backOffice/users/update", new IORoute("UpdateUser", this.UserControllerName()));
                 routes.MapRoute("addMenuItem", "backOffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("deleteMenuItem", "backOffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("listMenuItems", "backOffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
@@ -213,11 +222,6 @@ namespace IOBootstrap.NET.Application
         public virtual string ResourcesControllerName()
         {
             return "IOBackOfficeResources";
-        }
-
-        public virtual string UserControllerName()
-        {
-            return "IOUser";
         }
 */
         #endregion

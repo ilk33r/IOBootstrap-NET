@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.WebApi.User.Models
+namespace IOBootstrap.NET.Common.Models.Users
 {
     public class IOUserInfoModel
     {

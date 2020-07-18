@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Entities.Users;
+using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.WebApi.User.Models;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.Common.Messages.Users;
 
-namespace IOBootstrap.NET.WebApi.User.ViewModels
+namespace IOBootstrap.NET.BackOffice.User.ViewModels
 {
-    public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Initialization Methods
@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
         public virtual Tuple<bool, int, string> AddUser(string userName, string password, int userRole)
         {
             // Obtain users entity
-            IOUserEntity user = IOUserEntity.FindUserFromName(_databaseContext.Users, userName);
+            IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
 
 			// Check push notification entity exists
             if (user != null)
@@ -47,8 +47,8 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 			};
 
             // Write user to database
-            _databaseContext.Add(newUserEntity);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Add(newUserEntity);
+            DatabaseContext.SaveChanges();
 
             // Return status
             return new Tuple<bool, int, string>(true, newUserEntity.ID, userName);
@@ -57,18 +57,18 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
         public bool ChangePassword(string userName, string oldPassword, string newPassword) 
         {
             // Obtain user entity
-            IOUserEntity user = IOUserEntity.FindUserFromName(_databaseContext.Users, userName);
+            IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
 
             // Check user old password is valid
-            if (user != null && ((UserRoles)this.userEntity.UserRole == UserRoles.SuperAdmin || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password)))
+            if (user != null && ((UserRoles)UserEntity.UserRole == UserRoles.SuperAdmin || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password)))
 			{
 				// Update user password properties
                 user.Password = IOPasswordUtilities.HashPassword(newPassword);
 			    user.UserToken = null;
 
                 // Update user password
-                _databaseContext.Update(user);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Update(user);
+                DatabaseContext.SaveChanges();
 
                 // Return response
                 return true;
@@ -84,7 +84,7 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 			List<IOUserInfoModel> users = new List<IOUserInfoModel>();
 
             // Obtain users from realm
-            var user = _databaseContext.Users;
+            var user = DatabaseContext.Users;
 
 			// Check users is not null
 			if (user != null)
@@ -116,17 +116,17 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
 
         public int UpdateUser(IOUpdateUserRequestModel request)
         {
-            IOUserEntity user = _databaseContext.Users.Find(request.UserId);
+            IOUserEntity user = DatabaseContext.Users.Find(request.UserId);
             string userName = request.UserName.ToLower();
 
-            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)this.userEntity.UserRole))
+            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserEntity.UserRole))
             {
                 return 2;
             }
 
             if (user != null) 
             {
-                var newUsers = _databaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
+                var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
                 if (newUsers == null || newUsers.Count() != 0)
                 {
                     return 3;
@@ -143,8 +143,8 @@ namespace IOBootstrap.NET.WebApi.User.ViewModels
                 }
 
                 // Update user password
-                _databaseContext.Update(user);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Update(user);
+                DatabaseContext.SaveChanges();
 
                 return 0;
             }

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Messages;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;

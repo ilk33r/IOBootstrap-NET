@@ -1,8 +1,8 @@
-﻿using IOBootstrap.NET.Common.Models.BaseModels;
+﻿using System;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
-using System;
 
-namespace IOBootstrap.NET.WebApi.KeyGenerator.Models
+namespace IOBootstrap.NET.Common.Messages.KeyGenerator
 {
     public class IOKeyGeneratorResponseModel : IOResponseModel
     {

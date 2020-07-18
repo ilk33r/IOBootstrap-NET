@@ -15,7 +15,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <DefineConstants>USE_MYSQL_DATABASE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <DefineConstants>USE_MYSQL_DATABASE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoStdLib>false</NoStdLib>
+    <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
 
 </Project>

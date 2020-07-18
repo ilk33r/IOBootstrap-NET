@@ -3,7 +3,7 @@ using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 
-namespace IOBootstrap.NET.Common.Messages
+namespace IOBootstrap.NET.Common.Messages.Base
 {
     public class IORequestModel : IOModel
     {

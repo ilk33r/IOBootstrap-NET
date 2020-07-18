@@ -96,11 +96,16 @@ namespace IOBootstrap.NET.Application
             // Use routing 
             app.UseRouting();
 
+            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
             IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+                
+#if DEBUG
+                endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
+#endif
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
 
@@ -167,11 +172,6 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("getAllResources", "backOffice/resources/all", new IORoute("GetAllResources", this.ResourcesControllerName()));
                 routes.MapRoute("getResources", "backOffice/resources/get", new IORoute("GetResources", this.ResourcesControllerName()));
                 routes.MapRoute("updateResource", "backOffice/resources/update", new IORoute("UpdateResource", this.ResourcesControllerName()));
-#if DEBUG
-                routes.MapRoute("generateKeys", "generate/keys", new IORoute("GenerateKeys", this.KeyControllerName()));
-#endif
-                routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
-                routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });
         }
 
@@ -202,11 +202,6 @@ namespace IOBootstrap.NET.Application
         public virtual string BackOfficeMessagesControllerName()
         {
             return "IOBackOfficeMessages";
-        }
-
-        public virtual string KeyControllerName() 
-        {
-            return "IOKeyGenerator";
         }
 
         public virtual string ResourcesControllerName()

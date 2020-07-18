@@ -1,30 +1,26 @@
-﻿using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Core.ViewModels;
+﻿using System;
+using System.Security.Cryptography;
+using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.WebApi.KeyGenerator.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Security.Cryptography;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Messages.KeyGenerator;
+using IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
-    public class IOKeyGeneratorController<TLogger, TDBContext> : IOController<TLogger, IOViewModel<TDBContext>, TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOKeyGeneratorController : IOController<IOKeyGeneratorViewModel, IODatabaseContextDefaultImpl>
     {
 
         #region Controller Lifecycle
 
-        public IOKeyGeneratorController(ILoggerFactory factory, 
-                                        ILogger<TLogger> logger, 
-                                        IConfiguration configuration, 
-                                        TDBContext databaseContext,
-                                        IHostingEnvironment environment)
-            : base(factory, logger, configuration, databaseContext, environment)
+        public IOKeyGeneratorController(IConfiguration configuration, 
+                                        IODatabaseContextDefaultImpl databaseContext,
+                                        IWebHostEnvironment environment) : base(configuration, databaseContext, environment)
         {
         }
 

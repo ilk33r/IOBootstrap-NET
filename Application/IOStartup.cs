@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.Middlewares;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Builder;
@@ -102,7 +103,7 @@ namespace IOBootstrap.NET.Application
             {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
-                
+
 #if DEBUG
                 endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
 #endif

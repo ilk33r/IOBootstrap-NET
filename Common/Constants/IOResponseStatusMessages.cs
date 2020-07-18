@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace IOBootstrap.NET.Common.Constants
 {
@@ -7,33 +8,35 @@ namespace IOBootstrap.NET.Common.Constants
 
         #region Messages
 
-        public static String[] Messages = {
-            "",
-            "Endpoint could not found.",
-            "Bad request",
-            "Invalid clients",
-            "Invalid credientals",
-            "Unsupported version",
-            "User exists",
-            "Invalid permission",
-            "User not found",
-            "General exception"
+        public static Dictionary<int, string> Messages = new Dictionary<int, string> {
+            {200, "OK"},
+            {400, "Invalid request."},
+            {401, "Invalid permission."},
+            {403, "Invalid credientals."},
+            {404, "Endpoint could not found."},
+            {405, "Https required."},
+            {406, "Invalid client."},
+            {600, "Authorization failed."},
+            {700, "User exists."},
+            {701, "User not found."},
+            {900, "General exception."}
         };
 
         #endregion
 
         #region Status Messages
 
-        public static int OK = 0;
-        public static int ENDPOINT_FAILURE = 1;
-        public static int BAD_REQUEST = 2;
-        public static int INVALID_CLIENTS = 3;
-        public static int INVALID_CREDIENTALS = 4;
-        public static int UNSUPPORTED_VERSION = 5;
-        public static int USER_EXISTS = 6;
-        public static int INVALID_PERMISSION = 7;
-        public static int USER_NOT_FOUND = 8;
-        public static int GENERAL_EXCEPTION = 9;
+        public static int OK = 200;
+        public static int BAD_REQUEST = 400;
+        public static int INVALID_PERMISSION = 401;
+        public static int INVALID_CREDIENTALS = 403;
+        public static int ENDPOINT_FAILURE = 404;
+        public static int HTTPS_REQUIRED = 405;
+        public static int INVALID_CLIENT = 406;
+        public static int AUTHORIZATION_FAILED = 600;
+        public static int USER_EXISTS = 700;
+        public static int USER_NOT_FOUND = 701;
+        public static int GENERAL_EXCEPTION = 900;
 
         #endregion
     }

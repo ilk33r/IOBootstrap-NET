@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
+using IOBootstrap.NET.Core.Logger;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
@@ -20,7 +21,8 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 
         public IOKeyGeneratorController(IConfiguration configuration, 
                                         IODatabaseContextDefaultImpl databaseContext,
-                                        IWebHostEnvironment environment) : base(configuration, databaseContext, environment)
+                                        IWebHostEnvironment environment,
+                                        ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
         {
         }
 

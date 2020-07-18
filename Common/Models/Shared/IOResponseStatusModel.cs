@@ -1,5 +1,5 @@
-﻿using IOBootstrap.NET.Common.Constants;
-using System;
+﻿using System;
+using IOBootstrap.NET.Common.Constants;
 
 namespace IOBootstrap.NET.Common.Models.Shared
 {
@@ -20,30 +20,30 @@ namespace IOBootstrap.NET.Common.Models.Shared
         public IOResponseStatusModel(int code, String detailedMessage = "")
         {
             // Setup properties
-            this.Code = code;
-            this.DetailedMessage = detailedMessage;
-            this.Message = IOResponseStatusMessages.Messages[code];
+            Code = code;
+            DetailedMessage = detailedMessage;
+            Message = IOResponseStatusMessages.Messages[code];
 
             // Check code is equal to the zero
             if (code == 0)
             {
                 // Then set success true
-                this.Success = true;
+                Success = true;
             }
             else
             {
                 // Set success false
-                this.Success = false;
+                Success = false;
             }
         }
 
         public IOResponseStatusModel(int code, String message, bool success, String detailedMessage = "")
         {
             // Setup properties
-            this.Code = code;
-            this.Message = message;
-            this.Success = success;
-            this.DetailedMessage = detailedMessage;
+            Code = code;
+            Message = message;
+            Success = success;
+            DetailedMessage = detailedMessage;
         }
 
         #endregion

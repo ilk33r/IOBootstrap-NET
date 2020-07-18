@@ -4,16 +4,21 @@ using IOBootstrap.NET.Common.Messages;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Index.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.Index.Controllers
 {
     public class IOIndexController : IOController<IOIndexViewModel, IODatabaseContextDefaultImpl>
     {
-        public IOIndexController(IConfiguration configuration, IODatabaseContextDefaultImpl databaseContext, IWebHostEnvironment environment) : base(configuration, databaseContext, environment)
+        public IOIndexController(IConfiguration configuration, 
+                                IODatabaseContextDefaultImpl databaseContext,
+                                IWebHostEnvironment environment,
+                                ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
         {
         }
 

@@ -7,6 +7,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
@@ -26,6 +28,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public IConfiguration Configuration { get; set; }
         public TDBContext DatabaseContext { get; }
         public IWebHostEnvironment Environment { get; }
+        public ILogger<IOLoggerType> Logger { get; }
         public TViewModel ViewModel { get; }
 
         #endregion
@@ -34,7 +37,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public IOController(IConfiguration configuration, 
                             TDBContext databaseContext,
-                            IWebHostEnvironment environment)
+                            IWebHostEnvironment environment,
+                            ILogger<IOLoggerType> logger)
         {
             // Setup properties
             Configuration = configuration;
@@ -48,37 +52,22 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.Configuration = configuration;
             ViewModel.DatabaseContext = databaseContext;
             ViewModel.Environment = environment;
+            ViewModel.Logger = logger;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
 
-            // Update allow origin
-            String allowedOrigins = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
-            String requestOrigin = Request.Headers["Origin"];
-            if (requestOrigin != null && allowedOrigins.Contains(requestOrigin)) {
-                Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
-                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
-            }
-
             // Check request method is options
-            if (Request.Method.Equals("OPTIONS")) {
-                // Create response status model
-                IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK);
-
-                // Return response
-                JsonResult result = new JsonResult(new IOResponseModel(responseStatus));
-                result.StatusCode = 200;
-                context.Result = result;
-
+            if (CheckAccessControl(context)) {
                 // Do nothing
                 ActionExecuted = true;
                 return;
             }
 
             // Check https is required
-            if (checkHttpsRequired(context))
+            if (CheckHttpsRequired(context))
             {
                 // Do nothing
                 ActionExecuted = true;
@@ -100,11 +89,10 @@ namespace IOBootstrap.NET.Core.Controllers
             if (!ViewModel.CheckAuthorizationHeader())
             {
                 // Obtain response model
-                IOResponseModel responseModel = Error400("Authorization failed.");
+                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.AUTHORIZATION_FAILED);
 
                 // Override response
                 JsonResult result = new JsonResult(responseModel);
-                result.StatusCode = 400;
                 context.Result = result;
 
                 // Do nothing
@@ -123,11 +111,10 @@ namespace IOBootstrap.NET.Core.Controllers
                 if (!ViewModel.CheckClient(clientId, clientSecret))
                 {
                     // Obtain response model
-                    IOResponseModel responseModel = Error400("Invalid client.");
+                    IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_CLIENT);
 
                     // Override response
                     JsonResult result = new JsonResult(responseModel);
-                    result.StatusCode = 400;
                     context.Result = result;
 
                     // Do nothing
@@ -147,8 +134,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Check attribute type
                 if (httpsRequired && !Request.Scheme.Equals("https")) {
                     // Obtain response model
-                    IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.OK, "");
-                    IOResponseModel responseModel = new IOResponseModel(responseStatus);
+                    IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.OK);
                     JsonResult result = new JsonResult(responseModel);
                     Response.Headers.Add("Location", "https://" + Request.Host.Host);
                     result.StatusCode = 301;
@@ -176,22 +162,10 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Errors
 
-        public virtual IOResponseModel Error400(string errorMessage = "")
-        {
-            // Update response status code
-            Response.StatusCode = 400;
-
-            // Create response status model
-            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, errorMessage);
-
-            // Return response
-            return new IOResponseModel(responseStatus);
-        }
-
         public virtual IOResponseModel Error404()
         {
             // Update response status code
-            Response.StatusCode = 404;
+            Response.StatusCode = 200;
 
             // Obtain request path
             string requestPath = Request.Path;
@@ -245,7 +219,6 @@ namespace IOBootstrap.NET.Core.Controllers
             else
             {
                 JsonResult result = new JsonResult(Error404());
-                result.StatusCode = 400;
                 return result;
             }
         }
@@ -266,6 +239,29 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Helper Methods
 
+        public virtual bool CheckAccessControl(ActionExecutingContext context)
+        {
+            // Update allow origin
+            String allowedOrigins = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+            String requestOrigin = Request.Headers["Origin"];
+            if (requestOrigin != null && allowedOrigins.Contains(requestOrigin)) {
+                Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
+                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
+            }
+
+            // Check request method is options
+            if (Request.Method.Equals("OPTIONS")) {
+                // Return response
+                JsonResult result = new JsonResult(IOResponseStatusMessages.OK);
+                context.Result = result;
+
+                // Do nothing
+                return true;
+            }
+
+            return false;
+        }
+
         public virtual bool CheckRole(ActionExecutingContext context)
         {
             // Obtain action desctriptor
@@ -281,23 +277,19 @@ namespace IOBootstrap.NET.Core.Controllers
                         object requiredRole = descriptor.ConstructorArguments[0].Value;
                         int userRole = ViewModel.GetUserRole();
 
-                        // Check attribute type
-                        if (requiredRole != null)
+                        // Check attribute type and role
+                        if (requiredRole != null && !IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                         {
-                            // Check role
-                            if (!IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
-                            {
-                                // Obtain response model
-                                IOResponseModel responseModel = Error400("Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
+                            // Obtain response model
+                            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
+                            IOResponseModel responseModel = new IOResponseModel(responseStatus);
 
-                                // Override response
-                                JsonResult result = new JsonResult(responseModel);
-                                result.StatusCode = 400;
-                                context.Result = result;
+                            // Override response
+                            JsonResult result = new JsonResult(responseModel);
+                            context.Result = result;
 
-                                // Do nothing
-                                return false;
-                            }
+                            // Do nothing
+                            return false;
                         }
                     }
                 }
@@ -306,7 +298,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return true;
         }
 
-        public bool checkHttpsRequired(ActionExecutingContext context)
+        public bool CheckHttpsRequired(ActionExecutingContext context)
         {
             // Obtain action desctriptor
             ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
@@ -324,11 +316,10 @@ namespace IOBootstrap.NET.Core.Controllers
                         if (httpsRequired && !Request.Scheme.Equals("https"))
                         {
                             // Obtain response model
-                            IOResponseModel responseModel = Error400("Https required.");
+                            IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.HTTPS_REQUIRED);
 
                             // Override response
                             JsonResult result = new JsonResult(responseModel);
-                            result.StatusCode = 400;
                             context.Result = result;
 
                             // Do nothing

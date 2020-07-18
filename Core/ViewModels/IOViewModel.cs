@@ -2,11 +2,13 @@
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -25,6 +27,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public IConfiguration Configuration { get; set; }
         public TDBContext DatabaseContext { get; set; }
         public IWebHostEnvironment Environment { get; set; }
+        public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
 
         #endregion
@@ -53,7 +56,6 @@ namespace IOBootstrap.NET.Core.ViewModels
 					// Then authorization success
 					return true;
 				}
-
 			}
 
 			return false;

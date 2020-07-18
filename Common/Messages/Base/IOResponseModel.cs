@@ -18,7 +18,12 @@ namespace IOBootstrap.NET.Common.Messages.Base
         public IOResponseModel(IOResponseStatusModel status) : base()
         {
             // Setup properties
-            this.Status = status;
+            Status = status;
+        }
+
+        public IOResponseModel(int responseStatusMessage) : base()
+        {
+            Status = new IOResponseStatusModel(responseStatusMessage);
         }
 
         #endregion

@@ -22,6 +22,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string EncryptionIV = "IOEncryptionIV";
         public static string HttpsRequired = "IOHttpsRequired";
         public static string IndexControllerNameKey = "IOIndexControllerName";
+        public static string MigrationsAssemblyKey = "IOMigrationsAssembly";
         public static string TokenLife = "IOTokenLife";
         public static string Version = "IOVersion";
 

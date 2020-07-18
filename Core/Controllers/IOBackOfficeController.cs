@@ -119,7 +119,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 return base.CheckAccessControl(context);
             }
 
-            return false;
+            return true;
         }
 
         #endregion

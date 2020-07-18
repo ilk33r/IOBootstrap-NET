@@ -281,7 +281,7 @@ namespace IOBootstrap.NET.Core.Controllers
                         if (requiredRole != null && !IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                         {
                             // Obtain response model
-                            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Restricted page. User role is " + requiredRole + " required role is " + requiredRole);
+                            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Restricted page. User role is " + userRole + " required role is " + requiredRole);
                             IOResponseModel responseModel = new IOResponseModel(responseStatus);
 
                             // Override response

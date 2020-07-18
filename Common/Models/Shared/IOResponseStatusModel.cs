@@ -25,7 +25,7 @@ namespace IOBootstrap.NET.Common.Models.Shared
             Message = IOResponseStatusMessages.Messages[code];
 
             // Check code is equal to the zero
-            if (code == 0)
+            if (code == IOResponseStatusMessages.OK)
             {
                 // Then set success true
                 Success = true;

@@ -193,9 +193,17 @@ namespace IOBootstrap.NET.Core.Controllers
             // Update response status code
             Response.StatusCode = 404;
 
+            // Obtain request path
+            string requestPath = Request.Path;
+
+            if (HttpContext.Items.ContainsKey("OriginalPath"))
+            {
+                requestPath = (string)HttpContext.Items["OriginalPath"];
+            }
+
             // Create response status model
             IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.ENDPOINT_FAILURE,
-                                                                         String.Format("Path {0} is invalid.", Request.Path));
+                                                                         String.Format("Path {0} is invalid.", requestPath));
 
             // Return response
             return new IOResponseModel(responseStatus);

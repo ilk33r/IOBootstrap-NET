@@ -7,8 +7,8 @@ namespace IOBootstrap.NET.Application
 
         #region Properties
 
-        public string action { get; }
-        public string controller { get; }
+        public string Action { get; }
+        public string Controller { get; }
 
         #endregion
 
@@ -16,11 +16,19 @@ namespace IOBootstrap.NET.Application
 
         public IORoute(string action, string controller)
         {
-            this.action = action;
-            this.controller = controller;
+            Action = action;
+            Controller = controller;
         }
 
         #endregion
 
+        #region Helper Methods
+
+        public string GetRouteString() 
+        {
+            return String.Format("{{controller={0}}}/{{action={1}}}", Controller, Action);
+        }
+
+        #endregion
     }
 }

@@ -1,14 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.Middlewares;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MySql.Data.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.Application
 {
@@ -17,24 +21,16 @@ namespace IOBootstrap.NET.Application
 
         #region Properties
 
-        public IConfigurationRoot Configuration { get; }
-        public IHostingEnvironment Environment;
+        public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         #endregion
 
         #region Initialization Methods
 
-        public IOStartup(IHostingEnvironment env)
+        public IOStartup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            // Create builder
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            // Setup properties
-            Configuration = builder.Build();
+            Configuration = configuration;
             Environment = env;
         }
 
@@ -42,13 +38,11 @@ namespace IOBootstrap.NET.Application
 
         #region Configurations
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddDbContext<TDBContext>(opt => this.DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
+            services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
-            services.AddMvc();
+            services.AddControllers();
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConsole();
@@ -59,18 +53,17 @@ namespace IOBootstrap.NET.Application
                 options.Cookie.Name = ".IO.Session";
             });
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<IHostingEnvironment>(Environment);
+            services.AddSingleton<IWebHostEnvironment>(Environment);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Use static files
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
                 {
-                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=640800");
+                    ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=640800");
                 }
             });
 
@@ -78,15 +71,69 @@ namespace IOBootstrap.NET.Application
             app.UseSession();
 
             // Log
-            bool useDeveloperLog = this.Configuration.GetValue<bool>(IOConfigurationConstants.UseDeveloperLog);
-            if (useDeveloperLog)
+            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();   
+                app.UseDeveloperExceptionPage();
             }
-			
-			// Use middleware
+
+            app.UseHttpsRedirection();
+
+            // Use middleware
 			app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
 
+            IORoute errorRoute = new IORoute("Error404", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+                {
+                    context.Items["OriginalPath"] = context.Request.Path.Value;
+                    context.Request.Path = "/" + errorRoute.Controller + "/Error404";
+                    await next();
+                }
+            });
+
+            // Use routing 
+            app.UseRouting();
+
+            IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+                endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
+            });
+
+            // Start static caching
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                TDBContext context = services.GetService<TDBContext>();
+                this.ConfigureStaticCaching(context);
+            }
+        }
+
+        public virtual void ConfigureStaticCaching(TDBContext databaseContext)
+        {
+        }
+
+        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
+        {
+            string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
+#if USE_MYSQL_DATABASE
+            options.UseMySQL(this.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
+#elif USE_SQLSRV_DATABASE
+            options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
+#else
+            options.UseInMemoryDatabase("IOMemory");
+#endif
+        }
+
+        /*
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
             // Create default routes
             app.UseMvc(routes =>
             {
@@ -126,29 +173,6 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("default", "", new IORoute("Index", this.BaseControllerName()));
                 routes.MapRoute("Error404", "{*url}", new IORoute("Error404", this.BaseControllerName()));
             });
-
-            // Start static caching
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                TDBContext context = services.GetService<TDBContext>();
-                this.ConfigureStaticCaching(context);
-            }
-        }
-
-        public virtual void ConfigureStaticCaching(TDBContext databaseContext)
-        {
-        }
-
-        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
-        {
-#if USE_MYSQL_DATABASE
-            options.UseMySql(this.Configuration.GetConnectionString("DefaultConnection"));
-#elif USE_SQLSRV_DATABASE
-            options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
-#else
-            options.UseInMemoryDatabase("IOMemory");
-#endif
         }
 
         #endregion
@@ -180,11 +204,6 @@ namespace IOBootstrap.NET.Application
             return "IOBackOfficeMessages";
         }
 
-        public virtual string BaseControllerName()
-        {
-            return "IO";
-        }
-
         public virtual string KeyControllerName() 
         {
             return "IOKeyGenerator";
@@ -199,7 +218,7 @@ namespace IOBootstrap.NET.Application
         {
             return "IOUser";
         }
-
+*/
         #endregion
     }
 }

@@ -113,6 +113,10 @@ namespace IOBootstrap.NET.Application
             IORoute listUsersRoute = new IORoute("ListUsers", userControllerName);
             IORoute updateUsersRoute = new IORoute("UpdateUser", userControllerName);
 
+            string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+            IORoute authenticateRoute = new IORoute("Authenticate", authenticationControllerName);
+            IORoute checkTokenRoute = new IORoute("CheckToken", authenticationControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -126,6 +130,8 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
                 endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
                 endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
+                endpoints.MapControllerRoute("authenticate", authenticateRoute.GetRouteString());
+                endpoints.MapControllerRoute("checktoken", checkTokenRoute.GetRouteString());
 
 #if DEBUG
                 endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
@@ -166,8 +172,6 @@ namespace IOBootstrap.NET.Application
             // Create default routes
             app.UseMvc(routes =>
             {
-                routes.MapRoute("authenticate", "backOffice/users/password/authenticate", new IORoute("Authenticate", this.AuthenticationControllerName()));
-                routes.MapRoute("checktoken", "backOffice/users/password/checktoken", new IORoute("CheckToken", this.AuthenticationControllerName()));
                 routes.MapRoute("addMenuItem", "backOffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("deleteMenuItem", "backOffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("listMenuItems", "backOffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
@@ -193,11 +197,6 @@ namespace IOBootstrap.NET.Application
         #endregion
 
         #region Routing
-
-        public virtual string AuthenticationControllerName()
-        {
-            return "IOAuthentication";
-        }
 
         public virtual string BackOfficeConfigurationControllerName()
         {

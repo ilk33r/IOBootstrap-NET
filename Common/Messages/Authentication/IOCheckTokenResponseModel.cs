@@ -1,8 +1,8 @@
-﻿using IOBootstrap.NET.Common.Models.BaseModels;
+﻿using System;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
-using System;
 
-namespace IOBootstrap.NET.WebApi.Authentication.Models
+namespace IOBootstrap.NET.Common.Messages.Authentication
 {
     public class IOCheckTokenResponseModel : IOResponseModel
     {
@@ -15,9 +15,9 @@ namespace IOBootstrap.NET.WebApi.Authentication.Models
 
         public IOCheckTokenResponseModel(IOResponseStatusModel status, DateTimeOffset lifeTime, string userName, int userRole) : base(status)
         {
-            this.TokenLifeTime = lifeTime;
-            this.UserName = userName;
-            this.UserRole = userRole;
+            TokenLifeTime = lifeTime;
+            UserName = userName;
+            UserRole = userRole;
         }
 
         #endregion

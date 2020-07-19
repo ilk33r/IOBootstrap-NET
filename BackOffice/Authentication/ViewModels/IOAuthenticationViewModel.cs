@@ -1,15 +1,14 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Entities.Users;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Database;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 
-namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
+namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 {
-    public abstract class IOAuthenticationViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOAuthenticationViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Initialization Methods
@@ -25,7 +24,7 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
         public Tuple<bool, string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
             // Obtain user entity
-            IOUserEntity user = IOUserEntity.FindUserFromName(_databaseContext.Users, userName);
+            IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
 
 			// Check user finded
             if (user != null)
@@ -44,8 +43,8 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				string decryptedUserToken = String.Format("{0},{1}", user.ID, userTokenString);
 
 				// Convert key and iv to byte array
-				byte[] key = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
-				byte[] iv = Convert.FromBase64String(_configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
+				byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
+				byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
 				// Encode user token
                 byte[] userTokenData = IOPasswordUtilities.EncryptStringToBytes(decryptedUserToken, key, iv);
@@ -57,15 +56,15 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
 				DateTime tokenDate = DateTime.UtcNow;
 
 				// Obtain token life from configuration
-				int tokenLife = _configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+				int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
 				// Update entity properties
 				user.UserToken = userTokenString;
 				user.TokenDate = tokenDate;
 
                 // Delete all entity
-                _databaseContext.Update(user);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Update(user);
+                DatabaseContext.SaveChanges();
 
                 // Return response
                 return new Tuple<bool, string, DateTimeOffset, string, int>(true, userToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), user.UserName, user.UserRole);
@@ -78,16 +77,16 @@ namespace IOBootstrap.NET.WebApi.Authentication.ViewModels
         public Tuple<bool, DateTimeOffset, string, int> CheckToken(string token)
         {
             // Parse token data
-            Tuple<string, int> tokenData = this.parseToken(token);
+            Tuple<string, int> tokenData = ParseToken(token);
 
             // Obtain user entity from database
-            IOUserEntity findedUserEntity = _databaseContext.Users.Find(tokenData.Item2);
+            IOUserEntity findedUserEntity = DatabaseContext.Users.Find(tokenData.Item2);
 
             // Check user entity is not null
             if (findedUserEntity != null)
             {
                 // Obtain token life from configuration
-                int tokenLife = this._configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+                int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
                 // Calculate token end seconds and current seconds
                 long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);

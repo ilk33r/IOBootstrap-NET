@@ -9,9 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.BackOffice.Controllers
 {
-    public class IOBackOfficeDefaultImpl : IOBackOfficeController<IOBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl>
+    public class IOBackOfficeDefaultController : IOBackOfficeController<IOBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl>
     {
-        public IOBackOfficeDefaultImpl(IConfiguration configuration, IODatabaseContextDefaultImpl databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOBackOfficeDefaultController(IConfiguration configuration, IODatabaseContextDefaultImpl databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
         {
         }
     }

@@ -117,6 +117,13 @@ namespace IOBootstrap.NET.Application
             IORoute authenticateRoute = new IORoute("Authenticate", authenticationControllerName);
             IORoute checkTokenRoute = new IORoute("CheckToken", authenticationControllerName);
 
+            string configurationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IORoute addConfigurationItemRoute = new IORoute("AddConfigItem", configurationControllerName);
+            IORoute deleteConfigurationItemRoute = new IORoute("DeleteConfigItem", configurationControllerName);
+            IORoute listConfigurationItemsRoute = new IORoute("ListConfigurationItems", configurationControllerName);
+            IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
+            IORoute restartAppRoute = new IORoute("RestartApp", configurationControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -132,6 +139,11 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
                 endpoints.MapControllerRoute("authenticate", authenticateRoute.GetRouteString());
                 endpoints.MapControllerRoute("checktoken", checkTokenRoute.GetRouteString());
+                endpoints.MapControllerRoute("addConfigurationItem", addConfigurationItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteConfigurationItem", deleteConfigurationItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("restartApp", restartAppRoute.GetRouteString());
 
 #if DEBUG
                 endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
@@ -181,11 +193,6 @@ namespace IOBootstrap.NET.Application
                 routes.MapRoute("listAllMessagesItems", "backOffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("listMessagesItems", "backOffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("updateMessagesItem", "backOffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("addConfigurationItem", "backOffice/configurations/add", new IORoute("AddConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("deleteConfigurationItem", "backOffice/configurations/delete", new IORoute("DeleteConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("listConfigurationItems", "backOffice/configurations/list", new IORoute("ListConfigurationItems", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("updateConfigurationItem", "backOffice/configurations/update", new IORoute("UpdateConfigItem", this.BackOfficeConfigurationControllerName()));
-                routes.MapRoute("restartApp", "backOffice/configurations/restartApp", new IORoute("RestartApp", this.BackOfficeConfigurationControllerName()));
                 routes.MapRoute("addResource", "backOffice/resources/add", new IORoute("AddResource", this.ResourcesControllerName()));
                 routes.MapRoute("deleteResource", "backOffice/resources/delete", new IORoute("DeleteResource", this.ResourcesControllerName()));
                 routes.MapRoute("getAllResources", "backOffice/resources/all", new IORoute("GetAllResources", this.ResourcesControllerName()));
@@ -197,11 +204,6 @@ namespace IOBootstrap.NET.Application
         #endregion
 
         #region Routing
-
-        public virtual string BackOfficeConfigurationControllerName()
-        {
-            return "IOBackOfficeConfigurations";
-        }
 
         public virtual string BackOfficeControllerName()
         {

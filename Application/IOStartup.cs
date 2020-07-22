@@ -53,6 +53,15 @@ namespace IOBootstrap.NET.Application
             {
                 options.Cookie.Name = ".IO.Session";
             });
+            
+            string allowedOrigin = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder => 
+                {
+                    builder.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader();
+                });
+            });
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IWebHostEnvironment>(Environment);
         }
@@ -77,8 +86,6 @@ namespace IOBootstrap.NET.Application
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             // Use middleware
 			app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
 
@@ -96,6 +103,10 @@ namespace IOBootstrap.NET.Application
 
             // Use routing 
             app.UseRouting();
+
+            // Use redirection and cors
+            app.UseHttpsRedirection();
+            app.UseCors();
 
             IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
             IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
@@ -156,7 +167,7 @@ namespace IOBootstrap.NET.Application
             {
                 var services = serviceScope.ServiceProvider;
                 TDBContext context = services.GetService<TDBContext>();
-                this.ConfigureStaticCaching(context);
+                ConfigureStaticCaching(context);
             }
         }
 

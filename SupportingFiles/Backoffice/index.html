@@ -60,32 +60,18 @@
 </div>
 
 <script type="text/javascript">
-    var IOSettings = {
-        Debug : {
-            authorization: "",
-            appName: "IO App",
-            backOfficePath: "backoffice",
-            clientId: "v19zp7xngog6pb54wbag5b3wemhpqoxv",
-            clientSecret: "r58imkp53pn9s3wsu7i8wcxjxdl3q8wsqkfj2nicm5dfou3apovj5pzf7pk9zlfv",
-            layoutApiUrl: "http://backoffice.localhost:5000",
-            isDebug: true,
-            serviceApiUrl: "http://api.localhost:5000",
-            version: "${version}"
-        },
-        Release: {
-            authorization: "",
-            appName: "IO App",
-            backOfficePath: "backoffice",
-            clientId: "v19zp7xngog6pb54wbag5b3wemhpqoxv",
-            clientSecret: "r58imkp53pn9s3wsu7i8wcxjxdl3q8wsqkfj2nicm5dfou3apovj5pzf7pk9zlfv",
-            isDebug: false,
-            layoutApiUrl: "http://backoffice.maworkout.com",
-            serviceApiUrl: "http://api.maworkout.com",
-            version: "${version}"
-        }
+    let IOGlobal = {
+        authorization: "${authorization}",
+        authenticationControllerName: "${authenticationControllerName}",
+        appName: "IO App",
+        backOfficePath: "backoffice",
+        clientId: "${clientID}",
+        clientSecret: "${clientSecret}",
+        environment: '${environmentName}',
+        layoutApiUrl: "${backOfficePageURL}",
+        serviceApiUrl: "${apiURL}",
+        version: "${version}"
     };
-    var environment = '${environmentName}';
-    var IOGlobal = (environment == 'Development') ? IOSettings.Debug : IOSettings.Release;
 </script>
 <!-- jQuery 3 -->
 <script src="backoffice/dist/vendors/jquery/jquery.min.js"></script>

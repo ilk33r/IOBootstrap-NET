@@ -109,19 +109,5 @@ namespace IOBootstrap.NET.Core.Controllers
         }
 
         #endregion
-
-        #region Helper Methods
-
-        public override bool CheckAccessControl(ActionExecutingContext context)
-        {
-            if (!ViewModel.IsBackOffice())
-            {
-                return base.CheckAccessControl(context);
-            }
-
-            return true;
-        }
-
-        #endregion
     }
 }

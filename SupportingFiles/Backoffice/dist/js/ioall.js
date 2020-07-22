@@ -120,11 +120,13 @@ io.prototype = {
     },
     loginApp: function () {
         let request = this.request.AuthenticationRequest;
-        var userName = $('#inputEmail3').val();
+        let userName = $('#inputEmail3').val();
         request.UserName = userName;
         request.Password = $('#inputPassword3').val();
         window.location.hash = '';
-        this.service.post('backoffice/users/password/authenticate', request, function (status, response, error) {
+        let requestURLFormat = '%s/Authenticate';
+        let requestURL = requestURLFormat.format(IOGlobal.authenticationControllerName);
+        this.service.post(requestURL, request, function (status, response, error) {
             // Check response
             if (status && response.status.success) {
                 localStorage.setItem('token', response.token);
@@ -137,7 +139,7 @@ io.prototype = {
                     appName: window.ioinstance.appName,
                     hasErrorClass: 'has-error',
                     hasMessageClass: '',
-                    errorMessage: response.status.message
+                    errorMessage: (response != undefined && response.status != undefined) ? response.status.message : "An unkown error occured."
                 };
                 window.ioinstance.showLogin(layoutData);
             }
@@ -663,6 +665,7 @@ io.prototype.service = {
         var postData = (data != null) ? JSON.stringify(data) : '';
         $.ajax({
             url: url,
+            crossDomain: true,
             type: type,
             contentType: 'application/json',
             data: postData,
@@ -674,14 +677,18 @@ io.prototype.service = {
             },
             dataType: dataType,
             success: function (data) {
+                if (typeof responeData === 'object' && (responeData.status.code === 401 || responeData.status.code === 403)) {
+                    window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
+                    return;
+                }
                 callback(true, data, null);
             },
             error: function (request, status, error) {
                 let io = window.ioinstance;
                 io.indicator.hide();
                 var responeData = (dataType === io.service.dataTypes.json) ? request.responseJSON : request.responseText;
-                if (typeof responeData === 'object' && responeData.status.code === 2) {
-                    window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName,});
+                if (typeof responeData === 'object' && responeData.status.code !== 200) {
+                    window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
                 }
                 callback(false, responeData, error);
             }

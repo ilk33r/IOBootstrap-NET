@@ -7,17 +7,21 @@ namespace IOBootstrap.NET.Common.Constants
         #region Properties
 
         public static string AllowedOrigin = "IOAllowedOrigin";
+        public static string APIURLKey = "IOAPIURL";
         public static string APNSCertificatePassword = "IOAPNSCertificatePassword";
         public static string APNSCertificatePath = "IOAPNSCertificatePath";
         public static string APNSHost = "IOAPNSHost";
         public static string APNSPort = "IOAPNSPort";
         public static string AuthorizationKey = "IOAuthorizationKey";
         public static string BackOfficeAuthenticationControllerNameKey = "IOBackOfficeAuthenticationControllerName";
+        public static string BackOfficeClientIDKey = "IOBackOfficelientID";
+        public static string BackOfficeClientSecretKey = "IOBackOfficelientSecret";
         public static string BackOfficeConfigurationControllerNameKey = "IOBackOfficeConfigurationControllerName";
         public static string BackOfficeControllerNameKey = "IOBackOfficeControllerName";
         public static string BackOfficeIsPublic = "IOBackOfficeIsPublic";
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
+        public static string BackOfficePageURLKey = "IOBackOfficePageURL";
         public static string BackofficeUserControllerNameKey = "IOBackofficeUserControllerName";
         public static string CheckClientInfo = "IOCheckClientInfo";
         public static string FirebaseApiUrl = "IOFirebaseApiUrl";

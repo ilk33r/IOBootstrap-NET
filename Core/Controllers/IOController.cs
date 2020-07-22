@@ -59,13 +59,6 @@ namespace IOBootstrap.NET.Core.Controllers
         {
             base.OnActionExecuting(context);
 
-            // Check request method is options
-            if (CheckAccessControl(context)) {
-                // Do nothing
-                ActionExecuted = true;
-                return;
-            }
-
             // Check https is required
             if (CheckHttpsRequired(context))
             {
@@ -232,35 +225,34 @@ namespace IOBootstrap.NET.Core.Controllers
             string appVersion = Configuration.GetValue<string>(IOConfigurationConstants.Version);
             webValues.Add("version", appVersion);
 
+            // Obtain backoffice page url
+            string backOfficePageURL = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePageURLKey);
+            webValues.Add("backOfficePageURL", backOfficePageURL);
+
+            // Obtain api url
+            string apiURL = Configuration.GetValue<string>(IOConfigurationConstants.APIURLKey);
+            webValues.Add("apiURL", apiURL);
+
+            // Obtain authorization
+            string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey);
+            webValues.Add("authorization", authorization);
+
+            // Obtain client id and secret
+            string backofficeClientID = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeClientIDKey);
+            string backofficeClientSecret = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeClientSecretKey);
+            webValues.Add("clientID", backofficeClientID);
+            webValues.Add("clientSecret", backofficeClientSecret);
+
+            // Obtain controllers
+            string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+            webValues.Add("authenticationControllerName", authenticationControllerName);
+
             return webValues;
         }
 
         #endregion
 
         #region Helper Methods
-
-        public virtual bool CheckAccessControl(ActionExecutingContext context)
-        {
-            // Update allow origin
-            String allowedOrigins = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
-            String requestOrigin = Request.Headers["Origin"];
-            if (requestOrigin != null && allowedOrigins.Contains(requestOrigin)) {
-                Response.Headers.Add("Access-Control-Allow-Origin", requestOrigin);
-                Response.Headers.Add("Access-Control-Allow-Headers", Request.Headers["Access-Control-Request-Headers"]);
-            }
-
-            // Check request method is options
-            if (Request.Method.Equals("OPTIONS")) {
-                // Return response
-                JsonResult result = new JsonResult(IOResponseStatusMessages.OK);
-                context.Result = result;
-
-                // Do nothing
-                return true;
-            }
-
-            return false;
-        }
 
         public virtual bool CheckRole(ActionExecutingContext context)
         {

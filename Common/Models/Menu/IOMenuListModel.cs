@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Base;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Models.Menu
 {
     public class IOMenuListModel : IOModel
     {

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Common.Models.Shared;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Messages.Menu
 {
 	public class IOMenuListResponseModel : IOResponseModel
     {

@@ -136,6 +136,12 @@ namespace IOBootstrap.NET.Application
             IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
             IORoute restartAppRoute = new IORoute("RestartApp", configurationControllerName);
 
+            string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
+            IORoute addMenuItemRoute = new IORoute("AddMenuItem", menuControllerName);
+            IORoute deleteMenuItemRoute = new IORoute("DeleteMenuItem", menuControllerName);
+            IORoute listMenuItemsRoute = new IORoute("ListMenuItems", menuControllerName);
+            IORoute updateMenuItemRoute = new IORoute("UpdateMenuItem", menuControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
@@ -156,6 +162,10 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
                 endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
                 endpoints.MapControllerRoute("restartApp", restartAppRoute.GetRouteString());
+                endpoints.MapControllerRoute("addMenuItem", addMenuItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteMenuItem", deleteMenuItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("listMenuItems", listMenuItemsRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateMenuItem", updateMenuItemRoute.GetRouteString());
                 ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
@@ -199,10 +209,6 @@ namespace IOBootstrap.NET.Application
             // Create default routes
             app.UseMvc(routes =>
             {
-                routes.MapRoute("addMenuItem", "backOffice/menu/add", new IORoute("AddMenuItem", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("deleteMenuItem", "backOffice/menu/delete", new IORoute("DeleteMenuItem", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("listMenuItems", "backOffice/menu/list", new IORoute("ListMenuItems", this.BackOfficeMenuControllerName()));
-                routes.MapRoute("updateMenuItem", "backOffice/menu/update", new IORoute("UpdateMenuItem", this.BackOfficeMenuControllerName()));
                 routes.MapRoute("addMessagesItem", "backOffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("deleteMessagesItem", "backOffice/messages/delete", new IORoute("DeleteMessagesItem", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("listAllMessagesItems", "backOffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));

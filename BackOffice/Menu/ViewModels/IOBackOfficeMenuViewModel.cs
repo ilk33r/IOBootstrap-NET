@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Messages.Menu;
+using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.WebApi.BackOffice.Entities;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
+namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 {
-    public class IOBackOfficeMenuViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeMenuViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
-     
+
         #region Initialization Methods
 
         public IOBackOfficeMenuViewModel() : base()
@@ -42,14 +42,14 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             }
 
             // Add menu entity to database
-            _databaseContext.Add(menuEntity);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Add(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public void DeleteMenuItem(int menuId)
         {
             // Obtain menu item entity
-            IOMenuEntity menuEntity = _databaseContext.Find<IOMenuEntity>(menuId);
+            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(menuId);
 
             // Check menu is not exists
             if (menuEntity == null)
@@ -58,14 +58,14 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             }
 
             // Add menu entity to database
-            _databaseContext.Remove(menuEntity);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Remove(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
-            var parentMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
-                                                      .OrderBy((arg) => arg.MenuOrder);
+            var parentMenuTree = DatabaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
+                                                     .OrderBy((arg) => arg.MenuOrder);
 
             if (parentMenuTree != null)
             {
@@ -73,7 +73,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
                 foreach (IOMenuEntity menuEntity in parentMenuTree)
                 {
-                    var childMenuTree = _databaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == menuEntity.ID)
+                    var childMenuTree = DatabaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == menuEntity.ID)
                                                         .OrderBy((arg) => arg.MenuOrder);
                     List<IOMenuListModel> childMenu = new List<IOMenuListModel>();
 
@@ -118,10 +118,11 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
         public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)
         {
             // Obtain menu item entity
-            IOMenuEntity menuEntity = _databaseContext.Find<IOMenuEntity>(requestModel.ID);
+            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(requestModel.ID);
 
             // Check menu is not exists
-            if (menuEntity == null) {
+            if (menuEntity == null)
+            {
                 return;
             }
 
@@ -140,8 +141,8 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             }
 
             // Add menu entity to database
-            _databaseContext.Update(menuEntity);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Update(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         #endregion

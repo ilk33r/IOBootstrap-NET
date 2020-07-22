@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Messages.Menu
 {
     public class IOMenuUpdateRequestModel : IOMenuAddRequestModel
     {

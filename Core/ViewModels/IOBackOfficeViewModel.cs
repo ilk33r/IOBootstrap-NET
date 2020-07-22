@@ -221,6 +221,11 @@ namespace IOBootstrap.NET.Core.ViewModels
                 return userEntity.UserRole;
             }
 
+            if (Configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic))
+            {
+                return (int)UserRoles.SuperAdmin;
+            }
+
             return (int)UserRoles.AnonmyMouse;
         }
 

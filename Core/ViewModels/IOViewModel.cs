@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public class IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Publics

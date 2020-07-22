@@ -9,7 +9,11 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels
 
         public override bool CheckAuthorizationHeader()
         {
+            #if DEBUG
             return true;
+            #else
+            return base.CheckAuthorizationHeader();
+            #endif
         }
     }
 }

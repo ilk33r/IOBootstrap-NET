@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.Middlewares;
@@ -7,7 +6,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +43,7 @@ namespace IOBootstrap.NET.Application
             services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
             services.AddControllers();
+            services.AddRouting();
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConsole();
@@ -89,7 +89,8 @@ namespace IOBootstrap.NET.Application
             // Use middleware
 			app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
 
-            IORoute errorRoute = new IORoute("Error404", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
+            string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey);
+            IORoute errorRoute = new IORoute("Error404", indexControllerName);
             app.Use(async (context, next) =>
             {
                 await next();
@@ -102,15 +103,15 @@ namespace IOBootstrap.NET.Application
             });
 
             // Use routing 
+            app.UseHttpMethodOverride();
             app.UseRouting();
 
             // Use redirection and cors
             app.UseHttpsRedirection();
             app.UseCors();
 
-            IORoute indexRoute = new IORoute("Index", Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey));
-            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
-            
+            IORoute indexRoute = new IORoute("Index", indexControllerName);
+
             string backofficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IORoute addClientRoute = new IORoute("AddClient", backofficeControllerName);
             IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
@@ -137,8 +138,8 @@ namespace IOBootstrap.NET.Application
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute("addUser", addUserRoute.GetRouteString());
                 endpoints.MapControllerRoute("changePassword", changePasswordRoute.GetRouteString());
                 endpoints.MapControllerRoute("deleteUser", deleteUserRoute.GetRouteString());
@@ -155,10 +156,7 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
                 endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
                 endpoints.MapControllerRoute("restartApp", restartAppRoute.GetRouteString());
-
-#if DEBUG
-                endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
-#endif
+                ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
 
@@ -169,6 +167,12 @@ namespace IOBootstrap.NET.Application
                 TDBContext context = services.GetService<TDBContext>();
                 ConfigureStaticCaching(context);
             }
+        }
+
+        public virtual void ConfigureEndpoints(IEndpointRouteBuilder endpoints) 
+        {
+            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
+            endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
         }
 
         public virtual void ConfigureStaticCaching(TDBContext databaseContext)

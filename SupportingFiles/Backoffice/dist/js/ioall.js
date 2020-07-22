@@ -381,8 +381,9 @@ io.prototype.layout = {
     },
     loadMenu: function () {
         this.menuLayout = null;
-
-        window.ioinstance.service.get('backoffice/menu/list', function (status, response, error) {
+        let requestURLFormat = '%s/ListMenuItems';
+        let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+        window.ioinstance.service.get(requestURL, function (status, response, error) {
             // Check response
             if (status && response.status.success) {
                 window.ioinstance.layout.loadMenuChildLayouts(function (parentmenuitemLayout, parentmenuwithchilditemLayout, childmenuitemLayout) {

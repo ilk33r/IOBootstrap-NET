@@ -498,8 +498,11 @@ io.prototype.app.menuEditorList = function(e, hash) {
 
     let breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
 
+    let requestURLFormat = '%s/ListMenuItems';
+    let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+
     // Call client list
-    io.service.get('backoffice/menu/list', function(status, response, error) {
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var updateParams = [];
@@ -759,8 +762,11 @@ io.prototype.app.menuSelect = function (e, hash) {
 
     let breadcrumb = new io.ui.breadcrumb('menuEditorList', 'Menu Editor', []);
 
+    let requestURLFormat = '%s/ListMenuItems';
+    let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+
     // Call client list
-    io.service.get('backoffice/menu/list', function(status, response, error) {
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var hasRowClasses = [];

@@ -34,21 +34,17 @@ namespace IOBootstrap.NET.Core.Middlewares
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            var code = HttpStatusCode.BadRequest;
-
-            if (ex is AmbiguousActionException)
-            {
-                code = HttpStatusCode.NotFound;
-            }
-
             IOResponseStatusModel responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, ex.Message + '\t' + '\t' + ex.StackTrace);
             IOResponseModel responseModel = new IOResponseModel(responseStatusModel);
 
             // Override response
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json";
 
-            string responseString = JsonConvert.SerializeObject(responseModel);
+            string responseString = JsonConvert.SerializeObject(responseModel, new JsonSerializerSettings 
+            { 
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() 
+            });
             await context.Response.WriteAsync(responseString);
         }
     }

@@ -653,7 +653,9 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
                 request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
             }
 
-            window.ioinstance.service.post('backoffice/menu/add', request, function (status, response, error) {
+            let requestURLFormat = '%s/AddMenuItem';
+            let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -675,7 +677,9 @@ io.prototype.app.menuEditorDelete = function (id) {
         request.Version = window.ioinstance.version;
         request.ID = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/menu/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteMenuItem';
+        let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Menu has been deleted successfully.', '');
@@ -752,7 +756,9 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
                 request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
             }
 
-            window.ioinstance.service.post('backoffice/menu/update', request, function (status, response, error) {
+            let requestURLFormat = '%s/UpdateMenuItem';
+            let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -1496,7 +1502,9 @@ io.prototype.app.resourceAdd = function (e, hash) {
                 request.ParentEntityID = window.ioinstance.ui.getPopupSelectionValue('parentMenu');
             }
 
-            window.ioinstance.service.post('backOffice/resources/add', request, function (status, response, error) {
+            let requestURLFormat = '%s/AddResource';
+            let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -1518,7 +1526,9 @@ io.prototype.app.resourceDelete = function (resourceID) {
         request.Version = window.ioinstance.version;
         request.ID = resourceID;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backOffice/resources/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteResource';
+        let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Resource has been deleted successfully.', '');
@@ -1540,7 +1550,9 @@ io.prototype.app.resourcesList = function (e, hash) {
 
     let breadcrumb = new io.ui.breadcrumb('resourcesList', 'Resources', []);
 
-    io.service.get('backOffice/resources/all', function(status, response, error) {
+    let requestURLFormat = '%s/GetAllResources';
+    let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             let listData = [];
             let updateParams = [];
@@ -1613,7 +1625,9 @@ io.prototype.app.resourceUpdate = function (resourceID, resourceKeyData, resourc
         function (request) {
             request.ResourceID = resourceID;
 
-            window.ioinstance.service.post('backOffice/resources/update', request, function (status, response, error) {
+            let requestURLFormat = '%s/UpdateResource';
+            let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {

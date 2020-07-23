@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IOBootstrap.NET.Common.Entities.Resource;
-using IOBootstrap.NET.Core.Cache;
-using IOBootstrap.NET.Core.Cache.Utilities;
-using IOBootstrap.NET.Core.Database;
+using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Messages.Resources;
+using IOBootstrap.NET.Common.Models.Resources;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.WebApi.BackOffice.Models;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
+namespace IOBootstrap.NET.BackOffice.Resources.ViewModels
 {
-    public class IOBackOfficeResourcesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeResourcesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Initialization Methods
 
@@ -31,28 +31,28 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
             };
 
             // Add resource entity to database
-            _databaseContext.Add(resourceEntity);
+            DatabaseContext.Add(resourceEntity);
 
             try {
-                _databaseContext.SaveChanges();
+                DatabaseContext.SaveChanges();
             } catch {
             }
 
-            string cacheKey = "IOResourceCache" + requestModel.ResourceKey;
+            string cacheKey = IOCacheKeys.ResourceCacheKey + requestModel.ResourceKey;
             IOCache.InvalidateCache(cacheKey);
         }
 
         public void DeleteResourceItem(int resourceId)
         {
-            IOResourceEntity resource = _databaseContext.Resources.Find(resourceId);
+            IOResourceEntity resource = DatabaseContext.Resources.Find(resourceId);
             if (resource == null) {
                 return;
             }
 
-            string cacheKey = "IOResourceCache" + resource.ResourceKey;
+            string cacheKey = IOCacheKeys.ResourceCacheKey + resource.ResourceKey;
 
-            _databaseContext.Remove(resource);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Remove(resource);
+            DatabaseContext.SaveChanges();
 
             IOCache.InvalidateCache(cacheKey);
         }
@@ -60,7 +60,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
         public IList<IOResourceModel> GetAllResources()
         {
             List<IOResourceModel> resouces = new List<IOResourceModel>();
-            var resourcesEntity = _databaseContext.Resources.OrderBy((arg) => arg.ID);
+            var resourcesEntity = DatabaseContext.Resources.OrderBy((arg) => arg.ID);
 
             foreach (IOResourceEntity resource in resourcesEntity)
             {
@@ -80,7 +80,7 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
 
             foreach (string resourceKey in resourceKeys)
             {
-                IOResourceEntity resource = IOResourceEntity.ResourceForKey(resourceKey, _databaseContext);
+                IOResourceEntity resource = IOResourceEntity.ResourceForKey(resourceKey, DatabaseContext);
                 IOResourceModel resourceModel = new IOResourceModel();
                 resourceModel.ResourceID = 0;
                 resourceModel.ResourceKey = resourceKey;
@@ -92,17 +92,17 @@ namespace IOBootstrap.NET.WebApi.BackOffice.ViewModels
         }
 
         public void UpdateResourceItem(IOResourceUpdateRequestModel requestModel) {
-            IOResourceEntity resource = _databaseContext.Resources.Find(requestModel.ResourceID);
+            IOResourceEntity resource = DatabaseContext.Resources.Find(requestModel.ResourceID);
             if (resource == null) {
                 return;
             }
 
             resource.ResourceKey = requestModel.ResourceKey;
             resource.ResourceValue = requestModel.ResourceValue;
-            _databaseContext.Update(resource);
-            _databaseContext.SaveChanges();
+            DatabaseContext.Update(resource);
+            DatabaseContext.SaveChanges();
 
-            string cacheKey = "IOResourceCache" + requestModel.ResourceKey;
+            string cacheKey = IOCacheKeys.ResourceCacheKey + requestModel.ResourceKey;
             IOCache.InvalidateCache(cacheKey);
         } 
     }

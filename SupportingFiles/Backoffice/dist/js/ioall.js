@@ -609,7 +609,10 @@ io.prototype.resources = {
         let request = {
             ResourceKeys: requestResources
         }
-        window.ioinstance.service.post('backOffice/resources/get', request, function(status, response, error) {
+        
+        let requestURLFormat = '%s/GetResources';
+        let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
+        window.ioinstance.service.post(requestURL, request, function(status, response, error) {
             if (status && response.status.success) {
                 for (var j = 0; j < response.resources.length; j++) {
                     let currentResource = response.resources[j];
@@ -696,7 +699,7 @@ io.prototype.service = {
                 let io = window.ioinstance;
                 io.indicator.hide();
                 var responeData = (dataType === io.service.dataTypes.json) ? request.responseJSON : request.responseText;
-                if (typeof responeData === 'object' && responeData.status.code !== 200) {
+                if (typeof responeData === 'object' && responeData.Status.Code !== 200) {
                     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
                 }
                 callback(false, responeData, error);
@@ -1324,7 +1327,7 @@ io.prototype.userRoles = {
 
         for (var i = 0; i < 3; i++) {
             var roleName = this.getRoleName(i);
-            roleList.push(window.ioinstance.ui.formDataOptions(roleName, i));
+            roleList.push(new window.ioinstance.ui.formDataOptions(roleName, i));
         }
 
         return roleList;

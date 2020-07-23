@@ -149,6 +149,13 @@ namespace IOBootstrap.NET.Application
             IORoute listMessagesItemsRoute = new IORoute("ListMessages", messagesControllerName);
             IORoute updateMessagesItemRoute = new IORoute("UpdateMessagesItem", messagesControllerName);
 
+            string resourcesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeResourcesControllerNameKey);
+            IORoute addResourceRoute = new IORoute("AddResource", messagesControllerName);
+            IORoute deleteResourceRoute = new IORoute("DeleteResource", messagesControllerName);
+            IORoute getAllResourcesRoute = new IORoute("GetAllResources", messagesControllerName);
+            IORoute getResourcesRoute = new IORoute("GetResources", messagesControllerName);
+            IORoute updateResourceRoute = new IORoute("UpdateResource", messagesControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
@@ -178,6 +185,11 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("listAllMessagesItems", listAllMessagesItemsRoute.GetRouteString());
                 endpoints.MapControllerRoute("listMessagesItems", listMessagesItemsRoute.GetRouteString());
                 endpoints.MapControllerRoute("updateMessagesItem", updateMessagesItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("addResource", addResourceRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteResource", deleteResourceRoute.GetRouteString());
+                endpoints.MapControllerRoute("getAllResources", getAllResourcesRoute.GetRouteString());
+                endpoints.MapControllerRoute("getResources", getResourcesRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateResource", updateResourceRoute.GetRouteString());
                 ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
@@ -213,46 +225,6 @@ namespace IOBootstrap.NET.Application
 #endif
         }
 
-        /*
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            // Create default routes
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute("addResource", "backOffice/resources/add", new IORoute("AddResource", this.ResourcesControllerName()));
-                routes.MapRoute("deleteResource", "backOffice/resources/delete", new IORoute("DeleteResource", this.ResourcesControllerName()));
-                routes.MapRoute("getAllResources", "backOffice/resources/all", new IORoute("GetAllResources", this.ResourcesControllerName()));
-                routes.MapRoute("getResources", "backOffice/resources/get", new IORoute("GetResources", this.ResourcesControllerName()));
-                routes.MapRoute("updateResource", "backOffice/resources/update", new IORoute("UpdateResource", this.ResourcesControllerName()));
-            });
-        }
-
-        #endregion
-
-        #region Routing
-
-        public virtual string BackOfficeControllerName()
-        {
-            return "IOBackOffice";
-        }
-
-        public virtual string BackOfficeMenuControllerName()
-        {
-            return "IOBackOfficeMenu";
-        }
-
-        public virtual string BackOfficeMessagesControllerName()
-        {
-            return "IOBackOfficeMessages";
-        }
-
-        public virtual string ResourcesControllerName()
-        {
-            return "IOBackOfficeResources";
-        }
-*/
         #endregion
     }
 }

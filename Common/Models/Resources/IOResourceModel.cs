@@ -1,7 +1,7 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Base;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Models.Resources
 {
     public class IOResourceModel : IOModel
     {

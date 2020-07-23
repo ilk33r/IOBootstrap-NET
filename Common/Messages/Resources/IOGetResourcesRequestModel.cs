@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Messages.Resources
 {
     public class IOGetResourcesRequestModel : IORequestModel
     {

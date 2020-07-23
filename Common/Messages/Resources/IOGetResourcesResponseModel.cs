@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Models.BaseModels;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Models.Resources;
 using IOBootstrap.NET.Common.Models.Shared;
 
-namespace IOBootstrap.NET.WebApi.BackOffice.Models
+namespace IOBootstrap.NET.Common.Messages.Resources
 {
     public class IOGetResourcesResponseModel : IOResponseModel
     {
@@ -14,7 +15,11 @@ namespace IOBootstrap.NET.WebApi.BackOffice.Models
         {
         }
 
-        public IOGetResourcesResponseModel(IOResponseStatusModel status, IList<IOResourceModel> resources) : base(status)
+        public IOGetResourcesResponseModel(int responseStatusMessage) : base(responseStatusMessage)
+        {
+        }
+
+        public IOGetResourcesResponseModel(int responseStatusMessage, IList<IOResourceModel> resources) : base(responseStatusMessage)
         {
             Resources = resources;
         }

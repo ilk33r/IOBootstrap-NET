@@ -69,12 +69,27 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 
             if (parentMenuTree != null)
             {
-                List<IOMenuListModel> menuTree = new List<IOMenuListModel>();
+                List<IOMenuListModel> menuTree = parentMenuTree.ToList()
+                                                               .ConvertAll(parentMenuEntity =>
+                                                               {
+                                                                   IOMenuListModel menuListModel = new IOMenuListModel()
+                                                                   {
+                                                                       ID = parentMenuEntity.ID,
+                                                                       MenuOrder = parentMenuEntity.MenuOrder,
+                                                                       RequiredRole = parentMenuEntity.RequiredRole,
+                                                                       Action = parentMenuEntity.Action,
+                                                                       CssClass = parentMenuEntity.CssClass,
+                                                                       Name = parentMenuEntity.Name,
+                                                                   };
 
-                foreach (IOMenuEntity menuEntity in parentMenuTree)
+                                                                   return menuListModel;
+
+                                                               });
+
+                foreach (IOMenuListModel menuEntity in menuTree)
                 {
                     var childMenuTree = DatabaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == menuEntity.ID)
-                                                        .OrderBy((arg) => arg.MenuOrder);
+                                                            .OrderBy((arg) => arg.MenuOrder);
                     List<IOMenuListModel> childMenu = new List<IOMenuListModel>();
 
                     if (childMenuTree != null && childMenuTree.Count() > 0)
@@ -95,18 +110,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
                         }
                     }
 
-                    IOMenuListModel parentMenuModel = new IOMenuListModel()
-                    {
-                        ID = menuEntity.ID,
-                        MenuOrder = menuEntity.MenuOrder,
-                        RequiredRole = menuEntity.RequiredRole,
-                        Action = menuEntity.Action,
-                        CssClass = menuEntity.CssClass,
-                        Name = menuEntity.Name,
-                        ChildItems = childMenu
-                    };
-
-                    menuTree.Add(parentMenuModel);
+                    menuEntity.ChildItems = childMenu;
                 }
 
                 return menuTree;

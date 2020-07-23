@@ -30,6 +30,27 @@ namespace IOBootstrap.NET.Core.Controllers
         {
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            // Update view model request value
+            ViewModel.Request = Request;
+
+            if (!ViewModel.IsBackOffice()) 
+            {
+                // Obtain response model
+                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_PERMISSION);
+
+                // Override response
+                JsonResult result = new JsonResult(responseModel);
+                context.Result = result;
+
+                ActionExecuted = true;
+                return;
+            }
+
+            base.OnActionExecuting(context);
+        }
+
         #endregion
 
         #region Client Methods

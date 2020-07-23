@@ -142,6 +142,13 @@ namespace IOBootstrap.NET.Application
             IORoute listMenuItemsRoute = new IORoute("ListMenuItems", menuControllerName);
             IORoute updateMenuItemRoute = new IORoute("UpdateMenuItem", menuControllerName);
 
+            string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            IORoute addMessagesItemRoute = new IORoute("AddMessagesItem", messagesControllerName);
+            IORoute deleteMessagesItemRoute = new IORoute("DeleteMessagesItem", messagesControllerName);
+            IORoute listAllMessagesItemsRoute = new IORoute("ListAllMessages", messagesControllerName);
+            IORoute listMessagesItemsRoute = new IORoute("ListMessages", messagesControllerName);
+            IORoute updateMessagesItemRoute = new IORoute("UpdateMessagesItem", messagesControllerName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
@@ -166,6 +173,11 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("deleteMenuItem", deleteMenuItemRoute.GetRouteString());
                 endpoints.MapControllerRoute("listMenuItems", listMenuItemsRoute.GetRouteString());
                 endpoints.MapControllerRoute("updateMenuItem", updateMenuItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("addMessagesItem", addMessagesItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("deleteMessagesItem", deleteMessagesItemRoute.GetRouteString());
+                endpoints.MapControllerRoute("listAllMessagesItems", listAllMessagesItemsRoute.GetRouteString());
+                endpoints.MapControllerRoute("listMessagesItems", listMessagesItemsRoute.GetRouteString());
+                endpoints.MapControllerRoute("updateMessagesItem", updateMessagesItemRoute.GetRouteString());
                 ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
@@ -209,11 +221,6 @@ namespace IOBootstrap.NET.Application
             // Create default routes
             app.UseMvc(routes =>
             {
-                routes.MapRoute("addMessagesItem", "backOffice/messages/add", new IORoute("AddMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("deleteMessagesItem", "backOffice/messages/delete", new IORoute("DeleteMessagesItem", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("listAllMessagesItems", "backOffice/messages/listall", new IORoute("ListAllMessages", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("listMessagesItems", "backOffice/messages/list", new IORoute("ListMessages", this.BackOfficeMessagesControllerName()));
-                routes.MapRoute("updateMessagesItem", "backOffice/messages/update", new IORoute("UpdateMessagesItem", this.BackOfficeMessagesControllerName()));
                 routes.MapRoute("addResource", "backOffice/resources/add", new IORoute("AddResource", this.ResourcesControllerName()));
                 routes.MapRoute("deleteResource", "backOffice/resources/delete", new IORoute("DeleteResource", this.ResourcesControllerName()));
                 routes.MapRoute("getAllResources", "backOffice/resources/all", new IORoute("GetAllResources", this.ResourcesControllerName()));

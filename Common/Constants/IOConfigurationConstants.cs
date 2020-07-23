@@ -20,6 +20,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackOfficeControllerNameKey = "IOBackOfficeControllerName";
         public static string BackOfficeIsPublic = "IOBackOfficeIsPublic";
         public static string BackOfficeMenuControllerNameKey = "IOBackOfficeMenuControllerName";
+        public static string BackOfficeMessagesControllerNameKey = "IOBackOfficeMessagesControllerName";
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
         public static string BackOfficePageURLKey = "IOBackOfficePageURL";

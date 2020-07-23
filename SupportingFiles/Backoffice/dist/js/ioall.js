@@ -147,7 +147,10 @@ io.prototype = {
     },
     messagesHtml: function(callback) {
         // Call messages list
-        this.service.get('backoffice/messages/list', function(status, response, error) {
+        let requestURLFormat = '%s/ListMessages';
+        let requestURL = requestURLFormat.format(IOGlobal.messagesControllerName);
+
+        this.service.get(requestURL, function(status, response, error) {
             if (status && response.status.success) {
                 window.ioinstance.service.loadLayoutText('dashboardmessage', function (layout) {
                     var readedMessagesJSON = localStorage.getItem('readedMessages');

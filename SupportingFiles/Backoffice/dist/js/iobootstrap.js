@@ -63,8 +63,10 @@ io.prototype.app.clientsList = function (e, hash) {
     io.indicator.show();
 
     let breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+    let requestURLFormat = '%s/ListClients';
+    let requestURL = requestURLFormat.format(IOGlobal.backOfficeControllerName);
 
-    io.service.get('backoffice/clients/list', function(status, response, error) {
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var updateParams = [];
@@ -157,8 +159,12 @@ io.prototype.app.clientsUpdate = function (id, clientDescription, isEnabled, req
 
         request.ClientId = id;
         request.IsEnabled = parseInt(request.IsEnabled);
+        request.RequestCount = parseInt(request.RequestCount);
+        request.MaxRequestCount = parseInt(request.MaxRequestCount);
 
-        window.ioinstance.service.post('backoffice/clients/update', request, function (status, response, error) {
+        let requestURLFormat = '%s/UpdateClient';
+        let requestURL = requestURLFormat.format(IOGlobal.backOfficeControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
@@ -180,7 +186,9 @@ io.prototype.app.clientDelete = function (id) {
         request.Version = window.ioinstance.version;
         request.ClientId = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/clients/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteClient';
+        let requestURL = requestURLFormat.format(IOGlobal.backOfficeControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Client has been deleted successfully.', '');
@@ -217,7 +225,10 @@ io.prototype.app.clientsAdd = function (e, hash) {
 
     io.ui.createForm(hash, formBreadcrumb, 'addClientForm', formDatas, 'Save', function () {
     }, function (request) {
-        window.ioinstance.service.post('backoffice/clients/add', request, function (status, response, error) {
+        request.RequestCount = parseInt(request.RequestCount);
+        let requestURLFormat = '%s/AddClient';
+        let requestURL = requestURLFormat.format(IOGlobal.backOfficeControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
@@ -239,8 +250,10 @@ io.prototype.app.clientsSelect = function (e, hash) {
     io.indicator.show();
 
     let breadcrumb = new io.ui.breadcrumb('clientsList', 'Clients', []);
+    let requestURLFormat = '%s/ListClients';
+    let requestURL = requestURLFormat.format(IOGlobal.backOfficeControllerName);
 
-    io.service.get('backoffice/clients/list', function(status, response, error) {
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var selectionParams = [];

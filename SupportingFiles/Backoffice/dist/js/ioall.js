@@ -683,8 +683,11 @@ io.prototype.service = {
             },
             dataType: dataType,
             success: function (data) {
-                if (typeof responeData === 'object' && (responeData.status.code === 401 || responeData.status.code === 403)) {
+                if (typeof data === 'object' && (data.status.code === 401 || data.status.code === 403)) {
                     window.ioinstance.showLogin({hasErrorClass: '', hasMessageClass: 'hidden', appName: window.ioinstance.appName});
+                    return;
+                } else if (typeof data === 'object' && data.status.code !== 200) {
+                    callback(false, data, { message: data.status.message, detailedMessage: data.status.detailedMessage });
                     return;
                 }
                 callback(true, data, null);

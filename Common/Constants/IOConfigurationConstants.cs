@@ -12,6 +12,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string APNSCertificatePath = "IOAPNSCertificatePath";
         public static string APNSHost = "IOAPNSHost";
         public static string APNSPort = "IOAPNSPort";
+        public static string APPNameKey = "IOAPPName";
         public static string AuthorizationKey = "IOAuthorizationKey";
         public static string BackOfficeAuthenticationControllerNameKey = "IOBackOfficeAuthenticationControllerName";
         public static string BackOfficeClientIDKey = "IOBackOfficelientID";

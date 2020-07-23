@@ -229,9 +229,11 @@ namespace IOBootstrap.NET.Core.Controllers
             string backOfficePageURL = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePageURLKey);
             webValues.Add("backOfficePageURL", backOfficePageURL);
 
-            // Obtain api url
+            // Obtain api url and app name
             string apiURL = Configuration.GetValue<string>(IOConfigurationConstants.APIURLKey);
+            string appName = Configuration.GetValue<string>(IOConfigurationConstants.APPNameKey);
             webValues.Add("apiURL", apiURL);
+            webValues.Add("appName", appName);
 
             // Obtain authorization
             string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey);

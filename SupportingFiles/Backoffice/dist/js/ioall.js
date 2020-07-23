@@ -81,7 +81,9 @@ io.prototype = {
     checkToken: function () {
         var request = this.request.CheckTokenRequest;
         request.Token = this.token;
-        this.service.post('backoffice/users/password/checktoken', request, function(status, response, error) {
+        let requestURLFormat = '%s/CheckToken';
+        let requestURL = requestURLFormat.format(IOGlobal.authenticationControllerName);
+        this.service.post(requestURL, request, function(status, response, error) {
             // Check response
             if (status && response.status.success) {
                 localStorage.setItem('userName', response.userName);

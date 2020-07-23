@@ -875,7 +875,9 @@ io.prototype.app.messagesAdd = function (e, hash) {
     io.ui.createForm(hash, formBreadcrumb, 'addMessageForm', formDatas, 'Save', function () {
         },
         function (request) {
-            window.ioinstance.service.post('backoffice/messages/add', request, function (status, response, error) {
+            let requestURLFormat = '%s/AddMessagesItem';
+            let requestURL = requestURLFormat.format(IOGlobal.messagesControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -897,9 +899,11 @@ io.prototype.app.messagesList = function (e, hash) {
     io.indicator.show();
 
     let breadcrumb = new io.ui.breadcrumb('messagesList', 'Messages', []);
+    let requestURLFormat = '%s/ListAllMessages';
+    let requestURL = requestURLFormat.format(IOGlobal.messagesControllerName);
 
     // Call client list
-    io.service.get('backoffice/messages/listall', function(status, response, error) {
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var updateParams = [];
@@ -994,7 +998,9 @@ io.prototype.app.messageUpdate = function (id, message, startDate, endDate) {
         },
         function (request) {
             request.MessageId = id;
-            window.ioinstance.service.post('backoffice/messages/update', request, function (status, response, error) {
+            let requestURLFormat = '%s/UpdateMessagesItem';
+            let requestURL = requestURLFormat.format(IOGlobal.messagesControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {

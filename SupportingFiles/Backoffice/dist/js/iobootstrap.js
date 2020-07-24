@@ -1058,7 +1058,9 @@ io.prototype.app.usersList = function (e, hash) {
     io.resources.getResources(resources, function() {
         let breadcrumb = new io.ui.breadcrumb('usersList', io.resources.get('BackOffice.Users'), []);
 
-        io.service.get('backoffice/users/list', function(status, response, error) {
+        let requestURLFormat = '%s/ListUsers';
+        let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+        io.service.get(requestURL, function(status, response, error) {
             if (status && response.status.success) {
                 var listData = [];
                 var updateParams = [];
@@ -1147,8 +1149,9 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
         function (request) {
 
             request.UserId = id;
-
-            window.ioinstance.service.post('backoffice/users/update', request, function (status, response, error) {
+            let requestURLFormat = '%s/UpdateUser';
+            let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -1209,7 +1212,9 @@ io.prototype.app.userChangePassword = function (e, hash, id, userName) {
 
             request.UserName = userName || localStorage.getItem('userName');
 
-            window.ioinstance.service.post('backoffice/users/password/change', request, function (status, response, error) {
+            let requestURLFormat = '%s/ChangePassword';
+            let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {
@@ -1231,7 +1236,9 @@ io.prototype.app.userDelete = function (id) {
         request.Version = window.ioinstance.version;
         request.UserId = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/users/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteUser';
+        let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'User has been deleted successfully.', '');
@@ -1292,7 +1299,9 @@ io.prototype.app.usersAdd = function (e, hash) {
     io.ui.createForm(hash, formBreadcrumb, 'addUserForm', formDatas, 'Save', function () {
     },
     function (request) {
-        window.ioinstance.service.post('backoffice/users/add', request, function (status, response, error) {
+        let requestURLFormat = '%s/AddUser';
+        let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {

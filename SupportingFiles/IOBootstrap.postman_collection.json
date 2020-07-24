@@ -15,7 +15,6 @@
 						"value": "{{authorization}}"
 					}
 				],
-				"body": {},
 				"url": {
 					"raw": "{{url}}/",
 					"host": [
@@ -29,18 +28,36 @@
 			"response": []
 		},
 		{
-			"name": "400",
+			"name": "Error404",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
 				"url": {
-					"raw": "{{url}}/",
+					"raw": "{{url}}/IOIndex/Error404",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						""
+						"IOIndex",
+						"Error404"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IOTest/Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/IOTest/Check",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"IOTest",
+						"Check"
 					]
 				}
 			},
@@ -56,21 +73,20 @@
 						"value": "{{authorization}}"
 					}
 				],
-				"body": {},
 				"url": {
-					"raw": "{{url}}/error_page_404",
+					"raw": "{{url}}/errorPage404",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"error_page_404"
+						"errorPage404"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Generate/Keys",
+			"name": "IOKeyGenerator/GenerateKeys",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -91,25 +107,21 @@
 						"value": "application/json"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"zecme2afylzkfr31wruol9fo4fkv3m8o\",\n    \"ClientSecret\": \"sv56hgxpaghx0vo3qcjqdxupyoizhebcebsklxkgu4d5sin9qh5r3hau1g7syy7v\"\n  },\n  \"UserName\": \"root\",\n  \"Password\": \"1234\"\n}"
-				},
 				"url": {
-					"raw": "{{url}}/generate/keys",
+					"raw": "{{url}}/IOKeyGenerator/GenerateKeys",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"generate",
-						"keys"
+						"IOKeyGenerator",
+						"GenerateKeys"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "BackOffiice/Clients/List",
+			"name": "BackOffice/ListClients",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -134,16 +146,14 @@
 						"value": "application/json"
 					}
 				],
-				"body": {},
 				"url": {
-					"raw": "{{url}}/backoffice/clients/list",
+					"raw": "{{url}}/IOBackOfficeDefault/ListClients",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"clients",
-						"list"
+						"IOBackOfficeDefault",
+						"ListClients"
 					]
 				}
 			},
@@ -174,7 +184,6 @@
 								"disabled": false
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/list",
 							"host": [
@@ -228,7 +237,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Clients/Add",
+			"name": "BackOffice/AddClient",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -255,17 +264,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientDescription\": \"Test Client\",\n\t\"RequestCount\": 999\n}"
+					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientDescription\": \"BackOfficeClient\",\n\t\"RequestCount\": 999\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/clients/add",
+					"raw": "{{url}}/IOBackOfficeDefault/AddClient",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"clients",
-						"add"
+						"IOBackOfficeDefault",
+						"AddClient"
 					]
 				}
 			},
@@ -280,7 +288,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -298,27 +305,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": "The mime type of this content"
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": "The date and time that the message was sent"
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": "A name for the server"
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
 						}
 					],
@@ -328,7 +335,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Clients/Delete",
+			"name": "BackOffice/DeleteClient",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -358,14 +365,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientId\": 1\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/clients/delete",
+					"raw": "{{url}}/IOBackOfficeDefault/DeleteClient",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"clients",
-						"delete"
+						"IOBackOfficeDefault",
+						"DeleteClient"
 					]
 				}
 			},
@@ -380,7 +386,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -398,27 +403,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -428,7 +433,7 @@
 			]
 		},
 		{
-			"name": "BackOffice/Clients/Update",
+			"name": "BackOffice/UpdateClient",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -458,14 +463,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"ClientId\": 1,\n\t\"ClientDescription\": \"Web Client\",\n    \"IsEnabled\": 1,\n    \"RequestCount\": 0,\n    \"MaxRequestCount\": 999\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/clients/update",
+					"raw": "{{url}}/IOBackOfficeDefault/UpdateClient",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"clients",
-						"update"
+						"IOBackOfficeDefault",
+						"UpdateClient"
 					]
 				}
 			},
@@ -497,10 +501,6 @@
 						"value": "application/json"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "-"
-				},
 				"url": {
 					"raw": "{{url}}/backoffice/menu/list",
 					"host": [
@@ -524,7 +524,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -542,27 +541,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -624,7 +623,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -642,27 +640,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -809,7 +807,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -827,27 +824,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -942,7 +939,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/Add",
+			"name": "BackOffiiceUsers/AddUser",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -972,14 +969,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserName\": \"root\",\n\t\"Password\": \"1234\",\n\t\"UserRole\": 0\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/add",
+					"raw": "{{url}}/IOBackOfficeUserDefault/AddUser",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"add"
+						"IOBackOfficeUserDefault",
+						"AddUser"
 					]
 				}
 			},
@@ -994,7 +990,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1012,27 +1007,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1042,7 +1037,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/List",
+			"name": "BackOffiiceUsers/ListUsers",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -1067,19 +1062,14 @@
 						"value": "application/json"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "-"
-				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/list",
+					"raw": "{{url}}/IOBackOfficeUserDefault/ListUsers",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"list"
+						"IOBackOfficeUserDefault",
+						"ListUsers"
 					]
 				}
 			},
@@ -1094,7 +1084,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1112,27 +1101,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1142,7 +1131,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/Delete",
+			"name": "BackOffiiceUsers/DeleteUser",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1172,14 +1161,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserId\": 1\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/delete",
+					"raw": "{{url}}/IOBackOfficeUserDefault/DeleteUser",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"delete"
+						"IOBackOfficeUserDefault",
+						"DeleteUser"
 					]
 				}
 			},
@@ -1194,7 +1182,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1212,27 +1199,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1242,7 +1229,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/ChangePassword",
+			"name": "BackOffiiceUsers/ChangePassword",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1272,15 +1259,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserName\": \"root\",\n\t\"OldPassword\": \"1234\",\n\t\"NewPassword\": \"1234\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/password/change",
+					"raw": "{{url}}/IOBackOfficeUserDefault/ChangePassword",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"password",
-						"change"
+						"IOBackOfficeUserDefault",
+						"ChangePassword"
 					]
 				}
 			},
@@ -1295,7 +1280,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1313,27 +1297,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1343,7 +1327,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/UpdateUser",
+			"name": "BackOffiiceUsers/UpdateUser",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1373,14 +1357,13 @@
 					"raw": "{\n\t\"Culture\": 0,\n\t\"Version\": \"0.0.0\",\n\t\"UserId\": 1,\n\t\"UserName\": \"root\",\n\t\"UserRole\": 0,\n\t\"UserPassword\": \"1234\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/update",
+					"raw": "{{url}}/IOBackOfficeUserDefault/UpdateUser",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"update"
+						"IOBackOfficeUserDefault",
+						"UpdateUser"
 					]
 				}
 			},
@@ -1395,7 +1378,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1413,27 +1395,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1443,13 +1425,12 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/Authenticate",
+			"name": "BackOffiiceAuthentication/Authenticate",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "7041599c-6121-4f30-ad1e-9810b9178c99",
-						"type": "text/javascript",
 						"exec": [
 							"try",
 							"{",
@@ -1459,7 +1440,8 @@
 							"catch(e)",
 							"{",
 							"}"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -1489,18 +1471,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Culture\": 0,\n    \"Version\": \"0.0.0\",\n    \"UserName\": \"root\",\n    \"Password\": \"1234\"\n}"
+					"raw": "{\n    \"Culture\": 0,\n    \"Version\": \"0.0.0\",\n    \"UserName\": \"root\",\n    \"Password\": \"3836\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/password/authenticate",
+					"raw": "{{url}}/IOBackOfficeAuthenticationDefault/Authenticate",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"password",
-						"authenticate"
+						"IOBackOfficeAuthenticationDefault",
+						"Authenticate"
 					]
 				}
 			},
@@ -1594,7 +1574,7 @@
 			]
 		},
 		{
-			"name": "BackOffiice/Users/CheckToken",
+			"name": "BackOffiiceAuthentication/CheckToken",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1620,15 +1600,13 @@
 					"raw": "{\n  \"ClientInfo\": {\n    \"ClientID\": \"{{clientId}}\",\n    \"ClientSecret\": \"{{clientSecret}}\"\n  },\n  \"Token\": \"{{token}}\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/backoffice/users/password/checktoken",
+					"raw": "{{url}}/IOBackOfficeAuthenticationDefault/CheckToken",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"backoffice",
-						"users",
-						"password",
-						"checktoken"
+						"IOBackOfficeAuthenticationDefault",
+						"CheckToken"
 					]
 				}
 			},
@@ -1643,7 +1621,6 @@
 								"value": "cfb05po8o90mfmj4vg6l"
 							}
 						],
-						"body": {},
 						"url": {
 							"raw": "{{url}}/backoffice/clients/add",
 							"host": [
@@ -1661,27 +1638,27 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"name": "content-type",
 							"key": "content-type",
 							"value": "application/json; charset=utf-8",
+							"name": "content-type",
 							"description": ""
 						},
 						{
-							"name": "date",
 							"key": "date",
 							"value": "Mon, 28 Aug 2017 19:28:39 GMT",
+							"name": "date",
 							"description": ""
 						},
 						{
-							"name": "server",
 							"key": "server",
 							"value": "Kestrel",
+							"name": "server",
 							"description": ""
 						},
 						{
-							"name": "transfer-encoding",
 							"key": "transfer-encoding",
 							"value": "chunked",
+							"name": "transfer-encoding",
 							"description": ""
 						}
 					],
@@ -1730,5 +1707,6 @@
 			},
 			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

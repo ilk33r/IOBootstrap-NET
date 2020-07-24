@@ -251,11 +251,13 @@ namespace IOBootstrap.NET.Core.Controllers
             string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
             string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
             string resourcesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeResourcesControllerNameKey);
+            string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             webValues.Add("authenticationControllerName", authenticationControllerName);
             webValues.Add("backOfficeControllerName", backOfficeControllerName);
             webValues.Add("menuControllerName", menuControllerName);
             webValues.Add("messagesControllerName", messagesControllerName);
             webValues.Add("resourcesControllerName", resourcesControllerName);
+            webValues.Add("userControllerName", userControllerName);
 
             return webValues;
         }

@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
 using Newtonsoft.Json;
 

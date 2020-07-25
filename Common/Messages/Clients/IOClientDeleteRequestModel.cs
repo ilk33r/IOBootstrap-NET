@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace IOBootstrap.NET.Common.Messages.Clients
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Base;
 
-namespace IOBootstrap.NET.Core.Firebase.Models
+namespace IOBootstrap.NET.Common.Models.Firebase
 {
 	public class FirebaseModel : IOModel
     {

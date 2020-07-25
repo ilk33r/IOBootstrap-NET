@@ -60,10 +60,15 @@ namespace IOBootstrap.NET.Core.Controllers
         public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.ClientDescription))
+            if (requestModel == null)
             {
                 // Create and return response
+                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Then return validation error
                 return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
@@ -83,6 +88,12 @@ namespace IOBootstrap.NET.Core.Controllers
             {
                 // Create and return response
                 return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Then return validation error
+                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
             // Check delete client is success

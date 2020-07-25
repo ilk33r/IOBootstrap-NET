@@ -42,7 +42,11 @@ namespace IOBootstrap.NET.Application
         {
             services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
-            services.AddControllers();
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(options => 
+                    {
+                        options.SuppressModelStateInvalidFilter = true;
+                    });
             services.AddRouting();
             services.AddLogging(loggingBuilder =>
             {

@@ -647,6 +647,8 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
         },
         function (request) {
 
+            request.MenuOrder = parseInt(request.MenuOrder);
+            request.RequiredRole = parseInt(request.RequiredRole);
             if (request.ParentEntityID === '') {
                 request.ParentEntityID = null;
             } else {
@@ -749,7 +751,8 @@ io.prototype.app.menuEditorUpdate = function(id, name, action, cssClass, userRol
         },
         function (request) {
             request.ID = id;
-
+            request.MenuOrder = parseInt(request.MenuOrder);
+            request.RequiredRole = parseInt(request.RequiredRole);
             if (request.ParentEntityID === '') {
                 request.ParentEntityID = null;
             } else {

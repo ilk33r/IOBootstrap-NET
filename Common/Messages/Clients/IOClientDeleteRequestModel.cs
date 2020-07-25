@@ -7,6 +7,7 @@ namespace IOBootstrap.NET.Common.Messages.Clients
 
         #region Properties
 
+        [Required]
         public int ClientId { get; set; }
 
         #endregion

@@ -14,20 +14,20 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
     public class IOHTTPClient
     {
-        private string baseUrl;
-        private string contentType;
-        private HttpClient httpClient;
-        private Object postBody;
-        private IOHTTPClientRequestMethods requestMethod;
+        private string BaseUrl { get; }
+        private string ContentType;
+        private HttpClient HttpClient;
+        private Object PostBody;
+        private IOHTTPClientRequestMethods RequestMethod;
 
         #region Initialization Methods
 
         public IOHTTPClient(string baseUrl)
         {
-            this.baseUrl = baseUrl;
-            this.httpClient = new HttpClient();
-            this.httpClient.DefaultRequestHeaders.Accept.Clear();
-            this.httpClient.DefaultRequestHeaders.Add("User-Agent", "IOBootstrap.NET");
+            BaseUrl = baseUrl;
+            HttpClient = new HttpClient();
+            HttpClient.DefaultRequestHeaders.Accept.Clear();
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", "IOBootstrap.NET");
         }
 
         #endregion
@@ -37,31 +37,31 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         public void AddAcceptHeader(string accept)
         {
             MediaTypeWithQualityHeaderValue headerValue = new MediaTypeWithQualityHeaderValue(accept);
-            this.httpClient.DefaultRequestHeaders.Accept.Add(headerValue);
+            HttpClient.DefaultRequestHeaders.Accept.Add(headerValue);
         }
 
         public void AddHeader(string name, string value)
         {
-            this.httpClient.DefaultRequestHeaders.Add(name, value);
+            HttpClient.DefaultRequestHeaders.Add(name, value);
         }
 
         public void Call(HttpResponse callback)
         {
             Task task;
-            if (this.requestMethod == IOHTTPClientRequestMethods.GET)
+            if (RequestMethod == IOHTTPClientRequestMethods.GET)
             {
-                task = this.GetRequest(callback);
+                task = GetRequest(callback);
             } else {
-                task = this.PostRequest(callback);
+                task = PostRequest(callback);
             }
             task.Wait();
         }
 
         public void CallJSON<TObject>(HttpJsonResponse<TObject> callback) where TObject : IOModel, new()
         {
-            this.Call((bool status, string response) =>
+            Call((bool status, string response) =>
             {
-                this.SetContentType("application/json");
+                SetContentType("application/json");
                 try
                 {
                     TObject jsonObject = JsonConvert.DeserializeObject<TObject>(response);
@@ -76,17 +76,17 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
         public void SetContentType(string contentType)
         {
-            this.contentType = contentType;
+            ContentType = contentType;
         }
 
         public void SetPostBody(Object bodyObject)
         {
-            this.postBody = bodyObject;
+            PostBody = bodyObject;
         }
 
         public void SetRequestMethod(IOHTTPClientRequestMethods requestMethod)
         {
-            this.requestMethod = requestMethod;
+            RequestMethod = requestMethod;
         }
 
         #endregion
@@ -97,7 +97,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             try 
             {
-                var task = this.httpClient.GetAsync(this.baseUrl);
+                var task = HttpClient.GetAsync(BaseUrl);
                 var response = await task;
 
                 // Deserialize the response body.
@@ -114,8 +114,8 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             try
             {
-                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(this.postBody), Encoding.UTF8, this.contentType);
-                var task = this.httpClient.PostAsync(this.baseUrl, postContent);
+                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(PostBody), Encoding.UTF8, ContentType);
+                var task = HttpClient.PostAsync(BaseUrl, postContent);
                 var response = await task;
 
                 // Deserialize the response body.

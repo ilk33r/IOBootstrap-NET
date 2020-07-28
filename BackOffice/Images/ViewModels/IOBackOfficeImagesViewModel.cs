@@ -162,7 +162,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
                 BlobClient blobClient = containerClient.GetBlobClient(filename);
                 using(var ms = new MemoryStream(imageBuffer, false))
                 {
-                    await blobClient.UploadAsync(ms);
+                    await blobClient.UploadAsync(ms, new BlobHttpHeaders{ ContentType = contentType});
                 }
                 return true;
             }

@@ -68,6 +68,13 @@ io.prototype.app.getUploadedImageIds = function(imageId) {
     return imageIdList;
 };
 
+io.prototype.app.getUploadedImageIdString = function(imageId) {
+    var fileIds = [imageId];
+    var fileDataString = JSON.stringify(fileIds);
+    return fileDataString.escapeHtml();
+};
+
+
 io.prototype.ui.listenMultipleImageSelect = function (id, name, tokens, fileVariants, images) {
     $('#' + id).click(function (e) {
         e.preventDefault();

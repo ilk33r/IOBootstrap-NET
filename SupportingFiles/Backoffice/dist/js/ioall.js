@@ -1277,7 +1277,13 @@ io.prototype.ui = {
             resources.options = io.resources.get(resourceKeys.options);
             resources.select = io.resources.get(resourceKeys.select);
 
-            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, null, null, null, null, hasRowClasses, resources, selectMethodName, selectionParams, null, onRendered);
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, onRendered);
+            createListParams.hasRowClasses = hasRowClasses;
+            createListParams.resources = resources;
+            createListParams.selectMethodName = selectMethodName;
+            createListParams.selectParams = selectionParams;
+
+            io.ui.createListData(createListParams);
         });
     },
     getPopupSelectionValue: function(id) {
@@ -1380,6 +1386,7 @@ io.prototype.ui.createListParams.prototype = {
     resources: {},
     resourcesKeys: {},
     pagination: null,
+    selectMethodName: null,
     selectParams: {},
     extraParams: {},
     onPaged: null,

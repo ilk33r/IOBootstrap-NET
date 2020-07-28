@@ -62,6 +62,12 @@ io.prototype.app.generateFileVariant = function (fileName, width, height, scale,
     return Object.assign({}, variants);
 };
 
+io.prototype.app.getUploadedImageIds = function(imageId) {
+    let imageIdString = $('#' + imageId + 'ImageId').val();
+    let imageIdList = JSON.parse(imageIdString.unEscapeHtml());
+    return imageIdList;
+};
+
 io.prototype.ui.listenMultipleImageSelect = function (id, name, tokens, fileVariants, images) {
     $('#' + id).click(function (e) {
         e.preventDefault();

@@ -110,8 +110,14 @@ io.prototype.app.clientsList = function (e, hash) {
                 'Secret'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'clientsUpdate', updateParams, 'clientDelete', deleteParams, null, function () {
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
             });
+            createListParams.updateMethodName = 'clientsUpdate';
+            createListParams.updateParams = updateParams;
+            createListParams.deleteMethodName = 'clientDelete';
+            createListParams.deleteParams = deleteParams;
+
+            io.ui.createList(createListParams);
         } else {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
@@ -417,8 +423,14 @@ io.prototype.app.configurationsList = function (e, hash) {
                 'String Value'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'configurationUpdate', updateParams, 'configurationDelete', deleteParams, null, function () {
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
             });
+            createListParams.updateMethodName = 'configurationUpdate';
+            createListParams.updateParams = updateParams;
+            createListParams.deleteMethodName = 'configurationDelete';
+            createListParams.deleteParams = deleteParams;
+
+            io.ui.createList(createListParams);
         } else {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
@@ -595,8 +607,15 @@ io.prototype.app.menuEditorList = function(e, hash) {
                 'Order'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'menuEditorUpdate', updateParams, 'menuEditorDelete', deleteParams, hasRowClasses, function () {
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
             });
+            createListParams.updateMethodName = 'menuEditorUpdate';
+            createListParams.updateParams = updateParams;
+            createListParams.deleteMethodName = 'menuEditorDelete';
+            createListParams.deleteParams = deleteParams;
+            createListParams.hasRowClasses = hasRowClasses;
+
+            io.ui.createList(createListParams);
         } else {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
@@ -981,8 +1000,14 @@ io.prototype.app.messagesList = function (e, hash) {
                 'End Date'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'messageUpdate', updateParams, 'messageDelete', deleteParams, null, function () {
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
             });
+            createListParams.updateMethodName = 'messageUpdate';
+            createListParams.updateParams = updateParams;
+            createListParams.deleteMethodName = 'messageDelete';
+            createListParams.deleteParams = deleteParams;
+
+            io.ui.createList(createListParams);
         } else {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');
@@ -1112,9 +1137,17 @@ io.prototype.app.usersList = function (e, hash) {
                 resources.home = io.resources.get('BackOffice.Home');
                 resources.options = io.resources.get('BackOffice.Options');
                 resources.select = io.resources.get('BackOffice.Select');
-    
-                io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, 'userUpdate', updateParams, 'userDelete', deleteParams, null, resources, null, null, extraParams, function () {
+
+                let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
                 });
+                createListParams.updateMethodName = 'userUpdate';
+                createListParams.updateParams = updateParams;
+                createListParams.deleteMethodName = 'userDelete';
+                createListParams.deleteParams = deleteParams;
+                createListParams.resources = resources;
+                createListParams.extraParams = extraParams;
+    
+                io.ui.createListData(createListParams);
             } else {
                 window.ioinstance.indicator.hide();
                 window.ioinstance.callout.show(window.ioinstance.callout.types.danger, io.resources.get('BackOffice.Error'), '');
@@ -1152,6 +1185,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
         function (request) {
 
             request.UserId = id;
+
             let requestURLFormat = '%s/UpdateUser';
             let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
             window.ioinstance.service.post(requestURL, request, function (status, response, error) {
@@ -1209,14 +1243,14 @@ io.prototype.app.userChangePassword = function (e, hash, id, userName) {
     formDatas.push(passwordFormData);
     formDatas.push(passwordRepeatFormData);
 
-    io.ui.createForm(hash, formBreadcrumb, 'changePasswordForm', formDatas, 'Save', function () {
+    io.ui.createForm(hash, formBreadcrumb, 'changePassword', formDatas, 'Save', function () {
         },
         function (request) {
 
             request.UserName = userName || localStorage.getItem('userName');
-
             let requestURLFormat = '%s/ChangePassword';
             let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
+
             window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
@@ -1386,8 +1420,12 @@ io.prototype.app.pushNotificationList = function (e, hash) {
                     io.resources.get('BackOffice.SendedDevices')
                 ];
 
-                io.ui.createList(hash, breadcrumb, listDataHeaders, listData, null, null, 'pushNotificationMessageDelete', deleteParams, null, function () {
+                let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
                 });
+                createListParams.deleteMethodName = 'pushNotificationMessageDelete';
+                createListParams.deleteParams = deleteParams;
+
+                io.ui.createList(createListParams);
             } else {
                 window.ioinstance.indicator.hide();
                 window.ioinstance.callout.show(window.ioinstance.callout.types.danger, io.resources.get('BackOffice.Error'), '');
@@ -1597,8 +1635,14 @@ io.prototype.app.resourcesList = function (e, hash) {
                 'Value'
             ];
 
-            io.ui.createList(hash, breadcrumb, listDataHeaders, listData, 'resourceUpdate', updateParams, 'resourceDelete', deleteParams, null, function () {
+            let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
             });
+            createListParams.updateMethodName = 'resourceUpdate';
+            createListParams.updateParams = updateParams;
+            createListParams.deleteMethodName = 'resourceDelete';
+            createListParams.deleteParams = deleteParams;
+
+            io.ui.createList(createListParams);
         } else {
             window.ioinstance.indicator.hide();
             window.ioinstance.callout.show(window.ioinstance.callout.types.danger, 'An error occured.', '');

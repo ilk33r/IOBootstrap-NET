@@ -386,8 +386,10 @@ io.prototype.layout = {
     },
     loadMenu: function () {
         this.menuLayout = null;
+
         let requestURLFormat = '%s/ListMenuItems';
         let requestURL = requestURLFormat.format(IOGlobal.menuControllerName);
+
         window.ioinstance.service.get(requestURL, function (status, response, error) {
             // Check response
             if (status && response.status.success) {
@@ -609,7 +611,7 @@ io.prototype.resources = {
         let request = {
             ResourceKeys: requestResources
         }
-        
+
         let requestURLFormat = '%s/GetResources';
         let requestURL = requestURLFormat.format(IOGlobal.resourcesControllerName);
         window.ioinstance.service.post(requestURL, request, function(status, response, error) {
@@ -798,6 +800,13 @@ io.prototype.ui = {
         this.navigationId = navigationId;
         this.navigationName = navigationName;
     },
+    createListParams: function(hash, breadcrumb, listDataHeaders, listData, onRendered) {
+        this.hash = hash;
+        this.breadcrumb = breadcrumb;
+        this.listDataHeaders = listDataHeaders;
+        this.listData = listData;
+        this.onRendered = onRendered;
+    },
     extraParam: function (name, icon, methodName, methodArguments) {
         this.name = name;
         this.icon = icon;
@@ -828,6 +837,11 @@ io.prototype.ui = {
         select: 'SelectType',
         textArea: 'TextAreaType',
         text: 'TextType'
+    },
+    pagination: function (start, length, count) {
+        this.start = start;
+        this.length = length;
+        this.count = count;
     },
     loadedFormDatas: null,
     checkFormDatasLoaded: function(callback) {
@@ -1017,150 +1031,221 @@ io.prototype.ui = {
             callback(formHtml);
         });
     },
-    createList: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, onRendered) {
+    createList: function (createListParams) {
         let resources = this.resourcesModel;
         resources.edit = 'BackOffice.Edit';
         resources.delete = 'BackOffice.Delete';
         resources.home = 'BackOffice.Home';
         resources.options = 'BackOffice.Options';
         resources.select = 'BackOffice.Select';
+        createListParams.resourcesKeys = resources;
 
-        this.createListWithResourceKeys(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, onRendered);
+        this.createListWithResourceKeys(createListParams);
     },
-    createListWithResourceKeys: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resourceKeys, onRendered) {
+    createListWithResourceKeys: function (createListParams) {
         let io = window.ioinstance;
 
         let requestResourceKeys = [
-            resourceKeys.edit,
-            resourceKeys.delete,
-            resourceKeys.home,
-            resourceKeys.options,
-            resourceKeys.select
+            createListParams.resourcesKeys.edit,
+            createListParams.resourcesKeys.delete,
+            createListParams.resourcesKeys.home,
+            createListParams.resourcesKeys.options,
+            createListParams.resourcesKeys.select
         ];
 
         io.resources.getResources(requestResourceKeys, function() {
             let resources = Object.assign({}, io.resourcesModel);
-            resources.edit = io.resources.get(resourceKeys.edit);
-            resources.delete = io.resources.get(resourceKeys.delete);
-            resources.home = io.resources.get(resourceKeys.home);
-            resources.options = io.resources.get(resourceKeys.options);
-            resources.select = io.resources.get(resourceKeys.select);
+            resources.edit = io.resources.get(createListParams.resourcesKeys.edit);
+            resources.delete = io.resources.get(createListParams.resourcesKeys.delete);
+            resources.home = io.resources.get(createListParams.resourcesKeys.home);
+            resources.options = io.resources.get(createListParams.resourcesKeys.options);
+            resources.select = io.resources.get(createListParams.resourcesKeys.select);
+            createListParams.resources = resources;
 
-            io.ui.createListData(hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, null, null, null, onRendered);
+            io.ui.createListData(createListParams);
         });
     },
-    createListData: function (hash, breadcrumb, listDataHeaders, listData, updateMethodName, updateParams, deleteMethodName, deleteParams, hasRowClasses, resources, selectMethodName, selectParams, extraParams, onRendered) {
+    createListData: function (createListParams) {
         let io = window.ioinstance;
 
         // Show indicator
         io.indicator.show();
-        io.selectMenu(hash);
+        io.selectMenu(createListParams.hash);
 
         // Create breadcrumb
-        this.createBreadcrumb(breadcrumb, function (breadcrumbHtml) {
+        this.createBreadcrumb(createListParams.breadcrumb, function (breadcrumbHtml) {
             // Load item layout
-            window.ioinstance.service.loadLayoutText('listItemLayout', function (layout) {
-                var itemsHtml = '';
-                var itemsLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
-
-                for (var index in listData) {
-                    var listDataItems = listData[index];
-                    var itemUpdateParams = (updateParams != null && updateParams.length > index) ? updateParams[index] : [];
-                    var itemDeleteParams = (deleteParams != null && deleteParams.length > index) ? deleteParams[index] : [];
-                    var itemSelectParams = (selectParams != null && selectParams.length > index) ? selectParams[index] : [];
-                    var itemExtraParams = (extraParams != null && extraParams.length > index) ? extraParams[index] : [];
-                    var singleItemHtml = '';
-
-                    for (var itemIndex in listDataItems) {
-                        singleItemHtml += '<td><div class="breakWord">' + listDataItems[itemIndex] + '</div></td>';
-                    }
-
-                    var updateParamsJSONString = '';
-                    if (itemUpdateParams.length > 0) {
-                        updateParamsJSONString = JSON.stringify(itemUpdateParams);
-                    } else {
-                        updateParamsJSONString = '[]';
-                    }
-
-                    var deleteParamsJSONString = '';
-                    if (itemDeleteParams.length > 0) {
-                        deleteParamsJSONString = JSON.stringify(itemDeleteParams);
-                    } else {
-                        deleteParamsJSONString = '[]';
-                    }
-
-                    var selectParamsJSONString = '';
-                    if (itemSelectParams.length > 0) {
-                        selectParamsJSONString = JSON.stringify(itemSelectParams);
-                    } else {
-                        selectParamsJSONString = '[]';
-                    }
-
-                    var updateParamsHtml = updateParamsJSONString.b64encode();
-                    var deleteParamsHtml = deleteParamsJSONString.b64encode();
-                    var selectParamsHtml = selectParamsJSONString.b64encode();
-                    var updateIsHidden = (updateMethodName != null && updateMethodName !== '') ? '' : 'hidden';
-                    var deleteIsHidden = (deleteMethodName != null && deleteMethodName !== '') ? '' : 'hidden';
-                    var selectIsHidden = (selectMethodName != null && selectMethodName !== '') ? '' : 'hidden';
-                    var hasRowClass = (hasRowClasses != null && hasRowClasses.length > index) ? hasRowClasses[index] : false;
-                    var extraParamsHtml = '';
-
-                    if (itemExtraParams != null && itemExtraParams.length > 0) {
-                        for (var extraParamIndex in itemExtraParams) {
-                            var extraParam = itemExtraParams[extraParamIndex];
-                            var extraParamsB64 = JSON.stringify(extraParam.methodArguments).b64encode();
-                            extraParamsHtml += '<a class="btn btn-app" href="#!' + extraParam.methodName + '" data-type="action" data-method="' + extraParam.methodName + '" data-params="' + extraParamsB64 + '">';
-                            extraParamsHtml += '<i class="fa ' + extraParam.icon + '"></i> ' + extraParam.name + '</a>';
-                        }
-                    }
-
-                    var itemsLayoutData = {
-                        rowClass: (hasRowClass) ? 'childmenu' : '',
-                        singleItemHtml: singleItemHtml,
-                        updateIsHidden: updateIsHidden,
-                        updateMethodName: (updateMethodName != null) ? updateMethodName : '',
-                        updateParamsHtml: updateParamsHtml,
-                        deleteIsHidden: deleteIsHidden,
-                        deleteMethodName: (deleteMethodName != null) ? deleteMethodName : '',
-                        deleteParamsHtml: deleteParamsHtml,
-                        selectIsHidden:  selectIsHidden,
-                        selectMethodName: (selectMethodName != null) ? selectMethodName : '',
-                        selectParamsHtml: selectParamsHtml,
-                        extraParams: extraParamsHtml,
-                        resourceEdit: resources.edit,
-                        resourcesDelete: resources.delete,
-                        resourcesSelect: resources.select
-                    };
-
-                    itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
+            io.ui.createListItem(createListParams, function (listDataItemsHtml, listDataHeadersHtml) {
+                if (createListParams.pagination == null) {
+                    io.ui.createListDataHtml(createListParams, breadcrumbHtml, listDataItemsHtml, listDataHeadersHtml, null);
+                } else {
+                    io.ui.createPagination(createListParams.pagination, function (paginationHtml) {
+                        io.ui.createListDataHtml(createListParams, breadcrumbHtml, listDataItemsHtml, listDataHeadersHtml, paginationHtml);
+                    });
                 }
+            });
+        });
+    },
+    createListDataHtml: function (createListParams, breadcrumbHtml, listDataItemsHtml, listDataHeadersHtml, paginationHtml) {
+        $('.paginationPage').unbind('click');
+        $('#paginationNext').unbind('click');
+        $('#paginationPrevious').unbind('click');
 
-                var headersHtml = '';
-                for (let headerItem in listDataHeaders) {
-                    headersHtml += '<th>' + listDataHeaders[headerItem] + '</th>';
-                }
+        // Load form layout
+        window.ioinstance.service.loadLayout('listLayout', false, function () {
+            // Prepare form layout
+            window.ioinstance.layout.contentLayoutData = {
+                activeNavigationName: createListParams.breadcrumb.activeNavigationName,
+                activeNavigationId: createListParams.breadcrumb.activeNavigationId,
+                breadcrumbLayout: breadcrumbHtml,
+                listData: listDataItemsHtml,
+                headersHtml: listDataHeadersHtml,
+                resourcesOptions: createListParams.resources.options,
+                resourcesHome: createListParams.resources.home,
+                paginationHtml: (paginationHtml != null) ? paginationHtml : ''
+            };
 
-                // Load form layout
-                window.ioinstance.service.loadLayout('listLayout', false, function () {
-                    // Prepare form layout
-                    window.ioinstance.layout.contentLayoutData = {
-                        activeNavigationName: breadcrumb.activeNavigationName,
-                        activeNavigationId: breadcrumb.activeNavigationId,
-                        breadcrumbLayout: breadcrumbHtml,
-                        listData: itemsHtml,
-                        headersHtml: headersHtml,
-                        resourcesOptions: resources.options,
-                        resourcesHome: resources.home
-                    };
+            // Render layout
+            window.ioinstance.layout.render();
+            window.ioinstance.selectMenu(createListParams.hash);
 
-                    // Render layout
-                    window.ioinstance.layout.render();
-                    window.ioinstance.selectMenu(hash);
-
-                    onRendered();
+            if (paginationHtml != null) {
+                
+                $('.paginationPage').click(function (e) {
+                    e.preventDefault();
+                    let currentPageNumber = parseInt($(this).attr('data-dt-idx'));
+                    createListParams.onPaged(currentPageNumber);
                 });
 
-            });
+                $('#paginationNext').click(function (e) {
+                    e.preventDefault();
+                    let currentPageNumber = parseInt($(this).attr('data-dt-idx'));
+                    if (!$(this).parent().hasClass('disabled')) {
+                        createListParams.onPaged(currentPageNumber);
+                    }
+                });
+
+                $('#paginationPrevious').click(function (e) {
+                    e.preventDefault();
+                    let currentPageNumber = parseInt($(this).attr('data-dt-idx'));
+                    if (!$(this).parent().hasClass('disabled')) {
+                        createListParams.onPaged(currentPageNumber);
+                    }
+                });
+            }
+
+            createListParams.onRendered();
+        });
+    },
+    createListItem: function (createListParams, callback) {
+        window.ioinstance.service.loadLayoutText('listItemLayout', function (layout) {
+            var itemsHtml = '';
+            var itemsLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+
+            for (var index in createListParams.listData) {
+                var listDataItems = createListParams.listData[index];
+                var itemUpdateParams = (createListParams.updateParams != null && createListParams.updateParams.length > index) ? createListParams.updateParams[index] : [];
+                var itemDeleteParams = (createListParams.deleteParams != null && createListParams.deleteParams.length > index) ? createListParams.deleteParams[index] : [];
+                var itemSelectParams = (createListParams.selectParams != null && createListParams.selectParams.length > index) ? createListParams.selectParams[index] : [];
+                var itemExtraParams = (createListParams.extraParams != null && createListParams.extraParams.length > index) ? createListParams.extraParams[index] : [];
+                var singleItemHtml = '';
+
+                for (var itemIndex in listDataItems) {
+                    singleItemHtml += '<td><div class="breakWord">' + listDataItems[itemIndex] + '</div></td>';
+                }
+
+                var updateParamsJSONString = '';
+                if (itemUpdateParams.length > 0) {
+                    updateParamsJSONString = JSON.stringify(itemUpdateParams);
+                } else {
+                    updateParamsJSONString = '[]';
+                }
+
+                var deleteParamsJSONString = '';
+                if (itemDeleteParams.length > 0) {
+                    deleteParamsJSONString = JSON.stringify(itemDeleteParams);
+                } else {
+                    deleteParamsJSONString = '[]';
+                }
+
+                var selectParamsJSONString = '';
+                if (itemSelectParams.length > 0) {
+                    selectParamsJSONString = JSON.stringify(itemSelectParams);
+                } else {
+                    selectParamsJSONString = '[]';
+                }
+
+                var updateParamsHtml = updateParamsJSONString.b64encode();
+                var deleteParamsHtml = deleteParamsJSONString.b64encode();
+                var selectParamsHtml = selectParamsJSONString.b64encode();
+                var updateIsHidden = (createListParams.updateMethodName != null && createListParams.updateMethodName !== '') ? '' : 'hidden';
+                var deleteIsHidden = (createListParams.deleteMethodName != null && createListParams.deleteMethodName !== '') ? '' : 'hidden';
+                var selectIsHidden = (createListParams.selectMethodName != null && createListParams.selectMethodName !== '') ? '' : 'hidden';
+                var hasRowClass = (createListParams.hasRowClasses != null && createListParams.hasRowClasses.length > index) ? createListParams.hasRowClasses[index] : false;
+                var extraParamsHtml = '';
+
+                if (itemExtraParams != null && itemExtraParams.length > 0) {
+                    for (var extraParamIndex in itemExtraParams) {
+                        var extraParam = itemExtraParams[extraParamIndex];
+                        var extraParamsB64 = JSON.stringify(extraParam.methodArguments).b64encode();
+                        extraParamsHtml += '<a class="btn btn-app" href="#!' + extraParam.methodName + '" data-type="action" data-method="' + extraParam.methodName + '" data-params="' + extraParamsB64 + '">';
+                        extraParamsHtml += '<i class="fa ' + extraParam.icon + '"></i> ' + extraParam.name + '</a>';
+                    }
+                }
+
+                var itemsLayoutData = {
+                    rowClass: (hasRowClass) ? 'childmenu' : '',
+                    singleItemHtml: singleItemHtml,
+                    updateIsHidden: updateIsHidden,
+                    updateMethodName: (createListParams.updateMethodName != null) ? createListParams.updateMethodName : '',
+                    updateParamsHtml: updateParamsHtml,
+                    deleteIsHidden: deleteIsHidden,
+                    deleteMethodName: (createListParams.deleteMethodName != null) ? createListParams.deleteMethodName : '',
+                    deleteParamsHtml: deleteParamsHtml,
+                    selectIsHidden:  selectIsHidden,
+                    selectMethodName: (createListParams.selectMethodName != null) ? createListParams.selectMethodName : '',
+                    selectParamsHtml: selectParamsHtml,
+                    extraParams: extraParamsHtml,
+                    resourceEdit: createListParams.resources.edit,
+                    resourcesDelete: createListParams.resources.delete,
+                    resourcesSelect: createListParams.resources.select
+                };
+
+                itemsHtml += window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
+            }
+
+            var headersHtml = '';
+            for (let headerItem in createListParams.listDataHeaders) {
+                headersHtml += '<th>' + createListParams.listDataHeaders[headerItem] + '</th>';
+            }
+
+            callback(itemsHtml, headersHtml);
+        });
+    },
+    createPagination: function (paginationObject, successHandler) {
+        let pageCount = Math.ceil(paginationObject.count / paginationObject.length);
+        let currentPage = Math.floor(paginationObject.start / paginationObject.length) + 1;
+
+        window.ioinstance.service.loadLayoutText('listPaginationLayout', function (layout) {
+            let itemsLayoutProperties = window.ioinstance.layout.parseLayoutProperties(layout);
+            var pagesHtml = '';
+            for (var i = 1; i <= pageCount; i++) {
+                if (i == currentPage) {
+                    pagesHtml += '<li class="paginate_button active"><a href="#" data-dt-idx="' + i + '" class="paginationPage" tabindex="0">' + i + '</a></li>';
+                } else {
+                    pagesHtml += '<li class="paginate_button"><a href="#" data-dt-idx="' + i + '" class="paginationPage" tabindex="0">' + i + '</a></li>';
+                }
+            }
+
+            let itemsLayoutData = {
+                previousPageIsDisabled: (currentPage == 1) ? 'disabled' : '',
+                nextPageIsDisabled: (currentPage == pageCount) ? 'disabled' : '',
+                previousPage: (currentPage - 1),
+                nextPage: (currentPage + 1),
+                pages: pagesHtml
+            };
+            let itemsHtml = window.ioinstance.layout.renderLayout(layout, itemsLayoutData, itemsLayoutProperties);
+            successHandler(itemsHtml);
         });
     },
     createPopupSelection: function (hash, breadcrumb, listDataHeaders, listData, selectMethodName, selectionParams, hasRowClasses, onRendered) {
@@ -1282,6 +1367,25 @@ io.prototype.ui.breadcrumbNavigation.prototype = {
     navigationName: ''
 };
 
+io.prototype.ui.createListParams.prototype = {
+    hash: '',
+    breadcrumb: null,
+    listDataHeaders: [],
+    listData: [],
+    updateMethodName: null,
+    updateParams: null,
+    deleteMethodName: null,
+    deleteParams: null,
+    hasRowClasses: null,
+    resources: {},
+    resourcesKeys: {},
+    pagination: null,
+    selectParams: {},
+    extraParams: {},
+    onPaged: null,
+    onRendered: null
+};
+
 io.prototype.ui.extraParam.prototype = {
     name: '',
     icon: '',
@@ -1304,6 +1408,12 @@ io.prototype.ui.formData.prototype = {
 io.prototype.ui.formDataOptions.prototype = {
     name: '',
     value: ''
+};
+
+io.prototype.ui.pagination.prototype = {
+    start: 0,
+    length: 0,
+    count: 0
 };
 
 io.prototype.userRoles = {

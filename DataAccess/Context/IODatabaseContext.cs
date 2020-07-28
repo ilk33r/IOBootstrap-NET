@@ -11,6 +11,7 @@ namespace IOBootstrap.NET.DataAccess.Context
 
         public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
         public virtual DbSet<IOClientsEntity> Clients { get; set; }
+        public virtual DbSet<IOImagesEntity> Images { get; set; }
         public virtual DbSet<IOMenuEntity> Menu { get; set; }
         public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
         public virtual DbSet<IOUserEntity> Users { get; set; }
@@ -27,12 +28,16 @@ namespace IOBootstrap.NET.DataAccess.Context
         {
             modelBuilder.Entity<IOConfigurationEntity>().HasIndex(
                 configurationEntity => new { configurationEntity.ConfigKey }).IsUnique(true);
+
             modelBuilder.Entity<IOClientsEntity>().HasIndex(
                 clientEntity => new { clientEntity.ClientId }).IsUnique(true);
+
             modelBuilder.Entity<IOMenuEntity>().HasIndex(
                 menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);
+
             modelBuilder.Entity<IOUserEntity>().HasIndex(
                 userEntity => new { userEntity.UserName }).IsUnique(true);
+
             modelBuilder.Entity<PushNotificationEntity>().HasIndex(
                 pushNotificationEntity => new
                 {
@@ -40,6 +45,7 @@ namespace IOBootstrap.NET.DataAccess.Context
                     pushNotificationEntity.DeviceType,
                     pushNotificationEntity.LastUpdateTime
                 }).IsUnique(false);
+                
             modelBuilder.Entity<PushNotificationMessageEntity>().HasIndex(
                 pushNotificationMessageEntity => new
                 {
@@ -47,13 +53,15 @@ namespace IOBootstrap.NET.DataAccess.Context
                     pushNotificationMessageEntity.DeviceType,
                     pushNotificationMessageEntity.IsCompleted
                 });
+
             modelBuilder.Entity<IOBackOfficeMessageEntity>().HasIndex(
-            messagesEntity => new
-            {
-                messagesEntity.MessageCreateDate,
-                messagesEntity.MessageEndDate,
-                messagesEntity.MessageStartDate
-            });
+                messagesEntity => new
+                {
+                    messagesEntity.MessageCreateDate,
+                    messagesEntity.MessageEndDate,
+                    messagesEntity.MessageStartDate
+                });
+
             modelBuilder.Entity<IOResourceEntity>().HasIndex(
                 resourceEntity => new { resourceEntity.ResourceKey }).IsUnique(true);
 
@@ -65,6 +73,7 @@ namespace IOBootstrap.NET.DataAccess.Context
             GenerateMessagesMenu(modelBuilder);
             GenerateNotificationMenu(modelBuilder);
             GenerateResourceMenu(modelBuilder);
+            GenerateImagesMenu(modelBuilder);
         }
 
         private void AddResources(ModelBuilder modelBuilder)
@@ -537,6 +546,45 @@ namespace IOBootstrap.NET.DataAccess.Context
                 ParentEntityID = 24
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(resourceAddEntity);
+        }
+    
+        private void GenerateImagesMenu(ModelBuilder modelBuilder)
+        {
+            IOMenuEntity imagesEntity = new IOMenuEntity()
+            {
+                ID = 27,
+                Action = "actionImages",
+                CssClass = "fa-image",
+                Name = "Images",
+                MenuOrder = 27,
+                RequiredRole = (int)UserRoles.Admin,
+                ParentEntityID = null
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(imagesEntity);
+
+            IOMenuEntity imagesListEntity = new IOMenuEntity()
+            {
+                ID = 28,
+                Action = "imagesEdit",
+                CssClass = "fa-circle-o",
+                Name = "Edit Images",
+                MenuOrder = 28,
+                RequiredRole = (int)UserRoles.Admin,
+                ParentEntityID = 27
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(imagesListEntity);
+
+            IOMenuEntity imageAddEntity = new IOMenuEntity()
+            {
+                ID = 29,
+                Action = "imageAdd",
+                CssClass = "fa-circle-o",
+                Name = "Add Image",
+                MenuOrder = 29,
+                RequiredRole = (int)UserRoles.Admin,
+                ParentEntityID = 27
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(imageAddEntity);
         }
     }
 }

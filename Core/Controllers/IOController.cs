@@ -248,16 +248,23 @@ namespace IOBootstrap.NET.Core.Controllers
             // Obtain controllers
             string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
             string backOfficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
             string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
             string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
             string resourcesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeResourcesControllerNameKey);
             string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             webValues.Add("authenticationControllerName", authenticationControllerName);
             webValues.Add("backOfficeControllerName", backOfficeControllerName);
+            webValues.Add("imagesControllerName", imagesControllerName);
             webValues.Add("menuControllerName", menuControllerName);
             webValues.Add("messagesControllerName", messagesControllerName);
             webValues.Add("resourcesControllerName", resourcesControllerName);
             webValues.Add("userControllerName", userControllerName);
+
+            string storageBaseURL = Configuration.GetValue<string>(IOConfigurationConstants.StorageBaseURLKey);
+            string storageBlobName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
+            string storageBaseURLWithBlobName = storageBaseURL + storageBlobName + "/";
+            webValues.Add("storageBaseUrl", storageBaseURLWithBlobName);
 
             return webValues;
         }

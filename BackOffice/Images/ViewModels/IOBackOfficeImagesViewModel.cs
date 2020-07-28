@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.DataAccess.Context;
-using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using IOBootstrap.NET.Common.Constants;
-using Microsoft.WindowsAzure.Storage.Blob;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using IOBootstrap.NET.DataAccess.Entities;
-using System.Linq;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
@@ -49,6 +49,38 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
                                                                     });
 
             return new Tuple<int, IList<IOImageVariationsModel>>(imageCount, paginatedImages);
+        }
+
+        public bool DeleteImages(IList<int> imageIdList)
+        {
+            foreach (int imageId in imageIdList)
+            {
+                IOImagesEntity imagesEntity = DatabaseContext.Images.Find(imageId);
+
+                if (imagesEntity == null)
+                {
+                    return false;
+                }
+
+                string imageName = new string(imagesEntity.FileName);
+                try {
+                    DatabaseContext.Remove(imagesEntity);
+                    DatabaseContext.SaveChanges();
+                    Task<bool> deleteStatus = DeleteFromBlob(imageName);
+                    deleteStatus.Wait();
+
+                    if (!deleteStatus.Result)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public IList<IOImageVariationsModel> SaveImage(string fileData, string fileType, string contentType, string globalFileName, IList<IOImageVariationsModel> sizes)
@@ -89,49 +121,54 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             return imagesList;
         }
 
+        #endregion
+
+        #region Azure Storage
+
+        public async Task<bool> DeleteFromBlob(string filename)
+        {
+            BlobServiceClient blobServiceClient = GetBlobServiceClient();
+            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
+            try
+            {
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                if (containerClient == null) {
+                    containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
+                }
+                
+                // Get a reference to a blob
+                await containerClient.DeleteBlobIfExistsAsync(filename);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.LogDebug("{0}", e.StackTrace);
+                return false;
+            }
+        }
+
         public async Task<bool> UploadToBlob(string filename, string contentType, byte[] imageBuffer)
         {
-            CloudStorageAccount storageAccount = null;
-            CloudBlobContainer cloudBlobContainer = null;
-            string storageConnectionString = Configuration.GetConnectionString(IOConfigurationConstants.AzureStorageConnectionStringKey);
+            BlobServiceClient blobServiceClient = GetBlobServiceClient();
             string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
-
-            // Check whether the connection string can be parsed.
-            if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
+            try
             {
-                try
-                {
-                    // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
-                    CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-
-                    // Create a container called 'uploadblob' and append a GUID value to it to make the name unique. 
-                    cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName.ToLower());
-                    await cloudBlobContainer.CreateIfNotExistsAsync();
-
-                    // Set the permissions so the blobs are public. 
-                    BlobContainerPermissions permissions = new BlobContainerPermissions
-                    {
-                        PublicAccess = BlobContainerPublicAccessType.Blob
-                    };
-                    await cloudBlobContainer.SetPermissionsAsync(permissions);
-
-                    // Get a reference to the blob address, then upload the file to the blob.
-                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-                    cloudBlockBlob.Properties.ContentType = contentType;
-
-                    // OPTION A: use imageBuffer (converted from memory stream)
-                    await cloudBlockBlob.UploadFromByteArrayAsync(imageBuffer, 0, imageBuffer.Length);
-
-                    return true;
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                if (containerClient == null) {
+                    containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
                 }
-                catch (StorageException e)
+                
+                // Get a reference to a blob
+                BlobClient blobClient = containerClient.GetBlobClient(filename);
+                using(var ms = new MemoryStream(imageBuffer, false))
                 {
-                    Logger.LogDebug("{0}", e.StackTrace);
-                    return false;
+                    await blobClient.UploadAsync(ms);
                 }
+                return true;
             }
-            else
+            catch (Exception e)
             {
+                Logger.LogDebug("{0}", e.StackTrace);
                 return false;
             }
         }
@@ -139,6 +176,12 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
         #endregion
 
         #region Helper Methods
+
+        private BlobServiceClient GetBlobServiceClient() 
+        {
+            string storageConnectionString = Configuration.GetConnectionString(IOConfigurationConstants.AzureStorageConnectionStringKey);
+            return new BlobServiceClient(storageConnectionString);
+        }
 
         private byte[] ResizedImageFromRequest(Bitmap fileData, IOImageVariationsModel imageData)
         {

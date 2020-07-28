@@ -208,7 +208,9 @@ namespace IOBootstrap.NET.Application
         {
             string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
             IORoute saveImagesRoute = new IORoute("SaveImages", imagesControllerName);
+            IORoute deleteImagesRoute = new IORoute("DeleteImages", imagesControllerName);
             endpoints.MapControllerRoute("saveImages", saveImagesRoute.GetRouteString());
+            endpoints.MapControllerRoute("deleteImages", deleteImagesRoute.GetRouteString());
         }
 
         public virtual void ConfigureMenuEndpoints(IEndpointRouteBuilder endpoints)

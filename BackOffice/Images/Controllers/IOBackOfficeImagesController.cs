@@ -6,6 +6,7 @@ using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
@@ -46,6 +47,24 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             responseModel.Count = images.Item1;
             responseModel.Images = images.Item2;
             return responseModel;
+        }
+
+        [IOUserRole(UserRoles.CustomUser)]
+        [HttpPost]
+        public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Then return validation error
+                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+            }
+
+            if (ViewModel.DeleteImages(requestModel.ImagesIdList))
+            {
+                return new IOResponseModel(IOResponseStatusMessages.OK);
+            }
+
+            return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
         }
 
         [IOUserRole(UserRoles.CustomUser)]

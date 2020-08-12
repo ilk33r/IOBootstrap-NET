@@ -1,7 +1,8 @@
-﻿using IOBootstrap.NET.Core.Database;
+﻿using System;
+using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace IOBootstrap.NET.Batch.Application
 {
@@ -10,11 +11,11 @@ namespace IOBootstrap.NET.Batch.Application
 
         #region Properties
 
-        public bool _isDevelopment { get; set; }
-        public IConfiguration _configuration { get; set; }
-        public String _configurationPath { get; set; }
-		public TDBContext _databaseContext { get; set; }
-        public ILogger _logger { get; set; }
+        public bool IsDevelopment { get; set; }
+        public IConfiguration Configuration { get; set; }
+        public String ConfigurationPath { get; set; }
+		public TDBContext DatabaseContext { get; set; }
+        public ILogger<IOLoggerType> Logger { get; set; }
 
         #endregion
 
@@ -24,14 +25,14 @@ namespace IOBootstrap.NET.Batch.Application
                             IConfiguration configuration,
                             string configurationPath, 
                             TDBContext databaseContext, 
-                            ILogger logger)
+                            ILogger<IOLoggerType> logger)
         {
             // Setup properties
-            this._isDevelopment = isDevelopment;
-            this._configuration = configuration;
-            this._configurationPath = configurationPath;
-            this._databaseContext = databaseContext;
-            this._logger = logger;
+            this.IsDevelopment = isDevelopment;
+            this.Configuration = configuration;
+            this.ConfigurationPath = configurationPath;
+            this.DatabaseContext = databaseContext;
+            this.Logger = logger;
         }
 
         public virtual void Run()

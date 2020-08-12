@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using IOBootstrap.NET.Batch.Application;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Core.APNS.Utils;
-using IOBootstrap.NET.Core.APNS.Utils.Models;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Core.Firebase.Models;
-using IOBootstrap.NET.WebApi.PushNotification.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
+/*
 namespace IOBootstrap.NET.Batch.PushNotifications
 {
     public abstract class IOSendPushNotificationBatch<TDBContext> : IOBatchClass<TDBContext>
@@ -260,3 +247,4 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         #endregion
     }
 }
+*/

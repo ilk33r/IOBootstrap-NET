@@ -1,12 +1,10 @@
-﻿using IOBootstrap.NET.Core.Database;
+﻿using System;
+using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using System;
-using System.Collections.Generic;
-using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Batch.Application
 {
@@ -19,7 +17,7 @@ namespace IOBootstrap.NET.Batch.Application
         protected IConfiguration Configuration { get; set; }
         protected string ConfigurationPath { get; set; }
         protected TDBContext DatabaseContext { get; set; }
-        protected ILogger Logger { get; set; }
+        protected ILogger<IOLoggerType> Logger { get; set; }
 
         #endregion
 
@@ -34,22 +32,15 @@ namespace IOBootstrap.NET.Batch.Application
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder => builder
                 .AddConsole()
-                .AddFilter(level => level >= LogLevel.Debug)
+                .AddDebug()
             );
-            var loggerFactory = serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
-            this.Logger = loggerFactory.CreateLogger(this.BatchName());
-
-            /*
-                 * And in .NET Core 3.0, you can use LoggerFactory.Create:
-
-                var loggerFactory = LoggerFactory.Create(builder => {
-                    builder.AddFilter("Microsoft", LogLevel.Warning)
-                    .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("SampleApp.Program", LogLevel.Debug)
-                    .AddConsole();
-                }
-                );
-            */
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => {
+                builder.AddFilter("Microsoft", LogLevel.Warning)
+                        .AddFilter("System", LogLevel.Warning)
+                        .AddFilter("SampleApp.Program", LogLevel.Debug)
+                        .AddConsole();
+            });
+            this.Logger = loggerFactory.CreateLogger<IOLoggerType>();
 
             // Create database context
             DbContextOptionsBuilder databaseOptionBuilder = new DbContextOptionsBuilder();
@@ -123,11 +114,6 @@ namespace IOBootstrap.NET.Batch.Application
         #endregion
 
         #region Configs
-
-        public virtual string BatchName()
-        {
-            return "IOBatch";
-        }
 
         public virtual Type[] BatchClasses()
         {

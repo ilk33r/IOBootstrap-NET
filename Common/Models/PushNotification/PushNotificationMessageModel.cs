@@ -1,14 +1,14 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Models.Base;
+using IOBootstrap.NET.Common.Models.Clients;
 
-namespace IOBootstrap.NET.WebApi.PushNotification.Models
+namespace IOBootstrap.NET.Common.Models.PushNotification
 {
     public class PushNotificationMessageModel : IOModel
     {
     
         public int ID { get; set; }
-        public IOClientsEntity Client { get; set; }
+        public IOClientInfoModel Client { get; set; }
         public int DeviceType { get; set; }
         public string NotificationCategory { get; set; }
         public string NotificationData { get; set; }

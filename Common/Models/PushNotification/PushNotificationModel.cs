@@ -1,7 +1,7 @@
-﻿using IOBootstrap.NET.Common.Enumerations;
-using System;
+﻿using System;
+using IOBootstrap.NET.Common.Enumerations;
 
-namespace IOBootstrap.NET.WebApi.PushNotification.Models
+namespace IOBootstrap.NET.Common.Models.PushNotification
 {
     public class PushNotificationModel
     {

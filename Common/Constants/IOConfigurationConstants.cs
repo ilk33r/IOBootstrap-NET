@@ -28,6 +28,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
         public static string BackOfficePageURLKey = "IOBackOfficePageURL";
+        public static string BackOfficePushNotificationControllerNameKey = "IOBackofficePushNotificationControllerName";
         public static string BackOfficeResourcesControllerNameKey = "IOBackOfficeResourcesControllerName";
         public static string BackofficeUserControllerNameKey = "IOBackofficeUserControllerName";
         public static string CheckClientInfo = "IOCheckClientInfo";

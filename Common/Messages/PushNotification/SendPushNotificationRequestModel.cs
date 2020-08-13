@@ -1,8 +1,9 @@
-﻿using IOBootstrap.NET.Common.Models.BaseModels;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using IOBootstrap.NET.Common.Enumerations;
-using System;
+using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.WebApi.PushNotification.Models
+namespace IOBootstrap.NET.Common.Messages.PushNotification
 {
     public class SendPushNotificationRequestModel : IORequestModel
     {
@@ -11,6 +12,8 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Models
         public DeviceTypes DeviceType { get; set; }
         public string NotificationCategory { get; set; }
         public string NotificationData { get; set; }
+
+        [Required]
         public string NotificationMessage { get; set; }
         public string NotificationTitle { get; set; }
     }

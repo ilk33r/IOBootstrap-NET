@@ -126,6 +126,7 @@ namespace IOBootstrap.NET.Application
                 ConfigureConfigurationEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
+                ConfigurePushNotificationEndpoints(endpoints);
                 ConfigureResourcesEndpoints(endpoints);
                 ConfigureImagesEndpoints(endpoints);
                 ConfigureEndpoints(endpoints);
@@ -239,6 +240,19 @@ namespace IOBootstrap.NET.Application
             endpoints.MapControllerRoute("listAllMessagesItems", listAllMessagesItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("listMessagesItems", listMessagesItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateMessagesItem", updateMessagesItemRoute.GetRouteString());
+        }
+
+        public virtual void ConfigurePushNotificationEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
+            IORoute deleteMessageRoute = new IORoute("DeleteMessage", pushNotificationControllerName);
+            IORoute listMessagesRoute = new IORoute("ListMessages", pushNotificationControllerName);
+            IORoute listTokensRoute = new IORoute("ListTokens", pushNotificationControllerName);
+            IORoute sendNotificationRoute = new IORoute("SendNotification", pushNotificationControllerName);
+            endpoints.MapControllerRoute("deleteMessage", deleteMessageRoute.GetRouteString());
+            endpoints.MapControllerRoute("listMessages", listMessagesRoute.GetRouteString());
+            endpoints.MapControllerRoute("listTokens", listTokensRoute.GetRouteString());
+            endpoints.MapControllerRoute("sendNotification", sendNotificationRoute.GetRouteString());
         }
 
         public virtual void ConfigureResourcesEndpoints(IEndpointRouteBuilder endpoints)

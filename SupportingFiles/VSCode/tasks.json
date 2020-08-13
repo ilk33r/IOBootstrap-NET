@@ -2,24 +2,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "buildApplication",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/BoomApp/BoomApp.csproj",
+                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildbatch",
+            "label": "buildForgotPasswordBatch",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/BoomAppBatch/BoomAppBatch.csproj",
+                "${workspaceFolder}/SevenK/ForgotPasswordBatch/SevenKForgotPasswordBatch.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -31,7 +31,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/BoomApp/BoomApp.csproj",
+                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -44,7 +44,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/BoomApp/BoomApp.csproj",
+                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

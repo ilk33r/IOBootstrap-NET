@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Boom App",
+            "name": "SevenKApplication",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildApplication",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/BoomApp/bin/Debug/netcoreapp2.2/BoomApp.dll",
+            "program": "${workspaceFolder}/SevenK/Application/bin/Debug/netcoreapp3.1/SevenKApplication.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/BoomApp",
+            "cwd": "${workspaceFolder}/SevenK/Application",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
@@ -21,7 +21,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://192.168.0.26:5000"
+                "ASPNETCORE_URLS": "http://localhost:5000"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -34,14 +34,14 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "Boom App Batch",
+            "name": "ForgotPasswordBatch",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildbatch",
+            "preLaunchTask": "buildForgotPasswordBatch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/BoomAppBatch/bin/Debug/netcoreapp2.2/BoomAppBatch.dll",
-            "args": ["dev", "${workspaceFolder}/BoomApp"],
-            "cwd": "${workspaceFolder}/BoomAppBatch",
+            "program": "${workspaceFolder}/SevenK/ForgotPasswordBatch/bin/Debug/netcoreapp3.1/SevenKForgotPasswordBatch.dll",
+            "args": ["dev", "${workspaceFolder}/SevenK/Application"],
+            "cwd": "${workspaceFolder}/SevenK/ForgotPasswordBatch",
             "stopAtEntry": false,
             "requireExactSource": false,
             "env": {
@@ -49,6 +49,18 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "SevenKApplicationPublish",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "publish",
+            "program": "${workspaceFolder}/SevenK/Application/bin/Debug/netcoreapp3.1/SevenKApplication.dll",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Release",
+                "ASPNETCORE_URLS": "http://localhost:5000"
             }
         }
     ]

@@ -34,8 +34,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
         public IOConfigurationAddResponseModel AddConfigItem([FromBody] IOConfigurationAddRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.ConfigKey))
+            if (!ModelState.IsValid)
             {
                 // Then return validation error
                 return new IOConfigurationAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
@@ -82,8 +81,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
         public IOConfigurationUpdateResponseModel UpdateConfigItem([FromBody] IOConfigurationUpdateRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.ConfigKey))
+            if (!ModelState.IsValid)
             {
                 // Then return validation error
                 return new IOConfigurationUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);

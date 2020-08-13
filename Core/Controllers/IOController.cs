@@ -248,6 +248,7 @@ namespace IOBootstrap.NET.Core.Controllers
             // Obtain controllers
             string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
             string backOfficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            string configurationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
             string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
             string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
             string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
@@ -255,6 +256,7 @@ namespace IOBootstrap.NET.Core.Controllers
             string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             webValues.Add("authenticationControllerName", authenticationControllerName);
             webValues.Add("backOfficeControllerName", backOfficeControllerName);
+            webValues.Add("configurationControllerName", configurationControllerName);
             webValues.Add("imagesControllerName", imagesControllerName);
             webValues.Add("menuControllerName", menuControllerName);
             webValues.Add("messagesControllerName", messagesControllerName);

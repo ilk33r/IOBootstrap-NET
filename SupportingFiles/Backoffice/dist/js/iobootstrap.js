@@ -323,7 +323,9 @@ io.prototype.app.configurationDelete = function(id) {
         request.Version = window.ioinstance.version;
         request.ConfigId = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/configurations/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteConfigItem';
+        let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Configuration has been deleted successfully.', '');
@@ -364,7 +366,9 @@ io.prototype.app.configurationsAdd = function (e, hash) {
     }, function (request) {
         request.IntValue = parseInt(request.IntValue);
 
-        window.ioinstance.service.post('backoffice/configurations/add', request, function (status, response, error) {
+        let requestURLFormat = '%s/AddConfigItem';
+        let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
@@ -387,7 +391,9 @@ io.prototype.app.configurationsList = function (e, hash) {
 
     let breadcrumb = new io.ui.breadcrumb('configurationsList', 'Configurations', []);
 
-    io.service.get('backoffice/configurations/list', function(status, response, error) {
+    let requestURLFormat = '%s/ListConfigurationItems';
+    let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
+    io.service.get(requestURL, function(status, response, error) {
         if (status && response.status.success) {
             var listData = [];
             var updateParams = [];
@@ -470,7 +476,9 @@ io.prototype.app.configurationUpdate = function (id, key, intValue, stringValue)
         request.ConfigId = id;
         request.IntValue = parseInt(request.IntValue);
 
-        window.ioinstance.service.post('backoffice/configurations/update', request, function (status, response, error) {
+        let requestURLFormat = '%s/UpdateConfigItem';
+        let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
 
             if (status && response.status.success) {
@@ -1705,7 +1713,9 @@ io.prototype.app.restartApp = function (e, hash) {
     io.indicator.show();
     io.selectMenu(hash);
 
-    window.ioinstance.service.get("backoffice/configurations/restartApp", function (status, response, error) {
+    let requestURLFormat = '%s/RestartApp';
+    let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
+    window.ioinstance.service.get(requestURL, function (status, response, error) {
         let callout = window.ioinstance.callout;
         if (status && response.status.success) {
             callout.show(callout.types.success, 'Application restarted has been send successfully.', '');

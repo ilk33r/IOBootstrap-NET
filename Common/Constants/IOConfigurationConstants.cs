@@ -6,7 +6,7 @@ namespace IOBootstrap.NET.Common.Constants
     {
         #region Properties
 
-        public static string AllowedOrigin = "IOAllowedOrigin";
+        public static string AllowedOrigins = "IOAllowedOrigins";
         public static string APIURLKey = "IOAPIURL";
         public static string APNSCertificatePassword = "IOAPNSCertificatePassword";
         public static string APNSCertificatePath = "IOAPNSCertificatePath";

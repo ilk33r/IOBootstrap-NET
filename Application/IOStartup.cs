@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.Middlewares;
@@ -58,12 +59,15 @@ namespace IOBootstrap.NET.Application
                 options.Cookie.Name = ".IO.Session";
             });
 
-            string allowedOrigin = Configuration.GetValue<string>(IOConfigurationConstants.AllowedOrigin);
+            string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader();
+                    foreach (string allowedOrigin in allowedOrigins)
+                    {
+                        builder.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader();
+                    }
                 });
             });
             services.AddSingleton<IConfiguration>(Configuration);

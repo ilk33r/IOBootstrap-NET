@@ -147,32 +147,6 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             }
         }
 
-        public async Task<bool> UploadToBlob(string filename, string contentType, byte[] imageBuffer)
-        {
-            BlobServiceClient blobServiceClient = GetBlobServiceClient();
-            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
-            try
-            {
-                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-                if (containerClient == null) {
-                    containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
-                }
-                
-                // Get a reference to a blob
-                BlobClient blobClient = containerClient.GetBlobClient(filename);
-                using(var ms = new MemoryStream(imageBuffer, false))
-                {
-                    await blobClient.UploadAsync(ms, new BlobHttpHeaders{ ContentType = contentType});
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.LogDebug("{0}", e.StackTrace);
-                return false;
-            }
-        }
-
         #endregion
 
         #region Helper Methods
@@ -212,6 +186,32 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             ms.Flush();
 
             return ms.ToArray();
+        }
+
+        private async Task<bool> UploadToBlob(string filename, string contentType, byte[] imageBuffer)
+        {
+            BlobServiceClient blobServiceClient = GetBlobServiceClient();
+            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
+            try
+            {
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                if (containerClient == null) {
+                    containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
+                }
+                
+                // Get a reference to a blob
+                BlobClient blobClient = containerClient.GetBlobClient(filename);
+                using(var ms = new MemoryStream(imageBuffer, false))
+                {
+                    await blobClient.UploadAsync(ms, new BlobHttpHeaders{ ContentType = contentType});
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.LogDebug("{0}", e.StackTrace);
+                return false;
+            }
         }
 
         #endregion

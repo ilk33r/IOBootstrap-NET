@@ -72,12 +72,6 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
         public IOSaveImageResponseModel SaveImages([FromBody] IOSaveImageRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null || String.IsNullOrEmpty(requestModel.FileData))
-            {
-                // Then return validation error
-                return new IOSaveImageResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             if (!ModelState.IsValid)
             {
                 // Then return validation error

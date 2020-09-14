@@ -153,6 +153,10 @@ namespace IOBootstrap.NET.Application
         public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
         {
             string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
+#if DEBUG
+            options.EnableSensitiveDataLogging(true);
+#endif
+
 #if USE_MYSQL_DATABASE
             options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
 #elif USE_SQLSRV_DATABASE

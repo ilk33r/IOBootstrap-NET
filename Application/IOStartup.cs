@@ -154,6 +154,11 @@ namespace IOBootstrap.NET.Application
         {
             string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
 #if DEBUG
+            options.UseLoggerFactory(LoggerFactory.Create(builder =>
+            {
+                builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+                .AddConsole();
+            }));
             options.EnableSensitiveDataLogging(true);
 #endif
 

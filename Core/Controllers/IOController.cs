@@ -118,9 +118,17 @@ namespace IOBootstrap.NET.Core.Controllers
 
             // Check back office page host name
             string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
+            string backofficePagePath = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePagePath);
+            string requestPath = Request.Path;
+            if (HttpContext.Items.ContainsKey("OriginalPath"))
+            {
+                requestPath = (string)HttpContext.Items["OriginalPath"];
+            }
+            
+            bool isBackofficePath = (String.IsNullOrEmpty(requestPath) || requestPath.Contains(backofficePagePath));
 
             // Check hostname is back office page
-            if (backofficePageHostName.Equals(Request.Host.Host))
+            if (backofficePageHostName.Equals(Request.Host.Host) && isBackofficePath)
             {
                 bool httpsRequired = Configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
 

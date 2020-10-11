@@ -26,5 +26,8 @@
     <NoStdLib>false</NoStdLib>
     <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+   <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
+  </PropertyGroup>
 
 </Project>

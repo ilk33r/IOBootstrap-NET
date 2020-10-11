@@ -74,7 +74,7 @@ namespace IOBootstrap.NET.Application
             services.AddSingleton<IWebHostEnvironment>(Environment);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
         {
             // Use static files
             app.UseStaticFiles(new StaticFileOptions
@@ -89,7 +89,7 @@ namespace IOBootstrap.NET.Application
             app.UseSession();
 
             // Log
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
             }

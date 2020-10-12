@@ -1193,6 +1193,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
         function (request) {
 
             request.UserId = id;
+            request.UserRole = parseInt(request.UserRole);
 
             let requestURLFormat = '%s/UpdateUser';
             let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
@@ -1344,6 +1345,8 @@ io.prototype.app.usersAdd = function (e, hash) {
     io.ui.createForm(hash, formBreadcrumb, 'addUserForm', formDatas, 'Save', function () {
     },
     function (request) {
+        request.UserRole = parseInt(request.UserRole);
+
         let requestURLFormat = '%s/AddUser';
         let requestURL = requestURLFormat.format(IOGlobal.userControllerName);
         window.ioinstance.service.post(requestURL, request, function (status, response, error) {

@@ -15,11 +15,10 @@ namespace IOBootstrap.NET.Batch.Application
             }
 
             // Obtain is arguments
-            bool development = (args[0].Equals("dev")) ? true : false;
             string configPath = args[1];
 
             // Start batch
-            IOBatchStartupDefaultImpl startup = new IOBatchStartupDefaultImpl(configPath, development);
+            IOBatchStartupDefaultImpl startup = new IOBatchStartupDefaultImpl(configPath, args[0]);
             startup.RunAllBatches();
         }
     }

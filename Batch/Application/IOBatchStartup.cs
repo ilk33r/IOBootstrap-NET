@@ -13,20 +13,20 @@ namespace IOBootstrap.NET.Batch.Application
 
         #region Properties
 
-        protected bool IsDevelopment { get; set; }
         protected IConfiguration Configuration { get; set; }
         protected string ConfigurationPath { get; set; }
         protected TDBContext DatabaseContext { get; set; }
+        protected string EnvironmentName { get; set; }
         protected ILogger<IOLoggerType> Logger { get; set; }
 
         #endregion
 
         #region Initialization Methods
 
-        public IOBatchStartup(string configFilePath, bool development)
+        public IOBatchStartup(string configFilePath, string environment)
         {
             // Setup properties
-            this.IsDevelopment = development;
+            this.EnvironmentName = environment;
             this.Configuration = this.GetConfigurations(configFilePath);
             this.ConfigurationPath = configFilePath;
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -52,13 +52,14 @@ namespace IOBootstrap.NET.Batch.Application
             };
             this.DatabaseContext = (TDBContext)Activator.CreateInstance(this.GetType().BaseType.GenericTypeArguments[0], parameters);
 
+            this.Logger.LogDebug("Batch starting with environment {0}", EnvironmentName);
         }
 
         public void RunBatch(Type batchClass)
         {
             // Create batch class instance
             object[] parameters = new object[] {
-                (object)this.IsDevelopment,
+                (object)this.EnvironmentName,
                 (object)this.Configuration,
                 (object)this.ConfigurationPath,
                 (object)this.DatabaseContext,
@@ -77,6 +78,7 @@ namespace IOBootstrap.NET.Batch.Application
             // Loop Batch Classes
             foreach (Type batchClass in batchClasses)
             {
+                Logger.LogDebug("Running batch class {0}", batchClass.ToString());
                 this.RunBatch(batchClass);
             }
         }
@@ -87,24 +89,11 @@ namespace IOBootstrap.NET.Batch.Application
 
         private IConfiguration GetConfigurations(string configFilePath) 
         {
-            // Create environment name
-            string environmentName;
-
-            // Check environment is development
-            if (IsDevelopment)
-            {
-                environmentName = "Development";
-            }
-            else
-            {
-                environmentName = "Production";
-            }
-
             // Create builder
             var builder = new ConfigurationBuilder()
                 .SetBasePath(configFilePath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+                .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
             // Setup properties

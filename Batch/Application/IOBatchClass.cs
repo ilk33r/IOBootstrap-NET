@@ -11,24 +11,24 @@ namespace IOBootstrap.NET.Batch.Application
 
         #region Properties
 
-        public bool IsDevelopment { get; set; }
         public IConfiguration Configuration { get; set; }
         public String ConfigurationPath { get; set; }
 		public TDBContext DatabaseContext { get; set; }
+        public string EnvironmentName { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
 
         #endregion
 
         #region Initialization Methods
 
-        public IOBatchClass(bool isDevelopment, 
+        public IOBatchClass(string environment, 
                             IConfiguration configuration,
                             string configurationPath, 
                             TDBContext databaseContext, 
                             ILogger<IOLoggerType> logger)
         {
             // Setup properties
-            this.IsDevelopment = isDevelopment;
+            this.EnvironmentName = environment;
             this.Configuration = configuration;
             this.ConfigurationPath = configurationPath;
             this.DatabaseContext = databaseContext;

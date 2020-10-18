@@ -9,12 +9,31 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
   </ItemGroup>
 
+  <!--
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
+  </ItemGroup>
+  -->
+
   <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
   </ItemGroup>
 
+  <!--
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <DefineConstants>NETCORE_3_1</DefineConstants>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
+  </PropertyGroup>
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <DefineConstants>NETCORE_3_1</DefineConstants>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
@@ -26,6 +45,7 @@
     <NoStdLib>false</NoStdLib>
     <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
+
   <PropertyGroup>
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>

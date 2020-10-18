@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "SevenKApplication",
+            "name": "IOBootstrapNetApplication",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildApplication",
+            "preLaunchTask": "buildIOBootstrapNetApplication",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/SevenK/Application/bin/Debug/netcoreapp3.1/SevenKApplication.dll",
+            "program": "${workspaceFolder}/Application/bin/Debug/netcoreapp3.1/IOBootstrap.NET.Application.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SevenK/Application",
+            "cwd": "${workspaceFolder}/Application",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
@@ -34,14 +34,14 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "ForgotPasswordBatch",
+            "name": "IOBootstrapNetBatch",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildForgotPasswordBatch",
+            "preLaunchTask": "buildIOBootstrapNetBatch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/SevenK/ForgotPasswordBatch/bin/Debug/netcoreapp3.1/SevenKForgotPasswordBatch.dll",
+            "program": "${workspaceFolder}/Batch/bin/Debug/netcoreapp3.1/IOBootstrap.NET.Batch.dll",
             "args": ["dev", "${workspaceFolder}/SevenK/Application"],
-            "cwd": "${workspaceFolder}/SevenK/ForgotPasswordBatch",
+            "cwd": "${workspaceFolder}/Batch",
             "stopAtEntry": false,
             "requireExactSource": false,
             "env": {
@@ -52,11 +52,11 @@
             }
         },
         {
-            "name": "SevenKApplicationPublish",
+            "name": "IOBootstrapNetApplicationPublish",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "publish",
-            "program": "${workspaceFolder}/SevenK/Application/bin/Debug/netcoreapp3.1/SevenKApplication.dll",
+            "preLaunchTask": "publishIOBootstrapNetApplication",
+            "program": "${workspaceFolder}/Application/bin/Debug/netcoreapp3.1/IOBootstrap.NET.Application.dll",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Release",

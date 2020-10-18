@@ -2,36 +2,36 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildApplication",
+            "label": "buildIOBootstrapNetApplication",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
+                "${workspaceFolder}/Application/IOBootstrap.NET.Application.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildForgotPasswordBatch",
+            "label": "buildIOBootstrapNetBatch",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SevenK/ForgotPasswordBatch/SevenKForgotPasswordBatch.csproj",
+                "${workspaceFolder}/Batch/IOBootstrap.NET.Batch.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "publishIOBootstrapNetApplication",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
+                "${workspaceFolder}/Application/IOBootstrap.NET.Application.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -44,7 +44,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/SevenK/Application/SevenKApplication.csproj",
+                "${workspaceFolder}/Application/IOBootstrap.NET.Application.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

@@ -1,98 +1,76 @@
-﻿using IOBootstrap.NET.Common.Entities.Clients;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.WebApi.PushNotification.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using IOBootstrap.NET.Common.Messages.PushNotification;
+using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 {
-    public class IOPushNotificationViewModel<TDBContext> : IOViewModel<TDBContext>
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOPushNotificationViewModel<TDBContext> : IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
-
-        #region Initialization Methods
-
-        public IOPushNotificationViewModel() : base()
-        {
-        }
-
-        #endregion
-
-        #region View Model Methods
-
-        public void AddToken(int appBuildNumber, string appBundleId, 
-                             string appVersion, 
-                             string deviceId, 
-                             string deviceName, 
-                             string deviceToken, 
-                             DeviceTypes deviceType) 
+        public void AddToken(AddPushNotificationRequestModel requestModel) 
         {
             // Obtain client
-            var clients = _databaseContext.Clients.Where((arg) => arg.ClientId == this.clientId);
+            IQueryable<IOClientsEntity> clients = DatabaseContext.Clients
+                                                                    .Where(client => client.ClientId == ClientId);
             IOClientsEntity client;
 
             // Set client
-            if (clients.Count() > 0)
+            if (clients != null && clients.Count() > 0)
             {
                 client = clients.First();
             } else {
                 return;
             }
 
-
 			// Obtain push notification entity
-            var pushNotificationsEntities = _databaseContext.PushNotifications
-                                                            .Include(p => p.Client)
-                                                            .Where((arg) => arg.DeviceId == deviceId && (int)arg.DeviceType == (int)deviceType && arg.Client == client);
+            IQueryable<PushNotificationEntity> pushNotificationsEntities = DatabaseContext.PushNotifications
+                                                                                             .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType && pn.Client.ClientId == client.ClientId);
 
 			// Check push notification entity exists
-			if (pushNotificationsEntities.Count() > 0)
+			if (pushNotificationsEntities != null && pushNotificationsEntities.Count() > 0)
 			{
 				// Obtain push notification entity
 				PushNotificationEntity pushNotificationEntity = pushNotificationsEntities.First();
 
 				// Update entity properties
-				pushNotificationEntity.AppBuildNumber = appBuildNumber;
-				pushNotificationEntity.AppBundleId = appBundleId;
-				pushNotificationEntity.AppVersion = appVersion;
+				pushNotificationEntity.AppBuildNumber = requestModel.AppBuildNumber;
+				pushNotificationEntity.AppBundleId = requestModel.AppBundleId;
+				pushNotificationEntity.AppVersion = requestModel.AppVersion;
 				pushNotificationEntity.BadgeCount = 0;
-				pushNotificationEntity.DeviceName = deviceName;
-				pushNotificationEntity.DeviceToken = deviceToken;
+				pushNotificationEntity.DeviceName = requestModel.DeviceName;
+				pushNotificationEntity.DeviceToken = requestModel.DeviceToken;
 				pushNotificationEntity.LastUpdateTime = DateTime.UtcNow;
 
                 // Delete all entit
-                _databaseContext.Update(pushNotificationEntity);
+                DatabaseContext.Update(pushNotificationEntity);
 
                 // Write transaction
-                _databaseContext.SaveChanges();
+                DatabaseContext.SaveChanges();
 			}
 			else
 			{
 				// Create a push notification entity
 				PushNotificationEntity pushNotificationEntity = new PushNotificationEntity()
 				{
-					AppBuildNumber = appBuildNumber,
-					AppBundleId = appBundleId,
-					AppVersion = appVersion,
+					AppBuildNumber = requestModel.AppBuildNumber,
+					AppBundleId = requestModel.AppBundleId,
+					AppVersion = requestModel.AppVersion,
 					BadgeCount = 0,
                     Client = client,
-					DeviceId = deviceId,
-					DeviceName = deviceName,
-					DeviceToken = deviceToken,
-					DeviceType = (int)deviceType,
+					DeviceId = requestModel.DeviceId,
+					DeviceName = requestModel.DeviceName,
+					DeviceToken = requestModel.DeviceToken,
+					DeviceType = requestModel.DeviceType,
 					LastUpdateTime = DateTime.UtcNow
 				};
 
                 // Write push notification to database
-                _databaseContext.Add(pushNotificationEntity);
-                _databaseContext.SaveChanges();
+                DatabaseContext.Add(pushNotificationEntity);
+                DatabaseContext.SaveChanges();
 			}
         }
-
-        #endregion
 
     }
 }

@@ -1,71 +1,46 @@
-﻿using System;
+using System;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Models.BaseModels;
-using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Database;
-using IOBootstrap.NET.WebApi.PushNotification.Models;
+using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.PushNotification.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.WebApi.PushNotification.Controllers
+namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
 {
-
-    [Route("api/[controller]")]
-    public class IOPushNotificationsController<TLogger, TViewModel, TDBContext> : IOController<TLogger, TViewModel, TDBContext>
-        where TViewModel : IOPushNotificationViewModel<TDBContext>, new()
-        where TDBContext : IODatabaseContext<TDBContext>
+    public class IOPushNotificationController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOPushNotificationViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
+        #region Controller Lifecycle
 
-        #region Initialization Methods
-
-        public IOPushNotificationsController(ILoggerFactory factory,
-                                           ILogger<TLogger> logger,
-                                           IConfiguration configuration,
-                                           TDBContext databaseContext,
-                                           IHostingEnvironment environment)
-            : base(factory, logger, configuration, databaseContext, environment)
+        public IOPushNotificationController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
         {
         }
 
         #endregion
 
-        #region Api Methods
+        #region Push Notification Methods
 
-        [HttpPost("[action]")]
-        public virtual AddPushNotificationResponseModel AddToken([FromBody] AddPushNotificationRequestModel requestModel)
+        [HttpPost]
+        public AddPushNotificationResponseModel AddPushNotificationToken([FromBody] AddPushNotificationRequestModel requestModel)
         {
             // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.AppBundleId)
-                || String.IsNullOrEmpty(requestModel.AppVersion)
-                || String.IsNullOrEmpty(requestModel.DeviceId)
-                || String.IsNullOrEmpty(requestModel.DeviceName)
-                || String.IsNullOrEmpty(requestModel.DeviceToken))
+            if (!ModelState.IsValid)
             {
-                // Obtain 400 error 
-                IOResponseModel error400 = this.Error400("Invalid request data.");
-
                 // Then return validation error
-                return new AddPushNotificationResponseModel(new IOResponseStatusModel(error400.Status.Code, error400.Status.DetailedMessage));
+                return new AddPushNotificationResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
-            // Add token to database
-            _viewModel.AddToken(requestModel.AppBuildNumber, requestModel.AppBundleId,
-                                requestModel.AppVersion,
-                                requestModel.DeviceId,
-                                requestModel.DeviceName,
-                                requestModel.DeviceToken,
-                                requestModel.DeviceType);
+            // Add menu
+            ViewModel.AddToken(requestModel);
 
             // Create and return response
-            return new AddPushNotificationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+            return new AddPushNotificationResponseModel(IOResponseStatusMessages.OK);
         }
 
         #endregion
-
     }
 }

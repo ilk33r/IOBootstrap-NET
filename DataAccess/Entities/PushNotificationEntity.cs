@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using IOBootstrap.NET.Common.Enumerations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IOBootstrap.NET.DataAccess.Entities
@@ -36,7 +37,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
         [StringLength(256)]
         public string DeviceToken { get; set; }
 
-        public int DeviceType { get; set; }
+        public DeviceTypes DeviceType { get; set; }
 
         public DateTimeOffset LastUpdateTime { get; set; }
 

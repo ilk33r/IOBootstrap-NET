@@ -15,6 +15,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public int ID { get; set; }
 
         public virtual PushNotificationEntity PushNotification { get; set; }
+        
         public virtual PushNotificationMessageEntity PushNotificationMessage { get; set; }
 
         #endregion

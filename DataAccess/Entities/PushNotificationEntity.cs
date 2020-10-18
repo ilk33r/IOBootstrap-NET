@@ -18,16 +18,26 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public IOClientsEntity Client { get; set; }
 
         public int AppBuildNumber { get; set; }
+
+        [StringLength(64)]
         public string AppBundleId { get; set; }
+
+        [StringLength(10)]
         public string AppVersion { get; set; }
+
         public int BadgeCount { get; set; }
 
 		[StringLength(128)]
         public string DeviceId { get; set; }
 
+        [StringLength(128)]
         public string DeviceName { get; set; }
+
+        [StringLength(256)]
         public string DeviceToken { get; set; }
+
         public int DeviceType { get; set; }
+
         public DateTimeOffset LastUpdateTime { get; set; }
 
 		#endregion

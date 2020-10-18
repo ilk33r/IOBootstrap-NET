@@ -14,19 +14,28 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
             // Obtain client
             IQueryable<IOClientsEntity> clients = DatabaseContext.Clients
                                                                     .Where(client => client.ClientId == ClientId);
-            IOClientsEntity client;
+            IOClientsEntity client = null;
 
             // Set client
             if (clients != null && clients.Count() > 0)
             {
                 client = clients.First();
-            } else {
-                return;
             }
 
 			// Obtain push notification entity
-            IQueryable<PushNotificationEntity> pushNotificationsEntities = DatabaseContext.PushNotifications
-                                                                                             .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType && pn.Client.ClientId == client.ClientId);
+            IQueryable<PushNotificationEntity> pushNotificationsEntities;
+			
+			if (client != null)
+			{
+				pushNotificationsEntities = DatabaseContext.PushNotifications
+                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType && pn.Client.ClientId == client.ClientId);
+			}
+			else 
+			{
+				pushNotificationsEntities = DatabaseContext.PushNotifications
+                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType);
+			}
+			 
 
 			// Check push notification entity exists
 			if (pushNotificationsEntities != null && pushNotificationsEntities.Count() > 0)

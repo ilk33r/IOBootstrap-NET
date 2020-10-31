@@ -65,9 +65,9 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
         public List<PushNotificationMessageModel> ListMessages()
         {
             // Obtain push notification entity
-            var pushNotificationsEntities = DatabaseContext.PushNotificationMessages
-                                                            .OrderBy((arg) => arg.ID)
-                                                            .Include(p => p.Client);
+            IQueryable<PushNotificationMessageEntity> pushNotificationsEntities = DatabaseContext.PushNotificationMessages
+                                                                                                    .Include(p => p.Client)
+                                                                                                    .OrderByDescending(p => p.ID);
 
             // Create messages array
             List<PushNotificationMessageModel> messages = new List<PushNotificationMessageModel>();
@@ -75,17 +75,18 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
             // Loop throught entities
             foreach (PushNotificationMessageEntity message in pushNotificationsEntities)
             {
-                // Obtain sended messages
-                var sendedMessages = DatabaseContext.PushNotificationDeliveredMessages
-                                                     .Where((arg) => arg.PushNotificationMessage == message);
-
-                IOClientInfoModel clientInfoModel = new IOClientInfoModel(message.Client.ID, 
+                IOClientInfoModel clientInfoModel = null;
+                
+                if (message.Client != null)
+                {
+                    clientInfoModel = new IOClientInfoModel(message.Client.ID, 
                                                             message.Client.ClientId,
                                                             message.Client.ClientSecret,
                                                             message.Client.ClientDescription,
                                                             message.Client.IsEnabled,
                                                             message.Client.RequestCount,
                                                             message.Client.MaxRequestCount);
+                }
 
                 // Create push notification model
                 PushNotificationMessageModel pushNotificationModel = new PushNotificationMessageModel()
@@ -98,8 +99,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
                     NotificationDate = message.NotificationDate,
                     NotificationTitle = message.NotificationTitle,
                     NotificationMessage = message.NotificationMessage,
-                    IsCompleted = message.IsCompleted,
-                    SendedDevices = sendedMessages.Count()
+                    IsCompleted = message.IsCompleted
                 };
 
                 // Add model to devices array
@@ -168,7 +168,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
             return devices;
         }
 
-        public void SendNotifications(int clientId,
+        public void SendNotifications(int? clientId,
                                       DeviceTypes deviceType,
                                       string notificationCategory,
                                       string notificationData,
@@ -176,12 +176,11 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
                                       string notificationTitle)
         {
             // Obtain client
-            IOClientsEntity clientsEntity = DatabaseContext.Clients.Find(clientId);
-
-            // Check client
-            if (clientsEntity == null)
+            IOClientsEntity clientsEntity = null;
+            
+            if (clientId != null)
             {
-                return;
+                clientsEntity = DatabaseContext.Clients.Find(clientId);
             }
 
             // Create push notification message entity

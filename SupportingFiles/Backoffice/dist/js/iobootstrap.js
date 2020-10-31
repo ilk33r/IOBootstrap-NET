@@ -1393,7 +1393,10 @@ io.prototype.app.pushNotificationList = function (e, hash) {
     io.resources.getResources(resources, function() {
         let breadcrumb = new io.ui.breadcrumb('pushNotificationList', io.resources.get('BackOffice.PushNotificationMessages'), []);
 
-        io.service.get('backoffice/pushnotificationbackoffice/listMessages', function(status, response, error) {
+        let requestURLFormat = '%s/ListMessages';
+        let requestURL = requestURLFormat.format(IOGlobal.pushNotificationsControllerName);
+
+        io.service.get(requestURL, function(status, response, error) {
             if (status && response.status.success) {
                 var listData = [];
                 var deleteParams = [];
@@ -1401,18 +1404,20 @@ io.prototype.app.pushNotificationList = function (e, hash) {
                 for (var index in response.messages) {
                     var message = response.messages[index];
     
-                    var completed = (message.isCompleted === 0) ? io.resources.get('BackOffice.Sending') : io.resources.get('BackOffice.Completed');
-                    var notificationDate = new Date(message.notificationDate);
+                    let completed = (message.isCompleted === 0) ? io.resources.get('BackOffice.Sending') : io.resources.get('BackOffice.Completed');
+                    let notificationDate = new Date(message.notificationDate);
+                    let clientDescription = (message.client != null) ? message.client.clientDescription : "";
+
                     var itemListData = [
                         message.id,
-                        message.client.clientDescription,
+                        clientDescription,
                         notificationDate.toLocaleDateString(),
                         message.notificationCategory,
                         message.notificationData,
                         message.notificationMessage,
                         message.notificationTitle,
-                        completed,
-                        message.sendedDevices
+                        completed
+                        // message.sendedDevices
                     ];
     
                     listData.push(itemListData);
@@ -1427,8 +1432,8 @@ io.prototype.app.pushNotificationList = function (e, hash) {
                     io.resources.get('BackOffice.Data'),
                     io.resources.get('BackOffice.Message'),
                     io.resources.get('BackOffice.Title'),
-                    io.resources.get('BackOffice.Status'),
-                    io.resources.get('BackOffice.SendedDevices')
+                    io.resources.get('BackOffice.Status')
+                    // io.resources.get('BackOffice.SendedDevices')
                 ];
 
                 let createListParams = new io.ui.createListParams(hash, breadcrumb, listDataHeaders, listData, function () {
@@ -1452,7 +1457,11 @@ io.prototype.app.pushNotificationMessageDelete = function (id) {
         request.Version = window.ioinstance.version;
         request.ID = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/pushnotificationbackoffice/deleteMessage', request, function (status, response, error) {
+
+        let requestURLFormat = '%s/DeleteMessages';
+        let requestURL = requestURLFormat.format(IOGlobal.pushNotificationsControllerName);
+
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Message has been deleted successfully.', '');
@@ -1485,9 +1494,9 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
     var clientFormData = new io.ui.formData(io.ui.formDataTypes.popupSelection, 'client', 'Client', 'ClientId');
     clientFormData.params = '';
     clientFormData.methodName = 'clientsSelect';
-    var clientMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Client is not selected.', 'client', 'Invalid client.');
-    clientMinLengthValidation.length = 1;
-    clientFormData.validations = [ clientMinLengthValidation ];
+    // var clientMinLengthValidation = new ioValidation(io.validationRuleTypes.minLength, 'Client is not selected.', 'client', 'Invalid client.');
+    // clientMinLengthValidation.length = 1;
+    // clientFormData.validations = [ clientMinLengthValidation ];
 
     var categoryFormData = new io.ui.formData(io.ui.formDataTypes.select, 'notificationCategory', 'Category', 'NotificationCategory');;
     categoryFormData.options = io.pushNotificationCategories.getCategoryList();
@@ -1513,8 +1522,12 @@ io.prototype.app.pushNotificationSend = function (e, hash) {
         },
         function (request) {
             request.ClientId = window.ioinstance.ui.getPopupSelectionValue('client');
+            request.DeviceType = parseInt(request.DeviceType);
 
-            window.ioinstance.service.post('backoffice/pushnotificationbackoffice/sendnotification', request, function (status, response, error) {
+            let requestURLFormat = '%s/SendNotification';
+            let requestURL = requestURLFormat.format(IOGlobal.pushNotificationsControllerName);
+
+            window.ioinstance.service.post(requestURL, request, function (status, response, error) {
                 let callout = window.ioinstance.callout;
 
                 if (status && response.status.success) {

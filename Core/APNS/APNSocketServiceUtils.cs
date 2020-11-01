@@ -1,7 +1,4 @@
-﻿using IOBootstrap.NET.Core.APNS.Utils.Models;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,11 +7,15 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
+using IOBootstrap.NET.Common.Models.APNS;
+using IOBootstrap.NET.Core.Logger;
+using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.APNS.Utils
+namespace IOBootstrap.NET.Core.APNS
 {
-    public class APNSUtils
+    public class APNSocketServiceUtils
     {
 
         #region Properties
@@ -23,13 +24,13 @@ namespace IOBootstrap.NET.Core.APNS.Utils
         private int apnsPort;
         private string certificateFile;
         private string certificatePassword;
-        private ILogger logger;
+        private ILogger<IOLoggerType> logger;
 
         #endregion
 
         #region Initialization Methods
 
-        public APNSUtils(string apnsHost, int apnsPort, string certificateFile, string certificatePassword, ILogger logger)
+        public APNSocketServiceUtils(string apnsHost, int apnsPort, string certificateFile, string certificatePassword, ILogger<IOLoggerType> logger)
         {
             // Setup properties
             this.apnsHost = apnsHost;
@@ -148,7 +149,7 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             writer.Write((byte)0);
 
             // Obtain device token length
-            int deviceTokenLength = apnsPayloadModel.token.Length / 2;
+            int deviceTokenLength = apnsPayloadModel.DeviceToken.Length / 2;
 
             // The deviceId length (big-endian second byte)
             writer.Write((byte)deviceTokenLength);
@@ -156,7 +157,7 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             //convert Devide token to HEX value.
             byte[] deviceToken = new byte[deviceTokenLength];
             for (int i = 0; i < deviceTokenLength; i++) {
-                deviceToken[i] = byte.Parse(apnsPayloadModel.token.Substring(i * 2, 2), NumberStyles.HexNumber);
+                deviceToken[i] = byte.Parse(apnsPayloadModel.DeviceToken.Substring(i * 2, 2), NumberStyles.HexNumber);
             }
             
             // Write device token
@@ -166,7 +167,7 @@ namespace IOBootstrap.NET.Core.APNS.Utils
             writer.Write((byte)0);
 
             // Convert payload to json
-            string payloadJson = JsonConvert.SerializeObject(apnsPayloadModel.payload);
+            string payloadJson = JsonSerializer.Serialize(apnsPayloadModel.Payload);
 
             // Payload length (big-endian second byte)
             writer.Write((byte)payloadJson.Length);

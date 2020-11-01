@@ -1,4 +1,5 @@
 using System;
+using IOBootstrap.NET.Batch.PushNotifications;
 using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Batch.Application
@@ -7,6 +8,15 @@ namespace IOBootstrap.NET.Batch.Application
     {
         public IOBatchStartupDefaultImpl(string configFilePath, string environment) : base(configFilePath, environment)
         {
+        }
+
+        public override Type[] BatchClasses()
+        {
+            return new Type[] {
+                typeof(IOPrepareNotificationCache<IODatabaseContextDefaultImpl>),
+                typeof(IOSendFirebaseNotifications<IODatabaseContextDefaultImpl>),
+                typeof(IOFinalizePushNotificationBatch<IODatabaseContextDefaultImpl>)
+            };
         }
     }
 }

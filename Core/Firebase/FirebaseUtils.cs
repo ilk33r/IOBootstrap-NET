@@ -12,6 +12,12 @@ namespace IOBootstrap.NET.Core.Firebase
 
     public class FirebaseUtils
     {
+        public enum FirebaseUtilsMessageTypes
+        {
+            Success = 0,
+            DeviceNotFound = 1,
+            Failure = 2
+        }
 
         #region Properties
 
@@ -35,14 +41,14 @@ namespace IOBootstrap.NET.Core.Firebase
 
         #region Utility Methods
 
-        public void SendNotifications(FirebaseModel firebaseData, FirebaseSendNotificationHandler callback)
+        public FirebaseUtilsMessageTypes SendNotifications(FirebaseModel firebaseData)
         {
             // Create http client
             IOHTTPClient httpClient = new IOHTTPClient(FirebaseApiUrl);
 
             // Add headers
             string authorization = "key=" + FirebaseToken;
-            httpClient.AddHeader("Authorization", authorization);
+            httpClient.AddAuthorizationHeader(authorization);
             httpClient.AddAcceptHeader("application/json");
 
             // Set request method
@@ -52,17 +58,21 @@ namespace IOBootstrap.NET.Core.Firebase
             httpClient.SetPostBody(firebaseData);
 
             // Call http client
-            httpClient.CallJSON<FirebaseResponseModel>((bool status, FirebaseResponseModel responseObject) =>
+            FirebaseResponseModel response = httpClient.CallJSONSync<FirebaseResponseModel>();
+            if (response != null && response.Success == 1) 
             {
-                if (status) 
-                {
-                    Logger.LogInformation("Firebase api called successfully.\nSuccess: {0}\nFailure: {1}", new object[] { responseObject.success.ToString(), responseObject.failure.ToString() });
-                    callback(status, responseObject);
-                } else {
-                    Logger.LogError("Firebase api call failed.");
-                    callback(status, null);
-                }
-            });
+                Logger.LogInformation("Firebase api called successfully.");
+                return FirebaseUtilsMessageTypes.Success;
+            }
+
+            if (response != null && response.Failure == 1 && response.Results.Count > 0 && response.Results[0].Error == "InvalidRegistration")
+            {
+                Logger.LogError("Firebase api call failed. Device not found.");
+                return FirebaseUtilsMessageTypes.DeviceNotFound;
+            }
+
+            Logger.LogError("Firebase api call failed.");
+            return FirebaseUtilsMessageTypes.Failure;
         }
 
         #endregion

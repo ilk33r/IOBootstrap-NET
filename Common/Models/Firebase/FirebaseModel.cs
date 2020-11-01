@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common.Models.Base;
 
 namespace IOBootstrap.NET.Common.Models.Firebase
@@ -7,13 +8,16 @@ namespace IOBootstrap.NET.Common.Models.Firebase
 	public class FirebaseModel : IOModel
     {
 
-        public IList<string> registration_ids { get; set; }
-        public FirebaseDataModel data { get; set; }
+        [JsonPropertyName("to")]
+        public string To { get; set; }
 
-        public FirebaseModel(IList<string> registrationIds, FirebaseDataModel data) : base()
+        [JsonPropertyName("data")]
+        public FirebaseDataModel Data { get; set; }
+
+        public FirebaseModel(string token, string title, string message, string notificationType, int notificationId) : base()
         {
-            this.registration_ids = registrationIds;
-            this.data = data;
+            this.To = token;
+            this.Data = new FirebaseDataModel(title, message, notificationType, notificationId);
         }
     }
 }

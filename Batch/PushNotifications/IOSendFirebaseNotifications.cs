@@ -103,7 +103,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             DeleteInvalidDevices(invalidDevices);
         }
 
-        private void DeleteInvalidDevices(IList<PushNotificationEntity> invalidDevices)
+        protected virtual void DeleteInvalidDevices(IList<PushNotificationEntity> invalidDevices)
         {
             foreach (PushNotificationEntity pushNotification in invalidDevices)
             {

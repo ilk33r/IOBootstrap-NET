@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IOBootstrap.NET.Common.Enumerations;
@@ -40,6 +41,9 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public DeviceTypes DeviceType { get; set; }
 
         public DateTimeOffset LastUpdateTime { get; set; }
+
+        [ForeignKey("PushNotificationID")]
+        public ICollection<PushNotificationDeliveredMessagesEntity> DeliveredMessages { get; set; }
 
 		#endregion
 

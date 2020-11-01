@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.DataAccess.Context;
-using Newtonsoft.Json;
 
 namespace IOBootstrap.NET.DataAccess.Entities
 {
@@ -69,7 +69,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
                 return new TModel();
             }
                 
-            return JsonConvert.DeserializeObject<TModel>(this.ConfigStringValue);
+            return JsonSerializer.Deserialize<TModel>(this.ConfigStringValue);
         }
 
         #endregion

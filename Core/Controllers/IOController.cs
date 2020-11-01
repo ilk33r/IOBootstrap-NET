@@ -260,6 +260,7 @@ namespace IOBootstrap.NET.Core.Controllers
             string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
             string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
             string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            string pushNotificationsControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
             string resourcesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeResourcesControllerNameKey);
             string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             webValues.Add("authenticationControllerName", authenticationControllerName);
@@ -268,6 +269,7 @@ namespace IOBootstrap.NET.Core.Controllers
             webValues.Add("imagesControllerName", imagesControllerName);
             webValues.Add("menuControllerName", menuControllerName);
             webValues.Add("messagesControllerName", messagesControllerName);
+            webValues.Add("pushNotificationsControllerName", pushNotificationsControllerName);
             webValues.Add("resourcesControllerName", resourcesControllerName);
             webValues.Add("userControllerName", userControllerName);
 

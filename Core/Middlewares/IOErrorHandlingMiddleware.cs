@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace IOBootstrap.NET.Core.Middlewares
 {
@@ -62,9 +62,9 @@ namespace IOBootstrap.NET.Core.Middlewares
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json";
 
-            string responseString = JsonConvert.SerializeObject(responseModel, new JsonSerializerSettings 
+            string responseString = JsonSerializer.Serialize(responseModel, new JsonSerializerOptions 
             { 
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() 
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
             await context.Response.WriteAsync(responseString);
         }

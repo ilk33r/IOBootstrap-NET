@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
-using Newtonsoft.Json;
 
 namespace IOBootstrap.NET.Core.HTTP.Utils
 {
@@ -40,12 +40,17 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             HttpClient.DefaultRequestHeaders.Accept.Add(headerValue);
         }
 
+        public void AddAuthorizationHeader(string authorization)
+        {
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authorization);
+        }
+
         public void AddHeader(string name, string value)
         {
             HttpClient.DefaultRequestHeaders.Add(name, value);
         }
 
-        public void Call(HttpResponse callback)
+        public Task Call(HttpResponse callback)
         {
             Task task;
             if (RequestMethod == IOHTTPClientRequestMethods.GET)
@@ -54,17 +59,18 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             } else {
                 task = PostRequest(callback);
             }
-            task.Wait();
+            
+            return task;
         }
 
         public void CallJSON<TObject>(HttpJsonResponse<TObject> callback) where TObject : IOModel, new()
         {
-            Call((bool status, string response) =>
+            SetContentType("application/json");
+            Task task = Call((bool status, string response) =>
             {
-                SetContentType("application/json");
                 try
                 {
-                    TObject jsonObject = JsonConvert.DeserializeObject<TObject>(response);
+                    TObject jsonObject = JsonSerializer.Deserialize<TObject>(response);
                     callback(status, jsonObject);
                 } 
                 catch (Exception)
@@ -72,6 +78,27 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
                     callback(status, new TObject());
                 }
             });
+
+            task.Wait();
+        }
+
+        public TObject CallJSONSync<TObject>() where TObject : IOModel, new()
+        {
+            TObject jsonObject = null;
+            SetContentType("application/json");
+            Task task = Call((bool status, string response) =>
+            {
+                try
+                {
+                    jsonObject = JsonSerializer.Deserialize<TObject>(response);
+                } 
+                catch (Exception)
+                {
+                }
+            });
+
+            task.Wait();
+            return jsonObject;
         }
 
         public void SetContentType(string contentType)
@@ -114,7 +141,8 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             try
             {
-                HttpContent postContent = new StringContent(JsonConvert.SerializeObject(PostBody), Encoding.UTF8, ContentType);
+                string serializedBody = JsonSerializer.Serialize(PostBody);
+                HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType);
                 var task = HttpClient.PostAsync(BaseUrl, postContent);
                 var response = await task;
 

@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
+using IOBootstrap.NET.Core.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.HTTP.Utils
 {
@@ -14,6 +16,8 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
     public class IOHTTPClient
     {
+        public bool UseHttp2;
+
         private string BaseUrl { get; }
         private string ContentType;
         private HttpClient HttpClient;
@@ -22,10 +26,12 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
 
         #region Initialization Methods
 
-        public IOHTTPClient(string baseUrl)
+        public IOHTTPClient(string baseUrl, ILogger<IOLoggerType> logger)
         {
+            UseHttp2 = false;
             BaseUrl = baseUrl;
-            HttpClient = new HttpClient();
+            IOHttpClientHandler httpClientHandler = new IOHttpClientHandler(new HttpClientHandler(), logger);
+            HttpClient = new HttpClient(httpClientHandler);
             HttpClient.DefaultRequestHeaders.Accept.Clear();
             HttpClient.DefaultRequestHeaders.Add("User-Agent", "IOBootstrap.NET");
         }
@@ -143,7 +149,17 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             {
                 string serializedBody = JsonSerializer.Serialize(PostBody);
                 HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType);
-                var task = HttpClient.PostAsync(BaseUrl, postContent);
+                var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl)
+                {
+                    Content = postContent
+                };
+
+                if (UseHttp2)
+                {
+                    request.Version = new Version(2, 0);
+                }
+                
+                var task = HttpClient.SendAsync(request);
                 var response = await task;
 
                 // Deserialize the response body.

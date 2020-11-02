@@ -54,7 +54,20 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 return;
             }
 
-            if (firebaseDevices.Count == 0) 
+            // Obtain apns devices
+            IOCacheObject apnsDevicesCacheObject = IOCache.GetCachedObject(IOCacheKeys.PushNotificationAPNSDevices);
+            if (apnsDevicesCacheObject == null)
+            {
+                return;
+            }
+
+            IList<PushNotificationEntity> apnsDevices = (IList<PushNotificationEntity>)apnsDevicesCacheObject.Value;
+            if (apnsDevices == null)
+            {
+                return;
+            }
+
+            if (firebaseDevices.Count == 0 && apnsDevices.Count == 0) 
             {
                 pushNotificationMessage.IsCompleted = 1;
                 DatabaseContext.Update(pushNotificationMessage);

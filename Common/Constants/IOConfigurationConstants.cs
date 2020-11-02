@@ -8,10 +8,11 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static string AllowedOrigins = "IOAllowedOrigins";
         public static string APIURLKey = "IOAPIURL";
-        public static string APNSCertificatePassword = "IOAPNSCertificatePassword";
-        public static string APNSCertificatePath = "IOAPNSCertificatePath";
-        public static string APNSHost = "IOAPNSHost";
-        public static string APNSPort = "IOAPNSPort";
+        public static string APNSBundleID = "IOAPNSBundleID";
+        public static string APNSApiURL = "IOAPNSApiURL";
+        public static string APNSAuthKeyID = "IOAPNSAuthKeyID";
+        public static string APNSKeyFilePath = "IOAPNSKeyFilePath";
+        public static string APNSTeamID = "IOAPNSTeamID";
         public static string APPNameKey = "IOAPPName";
         public static string AuthorizationKey = "IOAuthorizationKey";
         public static string AzureStorageBlobNameKey = "IOAzureStorageBlobName";

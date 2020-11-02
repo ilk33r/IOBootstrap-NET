@@ -40,14 +40,14 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 return;
             }
 
-            // Create lock file
-            CreateLockFile();
-
             // Obtain message for sending 
             PushNotificationMessageEntity pushNotificationMessage = GetPushNotificationMessage();
 
             if (pushNotificationMessage != null) 
             {
+                // Create lock file
+                CreateLockFile();
+
                 // Log call
                 Logger.LogDebug("Sending push notification message for id {0}", pushNotificationMessage.ID);
 
@@ -71,6 +71,20 @@ namespace IOBootstrap.NET.Batch.PushNotifications
 
                 // Log call 
                 Logger.LogDebug("Firebase devices found size of {0}", firebaseDevices.Count());
+
+                // Obtain apns devices
+                IList<PushNotificationEntity> apnsDevices = PrepareDevices(DeviceTypes.iOS, pushNotificationMessage.ID, clientId);
+                if (apnsDevices == null)
+                {
+                    apnsDevices = new List<PushNotificationEntity>();
+                }
+
+                // Cache apns devices
+                IOCacheObject apnsDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationAPNSDevices, apnsDevices, 0);
+                IOCache.CacheObject(apnsDevicesCacheObject);
+
+                // Log call 
+                Logger.LogDebug("APNS devices found size of {0}", apnsDevices.Count());
             }
             else 
             {
@@ -145,7 +159,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                                                                                     .Include(pushNotifications => pushNotifications.Client)
                                                                                     .Include(pushNotifications => pushNotifications.DeliveredMessages)
                                                                                     .ThenInclude(pushNotificationDeliveredMessages => pushNotificationDeliveredMessages.PushNotificationMessage)
-                                                                                    .Where(pushNotifications => pushNotifications.DeviceType == DeviceTypes.Android)
+                                                                                    .Where(pushNotifications => pushNotifications.DeviceType == deviceType)
                                                                                     .Where(pn => pn.DeliveredMessages.All(dm => dm.PushNotificationMessage.ID != messageId));
 
             if (clientId != null)

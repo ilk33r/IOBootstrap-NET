@@ -8,8 +8,6 @@ using Microsoft.Extensions.Logging;
 namespace IOBootstrap.NET.Core.Firebase
 {
 
-    public delegate void FirebaseSendNotificationHandler(bool status, FirebaseResponseModel responseObject);
-
     public class FirebaseUtils
     {
         public enum FirebaseUtilsMessageTypes
@@ -44,7 +42,7 @@ namespace IOBootstrap.NET.Core.Firebase
         public FirebaseUtilsMessageTypes SendNotifications(FirebaseModel firebaseData)
         {
             // Create http client
-            IOHTTPClient httpClient = new IOHTTPClient(FirebaseApiUrl);
+            IOHTTPClient httpClient = new IOHTTPClient(FirebaseApiUrl, Logger);
 
             // Add headers
             string authorization = "key=" + FirebaseToken;

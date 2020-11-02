@@ -15,6 +15,7 @@ namespace IOBootstrap.NET.Batch.Application
             return new Type[] {
                 typeof(IOPrepareNotificationCache<IODatabaseContextDefaultImpl>),
                 typeof(IOSendFirebaseNotifications<IODatabaseContextDefaultImpl>),
+                typeof(IOSendApnsNotification<IODatabaseContextDefaultImpl>),
                 typeof(IOFinalizePushNotificationBatch<IODatabaseContextDefaultImpl>)
             };
         }

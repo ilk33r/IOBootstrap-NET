@@ -139,10 +139,10 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         private PushNotificationMessageEntity GetPushNotificationMessage()
         {
             IQueryable<PushNotificationMessageEntity> pushNotificationMessages = DatabaseContext.PushNotificationMessages
-                                                                                                    .Take(1)
                                                                                                     .Where(pushNotificationMessages => pushNotificationMessages.IsCompleted == 0)
                                                                                                     .Include(pushNotificationMessages => pushNotificationMessages.Client)
-                                                                                                    .OrderByDescending(pushNotificationMessages => pushNotificationMessages.NotificationDate);
+                                                                                                    .OrderByDescending(pushNotificationMessages => pushNotificationMessages.NotificationDate)
+                                                                                                    .Take(1);
 
             if (pushNotificationMessages != null && pushNotificationMessages.Count() > 0)
             {
@@ -155,12 +155,12 @@ namespace IOBootstrap.NET.Batch.PushNotifications
         private IList<PushNotificationEntity> PrepareDevices(DeviceTypes deviceType, int messageId, int? clientId)
         {
             IQueryable<PushNotificationEntity> pushNotifications = DatabaseContext.PushNotifications
-                                                                                    .Take(IOPushNotificationBatchConstants.BatchEntityCount)
                                                                                     .Include(pushNotifications => pushNotifications.Client)
                                                                                     .Include(pushNotifications => pushNotifications.DeliveredMessages)
                                                                                     .ThenInclude(pushNotificationDeliveredMessages => pushNotificationDeliveredMessages.PushNotificationMessage)
                                                                                     .Where(pushNotifications => pushNotifications.DeviceType == deviceType)
-                                                                                    .Where(pn => pn.DeliveredMessages.All(dm => dm.PushNotificationMessage.ID != messageId));
+                                                                                    .Where(pn => pn.DeliveredMessages.All(dm => dm.PushNotificationMessage.ID != messageId))
+                                                                                    .Take(IOPushNotificationBatchConstants.BatchEntityCount);
 
             if (clientId != null)
             {

@@ -33,6 +33,8 @@ namespace IOBootstrap.NET.DataAccess.Entities
 
         public int IsCompleted { get; set; }
 
+        public PushNotificationEntity PushNotificationDeviceID { get; set; }
+
         #endregion
     }
 }

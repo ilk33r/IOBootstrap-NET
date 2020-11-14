@@ -55,36 +55,61 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 IOCacheObject pushNotificationMessageCache = new IOCacheObject(IOCacheKeys.PushNotificationMessage, pushNotificationMessage, 0);
                 IOCache.CacheObject(pushNotificationMessageCache);
 
-                // Obtain client id
-                int? clientId = (pushNotificationMessage.Client == null) ? new int?() : pushNotificationMessage.Client.ID;
-
-                // Obtain firebase devices
-                IList<PushNotificationEntity> firebaseDevices = PrepareDevices(DeviceTypes.Android, pushNotificationMessage.ID, clientId);
-                if (firebaseDevices == null)
+                // Check notification is for single device
+                if (pushNotificationMessage.PushNotificationDeviceID == null)
                 {
-                    firebaseDevices = new List<PushNotificationEntity>();
-                }
+                    // Obtain client id
+                    int? clientId = (pushNotificationMessage.Client == null) ? new int?() : pushNotificationMessage.Client.ID;
 
-                // Cache firebase devices
-                IOCacheObject firebaseDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationFirebaseDevices, firebaseDevices, 0);
-                IOCache.CacheObject(firebaseDevicesCacheObject);
+                    // Obtain firebase devices
+                    IList<PushNotificationEntity> firebaseDevices = PrepareDevices(DeviceTypes.Android, pushNotificationMessage.ID, clientId);
+                    if (firebaseDevices == null)
+                    {
+                        firebaseDevices = new List<PushNotificationEntity>();
+                    }
 
-                // Log call 
-                Logger.LogDebug("Firebase devices found size of {0}", firebaseDevices.Count());
+                    // Cache firebase devices
+                    IOCacheObject firebaseDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationFirebaseDevices, firebaseDevices, 0);
+                    IOCache.CacheObject(firebaseDevicesCacheObject);
 
-                // Obtain apns devices
-                IList<PushNotificationEntity> apnsDevices = PrepareDevices(DeviceTypes.iOS, pushNotificationMessage.ID, clientId);
-                if (apnsDevices == null)
+                    // Log call 
+                    Logger.LogDebug("Firebase devices found size of {0}", firebaseDevices.Count());
+
+                    // Obtain apns devices
+                    IList<PushNotificationEntity> apnsDevices = PrepareDevices(DeviceTypes.iOS, pushNotificationMessage.ID, clientId);
+                    if (apnsDevices == null)
+                    {
+                        apnsDevices = new List<PushNotificationEntity>();
+                    }
+
+                    // Cache apns devices
+                    IOCacheObject apnsDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationAPNSDevices, apnsDevices, 0);
+                    IOCache.CacheObject(apnsDevicesCacheObject);
+
+                    // Log call 
+                    Logger.LogDebug("APNS devices found size of {0}", apnsDevices.Count());
+                } 
+                else 
                 {
-                    apnsDevices = new List<PushNotificationEntity>();
+                    IList<PushNotificationEntity> devices = new List<PushNotificationEntity>();
+                    devices.Add(pushNotificationMessage.PushNotificationDeviceID);
+
+                    if (pushNotificationMessage.PushNotificationDeviceID.DeviceType == DeviceTypes.Android) 
+                    {
+                        // Cache firebase devices
+                        IOCacheObject firebaseDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationFirebaseDevices, devices, 0);
+                        IOCache.CacheObject(firebaseDevicesCacheObject);
+                    }
+                    else if (pushNotificationMessage.PushNotificationDeviceID.DeviceType == DeviceTypes.iOS)
+                    {
+                        // Cache apns devices
+                        IOCacheObject apnsDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationAPNSDevices, devices, 0);
+                        IOCache.CacheObject(apnsDevicesCacheObject);
+                    }
+
+                    // Log call 
+                    Logger.LogDebug("Single device found.");
                 }
-
-                // Cache apns devices
-                IOCacheObject apnsDevicesCacheObject = new IOCacheObject(IOCacheKeys.PushNotificationAPNSDevices, apnsDevices, 0);
-                IOCache.CacheObject(apnsDevicesCacheObject);
-
-                // Log call 
-                Logger.LogDebug("APNS devices found size of {0}", apnsDevices.Count());
             }
             else 
             {
@@ -141,6 +166,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             IQueryable<PushNotificationMessageEntity> pushNotificationMessages = DatabaseContext.PushNotificationMessages
                                                                                                     .Where(pushNotificationMessages => pushNotificationMessages.IsCompleted == 0)
                                                                                                     .Include(pushNotificationMessages => pushNotificationMessages.Client)
+                                                                                                    .Include(pushNotificationMessages => pushNotificationMessages.PushNotificationDeviceID)
                                                                                                     .OrderByDescending(pushNotificationMessages => pushNotificationMessages.NotificationDate)
                                                                                                     .Take(1);
 

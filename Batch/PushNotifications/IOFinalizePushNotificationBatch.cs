@@ -51,7 +51,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             IList<PushNotificationEntity> firebaseDevices = (IList<PushNotificationEntity>)firebaseDevicesCacheObject.Value;
             if (firebaseDevices == null)
             {
-                return;
+                firebaseDevices = new List<PushNotificationEntity>();
             }
 
             // Obtain apns devices
@@ -64,7 +64,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             IList<PushNotificationEntity> apnsDevices = (IList<PushNotificationEntity>)apnsDevicesCacheObject.Value;
             if (apnsDevices == null)
             {
-                return;
+                apnsDevices = new List<PushNotificationEntity>();
             }
 
             if (firebaseDevices.Count == 0 && apnsDevices.Count == 0) 
@@ -73,9 +73,16 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 DatabaseContext.Update(pushNotificationMessage);
                 DatabaseContext.SaveChanges();
             }
+            else if (pushNotificationMessage.PushNotificationDeviceID != null)
+            {
+                pushNotificationMessage.IsCompleted = 1;
+                DatabaseContext.Update(pushNotificationMessage);
+                DatabaseContext.SaveChanges();
+            }
 
             IOCache.InvalidateCache(IOCacheKeys.PushNotificationMessage);
             IOCache.InvalidateCache(IOCacheKeys.PushNotificationFirebaseDevices);
+            IOCache.InvalidateCache(IOCacheKeys.PushNotificationAPNSDevices);
 
             string tempPath = Path.GetTempPath();
             string lockFile = Path.Combine(tempPath, IOPushNotificationBatchConstants.BatchLockFileName);

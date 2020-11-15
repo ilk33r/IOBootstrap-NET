@@ -17,6 +17,8 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static string ResourceCacheKey = "IOResourceCache";
 
+        public static string RSAPrivateKeyCacheKey = "RSAPrivateKeyCache";
+
         #endregion
 
     }

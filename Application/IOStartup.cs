@@ -128,6 +128,7 @@ namespace IOBootstrap.NET.Application
                 ConfigureClientEndpoints(endpoints);
                 ConfigureAuthenticationEndpoints(endpoints);
                 ConfigureConfigurationEndpoints(endpoints);
+                ConfigureHandshakeEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
@@ -216,6 +217,13 @@ namespace IOBootstrap.NET.Application
             endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("restartApp", restartAppRoute.GetRouteString());
+        }
+
+        public virtual void ConfigureHandshakeEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            string handshakeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.HandshakeControllerName);
+            IORoute indexRoute = new IORoute("Index", handshakeControllerName);
+            endpoints.MapControllerRoute("index", indexRoute.GetRouteString());
         }
 
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)

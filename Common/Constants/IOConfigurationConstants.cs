@@ -38,6 +38,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string FirebaseToken = "IOFirebaseToken";
         public static string EncryptionKey = "IOEncryptionKey";
         public static string EncryptionIV = "IOEncryptionIV";
+        public static string HandshakeControllerName = "IOHandshakeControllerName";
         public static string HttpsRequired = "IOHttpsRequired";
         public static string IndexControllerNameKey = "IOIndexControllerName";
         public static string MigrationsAssemblyKey = "IOMigrationsAssembly";

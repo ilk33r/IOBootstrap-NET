@@ -22,7 +22,14 @@ namespace IOBootstrap.NET.Common.Models.Shared
             // Setup properties
             Code = code;
             DetailedMessage = detailedMessage;
-            Message = IOResponseStatusMessages.Messages[code];
+            if (IOResponseStatusMessages.Messages.ContainsKey(code))
+            {
+                Message = IOResponseStatusMessages.Messages[code];
+            }
+            else 
+            {
+                Message = "";
+            }
 
             // Check code is equal to the zero
             if (code == IOResponseStatusMessages.OK)

@@ -1,6 +1,7 @@
 using System;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Utilities;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
@@ -21,6 +22,11 @@ namespace IOBootstrap.NET.Core.Encryption
                 RsaPrivateCrtKeyParameters cachedPrivateKey = (RsaPrivateCrtKeyParameters)cachedKey.Value;
                 return cachedPrivateKey;
             }
+
+            // Create key id
+            string keyID = IORandomUtilities.GenerateGUIDString();
+            IOCacheObject keyIDCacheObject = new IOCacheObject(IOCacheKeys.RSAPrivateKeyIDCacheKey, keyID, IOCommonConstants.KeyPairCacheTimeInterval);
+            IOCache.CacheObject(keyIDCacheObject);
 
             // Create key pair generator
             RsaKeyPairGenerator keyPairGenerator = new RsaKeyPairGenerator();

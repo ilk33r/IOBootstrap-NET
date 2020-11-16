@@ -1,5 +1,7 @@
 using System;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Handshake;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Logger;
@@ -30,8 +32,22 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
             // Get public key
             Tuple<string, string> publicKey = ViewModel.GetPuplicKey();
 
+            // Obtain key id
+            string keyID = "";
+            IOCacheObject keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+            if (keyIDCacheObject != null) 
+            {
+                keyID = (string)keyIDCacheObject.Value;
+            }
+
             // Create and return response
-            return new HandshakeResponseModel(IOResponseStatusMessages.OK, publicKey.Item2, publicKey.Item1);
+            return new HandshakeResponseModel(IOResponseStatusMessages.OK, publicKey.Item2, publicKey.Item1, keyID);
+        }
+
+        [HttpGet]
+        public virtual IOResponseModel CheckSession()
+        {
+            return new IOResponseModel(IOResponseStatusMessages.OK);
         }
 
         #endregion

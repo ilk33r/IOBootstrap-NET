@@ -19,6 +19,8 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static string RSAPrivateKeyCacheKey = "RSAPrivateKeyCache";
 
+        public static string RSAPrivateKeyIDCacheKey = "RSAPrivateKeyIDCache";
+
         #endregion
 
     }

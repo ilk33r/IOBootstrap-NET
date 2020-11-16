@@ -10,6 +10,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string AuthorizationToken = "X-IO-AUTHORIZATION-TOKEN";
         public static string ClientId = "X-IO-CLIENT-ID";
         public static string ClientSecret = "X-IO-CLIENT-SECRET";
+        public static string KeyID = "X-KEY-ID";
 
         #endregion
     }

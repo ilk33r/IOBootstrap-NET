@@ -6,6 +6,7 @@ namespace IOBootstrap.NET.Common.Messages.Handshake
     public class HandshakeResponseModel : IOResponseModel
     {
 
+        public string KeyID { get; set; }
         public string PublicKeyExponent { get; set; }
         public string PublicKeyModulus { get; set; }
 
@@ -13,8 +14,9 @@ namespace IOBootstrap.NET.Common.Messages.Handshake
         {
         }
 
-        public HandshakeResponseModel(int responseStatusMessage, string publicKeyExponent, string publicKeyModulus) : base(responseStatusMessage)
+        public HandshakeResponseModel(int responseStatusMessage, string publicKeyExponent, string publicKeyModulus, string keyID) : base(responseStatusMessage)
         {
+            this.KeyID = keyID;
             this.PublicKeyExponent = publicKeyExponent;
             this.PublicKeyModulus = publicKeyModulus;
         }

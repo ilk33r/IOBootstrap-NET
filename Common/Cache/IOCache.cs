@@ -29,14 +29,14 @@ namespace IOBootstrap.NET.Common.Cache
         public static IOCacheObject GetCachedObject(string key)
         {
             IOCache.InitializeCache();
-            IOCacheObject cachedObject = IOCache.CachedObjects.Find((obj) => obj.GetKey().Equals(key));
+            IOCacheObject cachedObject = IOCache.CachedObjects.Find(obj => obj != null && obj.GetKey().Equals(key));
             return cachedObject;
         }
 
         public static void InvalidateCache(string key)
         {
             IOCache.InitializeCache();
-            int index = IOCache.CachedObjects.FindIndex((obj) => obj.GetKey().Equals(key));
+            int index = IOCache.CachedObjects.FindIndex(obj => obj != null && obj.GetKey().Equals(key));
             if (index >= 0)
             {
                 IOCache.CachedObjects.RemoveAt(index);

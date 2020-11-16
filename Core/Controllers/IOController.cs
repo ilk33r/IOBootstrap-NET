@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -90,6 +91,20 @@ namespace IOBootstrap.NET.Core.Controllers
 
                 // Do nothing
                 ActionExecuted = true;
+                return;
+            }
+
+            if (!ActionExecuted && !CheckKeyID(context))
+            {
+                ActionExecuted = true;
+
+                // Obtain response model
+                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_KEY_ID);
+
+                // Override response
+                JsonResult result = new JsonResult(responseModel);
+                context.Result = result;
+
                 return;
             }
 
@@ -284,6 +299,32 @@ namespace IOBootstrap.NET.Core.Controllers
         #endregion
 
         #region Helper Methods
+
+        private bool CheckKeyID(ActionExecutingContext context)
+        {
+            // Obtain key id
+            string keyID = Request.Headers[IORequestHeaderConstants.KeyID];
+            if (String.IsNullOrEmpty(keyID))
+            {
+                return true;
+            }
+
+            string currentKeyID = "";
+
+            // Obtain key id cache
+            IOCacheObject keyIDCache = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+            if (keyIDCache != null)
+            {
+                currentKeyID = (string)keyIDCache.Value;
+            }
+
+            if (currentKeyID.Equals(keyID))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public virtual bool CheckRole(ActionExecutingContext context)
         {

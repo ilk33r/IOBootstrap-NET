@@ -223,7 +223,9 @@ namespace IOBootstrap.NET.Application
         {
             string handshakeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.HandshakeControllerName);
             IORoute indexRoute = new IORoute("Index", handshakeControllerName);
+            IORoute checkSessionRoute = new IORoute("CheckSession", handshakeControllerName);
             endpoints.MapControllerRoute("index", indexRoute.GetRouteString());
+            endpoints.MapControllerRoute("checkSession", checkSessionRoute.GetRouteString());
         }
 
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)

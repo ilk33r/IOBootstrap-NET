@@ -17,6 +17,7 @@ namespace IOBootstrap.NET.Common.Constants
             {405, "Https required."},
             {406, "Invalid client."},
             {600, "Authorization failed."},
+            {630, "Key expired."},
             {700, "User exists."},
             {701, "User not found."},
             {900, "General exception."}
@@ -34,6 +35,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int HTTPS_REQUIRED = 405;
         public static int INVALID_CLIENT = 406;
         public static int AUTHORIZATION_FAILED = 600;
+        public static int INVALID_KEY_ID = 630;
         public static int USER_EXISTS = 700;
         public static int USER_NOT_FOUND = 701;
         public static int GENERAL_EXCEPTION = 900;

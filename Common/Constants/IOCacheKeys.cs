@@ -9,12 +9,6 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static string ConfigurationCacheKey = "IOConfigurationCache";
 
-        public static string PushNotificationAPNSDevices = "IOPushNotificationAPNSDevices";
-
-        public static string PushNotificationFirebaseDevices = "IOPushNotificationFirebaseDevices";
-
-        public static string PushNotificationMessage = "IOPushNotificationMessage";
-
         public static string ResourceCacheKey = "IOResourceCache";
 
         public static string RSAPrivateKeyCacheKey = "RSAPrivateKeyCache";

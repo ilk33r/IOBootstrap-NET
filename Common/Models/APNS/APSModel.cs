@@ -16,11 +16,15 @@ namespace IOBootstrap.NET.Common.Models.APNS
         [JsonPropertyName("badge")]
         public int Badge { get; set; }
 
-        public APSModel(string title, string body, string sound, int badge)
+        [JsonPropertyName("category")]
+        public string Category { get; set; }
+
+        public APSModel(string title, string body, string sound, int badge, string category)
         {
             this.Alert = new APSAlertModel(title, body);
             this.Sound = sound;
             this.Badge = badge;
+            this.Category = category;
         }
     }
 }

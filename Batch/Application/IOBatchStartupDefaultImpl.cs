@@ -13,10 +13,7 @@ namespace IOBootstrap.NET.Batch.Application
         public override Type[] BatchClasses()
         {
             return new Type[] {
-                typeof(IOPrepareNotificationCache<IODatabaseContextDefaultImpl>),
-                typeof(IOSendFirebaseNotifications<IODatabaseContextDefaultImpl>),
-                typeof(IOSendApnsNotification<IODatabaseContextDefaultImpl>),
-                typeof(IOFinalizePushNotificationBatch<IODatabaseContextDefaultImpl>)
+                typeof(IOPushNotificationBatch<IODatabaseContextDefaultImpl>)
             };
         }
     }

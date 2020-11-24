@@ -9,9 +9,9 @@ namespace IOBootstrap.NET.Common.Models.APNS
 
 		public string DeviceToken { get; set; }
 
-		public APNSSendPayloadModel(string title, string body, int badge, string deviceToken)
+		public APNSSendPayloadModel(string title, string body, int badge, string deviceToken, string customData, string category)
 		{
-            this.Payload = new APNSPayloadModel(title, body, badge);
+            this.Payload = new APNSPayloadModel(title, body, badge, customData, category);
 			this.DeviceToken = deviceToken;
 		}
     }

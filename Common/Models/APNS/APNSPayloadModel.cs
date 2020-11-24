@@ -10,9 +10,13 @@ namespace IOBootstrap.NET.Common.Models.APNS
         [JsonPropertyName("aps")]
         public APSModel APS { get; set; }
 
-        public APNSPayloadModel(string title, string body, int badge)
+        [JsonPropertyName("customData")]
+        public string CustomData { get; set; }
+
+        public APNSPayloadModel(string title, string body, int badge, string customData, string category)
         {
-            this.APS = new APSModel(title, body, "default", badge);
+            this.APS = new APSModel(title, body, "default", badge, category);
+            this.CustomData = customData;
         }
     }
 }

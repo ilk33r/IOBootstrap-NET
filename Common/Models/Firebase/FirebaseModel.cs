@@ -14,10 +14,10 @@ namespace IOBootstrap.NET.Common.Models.Firebase
         [JsonPropertyName("data")]
         public FirebaseDataModel Data { get; set; }
 
-        public FirebaseModel(string token, string title, string message, string notificationType, int notificationId) : base()
+        public FirebaseModel(string token, string title, string message, string notificationType, int notificationId, string customData) : base()
         {
             this.To = token;
-            this.Data = new FirebaseDataModel(title, message, notificationType, notificationId);
+            this.Data = new FirebaseDataModel(title, message, notificationType, notificationId, customData);
         }
     }
 }

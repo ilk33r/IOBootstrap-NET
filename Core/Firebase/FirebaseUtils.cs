@@ -43,6 +43,7 @@ namespace IOBootstrap.NET.Core.Firebase
         {
             // Create http client
             IOHTTPClient httpClient = new IOHTTPClient(FirebaseApiUrl, Logger);
+            httpClient.IgnoreNullValues = true;
 
             // Add headers
             string authorization = "key=" + FirebaseToken;

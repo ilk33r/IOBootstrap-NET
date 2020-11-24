@@ -61,6 +61,7 @@ namespace IOBootstrap.NET.Core.APNS
             string endpoint = String.Format(EndpointFormat, APNSApiUrl, payloadData.DeviceToken);
             IOHTTPClient httpClient = new IOHTTPClient(endpoint, Logger);
             httpClient.UseHttp2 = true;
+            httpClient.IgnoreNullValues = true;
 
             // Add headers
             httpClient.AddHeader("apns-topic", APNSBundleID);

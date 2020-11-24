@@ -17,6 +17,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
     public class IOHTTPClient
     {
         public bool UseHttp2;
+        public bool IgnoreNullValues;
 
         private string BaseUrl { get; }
         private string ContentType;
@@ -29,6 +30,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         public IOHTTPClient(string baseUrl, ILogger<IOLoggerType> logger)
         {
             UseHttp2 = false;
+            IgnoreNullValues = false;
             BaseUrl = baseUrl;
             IOHttpClientHandler httpClientHandler = new IOHttpClientHandler(new HttpClientHandler(), logger);
             HttpClient = new HttpClient(httpClientHandler);
@@ -147,7 +149,10 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
         {
             try
             {
-                string serializedBody = JsonSerializer.Serialize(PostBody);
+                string serializedBody = JsonSerializer.Serialize(PostBody, new JsonSerializerOptions()
+                {
+                    IgnoreNullValues = this.IgnoreNullValues
+                });
                 HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType);
                 var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl)
                 {

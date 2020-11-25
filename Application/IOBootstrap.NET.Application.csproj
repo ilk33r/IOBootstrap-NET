@@ -53,7 +53,12 @@
   <!--
   <ItemGroup> 
     <Content Include="maworkout-01-test.pubxml"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="certificates\**" LinkBase="certificates" />
+    <Content Include="certificates\**" LinkBase="certificates">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <Content Include="webjobs\**" LinkBase="webjobs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
   </ItemGroup>
   -->
 

@@ -1,0 +1,3 @@
+Configuration -> Path Mappings
+
+/webjobs site\wwwwroot\webjobs

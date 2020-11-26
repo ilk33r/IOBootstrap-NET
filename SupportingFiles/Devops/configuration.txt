@@ -1,5 +1,5 @@
 Configuration -> Path Mappings
 
-/PushSender site\wwwroot\App_Data\jobs\continuous
+/PushSender site\jobs\Continuous\CreateSearchIndex
 
 isDirectory = false

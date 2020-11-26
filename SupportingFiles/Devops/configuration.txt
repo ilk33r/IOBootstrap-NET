@@ -1,3 +1,5 @@
 Configuration -> Path Mappings
 
-/webjobs site\wwwwroot\webjobs\continuous
+/PushSender site\wwwroot\App_Data\jobs\continuous
+
+isDirectory = false

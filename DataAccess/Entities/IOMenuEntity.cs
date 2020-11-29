@@ -24,6 +24,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public string Name { get; set; }
 
         public int MenuOrder { get; set; }
+        
         public int RequiredRole { get; set; }
 
         public Nullable<int> ParentEntityID { get; set; }

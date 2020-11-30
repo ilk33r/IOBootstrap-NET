@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.Middlewares;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MySql.Data.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.Application
 {
@@ -165,6 +162,7 @@ namespace IOBootstrap.NET.Application
 
 #if USE_MYSQL_DATABASE
             options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
+            // options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
 #elif USE_SQLSRV_DATABASE
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
 #else

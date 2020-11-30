@@ -5,45 +5,44 @@
     <ProjectReference Include="..\BackOffice\IOBootstrap.NET.BackOffice.csproj" />
   </ItemGroup>
 
+<!--
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0" />
   </ItemGroup>
+-->
 
   <!--
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
   </ItemGroup>
   -->
 
-  <ItemGroup>
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
-  </ItemGroup>
-
   <!--
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <DefineConstants>NETCORE_3_1</DefineConstants>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <DefineConstants>NETCORE_5_0</DefineConstants>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
   </PropertyGroup>
   -->
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <DefineConstants>NETCORE_3_1</DefineConstants>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <DefineConstants>NETCORE_5_0</DefineConstants>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MYSQL_DATABASE;DEBUG</DefineConstants>
+    <DefineConstants>USE_MEMORY_DATABASE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>
-    <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
+    <DefineConstants>USE_MEMORY_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -1,2 +1,8 @@
 IO.Environment
 Release
+
+IO.NetCoreSDKVersion
+5.x
+
+IO.NetCoreAppDirectory
+netcoreapp5.0

@@ -281,6 +281,11 @@ namespace IOBootstrap.NET.Batch.PushNotifications
 
         protected virtual void DeleteInvalidDevices(IList<PushNotificationEntity> invalidDevices)
         {
+            if (invalidDevices == null)
+            {
+                return;
+            }
+
             foreach (PushNotificationEntity pushNotification in invalidDevices)
             {
                 DatabaseContext.Remove(pushNotification.DeliveredMessages);

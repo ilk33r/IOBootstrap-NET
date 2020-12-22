@@ -3,5 +3,5 @@
   "webJobName": "pushsender",
   "runMode": "Scheduled",
   "jobRecurrenceFrequency": "Minute",
-  "interval": "50"
+  "interval": 50
 }

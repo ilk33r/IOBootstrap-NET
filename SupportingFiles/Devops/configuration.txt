@@ -1,5 +1,8 @@
 Configuration -> Path Mappings
 
-/PushSender site\jobs\Continuous\CreateSearchIndex
+/PushSender site\jobs\Scheduled\CreateSearchIndex
 
 isDirectory = false
+
+Configuration -> Application Settings
+ASPNETCORE_ENVIRONMENT Staging

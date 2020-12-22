@@ -1,6 +1,6 @@
 {
   "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
   "webJobName": "pushsender",
-  "runMode": "Triggered",
+  "runMode": "Scheduled",
   "schedule": "0 */50 * * * *"
 }

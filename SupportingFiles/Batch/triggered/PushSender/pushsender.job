@@ -1,4 +1,1 @@
-{
-  "webJobName": "pushsender",
-  "schedule": "0 */50 * * * *"
-}
+{"schedule": "0 */50 * * * *"}

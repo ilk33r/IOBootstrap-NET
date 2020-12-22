@@ -2,5 +2,6 @@
   "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
   "webJobName": "pushsender",
   "runMode": "Scheduled",
-  "schedule": "0 */50 * * * *"
+  "jobRecurrenceFrequency": "Minute",
+  "interval": "50"
 }

@@ -1,6 +1,6 @@
 Configuration -> Path Mappings
 
-/PushSender site\jobs\Scheduled\CreateSearchIndex
+/PushSender site\jobs\triggered\CreateSearchIndex
 
 isDirectory = false
 

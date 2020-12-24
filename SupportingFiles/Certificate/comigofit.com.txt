@@ -1,0 +1,75 @@
+﻿; Domain: comigofit.com
+; Exported (y-m-d hh:mm:ss): 2020-12-23 23:17:06
+;
+; This file is intended for use for informational and archival
+; purposes ONLY and MUST be edited before use on a production
+; DNS server.
+;
+; In particular, you must update the SOA record with the correct
+; authoritative name server and contact e-mail address information,
+; and add the correct NS records for the name servers which will
+; be authoritative for this domain.
+;
+; For further information, please consult the BIND documentation
+; located on the following website:
+;
+; http://www.isc.org/
+;
+; And RFC 1035:
+;
+; http://www.ietf.org/rfc/rfc1035.txt
+;
+; Please note that we do NOT offer technical support for any use
+; of this zone data, the BIND name server, or any other third-
+; party DNS software.
+;
+; Use at your own risk.
+
+
+$ORIGIN comigofit.com.
+
+; SOA Record
+@	3600	 IN 	SOA	ns07.domaincontrol.com.	dns.jomax.net. (
+					2020122417
+					28800
+					7200
+					604800
+					3600
+					) 
+
+; A Records
+@	604800	 IN 	A	51.120.98.192
+
+; CNAME Records
+api	604800	 IN 	CNAME	@
+app	604800	 IN 	CNAME	@
+backoffice	604800	 IN 	CNAME	@
+jobs	604800	 IN 	CNAME	@
+www	604800	 IN 	CNAME	@
+_acme-challenge.api.comigofit.com	600	 IN 	CNAME	@
+_acme-challenge.app.comigofit.com	600	 IN 	CNAME	@
+_acme-challenge.backoffice.comigofit.com	600	 IN 	CNAME	backoffice.
+_acme-challenge.comigofit.com	600	 IN 	CNAME	@
+_acme-challenge.jobs.comigofit.com	600	 IN 	CNAME	@
+_acme-challenge.www.comigofit.com	600	 IN 	CNAME	@
+
+; MX Records
+
+; TXT Records
+_acme-challenge	600	 IN 	TXT	"JOx09kFp-56uD-RHUgIkxVFC5lCLPn7h9fWsOlRL3eg"
+_acme-challenge.api	600	 IN 	TXT	"oVUDTSI0KoD0QBzLOUsVO0Ilff0uhbsAGE60xt00rd0"
+_acme-challenge.app	600	 IN 	TXT	"ix5FfklxUdFOtMb84ehC9b95fyhbURFPvT1bDuOcyog"
+_acme-challenge.backoffice	600	 IN 	TXT	"Cm6ISCzkWV_88FVtjh905fXnvd4CDTXv3QMRxl_ixGM"
+_acme-challenge.jobs	600	 IN 	TXT	"4O6ALfn6R_T_9q1YRVPJodIcfi7YPi7GUA9jJo1HyHg"
+_acme-challenge.www	600	 IN 	TXT	"9PCjdyfdG5v6WfoLb4yrl0MZVsqXu3lNluTBNo9"
+
+; SRV Records
+
+; AAAA Records
+
+; CAA Records
+
+; NS Records
+@	3600	 IN 	NS	ns07.domaincontrol.com.
+@	3600	 IN 	NS	ns08.domaincontrol.com.
+

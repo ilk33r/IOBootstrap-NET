@@ -6,3 +6,6 @@ IO.NetCoreSDKVersion
 
 IO.NetCoreAppDirectory
 netcoreapp5.0
+
+IO.Environment.Name
+Staging

@@ -55,9 +55,7 @@
     <Content Include="certificates\**" LinkBase="certificates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
-    <Content Include="webjobs\**" LinkBase="webjobs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
-    </Content>
+    <None Include="webjobs\**" LinkBase="webjobs" />
   </ItemGroup>
   -->
 

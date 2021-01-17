@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.8" />
-    <PackageReference Include="Sendgrid" Version="9.20.0" />
+    <PackageReference Include="Sendgrid" Version="9.22.0" />
   </ItemGroup>
 
   <PropertyGroup>

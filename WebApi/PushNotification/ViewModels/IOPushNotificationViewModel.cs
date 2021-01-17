@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
@@ -28,18 +29,24 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 			if (client != null)
 			{
 				pushNotificationsEntities = DatabaseContext.PushNotifications
-                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType && pn.Client.ClientId == client.ClientId);
+                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.Client.ClientId == client.ClientId);
 			}
 			else 
 			{
 				pushNotificationsEntities = DatabaseContext.PushNotifications
-                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId && pn.DeviceType == requestModel.DeviceType);
+                                                                .Where(pn => pn.DeviceId == requestModel.DeviceId);
 			}
 			 
 
 			// Check push notification entity exists
 			if (pushNotificationsEntities != null && pushNotificationsEntities.Count() > 0)
 			{
+				// Loop throught push notification entity
+				foreach (PushNotificationEntity pushEntity in pushNotificationsEntities) {
+					pushEntity.DeviceType = DeviceTypes.Unkown;
+					DatabaseContext.Update(pushEntity);
+				}
+
 				// Obtain push notification entity
 				PushNotificationEntity pushNotificationEntity = pushNotificationsEntities.First();
 
@@ -50,9 +57,10 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 				pushNotificationEntity.BadgeCount = 0;
 				pushNotificationEntity.DeviceName = requestModel.DeviceName;
 				pushNotificationEntity.DeviceToken = requestModel.DeviceToken;
+				pushNotificationEntity.DeviceType = requestModel.DeviceType;
 				pushNotificationEntity.LastUpdateTime = DateTime.UtcNow;
 
-                // Delete all entit
+                // Update entity
                 DatabaseContext.Update(pushNotificationEntity);
 
                 // Write transaction

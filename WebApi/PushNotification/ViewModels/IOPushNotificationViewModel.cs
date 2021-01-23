@@ -65,29 +65,28 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 
                 // Write transaction
                 DatabaseContext.SaveChanges();
+
+				return;
 			}
-			else
+
+			// Create a push notification entity
+			PushNotificationEntity newPushNotificationDeviceEntity = new PushNotificationEntity()
 			{
-				// Create a push notification entity
-				PushNotificationEntity pushNotificationEntity = new PushNotificationEntity()
-				{
-					AppBuildNumber = requestModel.AppBuildNumber,
-					AppBundleId = requestModel.AppBundleId,
-					AppVersion = requestModel.AppVersion,
-					BadgeCount = 0,
-                    Client = client,
-					DeviceId = requestModel.DeviceId,
-					DeviceName = requestModel.DeviceName,
-					DeviceToken = requestModel.DeviceToken,
-					DeviceType = requestModel.DeviceType,
-					LastUpdateTime = DateTime.UtcNow
-				};
+				AppBuildNumber = requestModel.AppBuildNumber,
+				AppBundleId = requestModel.AppBundleId,
+				AppVersion = requestModel.AppVersion,
+				BadgeCount = 0,
+                Client = client,
+				DeviceId = requestModel.DeviceId,
+				DeviceName = requestModel.DeviceName,
+				DeviceToken = requestModel.DeviceToken,
+				DeviceType = requestModel.DeviceType,
+				LastUpdateTime = DateTime.UtcNow
+			};
 
-                // Write push notification to database
-                DatabaseContext.Add(pushNotificationEntity);
-                DatabaseContext.SaveChanges();
-			}
+            // Write push notification to database
+            DatabaseContext.Add(newPushNotificationDeviceEntity);
+            DatabaseContext.SaveChanges();
         }
-
     }
 }

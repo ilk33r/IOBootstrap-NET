@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
@@ -174,8 +175,26 @@ namespace IOBootstrap.NET.Core.Controllers
         public override void OnActionExecuted(ActionExecutedContext context) {
             base.OnActionExecuted(context);
 
-            // Log call
-            Logger.LogInformation(context.Result.ToString());
+            // Check result type
+            string jsonString = null;
+            if (context.Result is JsonResult)
+            {
+                // Create JSON string
+                JsonResult resultJson = (JsonResult)context.Result;
+                jsonString = JsonSerializer.Serialize(resultJson.Value);    
+            }
+            else if (context.Result is ObjectResult)
+            {
+                // Create JSON string
+                ObjectResult resultJson = (ObjectResult)context.Result;
+                jsonString = JsonSerializer.Serialize(resultJson.Value);    
+            }
+
+            if (jsonString != null)
+            {
+                // Log call
+                Logger.LogInformation(String.Format("{0} - {1}", Request.Path, jsonString));
+            }
         }
 
         #endregion

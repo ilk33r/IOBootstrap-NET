@@ -45,6 +45,7 @@ namespace IOBootstrap.NET.Core.Controllers
             Configuration = configuration;
             DatabaseContext = databaseContext;
             Environment = environment;
+            Logger = logger;
 
             // Initialize view model
             ViewModel = new TViewModel();
@@ -172,6 +173,9 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public override void OnActionExecuted(ActionExecutedContext context) {
             base.OnActionExecuted(context);
+
+            // Log call
+            Logger.LogInformation(context.Result.ToString());
         }
 
         #endregion

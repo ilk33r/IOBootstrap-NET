@@ -50,6 +50,10 @@ namespace IOBootstrap.NET.Application
             {
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
+                loggingBuilder.AddIOFileLogger(options => 
+                {
+                    Configuration.GetSection("Logging").GetSection("IOFileLogger").GetSection("Options").Bind(options);
+                });
             });
             services.AddSession(options =>
             {

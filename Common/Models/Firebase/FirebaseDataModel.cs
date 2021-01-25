@@ -22,13 +22,17 @@ namespace IOBootstrap.NET.Common.Models.Firebase
         [JsonPropertyName("customData")]
         public string CustomData { get; set; }
 
-        public FirebaseDataModel(string title, string message, string notificationType, int notificationId, string customData) : base()
+        [JsonPropertyName("badgeCount")]
+        public int BadgeCount { get; set; }
+
+        public FirebaseDataModel(string title, string message, string notificationType, int notificationId, string customData, int badgeCount) : base()
         {
             this.Title = title;
             this.Message = message;
             this.NotificationType = notificationType;
             this.NotificationId = notificationId;
             this.CustomData = customData;
+            this.BadgeCount = badgeCount;
         }
     }
 }

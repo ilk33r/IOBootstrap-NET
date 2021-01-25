@@ -221,7 +221,8 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                 message.NotificationMessage,
                 message.NotificationCategory,
                 message.ID,
-                message.NotificationData);
+                message.NotificationData,
+                pushNotification.BadgeCount);
                 FirebaseUtils.FirebaseUtilsMessageTypes response = Firebase.SendNotifications(firebaseModel);
 
                 if (response == FirebaseUtils.FirebaseUtilsMessageTypes.Success)
@@ -254,7 +255,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
             {
                 APNSSendPayloadModel sendPayloadModel = new APNSSendPayloadModel(message.NotificationTitle, 
                 message.NotificationMessage, 
-                1, 
+                pushNotification.BadgeCount, 
                 pushNotification.DeviceToken, 
                 message.NotificationData,
                 message.NotificationCategory);
@@ -268,6 +269,7 @@ namespace IOBootstrap.NET.Batch.PushNotifications
                         PushNotificationMessage = message
                     };
                     DatabaseContext.Add(deliveredMessageEntity);
+                    Logger.LogDebug("Notification sended to device {0} badge {1}", pushNotification.DeviceToken, pushNotification.BadgeCount);
                 }
                 else if (response == APNSHttpServiceUtils.APNSHttpServiceUtilsMessageTypes.DeviceNotFound)
                 {

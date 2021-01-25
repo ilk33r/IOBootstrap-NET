@@ -54,7 +54,6 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
 				pushNotificationEntity.AppBuildNumber = requestModel.AppBuildNumber;
 				pushNotificationEntity.AppBundleId = requestModel.AppBundleId;
 				pushNotificationEntity.AppVersion = requestModel.AppVersion;
-				pushNotificationEntity.BadgeCount = 0;
 				pushNotificationEntity.DeviceName = requestModel.DeviceName;
 				pushNotificationEntity.DeviceToken = requestModel.DeviceToken;
 				pushNotificationEntity.DeviceType = requestModel.DeviceType;

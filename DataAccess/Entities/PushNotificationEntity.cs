@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
         [StringLength(128)]
         public string DeviceName { get; set; }
 
-        [StringLength(256)]
+        [StringLength(512)]
         public string DeviceToken { get; set; }
 
         public DeviceTypes DeviceType { get; set; }

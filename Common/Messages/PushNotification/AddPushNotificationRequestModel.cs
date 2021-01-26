@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
 		public String DeviceName { get; set; }
 
 		[Required]
-		[StringLength(256)]
+		[StringLength(512)]
 		public String DeviceToken { get; set; }
 
 		[Required]

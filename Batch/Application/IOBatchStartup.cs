@@ -92,7 +92,7 @@ namespace IOBootstrap.NET.Batch.Application
             // Create builder
             var builder = new ConfigurationBuilder()
                 .SetBasePath(configFilePath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 

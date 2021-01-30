@@ -126,11 +126,11 @@ namespace IOBootstrap.NET.Core.APNS
 
                 // base64 encode
                 jwtSignature = Convert.ToBase64String(sigBytes).Replace("+", "-").Replace("/", "_").Replace("=", "");
-                Logger.LogDebug("Apple Push Signature Created message bytes {0}", message.Length);
+                Logger.LogInformation("Apple Push Signature Created message bytes {0}", message.Length);
             }
             catch  (Exception ex)
             {
-                Logger.LogDebug(ex.Message);
+                Logger.LogError(ex.Message);
             }
 
             return String.Format(JWTHeaderAndBody, jwtHeaderAndBody, jwtSignature);
@@ -141,7 +141,7 @@ namespace IOBootstrap.NET.Core.APNS
             ECPrivateKeyParameters privateKey = null;
 
             try {
-                Logger.LogDebug("Apple Private Key Path {0}", APNSKeyFilePath);
+                Logger.LogInformation("Apple Private Key Path {0}", APNSKeyFilePath);
 
                 // Read key file
                 using (StreamReader reader = File.OpenText(APNSKeyFilePath))
@@ -153,7 +153,7 @@ namespace IOBootstrap.NET.Core.APNS
             }
             catch  (Exception ex)
             {
-                Logger.LogDebug("ECPrivateKeyParameters exception {0}", ex.Message);
+                Logger.LogError("ECPrivateKeyParameters exception {0}", ex.Message);
             }
 
             // Return certificate

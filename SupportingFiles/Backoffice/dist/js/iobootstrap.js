@@ -1722,19 +1722,19 @@ io.prototype.app.resourceUpdate = function (resourceID, resourceKeyData, resourc
         });
 };
 
-io.prototype.app.restartApp = function (e, hash) {
+io.prototype.app.resetCache = function (e, hash) {
     let io = window.ioinstance;
 
     // Show indicator
     io.indicator.show();
     io.selectMenu(hash);
 
-    let requestURLFormat = '%s/RestartApp';
+    let requestURLFormat = '%s/resetCache';
     let requestURL = requestURLFormat.format(IOGlobal.configurationControllerName);
     window.ioinstance.service.get(requestURL, function (status, response, error) {
         let callout = window.ioinstance.callout;
         if (status && response.status.success) {
-            callout.show(callout.types.success, 'Application restarted has been send successfully.', '');
+            callout.show(callout.types.success, 'Application has been cleaned.', '');
         } else {
             callout.show(callout.types.danger, error.message, error.detailedMessage);
         }

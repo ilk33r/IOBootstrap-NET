@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Configuration;
@@ -96,10 +97,9 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpGet]
-        public virtual IOConfigurationUpdateResponseModel RestartApp()
+        public virtual IOConfigurationUpdateResponseModel ResetCache()
         {
-            // Create and return response
-            // Program.Shutdown();
+            IOCache.ClearCache();
             return new IOConfigurationUpdateResponseModel(IOResponseStatusMessages.OK);
         }
 

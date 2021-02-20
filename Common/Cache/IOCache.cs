@@ -26,6 +26,12 @@ namespace IOBootstrap.NET.Common.Cache
             }
         }
 
+        public static void ClearCache() 
+        {
+            IOCache.CachedObjects = null;
+            IOCache.InitializeCache();
+        }
+
         public static IOCacheObject GetCachedObject(string key)
         {
             IOCache.InitializeCache();

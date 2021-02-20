@@ -213,12 +213,12 @@ namespace IOBootstrap.NET.Application
             IORoute deleteConfigurationItemRoute = new IORoute("DeleteConfigItem", configurationControllerName);
             IORoute listConfigurationItemsRoute = new IORoute("ListConfigurationItems", configurationControllerName);
             IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
-            IORoute restartAppRoute = new IORoute("RestartApp", configurationControllerName);
+            IORoute resetCacheRoute = new IORoute("ResetCache", configurationControllerName);
             endpoints.MapControllerRoute("addConfigurationItem", addConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("deleteConfigurationItem", deleteConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("restartApp", restartAppRoute.GetRouteString());
+            endpoints.MapControllerRoute("resetCache", resetCacheRoute.GetRouteString());
         }
 
         public virtual void ConfigureHandshakeEndpoints(IEndpointRouteBuilder endpoints)

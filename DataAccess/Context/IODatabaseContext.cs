@@ -382,9 +382,9 @@ namespace IOBootstrap.NET.DataAccess.Context
             IOMenuEntity recycleAppEntity = new IOMenuEntity()
             {
                 ID = 14,
-                Action = "restartApp",
+                Action = "resetCache",
                 CssClass = "fa-circle-o",
-                Name = "Restart App",
+                Name = "Reset Cache",
                 MenuOrder = 14,
                 RequiredRole = (int)UserRoles.SuperAdmin,
                 ParentEntityID = 11

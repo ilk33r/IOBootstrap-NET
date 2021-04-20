@@ -33,9 +33,14 @@ namespace IOBootstrap.NET.Core.Logger
             string fullFilePath = FileLoggerProvider.Options.FolderPath + "/" + FileLoggerProvider.Options.FilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
             string logRecord = string.Format("{0} [{1}] {2} {3}", "[" + DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00") + "]", logLevel.ToString(), formatter(state, exception), exception != null ? exception.StackTrace : "");
  
-            using (var streamWriter = new StreamWriter(fullFilePath, true))
+            try {
+                using (var streamWriter = new StreamWriter(fullFilePath, true))
+                {
+                    streamWriter.WriteLine(logRecord);
+                }
+            } 
+            catch (Exception) 
             {
-                streamWriter.WriteLine(logRecord);
             }
         }
     }

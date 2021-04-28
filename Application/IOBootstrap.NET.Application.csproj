@@ -52,10 +52,10 @@
   <!--
   <ItemGroup> 
     <Content Include="maworkout-01-test.pubxml"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="certificates\**" LinkBase="certificates">
+    <Content Include="Certificates\**" LinkBase="Certificates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
-    <None Include="webjobs\**" LinkBase="webjobs" />
+    <None Include="Webjobs\**" LinkBase="Webjobs" />
   </ItemGroup>
   -->
 

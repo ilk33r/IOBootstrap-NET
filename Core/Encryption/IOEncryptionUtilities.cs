@@ -26,7 +26,6 @@ namespace IOBootstrap.NET.Core.Encryption
             // Create key id
             string keyID = IORandomUtilities.GenerateGUIDString();
             IOCacheObject keyIDCacheObject = new IOCacheObject(IOCacheKeys.RSAPrivateKeyIDCacheKey, keyID, IOCommonConstants.KeyPairCacheTimeInterval);
-            IOCache.CacheObject(keyIDCacheObject);
 
             // Create key pair generator
             RsaKeyPairGenerator keyPairGenerator = new RsaKeyPairGenerator();
@@ -36,6 +35,7 @@ namespace IOBootstrap.NET.Core.Encryption
             RsaPrivateCrtKeyParameters privateKey = (RsaPrivateCrtKeyParameters)keyPair.Private;
             cachedKey = new IOCacheObject(IOCacheKeys.RSAPrivateKeyCacheKey, privateKey, IOCommonConstants.KeyPairCacheTimeInterval);
             IOCache.CacheObject(cachedKey);
+            IOCache.CacheObject(keyIDCacheObject);
 
             return privateKey;
         }

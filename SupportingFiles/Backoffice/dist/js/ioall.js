@@ -1,10 +1,11 @@
-var io = function (authorization, appName, backOfficePath, clientId, clientSecret, debug, layoutApiUrl, serviceApiUrl, version) {
+var io = function (authorization, appName, backOfficePath, clientId, clientSecret, debug, layoutApiUrl, layoutApiPath, serviceApiUrl, version) {
     'use strict';
     this.authorization = authorization;
     this.appName = appName;
     this.backOfficePath = backOfficePath;
     this.log.debug = debug;
     this.layoutApiUrl = layoutApiUrl;
+    this.layoutApiPath = layoutApiPath;
     this.serviceApiUrl = serviceApiUrl;
     this.token = localStorage.getItem('token');
     this.userRole = -1;
@@ -207,7 +208,11 @@ io.prototype = {
         });
     },
     openWindow: function (hash) {
-        var url = this.layoutApiUrl + '/#!' + hash;
+        var url = this.layoutApiUrl;
+        if (this.layoutApiPath.length > 0) {
+            url += "/" + this.layoutApiPath;
+        }
+        url += '#!' + hash;
         this.openedWindow = window.open(url, hash, 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
     },
     showDashboard: function () {
@@ -362,7 +367,7 @@ io.prototype.layout = {
             var element = $(this);
             var actionName = element.attr('data-method');
             var params = element.attr('data-params');
-            var paramsJson = atob(params);
+            var paramsJson = params.b64decode();
             var messageData = {
                 'actionName': actionName,
                 'data': JSON.parse(paramsJson)
@@ -1580,6 +1585,7 @@ $(document).ready(function () {
        IOGlobal.clientSecret,
        IOGlobal.isDebug,
        IOGlobal.layoutApiUrl,
+       IOGlobal.layoutPath,
        IOGlobal.serviceApiUrl,
        IOGlobal.version);
 

@@ -49,14 +49,14 @@ namespace IOBootstrap.NET.Core.Middlewares
             }
             else
             {
-                exceptionContent = ex.Message;
+                exceptionContent = "An exception occured.";
             }
 
             IOResponseStatusModel responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, exceptionContent);
             IOResponseModel responseModel = new IOResponseModel(responseStatusModel);
 
             // Log call
-            Logger.LogError(ex, ex.Message);
+            Logger.LogError(ex, exceptionContent);
 
             // Override response
             context.Response.StatusCode = (int)HttpStatusCode.OK;

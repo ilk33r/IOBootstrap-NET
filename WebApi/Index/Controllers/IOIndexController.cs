@@ -24,6 +24,7 @@ namespace IOBootstrap.NET.WebApi.Index.Controllers
 
         #region Default
 
+        // [Obsolete("This Method is Deprecated", false)]
         public virtual IOResponseModel Index()
         {
             // Obtain app version

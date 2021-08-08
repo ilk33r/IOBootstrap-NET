@@ -6,6 +6,7 @@ using System.Text.Json;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
@@ -26,6 +27,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Properties
 
+        [Obsolete("This Property is Deprecated", false)]
         public bool ActionExecuted = false;
         public IConfiguration Configuration { get; set; }
         public TDBContext DatabaseContext { get; }
@@ -63,12 +65,7 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuting(context);
 
             // Check https is required
-            if (CheckHttpsRequired(context))
-            {
-                // Do nothing
-                ActionExecuted = true;
-                return;
-            }
+            CheckHttpsRequired(context);
 
             // Check user role
             if (!CheckRole(context))
@@ -215,7 +212,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Create response status model
-            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.ENDPOINT_FAILURE,
+            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.EndpointFailure,
                                                                          String.Format("Path {0} is invalid.", requestPath));
 
             // Return response
@@ -387,7 +384,32 @@ namespace IOBootstrap.NET.Core.Controllers
             return true;
         }
 
-        public bool CheckHttpsRequired(ActionExecutingContext context)
+        public virtual void CheckHttpsRequired(ActionExecutingContext context)
+        {   
+            if (HasControllerAttribute<IORequireHTTPSAttribute>(context))
+            {
+                bool httpsRequired = Configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
+
+                // Check attribute type
+                if (httpsRequired && !Request.Scheme.Equals("https"))
+                {
+                    throw new IOHttpsRequiredException();
+                }
+            }
+        }
+
+        public virtual string GetControllerName()
+        {
+            // Obtain class name
+            String className = GetType().Name;
+
+            // Substract controller word
+            string[] controllerName = className.Split(new string[] { "Controller" }, StringSplitOptions.None);
+
+            return controllerName.First();
+        }
+
+        public virtual bool HasControllerAttribute<T>(ActionExecutingContext context)
         {
             // Obtain action desctriptor
             ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
@@ -397,39 +419,14 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Loop throught descriptors
                 foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
                 {
-                    if (descriptor.AttributeType == typeof(IORequireHTTPSAttribute))
+                    if (descriptor.AttributeType == typeof(T))
                     {
-                        bool httpsRequired = Configuration.GetValue<bool>(IOConfigurationConstants.HttpsRequired);
-
-                        // Check attribute type
-                        if (httpsRequired && !Request.Scheme.Equals("https"))
-                        {
-                            // Obtain response model
-                            IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.HTTPS_REQUIRED);
-
-                            // Override response
-                            JsonResult result = new JsonResult(responseModel);
-                            context.Result = result;
-
-                            // Do nothing
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
 
             return false;
-        }
-
-        public string GetControllerName()
-        {
-            // Obtain class name
-            String className = GetType().Name;
-
-            // Substract controller word
-            string[] controllerName = className.Split(new string[] { "Controller" }, StringSplitOptions.None);
-
-            return controllerName.First();
         }
 
         #endregion

@@ -4,6 +4,7 @@ using IOBootstrap.NET.BackOffice.User.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -111,7 +112,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
 			// Return bad request
-			return new IOResponseModel(IOResponseStatusMessages.USER_NOT_FOUND);
+            throw new IOUserNotFoundException();
         }
 
         [IOUserRole(UserRoles.Admin)]
@@ -151,7 +152,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             else if (status == 1)
             {
                 // Obtain 400 error 
-                return new IOUpdateUserResponseModel(IOResponseStatusMessages.USER_NOT_FOUND);
+                throw new IOUserNotFoundException();
             }
 
             return new IOUpdateUserResponseModel(IOResponseStatusMessages.OK);

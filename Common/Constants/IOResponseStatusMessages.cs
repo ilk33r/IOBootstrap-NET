@@ -18,7 +18,6 @@ namespace IOBootstrap.NET.Common.Constants
             {600, "Authorization failed."},
             {630, "Key expired."},
             {700, "User exists."},
-            {701, "User not found."},
             {900, "General exception."}
         };
 
@@ -35,7 +34,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static int AUTHORIZATION_FAILED = 600;
         public static int INVALID_KEY_ID = 630;
         public static int USER_EXISTS = 700;
-        public static int USER_NOT_FOUND = 701;
         public static int GENERAL_EXCEPTION = 900;
 
         #endregion

@@ -6,7 +6,9 @@ namespace IOBootstrap.NET.Common.Constants
     {
 
         public const int InvalidCredentialsCode = 403;
+        public const int UserNotFoundCode = 701;
 
         public const string InvalidCredentialsMessage = "Invalid credientals.";
+        public const string UserNotFoundMessage = "User not found.";
     }
 }

@@ -79,28 +79,8 @@ namespace IOBootstrap.NET.Core.Controllers
             // Check key id
             CheckKeyID(context);
 
-            // Obtain client info
-            bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
-            if (checkClientInfo) 
-            {
-                string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? (string)Request.Headers[IORequestHeaderConstants.ClientId] : "";
-                string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
-
-                // Check client info
-                if (!ViewModel.CheckClient(clientId, clientSecret))
-                {
-                    // Obtain response model
-                    IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_CLIENT);
-
-                    // Override response
-                    JsonResult result = new JsonResult(responseModel);
-                    context.Result = result;
-
-                    // Do nothing
-                    ActionExecuted = true;
-                    return;
-                }
-            }
+            // Check client info
+            ViewModel.CheckClient();
 
             // Check back office page host name
             string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);

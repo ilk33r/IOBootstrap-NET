@@ -6,6 +6,7 @@ namespace IOBootstrap.NET.Common.Constants
     {
 
         public const int HttpsRequiredCode = 405;
+        public const int InvalidClientCode = 406;
         public const int InvalidCredentialsCode = 403;
         public const int InvalidKeyIDCode = 630;
         public const int InvalidPermissionCode = 401;
@@ -13,6 +14,7 @@ namespace IOBootstrap.NET.Common.Constants
         public const int UserNotFoundCode = 701;
 
         public const string HttpsRequiredMessage = "Https required.";
+        public const string InvalidClientMessage = "Invalid client ID.";
         public const string InvalidCredentialsMessage = "Invalid credientals.";
         public const string InvalidKeyIDMessage = "Invalid key ID or key expired.";
         public const string InvalidPermissionMessage = "Invalid permission.";

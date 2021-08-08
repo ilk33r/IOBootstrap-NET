@@ -62,8 +62,19 @@ namespace IOBootstrap.NET.Core.ViewModels
 			throw new IOUnAuthorizeException();
 		}
 
-        public virtual bool CheckClient(string clientId, string clientSecret)
+        public virtual void CheckClient()
 		{
+            // Obtain client info
+            bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
+            if (!checkClientInfo)
+            {
+                return;
+            }
+
+            // Obtain client ID and Secret
+            string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? (string)Request.Headers[IORequestHeaderConstants.ClientId] : "";
+            string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
+
             // Find client
             var clientsEntity = DatabaseContext.Clients.Where((arg1) => arg1.ClientId == clientId);
 
@@ -95,13 +106,13 @@ namespace IOBootstrap.NET.Core.ViewModels
                         DatabaseContext.SaveChanges();
 
                         // Then return client valid
-                        return true;   
+                        return;   
                     }
 				}
 			}
 
 			// Then return invalid clients
-			return false;
+			throw new IOInvalidClientException();
 		}
 
         public virtual int GetUserRole()

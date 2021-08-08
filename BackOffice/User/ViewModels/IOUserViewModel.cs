@@ -26,7 +26,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
         #region View Model Methods
 
-        public virtual Tuple<bool, int, string> AddUser(string userName, string password, int userRole)
+        public virtual Tuple<int, string> AddUser(string userName, string password, int userRole)
         {
             // Obtain users entity
             IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             if (user != null)
 			{
                 // Return user exists response
-                return new Tuple<bool, int, string>(false, 0, null);
+                throw new IOUserExistsException();
 			}
 
 			// Create a users entity 
@@ -53,7 +53,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             DatabaseContext.SaveChanges();
 
             // Return status
-            return new Tuple<bool, int, string>(true, newUserEntity.ID, userName);
+            return new Tuple<int, string>(newUserEntity.ID, userName);
         }
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword) 
@@ -116,7 +116,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             return users;
         }
 
-        public int UpdateUser(IOUpdateUserRequestModel request)
+        public void UpdateUser(IOUpdateUserRequestModel request)
         {
             IOUserEntity user = DatabaseContext.Users.Find(request.UserId);
             string userName = request.UserName.ToLower();
@@ -134,7 +134,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
             if (newUsers == null || newUsers.Count() != 0)
             {
-                return 3;
+                throw new IOUserExistsException();
             }
 
             // Update user properties
@@ -150,8 +150,6 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             // Update user password
             DatabaseContext.Update(user);
             DatabaseContext.SaveChanges();
-
-            return 0;
         }
 
         #endregion

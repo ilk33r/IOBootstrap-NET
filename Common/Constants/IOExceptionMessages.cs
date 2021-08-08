@@ -11,6 +11,7 @@ namespace IOBootstrap.NET.Common.Constants
         public const int InvalidKeyIDCode = 630;
         public const int InvalidPermissionCode = 401;
         public const int UnauthorizedCode = 600;
+        public const int UserExistsCode = 700;
         public const int UserNotFoundCode = 701;
 
         public const string HttpsRequiredMessage = "Https required.";
@@ -19,6 +20,7 @@ namespace IOBootstrap.NET.Common.Constants
         public const string InvalidKeyIDMessage = "Invalid key ID or key expired.";
         public const string InvalidPermissionMessage = "Invalid permission.";
         public const string UnauthorizedMessage = "Authorization failed.";
+        public const string UserExistsMessage = "User exists.";
         public const string UserNotFoundMessage = "User not found.";
     }
 }

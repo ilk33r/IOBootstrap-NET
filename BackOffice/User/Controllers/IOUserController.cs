@@ -47,17 +47,10 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			}
 
             // Obtain add user response
-            Tuple<bool, int, string> addUserStatus = ViewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
+            Tuple<int, string> addUserStatus = ViewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
 
-            // Check add user is success
-            if (addUserStatus.Item1) 
-            {
-				// Create and return response
-                return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), addUserStatus.Item2, addUserStatus.Item3);
-            }
-
-			// Return user exists response
-            return new IOAddUserResponseModel(IOResponseStatusMessages.USER_EXISTS);
+			// Create and return response
+            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), addUserStatus.Item1, addUserStatus.Item2);
 		}
 
         [IOUserRole(UserRoles.User)]
@@ -137,14 +130,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
                 return new IOUpdateUserResponseModel(IOResponseStatusMessages.BAD_REQUEST);
             }
 
-            int status = ViewModel.UpdateUser(requestModel);
-
-            if (status == 3)
-            {
-                // Obtain 400 error 
-                return new IOUpdateUserResponseModel(IOResponseStatusMessages.USER_EXISTS);
-            }
-
+            ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel(IOResponseStatusMessages.OK);
         }
 

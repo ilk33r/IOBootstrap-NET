@@ -27,8 +27,6 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Properties
 
-        [Obsolete("This Property is Deprecated", false)]
-        public bool ActionExecuted = false;
         public IConfiguration Configuration { get; set; }
         public TDBContext DatabaseContext { get; }
         public IWebHostEnvironment Environment { get; }
@@ -116,7 +114,6 @@ namespace IOBootstrap.NET.Core.Controllers
                 context.Result = GetWebIndex(layoutName);
 
                 // Do nothing
-                ActionExecuted = true;
                 return;
             }
         }

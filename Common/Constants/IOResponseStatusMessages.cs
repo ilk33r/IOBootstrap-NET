@@ -12,7 +12,6 @@ namespace IOBootstrap.NET.Common.Constants
             {200, "OK"},
             {400, "Invalid request."},
             {404, "Endpoint not found."},
-            {700, "User exists."},
             {900, "General exception."}
         };
 
@@ -23,7 +22,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static int OK = 200;
         public static int BAD_REQUEST = 400;
         public const int EndpointFailure = 404;
-        public static int USER_EXISTS = 700;
         public static int GENERAL_EXCEPTION = 900;
 
         #endregion

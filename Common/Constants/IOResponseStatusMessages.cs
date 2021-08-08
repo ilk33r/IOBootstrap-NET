@@ -11,7 +11,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static Dictionary<int, string> Messages = new Dictionary<int, string> {
             {200, "OK"},
             {400, "Invalid request."},
-            {401, "Invalid permission."},
             {404, "Endpoint not found."},
             {406, "Invalid client."},
             {600, "Authorization failed."},
@@ -26,7 +25,6 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static int OK = 200;
         public static int BAD_REQUEST = 400;
-        public static int INVALID_PERMISSION = 401;
         public const int EndpointFailure = 404;
         public static int INVALID_CLIENT = 406;
         public static int AUTHORIZATION_FAILED = 600;

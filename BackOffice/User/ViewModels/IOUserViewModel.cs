@@ -8,6 +8,8 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Common.Messages.Users;
+using IOBootstrap.NET.Common.Exceptions.Members;
+using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels
 {
@@ -121,35 +123,35 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
             if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserEntity.UserRole))
             {
-                return 2;
+                throw new IOInvalidPermissionException();
             }
 
-            if (user != null) 
+            if (user == null)
             {
-                var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
-                if (newUsers == null || newUsers.Count() != 0)
-                {
-                    return 3;
-                }
-
-                // Update user properties
-                user.UserName = userName;
-                user.UserRole = request.UserRole;
-
-                if (!String.IsNullOrEmpty(request.UserPassword))
-                {
-                    user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
-                    user.UserToken = null;
-                }
-
-                // Update user password
-                DatabaseContext.Update(user);
-                DatabaseContext.SaveChanges();
-
-                return 0;
+                throw new IOUserNotFoundException();
             }
 
-            return 1;
+            var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
+            if (newUsers == null || newUsers.Count() != 0)
+            {
+                return 3;
+            }
+
+            // Update user properties
+            user.UserName = userName;
+            user.UserRole = request.UserRole;
+
+            if (!String.IsNullOrEmpty(request.UserPassword))
+            {
+                user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
+                user.UserToken = null;
+            }
+
+            // Update user password
+            DatabaseContext.Update(user);
+            DatabaseContext.SaveChanges();
+
+            return 0;
         }
 
         #endregion

@@ -68,12 +68,7 @@ namespace IOBootstrap.NET.Core.Controllers
             CheckHttpsRequired(context);
 
             // Check user role
-            if (!CheckRole(context))
-            {
-                // Do nothing
-                ActionExecuted = true;
-                return;
-            }
+            CheckRole(context);
 
             // Update view model request value
             ViewModel.Request = Request;
@@ -348,7 +343,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return false;
         }
 
-        public virtual bool CheckRole(ActionExecutingContext context)
+        public virtual void CheckRole(ActionExecutingContext context)
         {
             // Obtain action desctriptor
             ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
@@ -366,22 +361,11 @@ namespace IOBootstrap.NET.Core.Controllers
                         // Check attribute type and role
                         if (requiredRole != null && !IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                         {
-                            // Obtain response model
-                            IOResponseStatusModel responseStatus = new IOResponseStatusModel(IOResponseStatusMessages.INVALID_PERMISSION, "Restricted page. User role is " + userRole + " required role is " + requiredRole);
-                            IOResponseModel responseModel = new IOResponseModel(responseStatus);
-
-                            // Override response
-                            JsonResult result = new JsonResult(responseModel);
-                            context.Result = result;
-
-                            // Do nothing
-                            return false;
+                            throw new IOInvalidPermissionException("Restricted page. User role is " + userRole + " required role is " + requiredRole);
                         }
                     }
                 }
             }
-
-            return true;
         }
 
         public virtual void CheckHttpsRequired(ActionExecutingContext context)

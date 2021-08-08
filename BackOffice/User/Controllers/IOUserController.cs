@@ -144,16 +144,6 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
                 // Obtain 400 error 
                 return new IOUpdateUserResponseModel(IOResponseStatusMessages.USER_EXISTS);
             }
-            else if (status == 2)
-            {
-                // Obtain 400 error 
-                return new IOUpdateUserResponseModel(IOResponseStatusMessages.INVALID_PERMISSION);
-            }
-            else if (status == 1)
-            {
-                // Obtain 400 error 
-                throw new IOUserNotFoundException();
-            }
 
             return new IOUpdateUserResponseModel(IOResponseStatusMessages.OK);
         }

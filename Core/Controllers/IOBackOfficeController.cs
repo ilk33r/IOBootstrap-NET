@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
@@ -37,15 +38,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
             if (!ViewModel.IsBackOffice()) 
             {
-                // Obtain response model
-                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_PERMISSION);
-
-                // Override response
-                JsonResult result = new JsonResult(responseModel);
-                context.Result = result;
-
-                ActionExecuted = true;
-                return;
+                throw new IOInvalidPermissionException();
             }
 
             base.OnActionExecuting(context);

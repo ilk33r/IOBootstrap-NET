@@ -12,7 +12,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels
             #if DEBUG
             return;
             #else
-            return base.CheckAuthorizationHeader();
+            base.CheckAuthorizationHeader();
             #endif
         }
     }

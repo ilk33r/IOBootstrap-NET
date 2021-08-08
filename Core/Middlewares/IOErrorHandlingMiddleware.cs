@@ -52,14 +52,14 @@ namespace IOBootstrap.NET.Core.Middlewares
             else if (IsDevelopment) 
             {
                 string exceptionContent = ex.Message + '\n' + '\n' + ex.StackTrace;
-                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, exceptionContent);
+                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.UnkownException, exceptionContent);
 
                 // Log call
                 Logger.LogError(ex, exceptionContent);
             }
             else
             {
-                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, "An exception occured.");
+                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.UnkownException, "An exception occured.");
 
                 // Log call
                 Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);

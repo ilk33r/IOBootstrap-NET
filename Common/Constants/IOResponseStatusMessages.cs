@@ -12,7 +12,7 @@ namespace IOBootstrap.NET.Common.Constants
             {200, "OK"},
             {400, "Invalid request."},
             {404, "Endpoint not found."},
-            {900, "General exception."}
+            {500, "Unkown exception."}
         };
 
         #endregion
@@ -22,7 +22,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static int OK = 200;
         public static int BAD_REQUEST = 400;
         public const int EndpointFailure = 404;
-        public static int GENERAL_EXCEPTION = 900;
+        public const int UnkownException = 500;
 
         #endregion
     }

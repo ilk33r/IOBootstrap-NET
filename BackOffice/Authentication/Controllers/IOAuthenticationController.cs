@@ -28,18 +28,9 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         #region Authentication Api
 
         [HttpPost]
+        [IOValidateRequestModel]
         public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.UserName)
-                || String.IsNullOrEmpty(requestModel.Password)
-                || requestModel.Password.Length < 4)
-            {
-                // Then return validation error
-                return new IOAuthenticationResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Authenticate user
             Tuple<bool, string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
 

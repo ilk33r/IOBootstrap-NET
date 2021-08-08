@@ -30,17 +30,11 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         #region Configuration Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOConfigurationAddResponseModel AddConfigItem([FromBody] IOConfigurationAddRequestModel requestModel)
         {
-            // Validate request
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOConfigurationAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.AddConfigItem(requestModel);
 
@@ -48,17 +42,11 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             return new IOConfigurationAddResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOConfigurationDeleteResponseModel DeleteConfigItem([FromBody] IOConfigurationDeleteRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOConfigurationDeleteResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.DeleteConfigItem(requestModel.ConfigId);
 
@@ -77,17 +65,11 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             return new IOConfigurationListResponseModel(IOResponseStatusMessages.OK, configurationItems);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOConfigurationUpdateResponseModel UpdateConfigItem([FromBody] IOConfigurationUpdateRequestModel requestModel)
         {
-            // Validate request
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOConfigurationUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.UpdateConfigItem(requestModel);
 

@@ -74,19 +74,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.Request = Request;
 
             // Check authorization
-            if (!ViewModel.CheckAuthorizationHeader())
-            {
-                // Obtain response model
-                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.AUTHORIZATION_FAILED);
-
-                // Override response
-                JsonResult result = new JsonResult(responseModel);
-                context.Result = result;
-
-                // Do nothing
-                ActionExecuted = true;
-                return;
-            }
+            ViewModel.CheckAuthorizationHeader();
 
             if (!ActionExecuted && !CheckKeyID(context))
             {

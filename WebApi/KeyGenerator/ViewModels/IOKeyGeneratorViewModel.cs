@@ -7,10 +7,10 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels
     public class IOKeyGeneratorViewModel : IOViewModel<IODatabaseContextDefaultImpl>
     {
 
-        public override bool CheckAuthorizationHeader()
+        public override void CheckAuthorizationHeader()
         {
             #if DEBUG
-            return true;
+            return;
             #else
             return base.CheckAuthorizationHeader();
             #endif

@@ -2,6 +2,7 @@
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
@@ -42,7 +43,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
 		#region Helper Methods
 
-        public virtual bool CheckAuthorizationHeader()
+        public virtual void CheckAuthorizationHeader()
 		{
 			// Check authorization header key exists
 			if (Request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
@@ -54,11 +55,11 @@ namespace IOBootstrap.NET.Core.ViewModels
 				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))
 				{
 					// Then authorization success
-					return true;
+					return;
 				}
 			}
 
-			return false;
+			throw new IOUnAuthorizeException();
 		}
 
         public virtual bool CheckClient(string clientId, string clientSecret)

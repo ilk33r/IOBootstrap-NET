@@ -13,7 +13,6 @@ namespace IOBootstrap.NET.Common.Constants
             {400, "Invalid request."},
             {404, "Endpoint not found."},
             {406, "Invalid client."},
-            {600, "Authorization failed."},
             {630, "Key expired."},
             {700, "User exists."},
             {900, "General exception."}
@@ -27,7 +26,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static int BAD_REQUEST = 400;
         public const int EndpointFailure = 404;
         public static int INVALID_CLIENT = 406;
-        public static int AUTHORIZATION_FAILED = 600;
         public static int INVALID_KEY_ID = 630;
         public static int USER_EXISTS = 700;
         public static int GENERAL_EXCEPTION = 900;

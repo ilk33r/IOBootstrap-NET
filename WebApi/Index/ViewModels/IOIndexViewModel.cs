@@ -6,9 +6,9 @@ namespace IOBootstrap.NET.WebApi.Index.ViewModels
 {
     public class IOIndexViewModel : IOViewModel<IODatabaseContextDefaultImpl>
     {        
-        public override bool CheckAuthorizationHeader()
+        public override void CheckAuthorizationHeader()
         {
-            return true;
+            return;
         }
     }
 }

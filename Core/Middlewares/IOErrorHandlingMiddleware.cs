@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Base;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Logger;
@@ -41,22 +42,30 @@ namespace IOBootstrap.NET.Core.Middlewares
 
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            string exceptionContent;
+            IOResponseStatusModel responseStatusModel;
 
-            if (IsDevelopment) 
+            if (ex is IOServiceException)
             {
-                exceptionContent = ex.Message + '\n' + '\n' + ex.StackTrace;
+                IOServiceException serviceException = (IOServiceException)ex;
+                responseStatusModel = new IOResponseStatusModel(serviceException.Code, serviceException.Message, false, serviceException.DetailedMessage);
+            }
+            else if (IsDevelopment) 
+            {
+                string exceptionContent = ex.Message + '\n' + '\n' + ex.StackTrace;
+                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, exceptionContent);
+
+                // Log call
+                Logger.LogError(ex, exceptionContent);
             }
             else
             {
-                exceptionContent = "An exception occured.";
+                responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, "An exception occured.");
+
+                // Log call
+                Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);
             }
 
-            IOResponseStatusModel responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.GENERAL_EXCEPTION, exceptionContent);
             IOResponseModel responseModel = new IOResponseModel(responseStatusModel);
-
-            // Log call
-            Logger.LogError(ex, exceptionContent);
 
             // Override response
             context.Response.StatusCode = (int)HttpStatusCode.OK;

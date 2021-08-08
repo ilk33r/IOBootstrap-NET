@@ -1,6 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
@@ -47,7 +48,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             }
 
             // Return response
-            return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS), authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4, authenticationResult.Item5);
+            throw new IOInvalidCredentialsException();
         }
 
         [HttpPost]
@@ -71,7 +72,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             }
 
             // Return response
-            return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.INVALID_CREDIENTALS), DateTime.Now, null, 0);
+            throw new IOInvalidCredentialsException();
         }
 
         #endregion

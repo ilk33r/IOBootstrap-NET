@@ -12,7 +12,6 @@ namespace IOBootstrap.NET.Common.Constants
             {200, "OK"},
             {400, "Invalid request."},
             {401, "Invalid permission."},
-            {403, "Invalid credientals."},
             {404, "Endpoint could not found."},
             {405, "Https required."},
             {406, "Invalid client."},
@@ -30,7 +29,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static int OK = 200;
         public static int BAD_REQUEST = 400;
         public static int INVALID_PERMISSION = 401;
-        public static int INVALID_CREDIENTALS = 403;
         public static int ENDPOINT_FAILURE = 404;
         public static int HTTPS_REQUIRED = 405;
         public static int INVALID_CLIENT = 406;

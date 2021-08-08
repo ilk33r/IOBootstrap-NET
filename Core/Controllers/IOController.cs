@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -116,6 +117,9 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
+
+            // Validate request
+            ValidateRequestModel(context);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context) {
@@ -365,6 +369,32 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             return false;
+        }
+
+        public virtual void ValidateRequestModel(ActionExecutingContext context)
+        {
+            if (!HasControllerAttribute<IOValidateRequestModelAttribute>(context))
+            {
+                return;
+            }
+
+            if (ModelState.IsValid)
+            {
+                return;
+            }
+
+            string detailedMessage = "";
+            if (ModelState.Values.Count() > 0)
+            {
+                ModelStateEntry entry = ModelState.Values.First();
+                
+                if (entry.Errors.Count() > 0)
+                {
+                    detailedMessage = entry.Errors.First().ErrorMessage;
+                }
+            }
+            
+            throw new IOInvalidRequestException(detailedMessage);
         }
 
         #endregion

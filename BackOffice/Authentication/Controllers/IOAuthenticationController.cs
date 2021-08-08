@@ -1,5 +1,6 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Authentication;
@@ -52,16 +53,9 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         }
 
         [HttpPost]
+        [IOValidateRequestModel]
         public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.Token))
-            {
-                // Then return validation error
-                return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST), DateTime.Now, null, 0);
-            }
-
             // Check token
             Tuple<bool, DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);
 

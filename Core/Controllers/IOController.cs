@@ -76,19 +76,8 @@ namespace IOBootstrap.NET.Core.Controllers
             // Check authorization
             ViewModel.CheckAuthorizationHeader();
 
-            if (!ActionExecuted && !CheckKeyID(context))
-            {
-                ActionExecuted = true;
-
-                // Obtain response model
-                IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.INVALID_KEY_ID);
-
-                // Override response
-                JsonResult result = new JsonResult(responseModel);
-                context.Result = result;
-
-                return;
-            }
+            // Check key id
+            CheckKeyID(context);
 
             // Obtain client info
             bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
@@ -305,13 +294,13 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Helper Methods
 
-        private bool CheckKeyID(ActionExecutingContext context)
+        private void CheckKeyID(ActionExecutingContext context)
         {
             // Obtain key id
             string keyID = Request.Headers[IORequestHeaderConstants.KeyID];
             if (String.IsNullOrEmpty(keyID))
             {
-                return true;
+                return;
             }
 
             string currentKeyID = "";
@@ -325,10 +314,10 @@ namespace IOBootstrap.NET.Core.Controllers
 
             if (currentKeyID.Equals(keyID))
             {
-                return true;
+                return;
             }
 
-            return false;
+            throw new IOInvalidKeyIDException();
         }
 
         public virtual void CheckRole(ActionExecutingContext context)

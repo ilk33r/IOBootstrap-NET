@@ -13,7 +13,7 @@ io.prototype.request.ConfigurationDeleteRequest = {
     ConfigId: 0
 };
 
-io.prototype.request.MenuUpdateRequestModel = {
+io.prototype.request.MenuDeleteRequestModel = {
     Culture: 0,
     Version: '',
     ID: 0
@@ -702,7 +702,7 @@ io.prototype.app.menuEditorAdd = function (e, hash) {
 io.prototype.app.menuEditorDelete = function (id) {
     var answer = confirm("Are you sure want to delete this menu ?");
     if (answer) {
-        var request = window.ioinstance.request.MenuUpdateRequestModel;
+        var request = window.ioinstance.request.MenuDeleteRequestModel;
         request.Version = window.ioinstance.version;
         request.ID = id;
         window.ioinstance.indicator.show();
@@ -884,7 +884,9 @@ io.prototype.app.messageDelete = function (id) {
         request.Version = window.ioinstance.version;
         request.MessageId = id;
         window.ioinstance.indicator.show();
-        window.ioinstance.service.post('backoffice/messages/delete', request, function (status, response, error) {
+        let requestURLFormat = '%s/DeleteMessagesItem';
+        let requestURL = requestURLFormat.format(IOGlobal.messagesControllerName);
+        window.ioinstance.service.post(requestURL, request, function (status, response, error) {
             let callout = window.ioinstance.callout;
             if (status && response.status.success) {
                 callout.show(callout.types.success, 'Message has been deleted successfully.', '');

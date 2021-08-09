@@ -29,18 +29,11 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         #region Menu Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMenuAddResponseModel AddMenuItem([FromBody] IOMenuAddRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.Name))
-            {
-                // Then return validation error
-                return new IOMenuAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.AddMenuItem(requestModel);
 
@@ -48,17 +41,11 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             return new IOMenuAddResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
-        public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
+        public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuDeleteRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOMenuUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.DeleteMenuItem(requestModel.ID);
 
@@ -77,18 +64,11 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             return new IOMenuListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), menuItems);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMenuUpdateResponseModel UpdateMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.Name))
-            {
-                // Then return validation error
-                return new IOMenuUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.UpdateMenuItem(requestModel);
 

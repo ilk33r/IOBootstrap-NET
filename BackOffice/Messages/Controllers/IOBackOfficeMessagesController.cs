@@ -49,18 +49,11 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             return new IOListMessagesResponseModel(IOResponseStatusMessages.OK, messages);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMessageAddResponseModel AddMessagesItem([FromBody] IOMessageAddRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.Message))
-            {
-                // Then return validation error
-                return new IOMessageAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.AddMessage(requestModel);
 
@@ -68,17 +61,11 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             return new IOMessageAddResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMessageDeleteResponseModel DeleteMessagesItem([FromBody] IOMessageDeleteRequestModel requestModel) 
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOMessageDeleteResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.DeleteMessage(requestModel.MessageId);
 
@@ -86,17 +73,11 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             return new IOMessageDeleteResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOMessageUpdateResponseModel UpdateMessagesItem([FromBody] IOMessageUpdateRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOMessageUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.UpdateMessage(requestModel);
 

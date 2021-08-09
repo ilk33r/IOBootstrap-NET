@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
@@ -32,16 +32,11 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         #region API Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
         {
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOGetImagesResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             Tuple<int, IList<IOImageVariationsModel>> images = ViewModel.GetImages(requestModel.Start, requestModel.Count);
             IOGetImagesResponseModel responseModel = new IOGetImagesResponseModel(IOResponseStatusMessages.OK);
             responseModel.Count = images.Item1;
@@ -49,49 +44,34 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             return responseModel;
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
         {
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
-            if (ViewModel.DeleteImages(requestModel.ImagesIdList))
-            {
-                return new IOResponseModel(IOResponseStatusMessages.OK);
-            }
-
-            return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+            ViewModel.DeleteImages(requestModel.ImagesIdList);
+            return new IOResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOSaveImageResponseModel SaveImages([FromBody] IOSaveImageRequestModel requestModel)
         {
-            // Validate request
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOSaveImageResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add File
             Regex rx = new Regex(@"data:image\/([a-zA-Z]+);base64,(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection matches = rx.Matches(requestModel.FileData);
             if (matches.Count != 1)
             {
                 // Then return validation error
-                return new IOSaveImageResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+                throw new IOInvalidRequestException();
             }
 
             GroupCollection groups = matches[0].Groups;
             if (groups.Count != 3)
             {
                 // Then return validation error
-                return new IOSaveImageResponseModel(IOResponseStatusMessages.BAD_REQUEST);
+                throw new IOInvalidRequestException();
             }
 
             // Obtain values

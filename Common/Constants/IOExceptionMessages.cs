@@ -14,6 +14,8 @@ namespace IOBootstrap.NET.Common.Constants
         public const int InvalidKeyIDCode = 630;
         public const int UserExistsCode = 700;
         public const int UserNotFoundCode = 701;
+        public const int ImageNotFoundCode = 702;
+        public const int ImageDeleteCode = 703;
 
         public const string InvalidRequestMessage = "Invalid request.";
         public const string InvalidPermissionMessage = "Invalid permission.";
@@ -24,5 +26,7 @@ namespace IOBootstrap.NET.Common.Constants
         public const string InvalidKeyIDMessage = "Invalid key ID or key expired.";
         public const string UserExistsMessage = "User exists.";
         public const string UserNotFoundMessage = "User not found.";
+        public const string ImageNotFoundMessage = "Image not found.";
+        public const string ImageDeleteMessage = "Could not delete image in blob container.";
     }
 }

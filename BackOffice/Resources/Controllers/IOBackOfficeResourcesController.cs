@@ -28,19 +28,11 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
 
         #region Resource Methods
 
-
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOResourceAddResponseModel AddResource([FromBody] IOResourceAddRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.ResourceKey))
-            {
-                // Then return validation error
-                return new IOResourceAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.AddResourceItem(requestModel);
 
@@ -48,17 +40,11 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             return new IOResourceAddResponseModel(IOResponseStatusMessages.OK);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
         public IOResourceDeleteResponseModel DeleteResource([FromBody] IOResourceDeleteRequestModel requestModel) 
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOResourceDeleteResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.DeleteResourceItem(requestModel.ID);
 
@@ -77,18 +63,11 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             return new IOGetResourcesResponseModel(IOResponseStatusMessages.OK, resources);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOGetResourcesResponseModel GetResources([FromBody] IOGetResourcesRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null
-                || requestModel.ResourceKeys == null)
-            {
-                // Then return validation error
-                return new IOGetResourcesResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             IList<IOResourceModel> resources = ViewModel.GetResources(requestModel.ResourceKeys);
 
@@ -96,17 +75,11 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             return new IOGetResourcesResponseModel(IOResponseStatusMessages.OK, resources);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
-        public IOResourceUpdateResponseModel UpdateResource([FromBody] IOResourceUpdateRequestModel requestModel) {
-            // Validate request
-            if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.ResourceKey))
-            {
-                // Then return validation error
-                return new IOResourceUpdateResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
+        public IOResourceUpdateResponseModel UpdateResource([FromBody] IOResourceUpdateRequestModel requestModel) 
+        {
             // Add menu
             ViewModel.UpdateResourceItem(requestModel);
 

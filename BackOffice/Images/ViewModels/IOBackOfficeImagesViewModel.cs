@@ -9,6 +9,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
@@ -51,7 +52,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             return new Tuple<int, IList<IOImageVariationsModel>>(imageCount, paginatedImages);
         }
 
-        public bool DeleteImages(IList<int> imageIdList)
+        public void DeleteImages(IList<int> imageIdList)
         {
             foreach (int imageId in imageIdList)
             {
@@ -59,7 +60,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
                 if (imagesEntity == null)
                 {
-                    return false;
+                    throw new IOImageNotFoundException();
                 }
 
                 string imageName = new string(imagesEntity.FileName);
@@ -71,16 +72,14 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
                     if (!deleteStatus.Result)
                     {
-                        return false;
+                        throw new IOImageDeleteException();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return false;
+                    throw new IOImageDeleteException(ex.Message);
                 }
             }
-
-            return true;
         }
 
         public IList<IOImageVariationsModel> SaveImage(string fileData, string fileType, string contentType, string globalFileName, IList<IOImageVariationsModel> sizes)

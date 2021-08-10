@@ -1206,7 +1206,7 @@ io.prototype.app.userUpdate = function (id, userName, userRole) {
                     callout.show(callout.types.success, 'User has been updated successfully.', '');
                     window.location.hash = '';
                     window.ioinstance.app.usersList(null, 'usersList');
-                } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
+                } else if (response.status.code === 700) {
                     var helpText = 'User ' + request.UserName + ' is exists.';
                     callout.show(callout.types.danger, 'Invalid username.', helpText);
                     window.ioinstance.indicator.hide();
@@ -1358,7 +1358,7 @@ io.prototype.app.usersAdd = function (e, hash) {
                 callout.show(callout.types.success, 'User has been added successfully.', '');
                 window.location.hash = '';
                 window.ioinstance.app.usersList(null, 'usersList');
-            } else if (response.status.code === window.ioinstance.response.StatusCodes.USER_EXISTS) {
+            } else if (response.status.code === 700) {
                 var helpText = 'User ' + request.UserName + ' is exists.';
                 callout.show(callout.types.danger, 'Invalid username.', helpText);
                 window.ioinstance.indicator.hide();

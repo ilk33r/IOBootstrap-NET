@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.DataAccess.Context;
@@ -52,24 +53,20 @@ namespace IOBootstrap.NET.Core.ViewModels
             return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
         }
 
-        public bool DeleteClient(int clientId)
+        public void DeleteClient(int clientId)
         {
             // Obtain client entity
             IOClientsEntity clientEntity = DatabaseContext.Clients.Find(clientId);
 
             // Check client entity is not null
-            if (clientEntity != null)
+            if (clientEntity == null)
             {
-                // Delete all entity
-                DatabaseContext.Remove(clientEntity);
-                DatabaseContext.SaveChanges();
-
-                // Then success
-                return true;
+                throw new IOInvalidClientException("Client not found.");
             }
 
-            // Return delete operation is failed
-            return false;
+            // Delete all entity
+            DatabaseContext.Remove(clientEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public List<IOClientInfoModel> GetClients()
@@ -101,7 +98,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             return clientInfos;
         }
 
-        public bool UpdateClient(int id, string description, int isEnabled, long requestCount, long maxRequestCount)
+        public void UpdateClient(int id, string description, int isEnabled, long requestCount, long maxRequestCount)
         {
             // Obtain client entity
             var clientEntities = DatabaseContext.Clients.Where(arg1 => arg1.ID == id);
@@ -123,11 +120,11 @@ namespace IOBootstrap.NET.Core.ViewModels
                 DatabaseContext.SaveChanges();
 
                 // Return response
-                return true;
+                return;
             }
 
             // Return response
-            return false;
+            throw new IOInvalidClientException("Client not found.");
         }
 
         public bool IsBackOffice()

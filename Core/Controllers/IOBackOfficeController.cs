@@ -48,23 +48,11 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Client Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Create and return response
-                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Obtain client info from view model
             IOClientInfoModel clientInfo = ViewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
 
@@ -72,32 +60,16 @@ namespace IOBootstrap.NET.Core.Controllers
             return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Create and return response
-                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new IOClientAddResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Check delete client is success
-            if (ViewModel.DeleteClient(requestModel.ClientId))
-            {
-                // Then create and return response
-                return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
-            }
-
-            // Return bad request
-            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
+            ViewModel.DeleteClient(requestModel.ClientId);
+            
+            // Then create and return response
+            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 
         [IOUserRole(UserRoles.Admin)]
@@ -111,26 +83,16 @@ namespace IOBootstrap.NET.Core.Controllers
             return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOResponseModel UpdateClient([FromBody] IOClientUpdateRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Create and return response
-                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Check update client is success
-            if (ViewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount))
-            {
-                // Then create and return response
-                return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
-            }
-
-            // Return bad request
-            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Client not found."));
+            ViewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount);
+            
+            // Then create and return response
+            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 
         #endregion

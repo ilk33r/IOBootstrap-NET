@@ -647,18 +647,6 @@ io.prototype.resources = {
     }
 }
 
-io.prototype.response = {
-    StatusCodes: {
-        OK: 0,
-        ENDPOINT_FAILURE: 1,
-        BAD_REQUEST: 2,
-        INVALID_CLIENTS: 3,
-        INVALID_CREDIENTALS: 4,
-        UNSUPPORTED_VERSION: 5,
-        USER_EXISTS: 6
-    }
-};
-
 io.prototype.service = {
     dataTypes: {
         text: 'text',

@@ -1,4 +1,5 @@
 using System;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
@@ -24,16 +25,10 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
 
         #region Push Notification Methods
 
+        [IOValidateRequestModel]
         [HttpPost]
         public virtual AddPushNotificationResponseModel AddPushNotificationToken([FromBody] AddPushNotificationRequestModel requestModel)
         {
-            // Validate request
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new AddPushNotificationResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             // Add menu
             ViewModel.AddToken(requestModel);
 

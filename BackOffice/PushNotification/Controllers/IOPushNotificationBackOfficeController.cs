@@ -31,17 +31,11 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 
         #region Back Office Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
         [HttpPost]
         public PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
         {
-            // Validate request
-            if (!ModelState.IsValid)
-            {
-                // Then return validation error
-                return new PushNotificationMessageDeleteResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             ViewModel.DeleteMessage(requestModel.ID);
 
             // Return response
@@ -59,17 +53,11 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             return new ListPushNotificationMessageResponseModel(IOResponseStatusMessages.OK, messages);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
 		[HttpPost]
 		public ListPushNotificationResponseModel ListTokens([FromBody] ListPushNotificationRequestModel requestModel)
 		{
-			// Validate request
-			if (!ModelState.IsValid)
-			{
-				// Then return validation error
-                return new ListPushNotificationResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-			}
-
             // Obtain devices from view model
             List<PushNotificationModel> devices = ViewModel.ListTokens(requestModel.Start, requestModel.Limit);
 
@@ -77,17 +65,11 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             return new ListPushNotificationResponseModel(IOResponseStatusMessages.OK, devices);
 		}
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
         [HttpPost]
         public IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
         {
-			// Validate request
-			if (!ModelState.IsValid)
-			{
-				// Then return validation error
-                return new IOResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-			}
-
             // Obtain device type
             DeviceTypes deviceType = (DeviceTypes)Enum.ToObject(typeof(DeviceTypes), requestModel.DeviceType);
 

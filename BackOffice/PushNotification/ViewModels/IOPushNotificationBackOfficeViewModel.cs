@@ -112,57 +112,25 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
 
         public List<PushNotificationModel> ListTokens(int start, int limit)
         {
-            // Obtain push notification entity
-            var pushNotificationsEntities = DatabaseContext.PushNotifications.OrderBy((arg) => arg.ID);
-
-            // Create devices array
-            List<PushNotificationModel> devices = new List<PushNotificationModel>();
-
-            // Create a variables for object count
-            int skippedObjectCount = 0;
-            int objectCount = 0;
-
-            // Loop throught entities
-            foreach (PushNotificationEntity device in pushNotificationsEntities)
-            {
-                // Check skipped object count is less than skip count
-                if (start > skippedObjectCount)
-                {
-                    // Increase skipped object count
-                    skippedObjectCount += 1;
-
-                    // Continue to next object
-                    continue;
-                }
-
-                // Create push notification model
-                PushNotificationModel pushNotificationModel = new PushNotificationModel()
-                {
-                    ID = device.ID,
-                    AppBuildNumber = device.AppBuildNumber,
-                    AppBundleId = device.AppBundleId,
-                    AppVersion = device.AppVersion,
-                    BadgeCount = device.BadgeCount,
-                    DeviceId = device.DeviceId,
-                    DeviceName = device.DeviceName,
-                    DeviceToken = device.DeviceToken,
-                    DeviceType = (DeviceTypes)device.DeviceType,
-                    LastUpdateTime = device.LastUpdateTime
-                };
-
-                // Add model to devices array
-                devices.Add(pushNotificationModel);
-
-                // Increase object count
-                objectCount += 1;
-
-                // Check object count is greater than limit
-                if (objectCount >= limit)
-                {
-                    // Then break the loop
-                    break;
-                }
-            }
+            // Obtain push notification devices
+            List<PushNotificationModel> devices = DatabaseContext.PushNotifications
+                                                                                .Select(pn => new PushNotificationModel()
+                                                                                {
+                                                                                    ID = pn.ID,
+                                                                                    AppBuildNumber = pn.AppBuildNumber,
+                                                                                    AppBundleId = pn.AppBundleId,
+                                                                                    AppVersion = pn.AppVersion,
+                                                                                    BadgeCount = pn.BadgeCount,
+                                                                                    DeviceId = pn.DeviceId,
+                                                                                    DeviceName = pn.DeviceName,
+                                                                                    DeviceToken = pn.DeviceToken,
+                                                                                    DeviceType = (DeviceTypes)pn.DeviceType,
+                                                                                    LastUpdateTime = pn.LastUpdateTime
+                                                                                })
+                                                                                .Skip(start)
+                                                                                .Take(limit)
+                                                                                .OrderBy(arg => arg.ID)
+                                                                                .ToList();
 
             // Return devices
             return devices;

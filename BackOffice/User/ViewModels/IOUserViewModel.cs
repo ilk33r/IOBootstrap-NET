@@ -56,13 +56,19 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             return new Tuple<int, string>(newUserEntity.ID, userName);
         }
 
-        public bool ChangePassword(string userName, string oldPassword, string newPassword) 
+        public void ChangePassword(string userName, string oldPassword, string newPassword) 
         {
             // Obtain user entity
             IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
 
+            // Check user found
+            if (user == null)
+            {
+                throw new IOUserNotFoundException();
+            }
+
             // Check user old password is valid
-            if (user != null && ((UserRoles)UserEntity.UserRole == UserRoles.SuperAdmin || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password)))
+            if (((UserRoles)UserEntity.UserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password))
 			{
 				// Update user password properties
                 user.Password = IOPasswordUtilities.HashPassword(newPassword);
@@ -71,13 +77,11 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
                 // Update user password
                 DatabaseContext.Update(user);
                 DatabaseContext.SaveChanges();
-
-                // Return response
-                return true;
+                return;
 			}
 
             // Return response
-            return false;
+            throw new IOInvalidPermissionException();
         }
 
         public virtual List<IOUserInfoModel> ListUsers()

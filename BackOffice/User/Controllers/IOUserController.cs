@@ -32,20 +32,11 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         #region User Methods
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
         {
-			// Validate request
-			if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.UserName)
-                || String.IsNullOrEmpty(requestModel.Password)
-                || requestModel.Password.Length < 4)
-			{
-				// Then return validation error
-                return new IOAddUserResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-			}
-
             // Obtain add user response
             Tuple<int, string> addUserStatus = ViewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
 
@@ -53,42 +44,23 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), addUserStatus.Item1, addUserStatus.Item2);
 		}
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
 		[HttpPost]
         public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
         {
-			// Validate request
-			if (requestModel == null
-                || String.IsNullOrEmpty(requestModel.UserName)
-                || String.IsNullOrEmpty(requestModel.NewPassword)
-                || requestModel.NewPassword.Length < 4)
-			{
-				// Then return validation error
-                return new IOAddUserResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-			}
-
             // Check change password is success
-            if (ViewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword))
-            {
-				// Return response
-				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
-            }
+            ViewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword);
 
-            // Return response
-            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.BAD_REQUEST, "Invalid user."));
+			// Return response
+			return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
 		public virtual IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
         {
-			// Validate request
-			if (requestModel == null)
-			{
-				// Then return validation error
-                return new IOAddUserResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-			}
-
             // Obtain user entity
             IOUserEntity userEntity = DatabaseContext.Users.Find(requestModel.UserId);
             int currentUserRole = ViewModel.UserEntity.UserRole;
@@ -119,17 +91,11 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), users);
         }
 
+        [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {
-            // Validate request
-            if (requestModel == null)
-            {
-                // Then return validation error
-                return new IOUpdateUserResponseModel(IOResponseStatusMessages.BAD_REQUEST);
-            }
-
             ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel(IOResponseStatusMessages.OK);
         }

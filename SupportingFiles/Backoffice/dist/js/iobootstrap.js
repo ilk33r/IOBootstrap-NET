@@ -1460,7 +1460,7 @@ io.prototype.app.pushNotificationMessageDelete = function (id) {
         request.ID = id;
         window.ioinstance.indicator.show();
 
-        let requestURLFormat = '%s/DeleteMessages';
+        let requestURLFormat = '%s/DeleteMessage';
         let requestURL = requestURLFormat.format(IOGlobal.pushNotificationsControllerName);
 
         window.ioinstance.service.post(requestURL, request, function (status, response, error) {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.Resources.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Resources;
 using IOBootstrap.NET.Common.Models.Resources;
@@ -37,7 +36,7 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             ViewModel.AddResourceItem(requestModel);
 
             // Create and return response
-            return new IOResourceAddResponseModel(IOResponseStatusMessages.OK);
+            return new IOResourceAddResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -49,7 +48,7 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             ViewModel.DeleteResourceItem(requestModel.ID);
 
             // Create and return response
-            return new IOResourceDeleteResponseModel(IOResponseStatusMessages.OK);
+            return new IOResourceDeleteResponseModel();
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
@@ -60,7 +59,7 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             IList<IOResourceModel> resources = ViewModel.GetAllResources();
 
             // Create and return response
-            return new IOGetResourcesResponseModel(IOResponseStatusMessages.OK, resources);
+            return new IOGetResourcesResponseModel(resources);
         }
 
         [IOValidateRequestModel]
@@ -72,7 +71,7 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             IList<IOResourceModel> resources = ViewModel.GetResources(requestModel.ResourceKeys);
 
             // Create and return response
-            return new IOGetResourcesResponseModel(IOResponseStatusMessages.OK, resources);
+            return new IOGetResourcesResponseModel(resources);
         }
 
         [IOValidateRequestModel]
@@ -84,7 +83,7 @@ namespace IOBootstrap.NET.BackOffice.Resources.Controllers
             ViewModel.UpdateResourceItem(requestModel);
 
             // Create and return response
-            return new IOResourceUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOResourceUpdateResponseModel();
         }
 
         #endregion

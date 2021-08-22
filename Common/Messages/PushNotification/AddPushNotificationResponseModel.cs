@@ -6,7 +6,7 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
     
     public class AddPushNotificationResponseModel : IOResponseModel
     {
-        public AddPushNotificationResponseModel(int responseStatusMessage) : base(responseStatusMessage)
+        public AddPushNotificationResponseModel() : base()
         {
         }
     }

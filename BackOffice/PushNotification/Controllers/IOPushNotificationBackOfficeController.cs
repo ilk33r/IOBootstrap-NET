@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.PushNotification.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.PushNotification;
@@ -39,7 +38,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             ViewModel.DeleteMessage(requestModel.ID);
 
             // Return response
-            return new PushNotificationMessageDeleteResponseModel(IOResponseStatusMessages.OK);
+            return new PushNotificationMessageDeleteResponseModel();
         }
 
         [IOUserRole(UserRoles.User)]
@@ -50,7 +49,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             IList<PushNotificationMessageModel> messages = ViewModel.ListMessages();
 
             // Return response
-            return new ListPushNotificationMessageResponseModel(IOResponseStatusMessages.OK, messages);
+            return new ListPushNotificationMessageResponseModel(messages);
         }
 
         [IOValidateRequestModel]
@@ -62,7 +61,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             List<PushNotificationModel> devices = ViewModel.ListTokens(requestModel.Start, requestModel.Limit);
 
 			// Return response
-            return new ListPushNotificationResponseModel(IOResponseStatusMessages.OK, devices);
+            return new ListPushNotificationResponseModel(devices);
 		}
 
         [IOValidateRequestModel]
@@ -82,7 +81,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
                                          requestModel.NotificationTitle);
 
             // Create and return response
-            return new IOResponseModel(IOResponseStatusMessages.OK);
+            return new IOResponseModel();
         }
 
 		#endregion

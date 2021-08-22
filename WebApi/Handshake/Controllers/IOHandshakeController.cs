@@ -1,4 +1,5 @@
 using System;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
@@ -26,6 +27,7 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
 
         #region Handshake Methods
 
+        [IORequireHTTPS]
         [HttpGet]
         public virtual HandshakeResponseModel Index()
         {
@@ -41,13 +43,14 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
             }
 
             // Create and return response
-            return new HandshakeResponseModel(IOResponseStatusMessages.OK, publicKey.Item2, publicKey.Item1, keyID);
+            return new HandshakeResponseModel(publicKey.Item2, publicKey.Item1, keyID);
         }
 
+        [IORequireHTTPS]
         [HttpGet]
         public virtual IOResponseModel CheckSession()
         {
-            return new IOResponseModel(IOResponseStatusMessages.OK);
+            return new IOResponseModel();
         }
 
         #endregion

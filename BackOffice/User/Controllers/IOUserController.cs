@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.User.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
-using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Logger;
@@ -41,7 +39,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             Tuple<int, string> addUserStatus = ViewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
 
 			// Create and return response
-            return new IOAddUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), addUserStatus.Item1, addUserStatus.Item2);
+            return new IOAddUserResponseModel(addUserStatus.Item1, addUserStatus.Item2);
 		}
 
         [IOValidateRequestModel]
@@ -53,7 +51,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             ViewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword);
 
 			// Return response
-			return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+			return new IOResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -73,7 +71,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
                 DatabaseContext.SaveChanges();
 
 				// Then return response
-				return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+				return new IOResponseModel();
 			}
 
 			// Return bad request
@@ -88,7 +86,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             List<IOUserInfoModel> users = ViewModel.ListUsers();
 
 			// Create and return response
-			return new IOListUserResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), users);
+			return new IOListUserResponseModel(users);
         }
 
         [IOValidateRequestModel]
@@ -97,7 +95,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {
             ViewModel.UpdateUser(requestModel);
-            return new IOUpdateUserResponseModel(IOResponseStatusMessages.OK);
+            return new IOUpdateUserResponseModel();
         }
 
         #endregion

@@ -1,6 +1,5 @@
 using System;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Logger;
@@ -33,7 +32,7 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
             ViewModel.AddToken(requestModel);
 
             // Create and return response
-            return new AddPushNotificationResponseModel(IOResponseStatusMessages.OK);
+            return new AddPushNotificationResponseModel();
         }
 
         #endregion

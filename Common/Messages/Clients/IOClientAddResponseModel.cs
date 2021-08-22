@@ -1,7 +1,6 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Common.Models.Shared;
 
 namespace IOBootstrap.NET.Common.Messages.Clients
 {
@@ -16,14 +15,10 @@ namespace IOBootstrap.NET.Common.Messages.Clients
 
 		#region Initialization Methods
 
-		public IOClientAddResponseModel(IOResponseStatusModel status, IOClientInfoModel client): base(status) {
+		public IOClientAddResponseModel(IOClientInfoModel client): base() {
 			// Setup properties
             Client = client;
 		}
-
-        public IOClientAddResponseModel(int responseStatusMessage) : base(responseStatusMessage)
-        {
-        }
 
         #endregion
 

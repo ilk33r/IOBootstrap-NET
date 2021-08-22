@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
@@ -57,7 +55,7 @@ namespace IOBootstrap.NET.Core.Controllers
             IOClientInfoModel clientInfo = ViewModel.CreateClient(requestModel.ClientDescription, requestModel.RequestCount);
 
             // Create and return response
-            return new IOClientAddResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfo);
+            return new IOClientAddResponseModel(clientInfo);
         }
 
         [IOValidateRequestModel]
@@ -69,7 +67,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.DeleteClient(requestModel.ClientId);
             
             // Then create and return response
-            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+            return new IOResponseModel();
         }
 
         [IOUserRole(UserRoles.Admin)]
@@ -80,7 +78,7 @@ namespace IOBootstrap.NET.Core.Controllers
             List<IOClientInfoModel> clientInfos = ViewModel.GetClients();
 
             // Create and return response
-            return new IOClientListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), clientInfos);
+            return new IOClientListResponseModel(clientInfos);
         }
 
         [IOValidateRequestModel]
@@ -92,7 +90,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.UpdateClient(requestModel.ClientId, requestModel.ClientDescription, requestModel.IsEnabled, requestModel.RequestCount, requestModel.MaxRequestCount);
             
             // Then create and return response
-            return new IOResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK));
+            return new IOResponseModel();
         }
 
         #endregion

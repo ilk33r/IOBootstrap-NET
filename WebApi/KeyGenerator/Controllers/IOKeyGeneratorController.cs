@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +43,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
             string encryptionIV = Convert.ToBase64String(encryptor.IV);
 
             // Create and return response
-            return new IOKeyGeneratorResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), authorizationKey, encryptionKey, encryptionIV);
+            return new IOKeyGeneratorResponseModel(authorizationKey, encryptionKey, encryptionIV);
         }
 
     }

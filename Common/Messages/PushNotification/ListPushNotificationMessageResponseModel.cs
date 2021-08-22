@@ -10,11 +10,7 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
 
         public IList<PushNotificationMessageModel> Messages { get; set; }
 
-        public ListPushNotificationMessageResponseModel(int responseStatusMessage) : base(responseStatusMessage)
-        {
-        }
-
-        public ListPushNotificationMessageResponseModel(int responseStatusMessage, IList<PushNotificationMessageModel> messages) : base(responseStatusMessage)
+        public ListPushNotificationMessageResponseModel(IList<PushNotificationMessageModel> messages) : base()
         {
             this.Messages = messages;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Models.Shared;
 
 namespace IOBootstrap.NET.Common.Messages.Users
 {
@@ -16,15 +15,11 @@ namespace IOBootstrap.NET.Common.Messages.Users
 
 		#region Initialization Methods
 
-        public IOAddUserResponseModel(IOResponseStatusModel status, int userId, string userName): base(status) {
+        public IOAddUserResponseModel(int userId, string userName): base() {
 			// Setup properties
             UserId = userId;
             UserName = userName;
 		}
-
-        public IOAddUserResponseModel(int responseStatusMessage) : base(responseStatusMessage)
-        {
-        }
 
         #endregion
 

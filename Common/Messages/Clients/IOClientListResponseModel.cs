@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Common.Models.Shared;
 
 namespace IOBootstrap.NET.Common.Messages.Clients
 {
@@ -17,7 +16,7 @@ namespace IOBootstrap.NET.Common.Messages.Clients
 
         #region Initialization Methods
 
-        public IOClientListResponseModel(IOResponseStatusModel status, IList<IOClientInfoModel> clientList): base(status) {
+        public IOClientListResponseModel(IList<IOClientInfoModel> clientList): base() {
             // Setup properties
             this.ClientList = clientList;
         }

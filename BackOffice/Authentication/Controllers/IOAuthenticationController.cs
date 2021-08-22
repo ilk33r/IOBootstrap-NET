@@ -1,10 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Authentication;
-using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
@@ -32,15 +29,10 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
             // Authenticate user
-            Tuple<bool, string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
+            Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
 
             // Check if authentication result is true
-            if (authenticationResult.Item1) {
-                return new IOAuthenticationResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4, authenticationResult.Item5);
-            }
-
-            // Return response
-            throw new IOInvalidCredentialsException();
+            return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
         }
 
         [HttpPost]
@@ -48,16 +40,10 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
             // Check token
-            Tuple<bool, DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);
+            Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);
 
             // Check if authentication result is true
-            if (checkTokenResult.Item1)
-            {
-                return new IOCheckTokenResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), checkTokenResult.Item2, checkTokenResult.Item3, checkTokenResult.Item4);
-            }
-
-            // Return response
-            throw new IOInvalidCredentialsException();
+            return new IOCheckTokenResponseModel(checkTokenResult.Item1, checkTokenResult.Item2, checkTokenResult.Item3);
         }
 
         #endregion

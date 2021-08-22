@@ -10,8 +10,10 @@ namespace IOBootstrap.NET.Common.Messages.Images
         public int Count { get; set; }
         public IList<IOImageVariationsModel> Images { get; set; }
 
-        public IOGetImagesResponseModel(int responseStatusMessage) : base(responseStatusMessage)
+        public IOGetImagesResponseModel(int count, IList<IOImageVariationsModel> images) : base()
         {
+            Count = count;
+            Images = images;
         }
     }
 }

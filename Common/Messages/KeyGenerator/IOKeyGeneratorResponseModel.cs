@@ -1,6 +1,5 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Models.Shared;
 
 namespace IOBootstrap.NET.Common.Messages.KeyGenerator
 {
@@ -17,7 +16,7 @@ namespace IOBootstrap.NET.Common.Messages.KeyGenerator
 
 		#region Initialization Methods
 
-        public IOKeyGeneratorResponseModel(IOResponseStatusModel status, string authorizationKey, string encryptionKey, string encryptionIV) : base(status)
+        public IOKeyGeneratorResponseModel(string authorizationKey, string encryptionKey, string encryptionIV) : base()
 		{
             // Setup properties
             this.AuthorizationKey = authorizationKey;

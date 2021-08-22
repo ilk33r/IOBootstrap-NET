@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.Menu.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Menu;
 using IOBootstrap.NET.Common.Models.Menu;
-using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
@@ -38,7 +36,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             ViewModel.AddMenuItem(requestModel);
 
             // Create and return response
-            return new IOMenuAddResponseModel(IOResponseStatusMessages.OK);
+            return new IOMenuAddResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -50,7 +48,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             ViewModel.DeleteMenuItem(requestModel.ID);
 
             // Create and return response
-            return new IOMenuUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOMenuUpdateResponseModel();
         }
 
         [IOUserRole(UserRoles.User)]
@@ -61,7 +59,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             IList<IOMenuListModel> menuItems = ViewModel.GetMenuTree(ViewModel.UserEntity.UserRole);
 
             // Create and return response
-            return new IOMenuListResponseModel(new IOResponseStatusModel(IOResponseStatusMessages.OK), menuItems);
+            return new IOMenuListResponseModel(menuItems);
         }
 
         [IOValidateRequestModel]
@@ -73,7 +71,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             ViewModel.UpdateMenuItem(requestModel);
 
             // Create and return response
-            return new IOMenuUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOMenuUpdateResponseModel();
         }
 
         #endregion

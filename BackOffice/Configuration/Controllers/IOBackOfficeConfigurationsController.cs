@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Configuration;
 using IOBootstrap.NET.Common.Models.Configuration;
@@ -39,7 +38,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             ViewModel.AddConfigItem(requestModel);
 
             // Create and return response
-            return new IOConfigurationAddResponseModel(IOResponseStatusMessages.OK);
+            return new IOConfigurationAddResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -51,7 +50,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             ViewModel.DeleteConfigItem(requestModel.ConfigId);
 
             // Create and return response
-            return new IOConfigurationDeleteResponseModel(IOResponseStatusMessages.OK);
+            return new IOConfigurationDeleteResponseModel();
         }
 
         [IOUserRole(UserRoles.User)]
@@ -62,7 +61,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             IList<IOConfigurationModel> configurationItems = ViewModel.GetConfigurations();
 
             // Create and return response
-            return new IOConfigurationListResponseModel(IOResponseStatusMessages.OK, configurationItems);
+            return new IOConfigurationListResponseModel(configurationItems);
         }
 
         [IOValidateRequestModel]
@@ -74,7 +73,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             ViewModel.UpdateConfigItem(requestModel);
 
             // Create and return response
-            return new IOConfigurationUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOConfigurationUpdateResponseModel();
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
@@ -82,7 +81,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
         public virtual IOConfigurationUpdateResponseModel ResetCache()
         {
             IOCache.ClearCache();
-            return new IOConfigurationUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOConfigurationUpdateResponseModel();
         }
 
         #endregion

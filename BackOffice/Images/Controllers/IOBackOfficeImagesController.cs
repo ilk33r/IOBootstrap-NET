@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
@@ -38,9 +37,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
         public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
         {
             Tuple<int, IList<IOImageVariationsModel>> images = ViewModel.GetImages(requestModel.Start, requestModel.Count);
-            IOGetImagesResponseModel responseModel = new IOGetImagesResponseModel(IOResponseStatusMessages.OK);
-            responseModel.Count = images.Item1;
-            responseModel.Images = images.Item2;
+            IOGetImagesResponseModel responseModel = new IOGetImagesResponseModel(images.Item1, images.Item2);
             return responseModel;
         }
 
@@ -50,7 +47,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
         public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
         {
             ViewModel.DeleteImages(requestModel.ImagesIdList);
-            return new IOResponseModel(IOResponseStatusMessages.OK);
+            return new IOResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -83,7 +80,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             IList<IOImageVariationsModel> imageList = ViewModel.SaveImage(fileData, fileType, contentType, globalFileName, requestModel.Sizes);
 
             // Create and return response
-            return new IOSaveImageResponseModel(IOResponseStatusMessages.OK, imageList);
+            return new IOSaveImageResponseModel(imageList);
         }
 
         #endregion

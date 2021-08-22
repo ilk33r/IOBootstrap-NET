@@ -100,7 +100,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Check attribute type
                 if (httpsRequired && !Request.Scheme.Equals("https")) {
                     // Obtain response model
-                    IOResponseModel responseModel = new IOResponseModel(IOResponseStatusMessages.OK);
+                    IOResponseModel responseModel = new IOResponseModel();
                     JsonResult result = new JsonResult(responseModel);
                     Response.Headers.Add("Location", "https://" + Request.Host.Host);
                     result.StatusCode = 301;

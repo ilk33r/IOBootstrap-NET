@@ -1,6 +1,5 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Models.Shared;
 
 namespace IOBootstrap.NET.Common.Messages.Authentication
 {
@@ -13,7 +12,7 @@ namespace IOBootstrap.NET.Common.Messages.Authentication
 
         #region Initialization Methods
 
-        public IOCheckTokenResponseModel(IOResponseStatusModel status, DateTimeOffset lifeTime, string userName, int userRole) : base(status)
+        public IOCheckTokenResponseModel(DateTimeOffset lifeTime, string userName, int userRole) : base()
         {
             TokenLifeTime = lifeTime;
             UserName = userName;

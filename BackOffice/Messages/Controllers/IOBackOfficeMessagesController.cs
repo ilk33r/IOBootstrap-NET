@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.Messages;
 using IOBootstrap.NET.Common.Models.Messages;
@@ -35,7 +34,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             IList<IOMessageModel> messages = ViewModel.GetMessages();
 
             // Create and return response
-            return new IOListMessagesResponseModel(IOResponseStatusMessages.OK, messages);
+            return new IOListMessagesResponseModel(messages);
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
@@ -46,7 +45,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             IList<IOMessageModel> messages = ViewModel.GetAllMessages();
 
             // Create and return response
-            return new IOListMessagesResponseModel(IOResponseStatusMessages.OK, messages);
+            return new IOListMessagesResponseModel(messages);
         }
 
         [IOValidateRequestModel]
@@ -58,7 +57,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             ViewModel.AddMessage(requestModel);
 
             // Create and return response
-            return new IOMessageAddResponseModel(IOResponseStatusMessages.OK);
+            return new IOMessageAddResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -70,7 +69,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             ViewModel.DeleteMessage(requestModel.MessageId);
 
             // Create and return response
-            return new IOMessageDeleteResponseModel(IOResponseStatusMessages.OK);
+            return new IOMessageDeleteResponseModel();
         }
 
         [IOValidateRequestModel]
@@ -82,7 +81,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             ViewModel.UpdateMessage(requestModel);
 
             // Create and return response
-            return new IOMessageUpdateResponseModel(IOResponseStatusMessages.OK);
+            return new IOMessageUpdateResponseModel();
         }
     }
 }

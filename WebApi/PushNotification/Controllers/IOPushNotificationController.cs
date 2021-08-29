@@ -24,12 +24,24 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
 
         #region Push Notification Methods
 
+        [Obsolete("Will be removed future.")]
         [IOValidateRequestModel]
         [HttpPost]
         public virtual AddPushNotificationResponseModel AddPushNotificationToken([FromBody] AddPushNotificationRequestModel requestModel)
         {
             // Add menu
             ViewModel.AddToken(requestModel);
+
+            // Create and return response
+            return new AddPushNotificationResponseModel();
+        }
+
+        [IOValidateRequestModel]
+        [HttpPost]
+        public virtual AddPushNotificationResponseModel AddPushNotificationTokenV2([FromBody] AddPushNotificationRequestModel requestModel)
+        {
+            // Add menu
+            ViewModel.AddTokenV2(requestModel);
 
             // Create and return response
             return new AddPushNotificationResponseModel();

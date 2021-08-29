@@ -3,6 +3,8 @@ using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Encryption;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
@@ -118,6 +120,41 @@ namespace IOBootstrap.NET.Core.ViewModels
         public virtual int GetUserRole()
         {
             return (int)UserRoles.SuperAdmin;
+        }
+
+        #endregion
+
+        #region Encryption Decryption
+
+        public virtual string DecryptString(string encryptedString)
+        {
+            IOAESUtilities aesUtility = GetAesUtility();
+            return aesUtility.Decrypt(encryptedString);
+        }
+
+        public virtual string EncryptString(string plainString)
+        {
+            IOAESUtilities aesUtility = GetAesUtility();
+            return aesUtility.Encrypt(plainString);
+        }
+
+        public virtual IOAESUtilities GetAesUtility()
+        {
+            string symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
+            string symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
+            
+            byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
+            byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
+            
+            byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
+            byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
+
+            if (symmetricIV == null || symmetricKey == null)
+            {
+                throw new IOInvalidKeyIDException();
+            }
+
+            return new IOAESUtilities(symmetricKey, symmetricIV);
         }
 
         #endregion

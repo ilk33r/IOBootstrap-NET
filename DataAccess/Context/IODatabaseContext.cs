@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +65,7 @@ namespace IOBootstrap.NET.DataAccess.Context
             modelBuilder.Entity<IOResourceEntity>().HasIndex(
                 resourceEntity => new { resourceEntity.ResourceKey }).IsUnique(true);
 
+            AddDefaultConfiguration(modelBuilder);
             AddResources(modelBuilder);
             GenerateClientMenu(modelBuilder);
             GenerateUserMenu(modelBuilder);
@@ -74,6 +75,18 @@ namespace IOBootstrap.NET.DataAccess.Context
             GenerateNotificationMenu(modelBuilder);
             GenerateResourceMenu(modelBuilder);
             GenerateImagesMenu(modelBuilder);
+        }
+
+        private void AddDefaultConfiguration(ModelBuilder modelBuilder)
+        {
+            IOConfigurationEntity isMaintenanceModeOn = new IOConfigurationEntity()
+            {
+                ID = 1,
+                ConfigKey = IOConfigurationKeys.IsMaintenanceModeOn,
+                ConfigIntValue = 0,
+                ConfigStringValue = null
+            };
+            modelBuilder.Entity<IOConfigurationEntity>().HasData(isMaintenanceModeOn);
         }
 
         private void AddResources(ModelBuilder modelBuilder)

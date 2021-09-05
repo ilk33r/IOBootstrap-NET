@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
+    [IOBackoffice]
     public abstract class IOBackOfficeMenuController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMenuViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Controller Lifecycle

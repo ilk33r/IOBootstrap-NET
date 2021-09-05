@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Images.Controllers
 {
+    [IOBackoffice]
     public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Controller Lifecycle

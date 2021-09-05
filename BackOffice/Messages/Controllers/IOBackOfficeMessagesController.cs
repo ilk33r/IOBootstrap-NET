@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 {
-    
+    [IOBackoffice]
     public abstract class IOBackOfficeMessagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         

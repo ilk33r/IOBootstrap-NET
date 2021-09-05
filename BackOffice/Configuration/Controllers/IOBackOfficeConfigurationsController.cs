@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 {
+    [IOBackoffice]
     public class IOBackOfficeConfigurationsController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeConfigurationsViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         

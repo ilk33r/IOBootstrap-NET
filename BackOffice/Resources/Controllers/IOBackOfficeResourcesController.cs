@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Resources.Controllers
 {
+    [IOBackoffice]
     public class IOBackOfficeResourcesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeResourcesViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Controller Lifecycle

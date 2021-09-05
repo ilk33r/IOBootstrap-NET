@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
+    [IOBackoffice]
     public abstract class IOUserController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOUserViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Controller Lifecycle

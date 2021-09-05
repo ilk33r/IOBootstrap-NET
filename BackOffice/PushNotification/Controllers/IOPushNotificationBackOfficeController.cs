@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 {
-    
+    [IOBackoffice]
     public class IOPushNotificationBackOfficeController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
 

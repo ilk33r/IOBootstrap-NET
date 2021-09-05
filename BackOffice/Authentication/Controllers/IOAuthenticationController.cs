@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
+    [IOBackoffice]
     public abstract class IOAuthenticationController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOAuthenticationViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Controller Lifecycle

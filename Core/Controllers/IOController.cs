@@ -13,6 +13,7 @@ using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -117,6 +118,9 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Do nothing
                 return;
             }
+
+            // Check maintenance status
+            CheckIsMaintenanceMode(context);
 
             // Validate request
             ValidateRequestModel(context);
@@ -336,6 +340,35 @@ namespace IOBootstrap.NET.Core.Controllers
                 if (httpsRequired && !Request.Scheme.Equals("https"))
                 {
                     throw new IOHttpsRequiredException();
+                }
+            }
+        }
+
+        public virtual void CheckIsMaintenanceMode(ActionExecutingContext context)
+        {
+            // Obtain action desctriptor
+            ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+            bool isBackofficePage = false;
+
+            if (actionDescriptor != null)
+            {
+                // Loop throught descriptors
+                foreach (CustomAttributeData descriptor in actionDescriptor.ControllerTypeInfo.CustomAttributes)
+                {
+                    if (descriptor.AttributeType == typeof(IOBackofficeAttribute))
+                    {
+                        isBackofficePage = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isBackofficePage)
+            {
+                int isMaintenanceModeOn = IOConfigurationEntity.ConfigForKey(IOConfigurationKeys.IsMaintenanceModeOn, DatabaseContext).IntValue();
+                if (isMaintenanceModeOn == 1)
+                {
+                    throw new IOMaintenanceException();
                 }
             }
         }

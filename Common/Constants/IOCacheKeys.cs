@@ -9,8 +9,6 @@ namespace IOBootstrap.NET.Common.Constants
 
         public static string ConfigurationCacheKey = "IOConfigurationCache";
 
-        public static string ResourceCacheKey = "IOResourceCache";
-
         public static string RSAPrivateKeyCacheKey = "RSAPrivateKeyCache";
 
         public static string RSAPrivateKeyIDCacheKey = "RSAPrivateKeyIDCache";

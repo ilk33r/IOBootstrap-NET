@@ -31,7 +31,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackofficePagePath = "IOBackofficePagePath";
         public static string BackOfficePageURLKey = "IOBackOfficePageURL";
         public static string BackOfficePushNotificationControllerNameKey = "IOBackofficePushNotificationControllerName";
-        public static string BackOfficeResourcesControllerNameKey = "IOBackOfficeResourcesControllerName";
         public static string BackofficeUserControllerNameKey = "IOBackofficeUserControllerName";
         public static string CheckClientInfo = "IOCheckClientInfo";
         public static string FirebaseApiUrl = "IOFirebaseApiUrl";

@@ -133,7 +133,6 @@ namespace IOBootstrap.NET.Application
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
-                ConfigureResourcesEndpoints(endpoints);
                 ConfigureImagesEndpoints(endpoints);
                 ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
@@ -282,21 +281,6 @@ namespace IOBootstrap.NET.Application
             string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);
             IORoute addPushNotificationTokenRoute = new IORoute("AddPushNotificationToken", pushNotificationControllerName);
             endpoints.MapControllerRoute("addPushNotificationToken", addPushNotificationTokenRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureResourcesEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string resourcesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeResourcesControllerNameKey);
-            IORoute addResourceRoute = new IORoute("AddResource", resourcesControllerName);
-            IORoute deleteResourceRoute = new IORoute("DeleteResource", resourcesControllerName);
-            IORoute getAllResourcesRoute = new IORoute("GetAllResources", resourcesControllerName);
-            IORoute getResourcesRoute = new IORoute("GetResources", resourcesControllerName);
-            IORoute updateResourceRoute = new IORoute("UpdateResource", resourcesControllerName);
-            endpoints.MapControllerRoute("addResource", addResourceRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteResource", deleteResourceRoute.GetRouteString());
-            endpoints.MapControllerRoute("getAllResources", getAllResourcesRoute.GetRouteString());
-            endpoints.MapControllerRoute("getResources", getResourcesRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateResource", updateResourceRoute.GetRouteString());
         }
 
         public virtual void ConfigureUserEndpoints(IEndpointRouteBuilder endpoints)

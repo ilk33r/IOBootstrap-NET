@@ -18,7 +18,6 @@ namespace IOBootstrap.NET.DataAccess.Context
         public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
         public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessages { get; set; }
         public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessages { get; set; }
-        public virtual DbSet<IOResourceEntity> Resources { get; set; }
 
         public IODatabaseContext(DbContextOptions<TContext> options) : base(options)
         {
@@ -62,11 +61,7 @@ namespace IOBootstrap.NET.DataAccess.Context
                     messagesEntity.MessageStartDate
                 });
 
-            modelBuilder.Entity<IOResourceEntity>().HasIndex(
-                resourceEntity => new { resourceEntity.ResourceKey }).IsUnique(true);
-
             AddDefaultConfiguration(modelBuilder);
-            AddResources(modelBuilder);
             GenerateClientMenu(modelBuilder);
             GenerateUserMenu(modelBuilder);
             GenerateConfigurationMenu(modelBuilder);
@@ -87,193 +82,6 @@ namespace IOBootstrap.NET.DataAccess.Context
                 ConfigStringValue = null
             };
             modelBuilder.Entity<IOConfigurationEntity>().HasData(isMaintenanceModeOn);
-        }
-
-        private void AddResources(ModelBuilder modelBuilder)
-        {
-            IOResourceEntity editEntity = new IOResourceEntity()
-            {
-                ID = 1,
-                ResourceKey = "BackOffice.Edit",
-                ResourceValue = "Edit",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(editEntity);
-
-            IOResourceEntity deleteEntity = new IOResourceEntity()
-            {
-                ID = 2,
-                ResourceKey = "BackOffice.Delete",
-                ResourceValue = "Delete",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(deleteEntity);
-
-            IOResourceEntity optionsEntity = new IOResourceEntity()
-            {
-                ID = 3,
-                ResourceKey = "BackOffice.Options",
-                ResourceValue = "Options",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(optionsEntity);
-
-            IOResourceEntity selectEntity = new IOResourceEntity()
-            {
-                ID = 4,
-                ResourceKey = "BackOffice.Select",
-                ResourceValue = "Select",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(selectEntity);
-
-            IOResourceEntity homeEntity = new IOResourceEntity()
-            {
-                ID = 5,
-                ResourceKey = "BackOffice.Home",
-                ResourceValue = "Home",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(homeEntity);
-
-            IOResourceEntity usersEntity = new IOResourceEntity()
-            {
-                ID = 6,
-                ResourceKey = "BackOffice.Users",
-                ResourceValue = "Users",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(usersEntity);
-
-            IOResourceEntity changePasswordEntity = new IOResourceEntity()
-            {
-                ID = 7,
-                ResourceKey = "BackOffice.ChangePassword",
-                ResourceValue = "Change Password",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(changePasswordEntity);
-
-            IOResourceEntity idEntity = new IOResourceEntity()
-            {
-                ID = 8,
-                ResourceKey = "BackOffice.ID",
-                ResourceValue = "ID",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(idEntity);
-
-            IOResourceEntity nameEntity = new IOResourceEntity()
-            {
-                ID = 9,
-                ResourceKey = "BackOffice.Name",
-                ResourceValue = "Name",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(nameEntity);
-
-            IOResourceEntity roleEntity = new IOResourceEntity()
-            {
-                ID = 10,
-                ResourceKey = "BackOffice.Role",
-                ResourceValue = "Role",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(roleEntity);
-
-            IOResourceEntity lastLoginDateEntity = new IOResourceEntity()
-            {
-                ID = 11,
-                ResourceKey = "BackOffice.LastLoginDate",
-                ResourceValue = "Last Login Date",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(lastLoginDateEntity);
-
-            IOResourceEntity errorEntity = new IOResourceEntity()
-            {
-                ID = 12,
-                ResourceKey = "BackOffice.Error",
-                ResourceValue = "An error occured.",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(errorEntity);
-
-            IOResourceEntity pushNotificationMessagesEntity = new IOResourceEntity()
-            {
-                ID = 13,
-                ResourceKey = "BackOffice.PushNotificationMessages",
-                ResourceValue = "Push Notification Messages",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(pushNotificationMessagesEntity);
-
-            IOResourceEntity sendingEntity = new IOResourceEntity()
-            {
-                ID = 14,
-                ResourceKey = "BackOffice.Sending",
-                ResourceValue = "Sending",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(sendingEntity);
-
-            IOResourceEntity completedEntity = new IOResourceEntity()
-            {
-                ID = 15,
-                ResourceKey = "BackOffice.Completed",
-                ResourceValue = "Completed",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(completedEntity);
-
-            IOResourceEntity clientEntity = new IOResourceEntity()
-            {
-                ID = 16,
-                ResourceKey = "BackOffice.Client",
-                ResourceValue = "Client",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(clientEntity);
-
-            IOResourceEntity dateEntity = new IOResourceEntity()
-            {
-                ID = 17,
-                ResourceKey = "BackOffice.Date",
-                ResourceValue = "Date",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(dateEntity);
-
-            IOResourceEntity categoryEntity = new IOResourceEntity()
-            {
-                ID = 18,
-                ResourceKey = "BackOffice.Category",
-                ResourceValue = "Category",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(categoryEntity);
-
-            IOResourceEntity dataEntity = new IOResourceEntity()
-            {
-                ID = 19,
-                ResourceKey = "BackOffice.Data",
-                ResourceValue = "Data",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(dataEntity);
-
-            IOResourceEntity messageEntity = new IOResourceEntity()
-            {
-                ID = 20,
-                ResourceKey = "BackOffice.Message",
-                ResourceValue = "Message",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(messageEntity);
-
-            IOResourceEntity titleEntity = new IOResourceEntity()
-            {
-                ID = 21,
-                ResourceKey = "BackOffice.Title",
-                ResourceValue = "Title",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(titleEntity);
-
-            IOResourceEntity statusEntity = new IOResourceEntity()
-            {
-                ID = 22,
-                ResourceKey = "BackOffice.Status",
-                ResourceValue = "Status",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(statusEntity);
-
-            IOResourceEntity sendedDevicesEntity = new IOResourceEntity()
-            {
-                ID = 23,
-                ResourceKey = "BackOffice.SendedDevices",
-                ResourceValue = "Sended Devices",
-            };
-            modelBuilder.Entity<IOResourceEntity>().HasData(sendedDevicesEntity);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)

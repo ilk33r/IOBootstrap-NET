@@ -49,6 +49,13 @@
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>
 
+  <ItemGroup> 
+    <Content Include="Certificates\**" LinkBase="Certificates">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <None Include="Webjobs\**" LinkBase="Webjobs" />
+    <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
+  </ItemGroup>
   <!--
   <ItemGroup> 
     <Content Include="maworkout-01-test.pubxml"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>

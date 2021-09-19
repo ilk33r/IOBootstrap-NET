@@ -193,84 +193,13 @@ namespace IOBootstrap.NET.Core.Controllers
                 // Read file
                 string fileContent = System.IO.File.ReadAllText(layoutPath);
 
-                // Obtain web values
-                Hashtable webValues = GetWebValues(layoutName);
-
-                // Create html content
-                string htmlContent = fileContent;
-
-                // Loop throught web values
-                foreach (DictionaryEntry webValue in webValues) 
-                {
-                    // Set values to content
-                    string contentKey = string.Format("${{{0}}}", webValue.Key);
-                    htmlContent = htmlContent.Replace(contentKey, (string)webValue.Value);
-                }
-
-                return Content(htmlContent, "text/html");
+                return Content(fileContent, "text/html");
             }
             else
             {
                 JsonResult result = new JsonResult(Error404());
                 return result;
             }
-        }
-
-        public virtual Hashtable GetWebValues(string layoutName)
-        {
-            Hashtable webValues = new Hashtable();
-            webValues.Add("environmentName", Environment.EnvironmentName);
-
-            // Obtain app version
-            string appVersion = Configuration.GetValue<string>(IOConfigurationConstants.Version);
-            webValues.Add("version", appVersion);
-
-            // Obtain backoffice page url
-            string backOfficePageURL = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePageURLKey);
-            string backofficePagePath = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePagePath);
-            webValues.Add("backOfficePageURL", backOfficePageURL);
-            webValues.Add("backOfficePagePath", backofficePagePath);
-
-            // Obtain api url and app name
-            string apiURL = Configuration.GetValue<string>(IOConfigurationConstants.APIURLKey);
-            string appName = Configuration.GetValue<string>(IOConfigurationConstants.APPNameKey);
-            webValues.Add("apiURL", apiURL);
-            webValues.Add("appName", appName);
-
-            // Obtain authorization
-            string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey);
-            webValues.Add("authorization", authorization);
-
-            // Obtain client id and secret
-            string backofficeClientID = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeClientIDKey);
-            string backofficeClientSecret = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeClientSecretKey);
-            webValues.Add("clientID", backofficeClientID);
-            webValues.Add("clientSecret", backofficeClientSecret);
-
-            // Obtain controllers
-            string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-            string backOfficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            string configurationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
-            string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
-            string pushNotificationsControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
-            string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
-            webValues.Add("authenticationControllerName", authenticationControllerName);
-            webValues.Add("backOfficeControllerName", backOfficeControllerName);
-            webValues.Add("configurationControllerName", configurationControllerName);
-            webValues.Add("imagesControllerName", imagesControllerName);
-            webValues.Add("menuControllerName", menuControllerName);
-            webValues.Add("messagesControllerName", messagesControllerName);
-            webValues.Add("pushNotificationsControllerName", pushNotificationsControllerName);
-            webValues.Add("userControllerName", userControllerName);
-
-            string storageBaseURL = Configuration.GetValue<string>(IOConfigurationConstants.StorageBaseURLKey);
-            string storageBlobName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
-            string storageBaseURLWithBlobName = storageBaseURL + storageBlobName + "/";
-            webValues.Add("storageBaseUrl", storageBaseURLWithBlobName);
-
-            return webValues;
         }
 
         #endregion

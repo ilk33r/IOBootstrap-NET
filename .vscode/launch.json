@@ -52,6 +52,19 @@
             }
         },
         {
+            "name": "Backoffice.UI",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/SevenK/Application/Backoffice.UI",
+            "runtimeArgs": [
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
             "name": "IOBootstrapNetApplicationPublish",
             "type": "coreclr",
             "request": "launch",

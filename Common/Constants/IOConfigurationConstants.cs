@@ -7,7 +7,6 @@ namespace IOBootstrap.NET.Common.Constants
         #region Properties
 
         public static string AllowedOrigins = "IOAllowedOrigins";
-        public static string APIURLKey = "IOAPIURL";
         public static string APNSBundleID = "IOAPNSBundleID";
         public static string APNSApiURL = "IOAPNSApiURL";
         public static string APNSAuthKeyID = "IOAPNSAuthKeyID";
@@ -18,8 +17,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string AzureStorageBlobNameKey = "IOAzureStorageBlobName";
         public static string AzureStorageConnectionStringKey = "IOAzureStorageConnectionString";
         public static string BackOfficeAuthenticationControllerNameKey = "IOBackOfficeAuthenticationControllerName";
-        public static string BackOfficeClientIDKey = "IOBackOfficelientID";
-        public static string BackOfficeClientSecretKey = "IOBackOfficelientSecret";
         public static string BackOfficeConfigurationControllerNameKey = "IOBackOfficeConfigurationControllerName";
         public static string BackOfficeControllerNameKey = "IOBackOfficeControllerName";
         public static string BackOfficeImagesControllerNameKey = "IOBackOfficeImagesControllerName";
@@ -29,7 +26,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackofficePageHostName = "IOBackofficePageHostName";
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
         public static string BackofficePagePath = "IOBackofficePagePath";
-        public static string BackOfficePageURLKey = "IOBackOfficePageURL";
         public static string BackOfficePushNotificationControllerNameKey = "IOBackofficePushNotificationControllerName";
         public static string BackofficeUserControllerNameKey = "IOBackofficeUserControllerName";
         public static string CheckClientInfo = "IOCheckClientInfo";
@@ -43,7 +39,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string MigrationsAssemblyKey = "IOMigrationsAssembly";
         public static string PushNotificationControllerNameKey = "IOPushNotificationControllerName";
         public static string SendGridApiKey = "IOSendGridApiKey";
-        public static string StorageBaseURLKey = "IOStorageBaseURL";
         public static string TokenLife = "IOTokenLife";
         public static string Version = "IOVersion";
 

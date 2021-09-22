@@ -75,8 +75,8 @@ class PushNotificationSendController extends Controller<{}, {}> {
             <React.StrictMode>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
-                    title="Add a new user"
-                    submitButtonName="Add"
+                    title="Send a push notification"
+                    submitButtonName="Send"
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />

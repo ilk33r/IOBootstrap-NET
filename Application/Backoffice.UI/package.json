@@ -2,6 +2,7 @@
   "name": "backoffice.ui",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/backoffice/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
@@ -21,7 +22,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
-    "build:test": "REACT_APP_ENV=test npm run build",
+    "build:development": "REACT_APP_ENV=development npm run build",
+    "build:staging": "REACT_APP_ENV=staging npm run build",
     "build:production": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

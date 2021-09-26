@@ -34,6 +34,7 @@ namespace IOBootstrap.NET.Core.Controllers
         public IWebHostEnvironment Environment { get; }
         public ILogger<IOLoggerType> Logger { get; }
         public TViewModel ViewModel { get; }
+        public bool IsBackofficePage;
 
         #endregion
 
@@ -49,6 +50,7 @@ namespace IOBootstrap.NET.Core.Controllers
             DatabaseContext = databaseContext;
             Environment = environment;
             Logger = logger;
+            IsBackofficePage = false;
 
             // Initialize view model
             ViewModel = new TViewModel();
@@ -106,12 +108,14 @@ namespace IOBootstrap.NET.Core.Controllers
                     Response.Headers.Add("Location", "https://" + Request.Host.Host);
                     result.StatusCode = 301;
                     context.Result = result;
+                    IsBackofficePage = true;
                     return;
                 }
 
                 // Obtain layout name from configuration
                 string layoutName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
-
+                IsBackofficePage = true;
+                
                 // Obtain index page
                 context.Result = GetWebIndex(layoutName);
 

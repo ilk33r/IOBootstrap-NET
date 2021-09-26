@@ -17,7 +17,7 @@ class Login extends Controller<LoginProps, LoginState> {
         this.handleLogin = this.handleLogin.bind(this);
     }
 
-    handleUserNameChange(event: { target: { value: string; }; }) {
+    public handleUserNameChange(event: React.ChangeEvent<HTMLInputElement>) {
         const newState = new LoginState();
         newState.userName = event.target.value;
         newState.password = this.state.password;
@@ -26,7 +26,7 @@ class Login extends Controller<LoginProps, LoginState> {
         this.setState(newState);
     }
 
-    handlePasswordChange(event: { target: { value: string; }; }) {
+    public handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
         const newState = new LoginState();
         newState.userName = this.state.userName;
         newState.password = event.target.value;
@@ -35,7 +35,7 @@ class Login extends Controller<LoginProps, LoginState> {
         this.setState(newState);
     }
 
-    loginSuccessHandler() {
+    private loginSuccessHandler() {
         this.props.loginSuccessHandler();
     }
 
@@ -49,8 +49,8 @@ class Login extends Controller<LoginProps, LoginState> {
         this.setState(newState);
     }
 
-    handleLogin(e: { preventDefault: () => void; }) {
-        e.preventDefault();
+    public handleLogin(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
         this.indicatorPresenter.present();
 
@@ -78,7 +78,7 @@ class Login extends Controller<LoginProps, LoginState> {
         });
     }
 
-    render() {
+    public render() {
         const formGroupErrorClass = (this.state.errorMessage.length > 0) ? "form-group has-error" : "form-group";
         return (
             <div className="content-wrapper">

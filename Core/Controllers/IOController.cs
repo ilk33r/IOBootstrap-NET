@@ -196,8 +196,9 @@ namespace IOBootstrap.NET.Core.Controllers
             {
                 // Read file
                 string fileContent = System.IO.File.ReadAllText(layoutPath);
-
-                return Content(fileContent, "text/html");
+                ContentResult contentResult = Content(fileContent, "text/html");
+                contentResult.StatusCode = 200;
+                return contentResult;
             }
             else
             {

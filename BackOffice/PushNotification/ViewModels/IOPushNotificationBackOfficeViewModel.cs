@@ -62,7 +62,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
             DatabaseContext.SaveChanges();
         }
 
-        public List<PushNotificationMessageModel> ListMessages()
+        public virtual List<PushNotificationMessageModel> ListMessages()
         {
             // Obtain push notification entity
             IQueryable<PushNotificationMessageEntity> pushNotificationsEntities = DatabaseContext.PushNotificationMessages

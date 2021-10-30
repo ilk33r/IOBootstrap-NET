@@ -12,6 +12,7 @@ import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
 import FormView from "../../shared/views/FormView";
 import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
+import ValidationMaxLengthRule from "../../../presentation/validations/ValidationMaxLengthRule";
 import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
 import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
 
@@ -66,8 +67,10 @@ class PushNotificationSendController extends Controller<{}, {}> {
             FormTypeSelectProps.initialize("Category", "", true, [
                 FormDataOptionModel.initialize("-", "")
             ]),
-            FormTypeTextProps.initializeWithValidations("Title", "", true, [ ValidationRequiredRule.initialize("Title is too short.", "Invalid notification title.") ]),
-            FormTypeTextProps.initializeWithValidations("Message", "", true, [ ValidationMinLengthRule.initialize("Message is too short.", "Invalid notification message.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Title", "", true, [ ValidationRequiredRule.initialize("Title is too short.", "Invalid notification title."),
+                                                                                ValidationMaxLengthRule.initialize("Title is too long.", "Title must be smaller than 32 characters.", 33) ]),
+            FormTypeTextProps.initializeWithValidations("Message", "", true, [ ValidationMinLengthRule.initialize("Message is too short.", "Invalid notification message.", 3),
+                                                                                ValidationMaxLengthRule.initialize("Message is too long.", "Message must be smaller than 256 characters.", 257) ]),
             FormTypeTextAreaProps.initialize("Custom Data", "", true)
         ];
 

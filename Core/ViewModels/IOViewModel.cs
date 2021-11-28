@@ -143,18 +143,25 @@ namespace IOBootstrap.NET.Core.ViewModels
             string symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
             string symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
             
-            byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
-            byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
+            try {
+                byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
+                byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
             
-            byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
-            byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
+                byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
+                byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
 
-            if (symmetricIV == null || symmetricKey == null)
+                if (symmetricIV == null || symmetricKey == null)
+                {
+                    throw new IOInvalidKeyIDException();
+                }
+
+                return new IOAESUtilities(symmetricKey, symmetricIV);
+            } 
+            catch (Exception e)
             {
+                Logger.LogDebug("{0}", e.StackTrace);
                 throw new IOInvalidKeyIDException();
             }
-
-            return new IOAESUtilities(symmetricKey, symmetricIV);
         }
 
         #endregion

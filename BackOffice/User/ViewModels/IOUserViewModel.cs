@@ -90,7 +90,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 			List<IOUserInfoModel> users = new List<IOUserInfoModel>();
 
             // Obtain users from realm
-            var user = DatabaseContext.Users;
+            var user = DatabaseContext.Users.OrderBy(u => u.ID);
 
 			// Check users is not null
 			if (user != null)

@@ -68,9 +68,9 @@ class PushNotificationSendController extends Controller<{}, {}> {
                 FormDataOptionModel.initialize("-", "")
             ]),
             FormTypeTextProps.initializeWithValidations("Title", "", true, [ ValidationRequiredRule.initialize("Title is too short.", "Invalid notification title."),
-                                                                                ValidationMaxLengthRule.initialize("Title is too long.", "Title must be smaller than 32 characters.", 33) ]),
+                                                                                ValidationMaxLengthRule.initialize("Title is too long.", "Title must be smaller than 32 characters.", 32) ]),
             FormTypeTextProps.initializeWithValidations("Message", "", true, [ ValidationMinLengthRule.initialize("Message is too short.", "Invalid notification message.", 3),
-                                                                                ValidationMaxLengthRule.initialize("Message is too long.", "Message must be smaller than 256 characters.", 257) ]),
+                                                                                ValidationMaxLengthRule.initialize("Message is too long.", "Message must be smaller than 256 characters.", 256) ]),
             FormTypeTextAreaProps.initialize("Custom Data", "", true)
         ];
 

@@ -34,7 +34,8 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
         {
             IQueryable<IOImagesEntity> images = DatabaseContext.Images;
             int imageCount = images.Count();
-            IList<IOImageVariationsModel> paginatedImages = images.Skip(start)
+            IList<IOImageVariationsModel> paginatedImages = images.OrderBy(i => i.ID)
+                                                                  .Skip(start)
                                                                   .Take(count)
                                                                   .ToList()
                                                                   .ConvertAll(image =>

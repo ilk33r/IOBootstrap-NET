@@ -127,9 +127,9 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
                                                                                     DeviceType = (DeviceTypes)pn.DeviceType,
                                                                                     LastUpdateTime = pn.LastUpdateTime
                                                                                 })
+                                                                                .OrderBy(arg => arg.ID)
                                                                                 .Skip(start)
                                                                                 .Take(limit)
-                                                                                .OrderBy(arg => arg.ID)
                                                                                 .ToList();
 
             // Return devices

@@ -23,6 +23,7 @@ namespace IOBootstrap.NET.WebApi.Index.Controllers
 
         #region Default
 
+        // Deprecated
         // [Obsolete("This Method is Deprecated", false)]
         public virtual IOResponseModel Index()
         {

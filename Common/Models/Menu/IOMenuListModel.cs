@@ -15,6 +15,7 @@ namespace IOBootstrap.NET.Common.Models.Menu
         public string Action { get; set; }
         public string CssClass { get; set; }
         public string Name { get; set; }
+        public Nullable<int> ParentEntityID { get; set; }
         public IList<IOMenuListModel> ChildItems { get; set; }
 
         #endregion

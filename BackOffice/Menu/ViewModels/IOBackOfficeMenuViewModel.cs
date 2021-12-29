@@ -64,59 +64,36 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 
         public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
-            var parentMenuTree = DatabaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == null)
-                                                     .OrderBy((arg) => arg.MenuOrder);
+            List<IOMenuListModel> menuTree = DatabaseContext.Menu
+                                                                .Select(m => new IOMenuListModel()
+                                                                {
+                                                                    ID = m.ID,
+                                                                    MenuOrder = m.MenuOrder,
+                                                                    RequiredRole = m.RequiredRole,
+                                                                    Action = m.Action,
+                                                                    CssClass = m.CssClass,
+                                                                    Name = m.Name,
+                                                                    ParentEntityID = m.ParentEntityID,
+                                                                    ChildItems = DatabaseContext.Menu
+                                                                                                    .Select(cm => new IOMenuListModel()
+                                                                                                    {
+                                                                                                        ID = cm.ID,
+                                                                                                        MenuOrder = cm.MenuOrder,
+                                                                                                        RequiredRole = cm.RequiredRole,
+                                                                                                        Action = cm.Action,
+                                                                                                        CssClass = cm.CssClass,
+                                                                                                        Name = cm.Name,
+                                                                                                        ParentEntityID = cm.ParentEntityID,
+                                                                                                    })
+                                                                                                    .Where(cm => cm.RequiredRole >= requiredRole && cm.ParentEntityID == m.ID)
+                                                                                                    .OrderBy(cm => cm.MenuOrder)
+                                                                                                    .ToList()
+                                                                })
+                                                                .Where(m => m.RequiredRole >= requiredRole && m.ParentEntityID == null)
+                                                                .OrderBy(m => m.MenuOrder)
+                                                                .ToList();
 
-            if (parentMenuTree != null)
-            {
-                List<IOMenuListModel> menuTree = parentMenuTree.ToList()
-                                                               .ConvertAll(parentMenuEntity =>
-                                                               {
-                                                                   IOMenuListModel menuListModel = new IOMenuListModel()
-                                                                   {
-                                                                       ID = parentMenuEntity.ID,
-                                                                       MenuOrder = parentMenuEntity.MenuOrder,
-                                                                       RequiredRole = parentMenuEntity.RequiredRole,
-                                                                       Action = parentMenuEntity.Action,
-                                                                       CssClass = parentMenuEntity.CssClass,
-                                                                       Name = parentMenuEntity.Name,
-                                                                   };
-
-                                                                   return menuListModel;
-
-                                                               });
-
-                foreach (IOMenuListModel menuEntity in menuTree)
-                {
-                    var childMenuTree = DatabaseContext.Menu.Where((arg) => arg.RequiredRole >= requiredRole && arg.ParentEntityID == menuEntity.ID)
-                                                            .OrderBy((arg) => arg.MenuOrder);
-                    List<IOMenuListModel> childMenu = new List<IOMenuListModel>();
-
-                    if (childMenuTree != null && childMenuTree.Count() > 0)
-                    {
-                        foreach (IOMenuEntity childMenuEntity in childMenuTree)
-                        {
-                            IOMenuListModel childMenuModel = new IOMenuListModel()
-                            {
-                                ID = childMenuEntity.ID,
-                                Action = childMenuEntity.Action,
-                                CssClass = childMenuEntity.CssClass,
-                                Name = childMenuEntity.Name,
-                                MenuOrder = childMenuEntity.MenuOrder,
-                                RequiredRole = childMenuEntity.RequiredRole
-                            };
-
-                            childMenu.Add(childMenuModel);
-                        }
-                    }
-
-                    menuEntity.ChildItems = childMenu;
-                }
-
-                return menuTree;
-            }
-
-            return new List<IOMenuListModel>();
+            return menuTree;
         }
 
         public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)

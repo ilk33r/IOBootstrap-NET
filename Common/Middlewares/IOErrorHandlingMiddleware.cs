@@ -6,13 +6,13 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Base;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.Middlewares
+namespace IOBootstrap.NET.Common.Middlewares
 {
     public class IOErrorHandlingMiddleware
     {

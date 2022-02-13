@@ -1,6 +1,6 @@
 using System;
 
-namespace IOBootstrap.NET.Core.Logger
+namespace IOBootstrap.NET.Common.Logger
 {
     public class IOLoggerOptions
     {

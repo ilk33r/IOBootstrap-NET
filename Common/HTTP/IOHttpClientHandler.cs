@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.HTTP
+namespace IOBootstrap.NET.Common.HTTP
 {
     public class IOHttpClientHandler : DelegatingHandler
     {

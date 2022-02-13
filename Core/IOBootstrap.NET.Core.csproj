@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <PropertyGroup>
+    <TargetFramework>netcoreapp6.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\IOBootstrap.NET.DataAccess.csproj" />
   </ItemGroup>
@@ -8,10 +13,5 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Sendgrid" Version="9.25.3" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
 
 </Project>

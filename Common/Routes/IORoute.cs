@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Application
+namespace IOBootstrap.NET.Common.Routes
 {
     public class IORoute
     {

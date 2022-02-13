@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.Logger
+namespace IOBootstrap.NET.Common.Logger
 {
     public static class IOFileLoggerExtension
     {

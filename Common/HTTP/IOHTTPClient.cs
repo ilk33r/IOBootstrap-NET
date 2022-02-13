@@ -6,11 +6,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Models.Base;
-using IOBootstrap.NET.Core.HTTP.Enumerations;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.HTTP.Enumerations;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.HTTP.Utils
+namespace IOBootstrap.NET.Common.HTTP.Utils
 {
     public delegate void HttpResponse(bool status, string response);
     public delegate void HttpJsonResponse<TObject>(bool status, TObject responseObject) where TObject : IOModel, new();

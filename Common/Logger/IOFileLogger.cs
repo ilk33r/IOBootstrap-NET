@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.Logger
+namespace IOBootstrap.NET.Common.Logger
 {
     public class IOFileLogger: ILogger
     {

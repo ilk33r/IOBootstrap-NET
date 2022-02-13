@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace IOBootstrap.NET.Core.Logger
+namespace IOBootstrap.NET.Common.Logger
 {
 
     [ProviderAlias("IOFileLogger")]

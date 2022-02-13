@@ -40,5 +40,14 @@ namespace IOBootstrap.NET.MW.WebApi.Index.Controllers
         }
 
         #endregion
+
+        #region Helper Methods
+
+        public override bool EncryptResult()
+        {
+            return false;
+        }
+
+        #endregion
     }
 }

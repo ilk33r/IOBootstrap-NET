@@ -48,6 +48,7 @@ namespace IOBootstrap.NET.MW.Core.Controllers
             ViewModel.DatabaseContext = databaseContext;
             ViewModel.Environment = environment;
             ViewModel.Logger = logger;
+            ViewModel.Prepare();
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -73,13 +74,24 @@ namespace IOBootstrap.NET.MW.Core.Controllers
             {
                 // Create JSON string
                 JsonResult resultJson = (JsonResult)context.Result;
-                jsonString = JsonSerializer.Serialize(resultJson.Value);    
+                jsonString = JsonSerializer.Serialize(resultJson.Value);
             }
             else if (context.Result is ObjectResult)
             {
                 // Create JSON string
                 ObjectResult resultJson = (ObjectResult)context.Result;
-                jsonString = JsonSerializer.Serialize(resultJson.Value);    
+                jsonString = JsonSerializer.Serialize(resultJson.Value);
+
+                // Check encryption is enabled
+                if (EncryptResult())
+                {
+                    string encryptedResult = ViewModel.EncryptResult(jsonString);
+                    ContentResult contentResult = Content(encryptedResult, "text/plain");
+                    contentResult.StatusCode = 200;
+
+                    context.HttpContext.Response.Headers.Add(IORequestHeaderConstants.IsEncrypted, "true");
+                    context.Result = contentResult;
+                }
             }
 
             if (jsonString != null)
@@ -130,6 +142,11 @@ namespace IOBootstrap.NET.MW.Core.Controllers
                     throw new IOHttpsRequiredException();
                 }
             }
+        }
+
+        public virtual bool EncryptResult()
+        {
+            return true;
         }
 
         public virtual bool HasControllerAttribute<T>(ActionExecutingContext context)

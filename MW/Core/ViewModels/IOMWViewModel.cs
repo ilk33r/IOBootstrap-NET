@@ -1,7 +1,9 @@
 using System;
+using System.Text.Json;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.MW.DataAccess.Context;
 
 namespace IOBootstrap.NET.MW.Core.ViewModels
@@ -15,6 +17,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
+		public IOAESUtilities aesUtilities;
 
         #endregion
 
@@ -23,6 +26,23 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
         public IOMWViewModel()
         {
         }
+
+		public virtual void Prepare()
+		{
+			byte[] keyBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey));
+			byte[] ivBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV));
+			aesUtilities = new IOAESUtilities(keyBytes, ivBytes);
+		}
+
+		#endregion
+
+		#region Encryption
+
+		public string EncryptResult(string resultString)
+		{
+			// Encrypt result
+			return aesUtilities.Encrypt(resultString);
+		}
 
 		#endregion
 

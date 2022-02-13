@@ -1,10 +1,10 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.MW.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOBootstrap.NET.DataAccess.Context
+namespace IOBootstrap.NET.MW.DataAccess.Context
 {
     public abstract class IODatabaseContext<TContext> : DbContext where TContext : DbContext
     {

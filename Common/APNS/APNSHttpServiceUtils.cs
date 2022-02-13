@@ -4,16 +4,16 @@ using System.Text;
 using System.Text.Json;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.HTTP.Enumerations;
-using IOBootstrap.NET.Core.HTTP.Utils;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.HTTP.Enumerations;
+using IOBootstrap.NET.Common.HTTP.Utils;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 
-namespace IOBootstrap.NET.Core.APNS
+namespace IOBootstrap.NET.Common.APNS
 {
     public class APNSHttpServiceUtils
     {

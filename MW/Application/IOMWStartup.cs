@@ -1,22 +1,9 @@
-﻿using System;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.Core.Middlewares;
-using IOBootstrap.NET.DataAccess.Context;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
 
-namespace IOBootstrap.NET.Application
+namespace IOBootstrap.NET.MW.Application
 {
-    public abstract class IOStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOMWStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
-
         #region Properties
 
         public IConfiguration Configuration { get; }
@@ -46,10 +33,6 @@ namespace IOBootstrap.NET.Application
                         options.SuppressModelStateInvalidFilter = true;
                     });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            // builder.Services.AddEndpointsApiExplorer();
-            // builder.Services.AddSwaggerGen();
-
             services.AddRouting();
             services.AddLogging(loggingBuilder =>
             {
@@ -60,46 +43,17 @@ namespace IOBootstrap.NET.Application
                     Configuration.GetSection("Logging").GetSection("IOFileLogger").GetSection("Options").Bind(options);
                 });
             });
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = ".IO.Session";
-            });
 
-            string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>();
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    foreach (string allowedOrigin in allowedOrigins)
-                    {
-                        builder.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader();
-                    }
-                });
-            });
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IWebHostEnvironment>(Environment);
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
         {
-            // Use static files
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=640800");
-                }
-            });
-
-            // Use session
-            app.UseSession();
-
             // Log
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
-                // app.UseSwagger();
-                // app.UseSwaggerUI();
             }
 
             // Use middleware
@@ -124,7 +78,6 @@ namespace IOBootstrap.NET.Application
 
             // Use redirection and cors
             app.UseHttpsRedirection();
-            app.UseCors();
 
             IORoute indexRoute = new IORoute("Index", indexControllerName);
 
@@ -161,23 +114,23 @@ namespace IOBootstrap.NET.Application
         public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
         {
             string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
-#if DEBUG
+            #if DEBUG
             options.UseLoggerFactory(LoggerFactory.Create(builder =>
             {
                 builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
                 .AddConsole();
             }));
             options.EnableSensitiveDataLogging(true);
-#endif
+            #endif
 
-#if USE_MYSQL_DATABASE
+            #if USE_MYSQL_DATABASE
             options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
             // options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
-#elif USE_SQLSRV_DATABASE
+            #elif USE_SQLSRV_DATABASE
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
-#else
+            #else
             options.UseInMemoryDatabase("IOMemory");
-#endif
+            #endif
         }
 
         #endregion

@@ -1,0 +1,6 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.rename.enablePreview": false,
+    "workbench.editor.enablePreview": false,
+    "csharp.maxProjectFileCountForDiagnosticAnalysis": 10000
+}

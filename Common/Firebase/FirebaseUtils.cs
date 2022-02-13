@@ -1,11 +1,11 @@
 ﻿using System;
+using IOBootstrap.NET.Common.HTTP.Enumerations;
+using IOBootstrap.NET.Common.HTTP.Utils;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Models.Firebase;
-using IOBootstrap.NET.Core.HTTP.Enumerations;
-using IOBootstrap.NET.Core.HTTP.Utils;
-using IOBootstrap.NET.Core.Logger;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.Firebase
+namespace IOBootstrap.NET.Common.Firebase
 {
 
     public class FirebaseUtils

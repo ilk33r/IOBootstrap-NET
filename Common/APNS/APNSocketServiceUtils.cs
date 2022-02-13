@@ -10,10 +10,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using IOBootstrap.NET.Common.Models.APNS;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Core.APNS
+namespace IOBootstrap.NET.Common.APNS
 {
     public class APNSocketServiceUtils
     {

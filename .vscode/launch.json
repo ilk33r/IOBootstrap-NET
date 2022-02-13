@@ -5,6 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "IOBootstrap.Net.MW.Application",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildIOBootstrapNetMWApplication",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/MW/Application/bin/Debug/netcoreapp6.0/IOBootstrap.NET.MW.Application.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/MW/Application",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5001"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
             "name": "IOBootstrapNetApplication",
             "type": "coreclr",
             "request": "launch",

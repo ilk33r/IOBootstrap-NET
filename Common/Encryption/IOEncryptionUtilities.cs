@@ -9,7 +9,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 
-namespace IOBootstrap.NET.Core.Encryption
+namespace IOBootstrap.NET.Common.Encryption
 {
     public static class IOEncryptionUtilities
     {

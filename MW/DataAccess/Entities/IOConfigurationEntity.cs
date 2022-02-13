@@ -6,9 +6,9 @@ using System.Text.Json;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Models.Base;
-using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.MW.DataAccess.Context;
 
-namespace IOBootstrap.NET.DataAccess.Entities
+namespace IOBootstrap.NET.MW.DataAccess.Entities
 {
     public class IOConfigurationEntity
     {

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOBootstrap.NET.DataAccess.Context
+namespace IOBootstrap.NET.MW.DataAccess.Context
 {
     public class IODatabaseContextDefaultImpl : IODatabaseContext<IODatabaseContextDefaultImpl>
     {

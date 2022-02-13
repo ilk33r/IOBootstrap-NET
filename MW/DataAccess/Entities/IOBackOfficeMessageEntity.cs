@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IOBootstrap.NET.DataAccess.Entities
+namespace IOBootstrap.NET.MW.DataAccess.Entities
 {
     public class IOBackOfficeMessageEntity
     {

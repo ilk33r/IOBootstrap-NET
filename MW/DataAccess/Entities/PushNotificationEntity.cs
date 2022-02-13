@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using IOBootstrap.NET.Common.Enumerations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IOBootstrap.NET.DataAccess.Entities
+namespace IOBootstrap.NET.MW.DataAccess.Entities
 {
     
     public class PushNotificationEntity

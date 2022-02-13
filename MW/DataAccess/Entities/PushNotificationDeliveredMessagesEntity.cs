@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IOBootstrap.NET.DataAccess.Entities
+namespace IOBootstrap.NET.MW.DataAccess.Entities
 {
     public class PushNotificationDeliveredMessagesEntity
     {

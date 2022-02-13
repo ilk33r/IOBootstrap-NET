@@ -37,7 +37,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
 				string requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOMWConfigurationConstants.MWAuthorizationKey)))
+				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey)))
 				{
 					// Then authorization success
 					return;

@@ -1,25 +1,24 @@
-var builder = WebApplication.CreateBuilder(args);
+using System;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace IOBootstrap.NET.MW.Application
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        private static CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+        public static IHost BuildWebHost(string[] args) => Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+                                                                     {
+                                                                         webBuilder.UseStartup<IOMWStartupDefault>();
+                                                                     }).Build();
+
+        public static void Main(string[] args)
+        {
+            BuildWebHost(args).RunAsync(cancelTokenSource.Token).GetAwaiter().GetResult();
+        }
+
+        public static void Shutdown()
+        {
+            cancelTokenSource.Cancel();
+        }
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

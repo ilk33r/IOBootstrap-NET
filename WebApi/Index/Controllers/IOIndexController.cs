@@ -5,9 +5,6 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.WebApi.Index.ViewModels;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.Index.Controllers
 {

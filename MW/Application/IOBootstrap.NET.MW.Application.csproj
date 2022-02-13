@@ -17,6 +17,13 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
   </ItemGroup>
   -->
+    <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
+  </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -29,7 +36,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MEMORY_DATABASE;DEBUG</DefineConstants>
+    <DefineConstants>USE_MYSQL_DATABASE;USE_MEMORY_DATABASE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>
@@ -40,4 +47,8 @@
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebApi\IOBootstrap.NET.MW.WebApi.csproj" />
+  </ItemGroup>
+  
 </Project>

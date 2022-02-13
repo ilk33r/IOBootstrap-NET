@@ -6,9 +6,10 @@ namespace IOBootstrap.NET.Common.Constants
     {
         #region Properties
 
-        public static string MWAuthorizationKey = "IOMWAuthorizationKey";
-        public static string MWEncryptionKey = "IOMWEncryptionKey";
-        public static string MWEncryptionIV = "IOMWEncryptionIV";
+        public static string AuthorizationKey = "IOMWAuthorizationKey";
+        public static string EncryptionKey = "IOMWEncryptionKey";
+        public static string EncryptionIV = "IOMWEncryptionIV";
+        public static string MigrationsAssemblyKey = "IOMWMigrationsAssembly";
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.MW.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,6 +71,7 @@ namespace IOBootstrap.NET.MW.DataAccess.Context
             GenerateNotificationMenu(modelBuilder);
             GenerateResourceMenu(modelBuilder);
             GenerateImagesMenu(modelBuilder);
+            GenerateBOUser(modelBuilder);
         }
 
         private void AddDefaultConfiguration(ModelBuilder modelBuilder)
@@ -406,6 +408,21 @@ namespace IOBootstrap.NET.MW.DataAccess.Context
                 ParentEntityID = 27
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(imageAddEntity);
+        }
+
+        private void GenerateBOUser(ModelBuilder modelBuilder)
+        {
+            IOUserEntity userEntity = new IOUserEntity()
+            {
+                ID = 1,
+                UserName = "root",
+                Password = IOPasswordUtilities.HashPassword("admin"),
+                UserRole = 0,
+                UserToken = "",
+                TokenDate = new DateTimeOffset()
+            };
+
+            modelBuilder.Entity<IOUserEntity>().HasData(userEntity);
         }
     }
 }

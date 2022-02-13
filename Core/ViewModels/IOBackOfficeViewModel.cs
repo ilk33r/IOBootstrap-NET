@@ -124,7 +124,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public bool IsBackOffice()
         {
             // Check back office is not open and token exists
-            if (!Configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic) && Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+            if (Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
             {
                 // Obtain token
                 string token = Request.Headers[IORequestHeaderConstants.AuthorizationToken];
@@ -139,7 +139,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             }
 
             // Then return back office
-            return true;
+            return false;
         }
         //TODO: Migrate with MW.
         /*

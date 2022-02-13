@@ -6,7 +6,7 @@ using IOBootstrap.NET.MW.DataAccess.Context;
 
 namespace IOBootstrap.NET.MW.Core.ViewModels
 {
-    public abstract class IOMWViewModell<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOMWViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
         #region Properties
 
@@ -20,7 +20,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
 
         #region Initialization Methods
 
-        public IOMWViewModell()
+        public IOMWViewModel()
         {
         }
 
@@ -37,7 +37,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
 				string requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOConfigurationConstants.MWAuthorizationKey)))
+				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOMWConfigurationConstants.MWAuthorizationKey)))
 				{
 					// Then authorization success
 					return;

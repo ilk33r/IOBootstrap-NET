@@ -18,22 +18,13 @@
   </ItemGroup>
   -->
 
-  <!--
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>NETCORE_6_0</DefineConstants>
+    <!-- <OutputType>Library</OutputType> -->
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
-  </PropertyGroup>
-  -->
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <DefineConstants>NETCORE_6_0</DefineConstants>
-    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

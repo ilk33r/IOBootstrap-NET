@@ -1,6 +1,6 @@
 using System;
 
-namespace IOBootstrap.Net.Common.Constants
+namespace IOBootstrap.NET.Common.Constants
 {
     public static class IOMWConfigurationConstants
     {

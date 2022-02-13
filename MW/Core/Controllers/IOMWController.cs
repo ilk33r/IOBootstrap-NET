@@ -1,4 +1,17 @@
 using System;
+using System.Reflection;
+using System.Text.Json;
+using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.MW.Core.ViewModels;
+using IOBootstrap.NET.MW.DataAccess.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace IOBootstrap.NET.MW.Core.Controllers
 {
@@ -16,17 +29,16 @@ namespace IOBootstrap.NET.MW.Core.Controllers
 
         #region Controller Lifecycle
 
-        public IOController(IConfiguration configuration, 
-                            TDBContext databaseContext,
-                            IWebHostEnvironment environment,
-                            ILogger<IOLoggerType> logger)
+        public IOMWController(IConfiguration configuration, 
+                              TDBContext databaseContext,
+                              IWebHostEnvironment environment,
+                              ILogger<IOLoggerType> logger)
         {
             // Setup properties
             Configuration = configuration;
             DatabaseContext = databaseContext;
             Environment = environment;
             Logger = logger;
-            IsBackofficePage = false;
 
             // Initialize view model
             ViewModel = new TViewModel();

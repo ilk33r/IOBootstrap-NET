@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeViewModel : IOViewModel
     {
 
         #region Publics
 
-        public IOUserEntity UserEntity;
+        //TODO: Migrate with MW.
+        // public IOUserEntity UserEntity;
 
         #endregion
 
@@ -32,6 +24,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region View Model Methods
 
+        //TODO: Migrate with MW.
+        /*
         public virtual IOClientInfoModel CreateClient(string clientDescription, long maxRequestCount)
         {
             // Create a client entity
@@ -126,7 +120,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Return response
             throw new IOInvalidClientException("Client not found.");
         }
-
+        */
         public bool IsBackOffice()
         {
             // Check back office is not open and token exists
@@ -139,13 +133,16 @@ namespace IOBootstrap.NET.Core.ViewModels
                 Tuple<string, int> tokenData = ParseToken(token);
 
                 // Return back office status
-                return CheckBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
+                //TODO: Migrate with MW.
+                // return CheckBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
+                return true;
             }
 
             // Then return back office
             return true;
         }
-
+        //TODO: Migrate with MW.
+        /*
         private bool CheckBackofficeTokenIsValid(string tokenData, int userId)
         {
             // Check token data is correct
@@ -176,6 +173,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Return is not back office
             return false;
         }
+        */
 
         public Tuple<string, int> ParseToken(string token)
         {
@@ -208,6 +206,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Helper Methods
 
+        //TODO: Migrate with MW.
+        /*
         public override int GetUserRole()
         {
             IOUserEntity userEntity = UserEntity;
@@ -226,7 +226,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
             return (int)UserRoles.AnonmyMouse;
         }
-
+        */
         #endregion
 
     }

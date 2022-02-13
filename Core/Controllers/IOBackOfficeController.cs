@@ -1,32 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.Clients;
-using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOBackOfficeViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeController<TViewModel> : IOController<TViewModel> where TViewModel : IOBackOfficeViewModel, new()
     {
 
         #region Controller Lifecycle
 
         public IOBackOfficeController(IConfiguration configuration,
-                                      TDBContext databaseContext,
                                       IWebHostEnvironment environment,
-                                      ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+                                      ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -47,6 +36,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Client Methods
 
+        //TODO: Migrate with MW.
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
@@ -93,7 +84,7 @@ namespace IOBootstrap.NET.Core.Controllers
             // Then create and return response
             return new IOResponseModel();
         }
-
+        */
         #endregion
     }
 }

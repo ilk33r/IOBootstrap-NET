@@ -1,36 +1,28 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Logger;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TViewModel, TDBContext> : Controller where TViewModel : IOViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOController<TViewModel> : Controller where TViewModel : IOViewModel, new()
     {
 
         #region Properties
 
         public IConfiguration Configuration { get; set; }
-        public TDBContext DatabaseContext { get; }
         public IWebHostEnvironment Environment { get; }
         public ILogger<IOLoggerType> Logger { get; }
         public TViewModel ViewModel { get; }
@@ -41,13 +33,11 @@ namespace IOBootstrap.NET.Core.Controllers
         #region Controller Lifecycle
 
         public IOController(IConfiguration configuration, 
-                            TDBContext databaseContext,
                             IWebHostEnvironment environment,
                             ILogger<IOLoggerType> logger)
         {
             // Setup properties
             Configuration = configuration;
-            DatabaseContext = databaseContext;
             Environment = environment;
             Logger = logger;
             IsBackofficePage = false;
@@ -57,7 +47,6 @@ namespace IOBootstrap.NET.Core.Controllers
 
             // Setup view model properties
             ViewModel.Configuration = configuration;
-            ViewModel.DatabaseContext = databaseContext;
             ViewModel.Environment = environment;
             ViewModel.Logger = logger;
         }
@@ -82,7 +71,8 @@ namespace IOBootstrap.NET.Core.Controllers
             CheckKeyID(context);
 
             // Check client info
-            ViewModel.CheckClient();
+            //TODO: Migrate with MW
+            // ViewModel.CheckClient();
 
             // Check back office page host name
             string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
@@ -295,6 +285,8 @@ namespace IOBootstrap.NET.Core.Controllers
                 }
             }
 
+            //TODO: Migrate with MW.
+            /*
             if (!isBackofficePage)
             {
                 int isMaintenanceModeOn = IOConfigurationEntity.ConfigForKey(IOConfigurationKeys.IsMaintenanceModeOn, DatabaseContext).IntValue();
@@ -303,6 +295,7 @@ namespace IOBootstrap.NET.Core.Controllers
                     throw new IOMaintenanceException();
                 }
             }
+            */
         }
 
         public virtual string GetControllerName()

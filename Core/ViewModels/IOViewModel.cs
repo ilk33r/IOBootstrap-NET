@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Linq;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Encryption;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using IOBootstrap.NET.Common.Encryption;
+using IOBootstrap.NET.Common.Logger;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOViewModel
     {
 
         #region Publics
@@ -28,7 +21,6 @@ namespace IOBootstrap.NET.Core.ViewModels
         #region Properties
 
         public IConfiguration Configuration { get; set; }
-        public TDBContext DatabaseContext { get; set; }
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
@@ -64,6 +56,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 			throw new IOUnAuthorizeException();
 		}
 
+        //TODO: Migrate with MW
+        /*
         public virtual void CheckClient()
 		{
             // Obtain client info
@@ -116,6 +110,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 			// Then return invalid clients
 			throw new IOInvalidClientException();
 		}
+        */
 
         public virtual int GetUserRole()
         {

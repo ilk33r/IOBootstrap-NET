@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Core.HTTP.Enumerations;
@@ -151,7 +152,7 @@ namespace IOBootstrap.NET.Core.HTTP.Utils
             {
                 string serializedBody = JsonSerializer.Serialize(PostBody, new JsonSerializerOptions()
                 {
-                    IgnoreNullValues = this.IgnoreNullValues
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 });
                 HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType);
                 var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl)

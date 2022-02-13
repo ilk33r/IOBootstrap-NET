@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetApplication",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Application/bin/Debug/netcoreapp3.1/IOBootstrap.NET.Application.dll",
+            "program": "${workspaceFolder}/Application/bin/Debug/netcoreapp6.0/IOBootstrap.NET.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Application",
             "stopAtEntry": false,
@@ -39,7 +39,7 @@
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetBatch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Batch/bin/Debug/netcoreapp3.1/IOBootstrap.NET.Batch.dll",
+            "program": "${workspaceFolder}/Batch/bin/Debug/netcoreapp6.0/IOBootstrap.NET.Batch.dll",
             "args": ["dev", "${workspaceFolder}/SevenK/Application"],
             "cwd": "${workspaceFolder}/Batch",
             "stopAtEntry": false,

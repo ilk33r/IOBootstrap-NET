@@ -8,7 +8,7 @@ namespace IOBootstrap.NET.Common.Utilities
     {
         #region Privates
 
-        private RijndaelManaged Encryptor;
+        private Aes Encryptor;
 
         #endregion
 
@@ -17,7 +17,7 @@ namespace IOBootstrap.NET.Common.Utilities
         public IOAESUtilities(byte[] key, byte[] iv)
         {
             // Create encryptor
-            Encryptor = new RijndaelManaged();
+            Encryptor = Aes.Create();
             Encryptor.Key = key;
             Encryptor.IV = iv;
         }

@@ -5,12 +5,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-    <PackageReference Include="Sendgrid" Version="9.24.2" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="Sendgrid" Version="9.25.3" />
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <TargetFramework>netcoreapp6.0</TargetFramework>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 

@@ -51,11 +51,9 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 			byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
 			byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
-			// Encode user token
-            byte[] userTokenData = IOPasswordUtilities.EncryptStringToBytes(decryptedUserToken, key, iv);
-
 			// Base 64 encode user token data
-			string userToken = Convert.ToBase64String(userTokenData);
+            IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+			string userToken = aesUtilities.Encrypt(decryptedUserToken);
 
 			// Create token date
 			DateTime tokenDate = DateTime.UtcNow;

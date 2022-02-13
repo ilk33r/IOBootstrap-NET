@@ -32,7 +32,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
             string authorizationKey = IORandomUtilities.GenerateRandomAlphaNumericString(32);
 
             // Create encryptor
-            RijndaelManaged encryptor = new RijndaelManaged();
+            Aes encryptor = Aes.Create();
 
 			// Generate key and iv
             encryptor.GenerateKey();

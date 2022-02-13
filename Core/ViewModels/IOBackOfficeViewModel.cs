@@ -183,10 +183,11 @@ namespace IOBootstrap.NET.Core.ViewModels
             byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
             byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
 
+            IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
             try
             {
                 // Obtain decrypted token value
-                string decryptedToken = IOPasswordUtilities.DecryptStringFromBytes(Convert.FromBase64String(token), key, iv);
+                string decryptedToken = aesUtilities.Decrypt(token);
 
                 // Split user id and token value
                 string[] tokenData = decryptedToken.Split(',');

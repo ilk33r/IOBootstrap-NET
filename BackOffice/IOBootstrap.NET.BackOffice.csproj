@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Core\IOBootstrap.NET.Core.csproj" />
   </ItemGroup>
@@ -9,10 +15,4 @@
     <PackageReference Include="runtime.osx.10.10-x64.CoreCompat.System.Drawing" Version="6.0.5.128" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
-
 </Project>

@@ -1,31 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
+using IOBootstrap.NET.BackOffice.Messages.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Messages.Messages;
-using IOBootstrap.NET.Common.Models.Messages;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeMessagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeMessagesController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeMessagesViewModel, new()
     {
         
         #region Controller Lifecycle
 
-        protected IOBackOfficeMessagesController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        protected IOBackOfficeMessagesController(IConfiguration configuration, 
+                                                 IWebHostEnvironment environment, 
+                                                 ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
         #endregion
 
+        //TODO: Migrate with MW.
+        /*
         [IOUserRole(UserRoles.User)]
         [HttpGet]
         public virtual IOListMessagesResponseModel ListMessages()
@@ -83,5 +82,6 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             // Create and return response
             return new IOMessageUpdateResponseModel();
         }
+        */
     }
 }

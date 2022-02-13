@@ -1,23 +1,22 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Messages.Authentication;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
     [IOBackoffice]
-    public abstract class IOAuthenticationController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOAuthenticationViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IOAuthenticationViewModel, new()
     {
         #region Controller Lifecycle
 
-        protected IOAuthenticationController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        protected IOAuthenticationController(IConfiguration configuration, 
+                                             IWebHostEnvironment environment, 
+                                             ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -25,6 +24,8 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         #region Authentication Api
 
+        //TODO: Migrate with MW.
+        /*
         [HttpPost]
         [IOValidateRequestModel]
         public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
@@ -46,8 +47,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             // Check if authentication result is true
             return new IOCheckTokenResponseModel(checkTokenResult.Item1, checkTokenResult.Item2, checkTokenResult.Item3);
         }
-
+        */
         #endregion
-
     }
 }

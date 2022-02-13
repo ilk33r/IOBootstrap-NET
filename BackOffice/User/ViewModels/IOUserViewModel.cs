@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using IOBootstrap.NET.DataAccess.Entities;
-using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.Common.Models.Users;
-using IOBootstrap.NET.Common.Messages.Users;
-using IOBootstrap.NET.Common.Exceptions.Members;
-using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels
 {
-    public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOUserViewModel : IOBackOfficeViewModel
     {
 
         #region Initialization Methods
@@ -26,6 +16,8 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
         #region View Model Methods
 
+        //TODO: Migrate with MW.
+        /*
         public virtual Tuple<int, string> AddUser(string userName, string password, int userRole)
         {
             // Obtain users entity
@@ -155,7 +147,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             DatabaseContext.Update(user);
             DatabaseContext.SaveChanges();
         }
-
+        */
         #endregion
     }
 }

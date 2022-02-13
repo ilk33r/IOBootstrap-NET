@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.PushNotification.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.PushNotification;
-using IOBootstrap.NET.Common.Models.PushNotification;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 {
     [IOBackoffice]
-    public class IOPushNotificationBackOfficeController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public class IOPushNotificationBackOfficeController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOPushNotificationBackOfficeViewModel, new()
     {
 
 		#region Initialization Methods
 
-        public IOPushNotificationBackOfficeController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOPushNotificationBackOfficeController(IConfiguration configuration, 
+                                                      IWebHostEnvironment environment, 
+                                                      ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -30,6 +25,8 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 
         #region Back Office Methods
 
+        //TODO: Migate with MW.
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
         [HttpPost]
@@ -83,7 +80,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
             // Create and return response
             return new IOResponseModel();
         }
-
+        */
 		#endregion
 
 	}

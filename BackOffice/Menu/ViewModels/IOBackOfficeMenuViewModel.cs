@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using IOBootstrap.NET.Common.Messages.Menu;
-using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 {
-    public class IOBackOfficeMenuViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeMenuViewModel : IOBackOfficeViewModel
     {
 
         #region Initialization Methods
@@ -22,6 +16,8 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 
         #region Menu Methods
 
+        //TODO: Migrate with MW.
+        /*
         public void AddMenuItem(IOMenuAddRequestModel requestModel)
         {
             // Create menu item entity
@@ -125,7 +121,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
             DatabaseContext.Update(menuEntity);
             DatabaseContext.SaveChanges();
         }
-
+        */
         #endregion
     }
 }

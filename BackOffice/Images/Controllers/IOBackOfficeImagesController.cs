@@ -1,30 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.Images;
-using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Images.Controllers
 {
     [IOBackoffice]
-    public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeImagesController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeImagesViewModel, new()
     {
         #region Controller Lifecycle
 
-        public IOBackOfficeImagesController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOBackOfficeImagesController(IConfiguration configuration, 
+                                            IWebHostEnvironment environment, 
+                                            ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -32,6 +24,8 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         #region API Methods
 
+        //TODO: Migrate with MW.
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
@@ -83,7 +77,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             // Create and return response
             return new IOSaveImageResponseModel(imageList);
         }
-
+        */
         #endregion
     }
 }

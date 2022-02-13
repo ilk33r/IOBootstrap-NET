@@ -1,15 +1,9 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Exceptions.Members;
-using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.Extensions.Configuration;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 {
-    public abstract class IOAuthenticationViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOAuthenticationViewModel : IOBackOfficeViewModel
     {
 
         #region Initialization Methods
@@ -22,6 +16,8 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 
         #region View Model Methods
 
+        //TODO: Migrate with MW.
+        /*
         public Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
             // Obtain user entity
@@ -105,7 +101,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             // Return status
             throw new IOInvalidCredentialsException();
         }
-
+        */
         #endregion
 
     }

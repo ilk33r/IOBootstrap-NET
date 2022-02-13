@@ -2,11 +2,10 @@ using System;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Handshake;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +14,13 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers
 {
-    public class IOHandshakeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> where TViewModel : IOHandshakeViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public class IOHandshakeController<TViewModel> : IOController<TViewModel> where TViewModel : IOHandshakeViewModel, new()
     {        
         #region Controller Lifecycle
 
-        public IOHandshakeController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOHandshakeController(IConfiguration configuration, 
+                                    IWebHostEnvironment environment, 
+                                    ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 

@@ -1,10 +1,9 @@
 using System;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Index.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,19 +11,16 @@ using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.Index.Controllers
 {
-    public class IOIndexController : IOController<IOIndexViewModel, IODatabaseContextDefaultImpl>
+    public class IOIndexController : IOController<IOIndexViewModel>
     {
         public IOIndexController(IConfiguration configuration, 
-                                IODatabaseContextDefaultImpl databaseContext,
                                 IWebHostEnvironment environment,
-                                ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+                                ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
         #region Default
 
-        // Deprecated
-        // [Obsolete("This Method is Deprecated", false)]
         public virtual IOResponseModel Index()
         {
             // Obtain app version

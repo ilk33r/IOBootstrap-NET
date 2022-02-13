@@ -5,45 +5,22 @@
     <ProjectReference Include="..\BackOffice\IOBootstrap.NET.BackOffice.csproj" />
   </ItemGroup>
 
-<!--
-  <ItemGroup>
-    dotnet tool install - -global dotnet-ef
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2" />
-  </ItemGroup>
--->
-
-  <!--
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
-  </ItemGroup>
-  -->
-
-  <!--
   <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>NETCORE_6_0</DefineConstants>
+    <!-- <OutputType>Library</OutputType> -->
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
-  </PropertyGroup>
-  -->
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
-    <DefineConstants>NETCORE_6_0</DefineConstants>
-    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MEMORY_DATABASE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>
-    <DefineConstants>USE_MEMORY_DATABASE;RELEASE</DefineConstants>
+    <DefineConstants>RELEASE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>

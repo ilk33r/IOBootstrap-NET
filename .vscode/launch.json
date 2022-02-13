@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetMWApplication",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MW/Application/bin/Debug/netcoreapp6.0/IOBootstrap.NET.MW.Application.dll",
+            "program": "${workspaceFolder}/MW/Application/bin/Debug/net6.0/IOBootstrap.NET.MW.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MW/Application",
             "stopAtEntry": false,
@@ -21,19 +21,19 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:5001"
+                "ASPNETCORE_URLS": "http://localhost:5002"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
         },
         {
-            "name": "IOBootstrapNetApplication",
+            "name": "IOBootstrap.Net.Application",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetApplication",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Application/bin/Debug/netcoreapp6.0/IOBootstrap.NET.Application.dll",
+            "program": "${workspaceFolder}/Application/bin/Debug/net6.0/IOBootstrap.NET.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Application",
             "stopAtEntry": false,

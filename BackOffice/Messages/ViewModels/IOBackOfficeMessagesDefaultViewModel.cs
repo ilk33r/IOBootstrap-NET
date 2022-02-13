@@ -1,10 +1,8 @@
 using System;
-using IOBootstrap.NET.Common.Models.Messages;
-using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
 {
-    public class IOBackOfficeMessagesDefaultViewModel : IOBackOfficeMessagesViewModel<IODatabaseContextDefaultImpl>
+    public class IOBackOfficeMessagesDefaultViewModel : IOBackOfficeMessagesViewModel
     {
     }
 }

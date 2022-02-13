@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using IOBootstrap.NET.Common.Cache;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Messages.Configuration;
-using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 {
-    public class IOBackOfficeConfigurationsViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeConfigurationsViewModel : IOBackOfficeViewModel
     {
 
         #region Initialization Methods
@@ -24,6 +16,8 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 
         #region Menu Methods
 
+        //TODO: Migrate with MW.
+        /*
         public void AddConfigItem(IOConfigurationAddRequestModel requestModel)
         {
             // Create configuration item entity
@@ -93,7 +87,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
             string cacheKey = IOCacheKeys.ConfigurationCacheKey + configurationEntity.ConfigKey;
             IOCache.InvalidateCache(cacheKey);
         }
-
+        */
         #endregion
     }
 }

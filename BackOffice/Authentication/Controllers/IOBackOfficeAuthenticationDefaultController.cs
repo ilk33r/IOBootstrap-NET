@@ -1,8 +1,7 @@
 using System;
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +11,11 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
     [IOBackoffice]
     [EnableCors]
-    public class IOBackOfficeAuthenticationDefaultController : IOAuthenticationController<IOBackOfficeAuthenticationDefaultViewModel, IODatabaseContextDefaultImpl>
+    public class IOBackOfficeAuthenticationDefaultController : IOAuthenticationController<IOBackOfficeAuthenticationDefaultViewModel>
     {
-        public IOBackOfficeAuthenticationDefaultController(IConfiguration configuration, IODatabaseContextDefaultImpl databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOBackOfficeAuthenticationDefaultController(IConfiguration configuration, 
+                                                           IWebHostEnvironment environment, 
+                                                           ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
     }

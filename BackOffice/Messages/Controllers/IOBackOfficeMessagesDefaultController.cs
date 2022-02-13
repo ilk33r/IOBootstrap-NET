@@ -1,8 +1,7 @@
 using System;
 using IOBootstrap.NET.BackOffice.Messages.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -10,9 +9,11 @@ using Microsoft.Extensions.Logging;
 namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 {
     [IOBackoffice]
-    public class IOBackOfficeMessagesDefaultController : IOBackOfficeMessagesController<IOBackOfficeMessagesDefaultViewModel, IODatabaseContextDefaultImpl>
+    public class IOBackOfficeMessagesDefaultController : IOBackOfficeMessagesController<IOBackOfficeMessagesDefaultViewModel>
     {
-        public IOBackOfficeMessagesDefaultController(IConfiguration configuration, IODatabaseContextDefaultImpl databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        public IOBackOfficeMessagesDefaultController(IConfiguration configuration, 
+                                                     IWebHostEnvironment environment, 
+                                                     ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
     }

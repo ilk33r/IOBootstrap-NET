@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
 {
-    public class IOPushNotificationBackOfficeViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOPushNotificationBackOfficeViewModel : IOBackOfficeViewModel
     {
         
         #region Initialization Methods
@@ -24,6 +16,8 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
 
         #region Back Office Methods
 
+        //TODO: Migrate with MW.
+        /*
         public void DeleteMessage(int messageId)
         {
             // Obtain message 
@@ -168,7 +162,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
             DatabaseContext.Add(pushNotificationMessageEntity);
             DatabaseContext.SaveChanges();
         }
-
+        */
         #endregion
     }
 }

@@ -1,20 +1,12 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.Core.Middlewares;
-using IOBootstrap.NET.DataAccess.Context;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Middlewares;
+using IOBootstrap.NET.Common.Routes;
 
 namespace IOBootstrap.NET.Application
 {
-    public abstract class IOStartup<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOStartup
     {
 
         #region Properties
@@ -38,7 +30,6 @@ namespace IOBootstrap.NET.Application
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
             services.AddControllers()
                     .ConfigureApiBehaviorOptions(options =>
@@ -144,40 +135,6 @@ namespace IOBootstrap.NET.Application
                 ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
-
-            // Start static caching
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                TDBContext context = services.GetService<TDBContext>();
-                ConfigureStaticCaching(context);
-            }
-        }
-
-        public virtual void ConfigureStaticCaching(TDBContext databaseContext)
-        {
-        }
-
-        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
-        {
-            string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
-#if DEBUG
-            options.UseLoggerFactory(LoggerFactory.Create(builder =>
-            {
-                builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
-                .AddConsole();
-            }));
-            options.EnableSensitiveDataLogging(true);
-#endif
-
-#if USE_MYSQL_DATABASE
-            options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
-            // options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
-#elif USE_SQLSRV_DATABASE
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
-#else
-            options.UseInMemoryDatabase("IOMemory");
-#endif
         }
 
         #endregion

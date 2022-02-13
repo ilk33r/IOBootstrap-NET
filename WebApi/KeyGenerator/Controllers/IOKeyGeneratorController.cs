@@ -1,26 +1,21 @@
 ﻿using System;
 using System.Security.Cryptography;
-using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Common.Utilities;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
-using IOBootstrap.NET.Core.Logger;
+using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.Common.Logger;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
-    public class IOKeyGeneratorController : IOController<IOKeyGeneratorViewModel, IODatabaseContextDefaultImpl>
+    public class IOKeyGeneratorController : IOController<IOKeyGeneratorViewModel>
     {
 
         #region Controller Lifecycle
 
         public IOKeyGeneratorController(IConfiguration configuration, 
-                                        IODatabaseContextDefaultImpl databaseContext,
                                         IWebHostEnvironment environment,
-                                        ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+                                        ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 

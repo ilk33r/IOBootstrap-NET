@@ -12,7 +12,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string APNSAuthKeyID = "IOAPNSAuthKeyID";
         public static string APNSKeyFilePath = "IOAPNSKeyFilePath";
         public static string APNSTeamID = "IOAPNSTeamID";
-        public static string APPNameKey = "IOAPPName";
         public static string AuthorizationKey = "IOAuthorizationKey";
         public static string AzureStorageBlobNameKey = "IOAzureStorageBlobName";
         public static string AzureStorageConnectionStringKey = "IOAzureStorageConnectionString";
@@ -37,7 +36,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string HttpsRequired = "IOHttpsRequired";
         public static string IndexControllerNameKey = "IOIndexControllerName";
         public static string MigrationsAssemblyKey = "IOMigrationsAssembly";
-        public static string MWAuthorizationKey = "IOMWAuthorizationKey";
         public static string PushNotificationControllerNameKey = "IOPushNotificationControllerName";
         public static string SendGridApiKey = "IOSendGridApiKey";
         public static string TokenLife = "IOTokenLife";

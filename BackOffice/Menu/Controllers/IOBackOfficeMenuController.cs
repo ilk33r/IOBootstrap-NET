@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.Menu.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Messages.Menu;
-using IOBootstrap.NET.Common.Models.Menu;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeMenuController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMenuViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeMenuViewModel, new()
     {
         #region Controller Lifecycle
 
-        protected IOBackOfficeMenuController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        protected IOBackOfficeMenuController(IConfiguration configuration, 
+                                             IWebHostEnvironment environment, 
+                                             ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -28,6 +24,8 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         #region Menu Methods
 
+        //TODO: Migrate with MW.
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
@@ -74,7 +72,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             // Create and return response
             return new IOMenuUpdateResponseModel();
         }
-
+        */
         #endregion
 
     }

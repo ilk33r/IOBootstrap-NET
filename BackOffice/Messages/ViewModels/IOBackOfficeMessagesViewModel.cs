@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.Common.Messages.Messages;
-using IOBootstrap.NET.Common.Models.Messages;
-using IOBootstrap.NET.DataAccess.Context;
-using System.Linq;
-using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.Common.Models.Messages
+namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
 {
-    public class IOBackOfficeMessagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeMessagesViewModel : IOBackOfficeViewModel
     {
 
         #region Initialization Methods
@@ -20,6 +14,8 @@ namespace IOBootstrap.NET.Common.Models.Messages
 
         #endregion
 
+        //TODO: Migrate with MW.
+        /*
         public IList<IOMessageModel> GetMessages()
         {
             DateTime currentDate = DateTime.Now;
@@ -99,5 +95,6 @@ namespace IOBootstrap.NET.Common.Models.Messages
                 DatabaseContext.SaveChanges();
             }
         }
+        */
     }
 }

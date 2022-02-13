@@ -1,13 +1,12 @@
 using System;
+using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.Encryption;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.DataAccess.Context;
 using Org.BouncyCastle.Crypto.Parameters;
 
 namespace IOBootstrap.NET.WebApi.Handshake.ViewModels
 {
-    public class IOHandshakeViewModel<TDBContext> : IOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOHandshakeViewModel : IOViewModel
     {
         public Tuple<string, string> GetPuplicKey()
         {

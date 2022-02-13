@@ -1,24 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using IOBootstrap.NET.Core.ViewModels;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Exceptions.Images;
-using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
-    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public class IOBackOfficeImagesViewModel : IOBackOfficeViewModel
     {
         #region Initialization Methods
 
@@ -30,6 +15,8 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
         #region View Model Methods
 
+        //TODO: Migrate with MW.
+        /*
         public Tuple<int, IList<IOImageVariationsModel>> GetImages(int start, int count)
         {
             IQueryable<IOImagesEntity> images = DatabaseContext.Images;
@@ -213,7 +200,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
                 return false;
             }
         }
-
+        */
         #endregion
     }
 }

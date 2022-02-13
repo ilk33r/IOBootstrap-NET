@@ -1,29 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.BackOffice.User.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
-using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Exceptions.Members;
-using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.Users;
-using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Core.Controllers;
-using IOBootstrap.NET.Core.Logger;
-using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
     [IOBackoffice]
-    public abstract class IOUserController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> where TViewModel : IOUserViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOUserViewModel, new()
     {
         #region Controller Lifecycle
 
-        protected IOUserController(IConfiguration configuration, TDBContext databaseContext, IWebHostEnvironment environment, ILogger<IOLoggerType> logger) : base(configuration, databaseContext, environment, logger)
+        protected IOUserController(IConfiguration configuration, 
+                                   IWebHostEnvironment environment, 
+                                   ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 
@@ -31,6 +24,8 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         #region User Methods
 
+        //TODO: Migrate with MW.
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
@@ -98,7 +93,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel();
         }
-
+        */
         #endregion
 
     }

@@ -17,7 +17,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
-		public IOAESUtilities aesUtilities;
+		public IOAESUtilities AESUtilities;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
 		{
 			byte[] keyBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey));
 			byte[] ivBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV));
-			aesUtilities = new IOAESUtilities(keyBytes, ivBytes);
+			AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
 		}
 
 		#endregion
@@ -41,7 +41,7 @@ namespace IOBootstrap.NET.MW.Core.ViewModels
 		public string EncryptResult(string resultString)
 		{
 			// Encrypt result
-			return aesUtilities.Encrypt(resultString);
+			return AESUtilities.Encrypt(resultString);
 		}
 
 		#endregion

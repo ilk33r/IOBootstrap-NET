@@ -1,8 +1,9 @@
 ﻿using System;
+using IOBootstrap.NET.Common.Models.Base;
 
 namespace IOBootstrap.NET.Common.Models.Users
 {
-    public class IOUserInfoModel
+    public class IOUserInfoModel : IOModel
     {
 
 		#region Properties

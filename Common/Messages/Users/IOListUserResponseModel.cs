@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Users;
 

@@ -26,24 +26,5 @@ namespace IOBootstrap.NET.MW.DataAccess.Entities
         public DateTimeOffset TokenDate { get; set; }
 
         #endregion
-
-        #region Helper Methods
-
-        public static IOUserEntity FindUserFromName(DbSet<IOUserEntity> users, string userName)
-        {
-            // Obtain user entity
-            var userEntities = users.Where((arg1) => arg1.UserName == userName.ToLower());
-
-            // Check user finded
-            if (userEntities.Count() > 0)
-            {
-                // Obtain user entity
-                return userEntities.First();
-            }
-
-            return null;
-        }
-
-        #endregion
     }
 }

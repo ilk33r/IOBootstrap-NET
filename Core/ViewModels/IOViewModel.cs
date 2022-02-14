@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.Net.Common.MWConnector;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -24,6 +25,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
+        public IOMWConnectorProtocol mwConnector { get; set; }
 
         #endregion
 

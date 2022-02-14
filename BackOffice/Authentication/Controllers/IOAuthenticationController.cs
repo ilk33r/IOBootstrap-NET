@@ -2,10 +2,9 @@
 using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
@@ -36,6 +35,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             // Check if authentication result is true
             return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
         }
+        */
 
         [HttpPost]
         [IOValidateRequestModel]
@@ -47,7 +47,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             // Check if authentication result is true
             return new IOCheckTokenResponseModel(checkTokenResult.Item1, checkTokenResult.Item2, checkTokenResult.Item3);
         }
-        */
+        
         #endregion
     }
 }

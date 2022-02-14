@@ -3,6 +3,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
 using IOBootstrap.NET.Common.Routes;
+using IOBootstrap.NET.MW.Core.Middlewares;
 using IOBootstrap.NET.MW.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,6 +65,7 @@ namespace IOBootstrap.NET.MW.Application
 
             // Use middleware
             app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
+            app.UseMiddleware(typeof(IOMWRequestDecryptorMiddleware));
 
             string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey);
             IORoute errorRoute = new IORoute("Error404", indexControllerName);
@@ -147,13 +149,9 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigureAuthenticationEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-            IORoute authenticateRoute = new IORoute("Authenticate", authenticationControllerName);
-            IORoute checkTokenRoute = new IORoute("CheckToken", authenticationControllerName);
-            endpoints.MapControllerRoute("authenticate", authenticateRoute.GetRouteString());
-            endpoints.MapControllerRoute("checktoken", checkTokenRoute.GetRouteString());
-            */
+            IORoute findUserByIdRoute = new IORoute("FindUserById", authenticationControllerName);
+            endpoints.MapControllerRoute("findUserById", findUserByIdRoute.GetRouteString());
         }
 
         public virtual void ConfigureClientEndpoints(IEndpointRouteBuilder endpoints)

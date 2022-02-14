@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
 using IOBootstrap.NET.Common.Logger;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Common.HTTP.Utils
 {
-    public delegate void HttpResponse(bool status, string response);
+    public delegate void HttpResponse(bool status, string response, HttpResponseHeaders headers);
     public delegate void HttpJsonResponse<TObject>(bool status, TObject responseObject) where TObject : IOModel, new();
 
     public class IOHTTPClient
@@ -72,10 +69,23 @@ namespace IOBootstrap.NET.Common.HTTP.Utils
             return task;
         }
 
+        public Task Call(string path, HttpResponse callback)
+        {
+            Task task;
+            if (RequestMethod == IOHTTPClientRequestMethods.GET)
+            {
+                task = GetRequest(callback);
+            } else {
+                task = PostRequest(path, callback);
+            }
+            
+            return task;
+        }
+
         public void CallJSON<TObject>(HttpJsonResponse<TObject> callback) where TObject : IOModel, new()
         {
             SetContentType("application/json");
-            Task task = Call((bool status, string response) =>
+            Task task = Call((bool status, string response, HttpResponseHeaders headers) =>
             {
                 try
                 {
@@ -95,7 +105,7 @@ namespace IOBootstrap.NET.Common.HTTP.Utils
         {
             TObject jsonObject = null;
             SetContentType("application/json");
-            Task task = Call((bool status, string response) =>
+            Task task = Call((bool status, string response, HttpResponseHeaders headers) =>
             {
                 try
                 {
@@ -138,24 +148,38 @@ namespace IOBootstrap.NET.Common.HTTP.Utils
 
                 // Deserialize the response body.
                 var responseBody = await response.Content.ReadAsStringAsync();
-                callback(response.IsSuccessStatusCode, responseBody);
+                callback(response.IsSuccessStatusCode, responseBody, response.Headers);
             }
             catch (Exception e)
             {
-                callback(false, e.Message);
+                callback(false, e.Message, null);
             }
         }
 
         private async Task PostRequest(HttpResponse callback)
         {
+            await PostRequest("", callback);
+        }
+
+        private async Task PostRequest(string path, HttpResponse callback)
+        {
             try
             {
-                string serializedBody = JsonSerializer.Serialize(PostBody, new JsonSerializerOptions()
+                string serializedBody = "";
+
+                if (ContentType.Contains("application/json"))
                 {
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-                });
+                    serializedBody = JsonSerializer.Serialize(PostBody, new JsonSerializerOptions()
+                    {
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                    });
+                }
+                else if (ContentType.Contains("text/plain"))
+                {
+                    serializedBody = (string)PostBody;
+                }
                 HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType);
-                var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl)
+                var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + path)
                 {
                     Content = postContent
                 };
@@ -170,11 +194,11 @@ namespace IOBootstrap.NET.Common.HTTP.Utils
 
                 // Deserialize the response body.
                 var responseBody = await response.Content.ReadAsStringAsync();
-                callback(response.IsSuccessStatusCode, responseBody);
+                callback(response.IsSuccessStatusCode, responseBody, response.Headers);
             }
             catch (Exception e)
             {
-                callback(false, e.Message);
+                callback(false, e.Message, null);
             }
         }
 

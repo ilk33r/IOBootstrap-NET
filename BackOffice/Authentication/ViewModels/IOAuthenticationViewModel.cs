@@ -1,4 +1,9 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.Net.Common.Messages.Users;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Members;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
@@ -68,6 +73,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             // Return response
             return new Tuple<string, DateTimeOffset, string, int>(userToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), user.UserName, user.UserRole);
         }
+        */
 
         public Tuple<DateTimeOffset, string, int> CheckToken(string token)
         {
@@ -75,7 +81,12 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             Tuple<string, int> tokenData = ParseToken(token);
 
             // Obtain user entity from database
-            IOUserEntity findedUserEntity = DatabaseContext.Users.Find(tokenData.Item2);
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            {
+                ID = tokenData.Item2
+            };
+            IOMWUserResponseModel findedUserEntity = mwConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
 
             // Check user entity is not null
             if (findedUserEntity == null)
@@ -101,7 +112,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             // Return status
             throw new IOInvalidCredentialsException();
         }
-        */
+
         #endregion
 
     }

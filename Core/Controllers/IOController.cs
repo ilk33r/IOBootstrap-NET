@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text.Json;
+using IOBootstrap.Net.Common.MWConnector;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
@@ -49,6 +50,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.Configuration = configuration;
             ViewModel.Environment = environment;
             ViewModel.Logger = logger;
+            ViewModel.mwConnector = new IOMWConnector(logger, configuration);
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

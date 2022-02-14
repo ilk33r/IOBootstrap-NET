@@ -77,7 +77,7 @@
         {
             "name": "Backoffice.UI",
             "request": "launch",
-            "cwd": "${workspaceFolder}/SevenK/Application/Backoffice.UI",
+            "cwd": "${workspaceFolder}/Application/Backoffice.UI",
             "runtimeArgs": [
                 "start"
             ],

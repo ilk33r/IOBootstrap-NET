@@ -92,7 +92,7 @@ namespace IOBootstrap.NET.MW.DataAccess.Context
             {
                 ID = 1,
                 Action = "actionClients",
-                CssClass = "fa-cloud-download",
+                CssClass = "fa-cloud",
                 Name = "Clients",
                 MenuOrder = 1,
                 RequiredRole = (int)UserRoles.Admin,
@@ -299,7 +299,7 @@ namespace IOBootstrap.NET.MW.DataAccess.Context
             {
                 ID = 21,
                 Action = "actionPushNotification",
-                CssClass = "fa-send-o",
+                CssClass = "fa-comment-alt",
                 Name = "Push Notifications",
                 MenuOrder = 21,
                 RequiredRole = (int)UserRoles.User,

@@ -23,8 +23,6 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         #region Authentication Api
 
-        //TODO: Migrate with MW.
-        /*
         [HttpPost]
         [IOValidateRequestModel]
         public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
@@ -35,7 +33,6 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             // Check if authentication result is true
             return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
         }
-        */
 
         [HttpPost]
         [IOValidateRequestModel]

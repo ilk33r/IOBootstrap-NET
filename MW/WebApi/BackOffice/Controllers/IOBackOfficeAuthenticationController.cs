@@ -1,8 +1,9 @@
 using System;
 using IOBootstrap.Net.Common.Messages.MW;
-using IOBootstrap.Net.Common.Messages.Users;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.MW.Core.Controllers;
 using IOBootstrap.NET.MW.DataAccess.Context;
 using IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels;
@@ -19,11 +20,12 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
         {
         }
 
+        [IORequireHTTPS]
         [HttpPost]
-        public IOMWUserResponseModel FindUserById([FromBody] IOMWFindRequestModel requestModel)
+        public IOMWUserResponseModel FindUserFromName([FromBody] IOMWFindRequestModel requestModel)
         {
             // Check if authentication result is true
-            IOMWUserResponseModel? responseModel = ViewModel.FindUserById(requestModel.ID);
+            IOMWUserResponseModel responseModel = ViewModel.FindUserFromName(requestModel.Where);
 
             if (responseModel == null)
             {
@@ -31,6 +33,29 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
             }
 
             return responseModel;
+        }
+
+        [IORequireHTTPS]
+        [HttpPost]
+        public IOMWUserResponseModel FindUserById([FromBody] IOMWFindRequestModel requestModel)
+        {
+            // Check if authentication result is true
+            IOMWUserResponseModel responseModel = ViewModel.FindUserById(requestModel.ID);
+
+            if (responseModel == null)
+            {
+                return new IOMWUserResponseModel(IOResponseStatusMessages.UnkownException);
+            }
+
+            return responseModel;
+        }
+
+        [IORequireHTTPS]
+        [HttpPost]
+        public IOResponseModel UpdateUserToken([FromBody] IOMWUpdateTokenRequestModel requestModel)
+        {
+            ViewModel.UpdateUserToken(requestModel.ID, requestModel.UserToken, requestModel.TokenDate);
+            return new IOResponseModel();
         }
     }
 }

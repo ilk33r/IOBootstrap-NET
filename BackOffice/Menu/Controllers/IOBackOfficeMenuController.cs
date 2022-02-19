@@ -1,11 +1,12 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Menu.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Menu;
+using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
@@ -49,18 +50,18 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             // Create and return response
             return new IOMenuUpdateResponseModel();
         }
-
+        */
         [IOUserRole(UserRoles.User)]
         [HttpGet]
         public virtual IOMenuListResponseModel ListMenuItems()
         {
             // Obtain menu items
-            IList<IOMenuListModel> menuItems = ViewModel.GetMenuTree(ViewModel.UserEntity.UserRole);
+            IList<IOMenuListModel> menuItems = ViewModel.GetMenuTree(ViewModel.UserModel.UserRole);
 
             // Create and return response
             return new IOMenuListResponseModel(menuItems);
         }
-
+        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]

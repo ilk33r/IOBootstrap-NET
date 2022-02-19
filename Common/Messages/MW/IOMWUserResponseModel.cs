@@ -1,13 +1,14 @@
 using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.Net.Common.Messages.Users
+namespace IOBootstrap.Net.Common.Messages.MW
 {
     public class IOMWUserResponseModel : IOResponseModel
     {
         #region Properties
 
 		public int ID { get; set; }
+		public string Password { get; set; }
 		public string UserName { get; set; }
 		public int UserRole { get; set; }
 		public string UserToken { get; set; }

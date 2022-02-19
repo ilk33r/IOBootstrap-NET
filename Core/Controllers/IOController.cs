@@ -50,7 +50,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.Configuration = configuration;
             ViewModel.Environment = environment;
             ViewModel.Logger = logger;
-            ViewModel.mwConnector = new IOMWConnector(logger, configuration);
+            ViewModel.MWConnector = new IOMWConnector(logger, configuration);
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

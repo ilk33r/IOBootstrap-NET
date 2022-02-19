@@ -25,7 +25,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
-        public IOMWConnectorProtocol mwConnector { get; set; }
+        public IOMWConnectorProtocol MWConnector { get; set; }
 
         #endregion
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
 
@@ -9,8 +11,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Publics
 
-        //TODO: Migrate with MW.
-        // public IOUserEntity UserEntity;
+        public IOMWUserResponseModel UserModel;
 
         #endregion
 
@@ -133,47 +134,67 @@ namespace IOBootstrap.NET.Core.ViewModels
                 Tuple<string, int> tokenData = ParseToken(token);
 
                 // Return back office status
-                //TODO: Migrate with MW.
-                // return CheckBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
-                return true;
+                return CheckBackofficeTokenIsValid(tokenData.Item1, tokenData.Item2);
             }
 
             // Then return back office
             return false;
         }
-        //TODO: Migrate with MW.
-        /*
+
         private bool CheckBackofficeTokenIsValid(string tokenData, int userId)
         {
             // Check token data is correct
             if (tokenData.Count() > 1)
             {
                 // Obtain user entity from database
-                UserEntity = DatabaseContext.Users.Find(userId);
+                string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+                IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+                {
+                    ID = userId
+                };
+                IOMWUserResponseModel findedUserEntity;
+                string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, userId);
+                IOCacheObject userCache = IOCache.GetCachedObject(cacheKey);
+                if (userCache != null)
+                {
+                    findedUserEntity = (IOMWUserResponseModel)userCache.Value;
+                }
+                else
+                {
+                    findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
+                }
 
                 // Check user entity is not null
-                if (UserEntity != null)
+                if (findedUserEntity == null)
                 {
-                    // Obtain token life from configuration
-                    int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+                    // Return is not back office
+                    return false;
+                }
+                 
+                // Obtain token life from configuration
+                int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
-                    // Calculate token end seconds and current seconds
-                    long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
-                    long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(UserEntity.TokenDate.DateTime) + tokenLife;
+                // Calculate token end seconds and current seconds
+                long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
+                long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(findedUserEntity.TokenDate.DateTime) + tokenLife;
 
-                    // Compare user token
-                    if (UserEntity.UserToken != null && currentSeconds < tokenEndSeconds && UserEntity.UserToken.Equals(tokenData))
+                // Compare user token
+                if (findedUserEntity.UserToken != null && currentSeconds < tokenEndSeconds && findedUserEntity.UserToken.Equals(tokenData))
+                {
+                    // Return is back office
+                    UserModel = findedUserEntity;
+                    if (userCache == null)
                     {
-                        // Return is back office
-                        return true;
+                        userCache = new IOCacheObject(cacheKey, findedUserEntity, 60);
+                        IOCache.CacheObject(userCache);
                     }
+                    return true;
                 }
             }
 
             // Return is not back office
             return false;
         }
-        */
 
         public Tuple<string, int> ParseToken(string token)
         {

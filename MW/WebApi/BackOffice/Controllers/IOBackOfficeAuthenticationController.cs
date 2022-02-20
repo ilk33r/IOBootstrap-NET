@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
 {
-    public class IOBackOfficeAuthenticationController<TViewModel, TDBContext> : IOMWController<TViewModel, TDBContext> where TViewModel : IOBackOfficeAuthenticationViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeAuthenticationController<TViewModel, TDBContext> : IOMWController<TViewModel, TDBContext> where TViewModel : IOBackOfficeAuthenticationViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         public IOBackOfficeAuthenticationController(IConfiguration configuration, 
                                                     TDBContext databaseContext, 

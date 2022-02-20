@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using IOBootstrap.NET.Common.Models.Base;
 
 namespace IOBootstrap.NET.Common.Models.Menu

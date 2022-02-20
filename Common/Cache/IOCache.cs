@@ -35,8 +35,13 @@ namespace IOBootstrap.NET.Common.Cache
         public static IOCacheObject GetCachedObject(string key)
         {
             IOCache.InitializeCache();
-            IOCacheObject cachedObject = IOCache.CachedObjects.Find(obj => obj != null && obj.GetKey().Equals(key));
-            return cachedObject;
+
+            if (IOCache.CachedObjects.Count() > 0)
+            {
+                return IOCache.CachedObjects.Find(obj => obj != null && obj.GetKey().Equals(key));
+            }
+            
+            return null;
         }
 
         public static void InvalidateCache(string key)

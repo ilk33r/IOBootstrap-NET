@@ -6,7 +6,7 @@ using IOBootstrap.NET.MW.DataAccess.Entities;
 
 namespace IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels
 {
-    public class IOBackOfficeAuthenticationViewModel<TDBContext> : IOMWViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeAuthenticationViewModel<TDBContext> : IOMWViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         public IOMWUserResponseModel FindUserFromName(string where)

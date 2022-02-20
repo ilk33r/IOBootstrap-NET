@@ -40,6 +40,7 @@ namespace IOBootstrap.Net.Common.MWConnector
 
         public TObject Get<TObject>(string path, Object request) where TObject : IOResponseModel, new()
         {
+            string decryptedResult = null;
             TObject jsonObject = null;
             string serializedRequest = JsonSerializer.Serialize(request, new JsonSerializerOptions()
             {
@@ -52,15 +53,10 @@ namespace IOBootstrap.Net.Common.MWConnector
             {
                 try
                 {
-                    string decryptedResult = response;
+                    decryptedResult = response;
                     if (headers.Contains(IORequestHeaderConstants.IsEncrypted))
                     {
                         decryptedResult = AESUtilities.Decrypt(response);
-                    }
-
-                    if (!String.IsNullOrEmpty(decryptedResult))
-                    {
-                        jsonObject = JsonSerializer.Deserialize<TObject>(decryptedResult);
                     }
                 } 
                 catch (Exception ex)
@@ -71,8 +67,22 @@ namespace IOBootstrap.Net.Common.MWConnector
             });
 
             task.Wait();
+            
+            
+            if (!String.IsNullOrEmpty(decryptedResult))
+            {
+                try
+                {
+                    jsonObject = JsonSerializer.Deserialize<TObject>(decryptedResult);
+                }
+                catch (Exception ex)
+                {
+                    // Log call
+                    Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);
+                }
+            }
 
-            if (jsonObject == null && !jsonObject.Status.Success)
+            if (jsonObject == null || !jsonObject.Status.Success)
             {
                 // Log call
                 jsonObject = null;

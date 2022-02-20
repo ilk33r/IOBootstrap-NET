@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
 {
-    public class IOBackOfficeMenuController<TViewModel, TDBContext> : IOMWController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMenuViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeMenuController<TViewModel, TDBContext> : IOMWController<TViewModel, TDBContext> where TViewModel : IOBackOfficeMenuViewModel<TDBContext>, new() where TDBContext : IODatabaseContext<TDBContext>
     {
         public IOBackOfficeMenuController(IConfiguration configuration, 
                                           TDBContext databaseContext, 

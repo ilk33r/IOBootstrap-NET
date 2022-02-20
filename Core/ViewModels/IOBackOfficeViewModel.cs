@@ -2,6 +2,11 @@
 using IOBootstrap.Net.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Clients;
+using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
 
 namespace IOBootstrap.NET.Core.ViewModels
@@ -25,95 +30,24 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region View Model Methods
 
-        //TODO: Migrate with MW.
-        /*
-        public virtual IOClientInfoModel CreateClient(string clientDescription, long maxRequestCount)
+        public virtual IOClientInfoModel CreateClient(IOClientAddRequestModel requestModel)
         {
-            // Create a client entity
-            IOClientsEntity clientEntity = new IOClientsEntity()
-            {
-                ClientId = IORandomUtilities.GenerateGUIDString(),
-                ClientSecret = IORandomUtilities.GenerateGUIDString(),
-                ClientDescription = clientDescription,
-                IsEnabled = 1,
-                RequestCount = 0,
-                MaxRequestCount = maxRequestCount
-            };
-
-            // Write client to database
-            DatabaseContext.Clients.Add(clientEntity);
-            DatabaseContext.SaveChanges();
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            IOMWObjectResponseModel<IOClientInfoModel> client = MWConnector.Get<IOMWObjectResponseModel<IOClientInfoModel>>(controller + "/" + "AddClient", requestModel);
 
             // Create and return client info
-            return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, maxRequestCount);
+            return client.Item;
         }
 
-        public void DeleteClient(int clientId)
+        public void DeleteClient(IOClientDeleteRequestModel requestModel)
         {
             // Obtain client entity
-            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(clientId);
-
-            // Check client entity is not null
-            if (clientEntity == null)
-            {
-                throw new IOInvalidClientException("Client not found.");
-            }
-
-            // Delete all entity
-            DatabaseContext.Remove(clientEntity);
-            DatabaseContext.SaveChanges();
-        }
-
-        public List<IOClientInfoModel> GetClients()
-        {
-            // Create list for clients
-            List<IOClientInfoModel> clientInfos = new List<IOClientInfoModel>();
-
-            // Obtain clients from realm
-            var clients = DatabaseContext.Clients;
-
-            // Check clients is not null
-            if (clients != null)
-            {
-                List<IOClientsEntity> clientsEntity = clients.ToList();
-                clientInfos = clientsEntity.ConvertAll(client =>
-                {
-                    // Create back office info model
-                    return new IOClientInfoModel(client.ID,
-                                                client.ClientId,
-                                                client.ClientSecret,
-                                                client.ClientDescription,
-                                                client.IsEnabled,
-                                                client.RequestCount,
-                                                client.MaxRequestCount);
-                });
-            }
-
-            // Return clients
-            return clientInfos;
-        }
-
-        public void UpdateClient(int id, string description, int isEnabled, long requestCount, long maxRequestCount)
-        {
-            // Obtain client entity
-            var clientEntities = DatabaseContext.Clients.Where(arg1 => arg1.ID == id);
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            IOResponseModel deletedClient = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteClient", requestModel);
 
             // Check client finded
-            if (clientEntities.Count() > 0)
+            if (deletedClient.Status.Success)
             {
-                // Obtain user entity
-                IOClientsEntity client = clientEntities.First();
-
-                // Update client properties
-                client.ClientDescription = description;
-                client.IsEnabled = isEnabled;
-                client.RequestCount = requestCount;
-                client.MaxRequestCount = maxRequestCount;
-
-                // Update client
-                DatabaseContext.Update(client);
-                DatabaseContext.SaveChanges();
-
                 // Return response
                 return;
             }
@@ -121,7 +55,32 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Return response
             throw new IOInvalidClientException("Client not found.");
         }
-        */
+        
+        public IList<IOClientInfoModel> GetClients()
+        {
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            IOMWListResponseModel<IOClientInfoModel> clients = MWConnector.Get<IOMWListResponseModel<IOClientInfoModel>>(controller + "/" + "ListClients", new IOMWFindRequestModel());
+
+            // Return clients
+            return clients.Items;
+        }
+
+        public void UpdateClient(IOClientUpdateRequestModel requestModel)
+        {
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
+            IOResponseModel updateClient = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateClient", requestModel);
+            
+            // Check client finded
+            if (updateClient.Status.Success)
+            {
+                // Return response
+                return;
+            }
+
+            // Return response
+            throw new IOInvalidClientException("Client not found.");
+        }
+
         public bool IsBackOffice()
         {
             // Check back office is not open and token exists
@@ -227,27 +186,18 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Helper Methods
 
-        //TODO: Migrate with MW.
-        /*
         public override int GetUserRole()
         {
-            IOUserEntity userEntity = UserEntity;
-
             // Check user exists
-            if (userEntity != null)
+            if (UserModel != null)
             {
                 // Return role
-                return userEntity.UserRole;
-            }
-
-            if (Configuration.GetValue<bool>(IOConfigurationConstants.BackOfficeIsPublic))
-            {
-                return (int)UserRoles.SuperAdmin;
+                return UserModel.UserRole;
             }
 
             return (int)UserRoles.AnonmyMouse;
         }
-        */
+        
         #endregion
 
     }

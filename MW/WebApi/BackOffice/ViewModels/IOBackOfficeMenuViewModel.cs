@@ -5,7 +5,7 @@ using IOBootstrap.NET.MW.DataAccess.Context;
 
 namespace IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels
 {
-    public class IOBackOfficeMenuViewModel<TDBContext> : IOMWViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+    public abstract class IOBackOfficeMenuViewModel<TDBContext> : IOMWViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
         public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {

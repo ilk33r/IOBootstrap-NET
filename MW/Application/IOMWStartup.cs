@@ -156,7 +156,6 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigureClientEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string backofficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IORoute addClientRoute = new IORoute("AddClient", backofficeControllerName);
             IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
@@ -166,7 +165,6 @@ namespace IOBootstrap.NET.MW.Application
             endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
             endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
             endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
-            */
         }
 
         public virtual void ConfigureConfigurationEndpoints(IEndpointRouteBuilder endpoints)

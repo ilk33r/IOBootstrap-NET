@@ -161,10 +161,12 @@ namespace IOBootstrap.NET.MW.Application
             IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
             IORoute listClientRoute = new IORoute("ListClients", backofficeControllerName);
             IORoute updateClientRoute = new IORoute("UpdateClient", backofficeControllerName);
+            IORoute checkClientRoute = new IORoute("CheckClient", backofficeControllerName);
             endpoints.MapControllerRoute("addClient", addClientRoute.GetRouteString());
             endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
             endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
             endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
+            endpoints.MapControllerRoute("checkClient", checkClientRoute.GetRouteString());
         }
 
         public virtual void ConfigureConfigurationEndpoints(IEndpointRouteBuilder endpoints)

@@ -1,4 +1,6 @@
 using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
@@ -100,6 +102,47 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels
 
             // Return response
             return false;
+        }
+
+        public IOMWCheckClientResponseModel CheckClient(IOMWCheckClientRequestModel requestModel)
+        {
+            // Find client
+            var clientsEntity = DatabaseContext.Clients.Where((arg1) => arg1.ClientId.Equals(requestModel.ClientID));
+
+			// Check finded client counts is greater than zero
+			if (clientsEntity.Count() > 0)
+			{
+				// Obtain client
+				IOClientsEntity client = clientsEntity.First();
+
+				// Check client secret
+                if (client.IsEnabled == 1 && client.ClientSecret.Equals(requestModel.ClientSecret))
+				{
+                    // Obtain request counts
+                    long requestCount = client.RequestCount + 1;
+                    long maxRequestCount = client.MaxRequestCount;
+
+                    // Check request counts
+                    if (requestCount <= maxRequestCount)
+                    {
+                        // Update request count
+                        client.RequestCount = requestCount;
+
+                        // Update properties
+                        IOMWCheckClientResponseModel response = new IOMWCheckClientResponseModel(requestModel.ClientID, client.ClientDescription);
+
+                        // Update client 
+                        DatabaseContext.Update(client);
+                        DatabaseContext.SaveChanges();
+
+                        // Then return client valid
+                        return response;
+                    }
+				}
+			}
+
+			// Then return invalid clients
+			return new IOMWCheckClientResponseModel(IOResponseStatusMessages.UnkownException);
         }
     }
 }

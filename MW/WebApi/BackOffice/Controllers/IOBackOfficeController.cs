@@ -66,5 +66,12 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
             // Then create and return response
             return new IOResponseModel(IOResponseStatusMessages.UnkownException);
         }
+
+        [IORequireHTTPS]
+        [HttpPost]
+        public IOMWCheckClientResponseModel CheckClient([FromBody] IOMWCheckClientRequestModel requestModel)
+        {
+            return ViewModel.CheckClient(requestModel);
+        }
     }
 }

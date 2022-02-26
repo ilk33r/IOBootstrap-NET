@@ -73,8 +73,7 @@ namespace IOBootstrap.NET.Core.Controllers
             CheckKeyID(context);
 
             // Check client info
-            //TODO: Migrate with MW
-            // ViewModel.CheckClient();
+            ViewModel.CheckClient();
 
             // Check back office page host name
             string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);

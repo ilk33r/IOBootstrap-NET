@@ -1,11 +1,13 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Configuration;
+using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 {
@@ -25,8 +27,6 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         #region Configuration Methods
 
-        //TODO: Migrate with MW:
-        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
@@ -81,7 +81,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
             IOCache.ClearCache();
             return new IOConfigurationUpdateResponseModel();
         }
-        */
+
         #endregion
     }
 }

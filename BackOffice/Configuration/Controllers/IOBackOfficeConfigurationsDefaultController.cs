@@ -2,9 +2,6 @@ using System;
 using IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 {

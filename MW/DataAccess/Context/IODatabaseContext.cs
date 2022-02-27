@@ -84,6 +84,42 @@ namespace IOBootstrap.NET.MW.DataAccess.Context
                 ConfigStringValue = null
             };
             modelBuilder.Entity<IOConfigurationEntity>().HasData(isMaintenanceModeOn);
+
+            IOConfigurationEntity forgotPasswordEmailTitle = new IOConfigurationEntity()
+            {
+                ID = 2,
+                ConfigKey = "ForgotPasswordEmailTitle",
+                ConfigIntValue = 0,
+                ConfigStringValue = "IOBootstrapt Reset Password"
+            };
+            modelBuilder.Entity<IOConfigurationEntity>().HasData(forgotPasswordEmailTitle);
+
+            IOConfigurationEntity forgotPasswordEmailHtmlBody = new IOConfigurationEntity()
+            {
+                ID = 3,
+                ConfigKey = "ForgotPasswordEmailHtmlBody",
+                ConfigIntValue = 0,
+                ConfigStringValue = "<p>This email has been sent upon your \'Change My Password\' request. If you don\'t have such request please ignore this email.\nPlease click to the link to  <a href=\"{0}\">Change your password.</a></p>\n<br />\n<p>Best Regards, IOBootstrapt</p>"
+            };
+            modelBuilder.Entity<IOConfigurationEntity>().HasData(forgotPasswordEmailHtmlBody);
+
+            IOConfigurationEntity forgotPasswordEmailTextBody = new IOConfigurationEntity()
+            {
+                ID = 4,
+                ConfigKey = "ForgotPasswordEmailTextBody",
+                ConfigIntValue = 0,
+                ConfigStringValue = "This email has been sent upon your \'Change My Password\' request. If you don\'t have such request please ignore this email.\nPlease click to the link to  {0}\n\nBest Regards, IOBootstrapt"
+            };
+            modelBuilder.Entity<IOConfigurationEntity>().HasData(forgotPasswordEmailTextBody);
+
+            IOConfigurationEntity eMailFromName = new IOConfigurationEntity()
+            {
+                ID = 5,
+                ConfigKey = "EMailFromName",
+                ConfigIntValue = 0,
+                ConfigStringValue = "IOBootstrapt Support"
+            };
+            modelBuilder.Entity<IOConfigurationEntity>().HasData(eMailFromName);
         }
 
         private void GenerateClientMenu(ModelBuilder modelBuilder)

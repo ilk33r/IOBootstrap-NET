@@ -27,6 +27,8 @@ namespace IOBootstrap.NET.MW.DataAccess.Entities
 
         #endregion
 
+        // TODO: Fix this.
+        /*
         #region Helper Methods
 
         public static IOConfigurationEntity ConfigForKey<TDBContext>(string configKey, TDBContext inContext) where TDBContext : IODatabaseContext<TDBContext>
@@ -73,6 +75,6 @@ namespace IOBootstrap.NET.MW.DataAccess.Entities
         }
 
         #endregion
-
+        */
     }
 }

@@ -171,19 +171,15 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigureConfigurationEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string configurationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
             IORoute addConfigurationItemRoute = new IORoute("AddConfigItem", configurationControllerName);
             IORoute deleteConfigurationItemRoute = new IORoute("DeleteConfigItem", configurationControllerName);
             IORoute listConfigurationItemsRoute = new IORoute("ListConfigurationItems", configurationControllerName);
             IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
-            IORoute resetCacheRoute = new IORoute("ResetCache", configurationControllerName);
             endpoints.MapControllerRoute("addConfigurationItem", addConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("deleteConfigurationItem", deleteConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("resetCache", resetCacheRoute.GetRouteString());
-            */
         }
 
         public virtual void ConfigureHandshakeEndpoints(IEndpointRouteBuilder endpoints)

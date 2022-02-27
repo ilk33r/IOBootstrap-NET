@@ -1,4 +1,10 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Configuration;
+using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.ViewModels;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
@@ -16,78 +22,52 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 
         #region Menu Methods
 
-        //TODO: Migrate with MW.
-        /*
         public void AddConfigItem(IOConfigurationAddRequestModel requestModel)
         {
-            // Create configuration item entity
-            IOConfigurationEntity configurationEntity = new IOConfigurationEntity()
-            {
-                ConfigKey = requestModel.ConfigKey,
-                ConfigIntValue = requestModel.IntValue,
-                ConfigStringValue = requestModel.StrValue
-            };
+            // MW connection
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IOResponseModel configurations = MWConnector.Get<IOMWListResponseModel<IOResponseModel>>(controller + "/" + "AddConfigItem", requestModel);
 
-            // Add config entity to database
-            DatabaseContext.Add(configurationEntity);
-            DatabaseContext.SaveChanges();
-
+            // Invalidate cache
             string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
             IOCache.InvalidateCache(cacheKey);
         }
 
         public void DeleteConfigItem(int configurationId)
         {
-            IOConfigurationEntity configuration = DatabaseContext.Configurations.Find(configurationId);
-            if (configuration != null)
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
             {
-                DatabaseContext.Remove(configuration);
-                DatabaseContext.SaveChanges();
+                ID = configurationId
+            };
+            IOMWObjectResponseModel<IOConfigurationModel> responseModel = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "DeleteConfigItem", requestModel);
 
-                string cacheKey = IOCacheKeys.ConfigurationCacheKey + configuration.ConfigKey;
+            // Invalidate cache
+            if (responseModel != null)
+            {
+                string cacheKey = IOCacheKeys.ConfigurationCacheKey + responseModel.Item.ConfigKey;
                 IOCache.InvalidateCache(cacheKey);
             }
         }
 
         public IList<IOConfigurationModel> GetConfigurations()
         {
-            var configurations = DatabaseContext.Configurations.OrderBy((arg) => arg.ID);
-            return configurations.ToList()
-                                .ConvertAll(configuration => {
-                                    IOConfigurationModel configurationModel = new IOConfigurationModel();
-                                    configurationModel.ID = configuration.ID;
-                                    configurationModel.ConfigKey = configuration.ConfigKey;
-                                    configurationModel.ConfigIntValue = configuration.ConfigIntValue;
-                                    configurationModel.ConfigStringValue = configuration.ConfigStringValue;
-
-                                    return configurationModel;
-                                });
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IOMWListResponseModel<IOConfigurationModel> configurations = MWConnector.Get<IOMWListResponseModel<IOConfigurationModel>>(controller + "/" + "ListConfigurationItems", new IOMWFindRequestModel());
+            return configurations.Items;
         }
 
         public void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel)
         {
-            // Obtain configuration item entity
-            IOConfigurationEntity configurationEntity = DatabaseContext.Configurations.Find(requestModel.ConfigId);
+                        // MW connection
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IOResponseModel configurations = MWConnector.Get<IOMWListResponseModel<IOResponseModel>>(controller + "/" + "UpdateConfigItem", requestModel);
 
-            // Check config is not exists
-            if (configurationEntity == null)
-            {
-                return;
-            }
-
-            // Update config item entity
-            configurationEntity.ConfigKey = requestModel.ConfigKey;
-            configurationEntity.ConfigIntValue = requestModel.IntValue;
-            configurationEntity.ConfigStringValue = requestModel.StrValue;
-
-            // Add menu entity to database
-            DatabaseContext.Update(configurationEntity);
-            DatabaseContext.SaveChanges();
-
-            string cacheKey = IOCacheKeys.ConfigurationCacheKey + configurationEntity.ConfigKey;
+            // Invalidate cache
+            string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
             IOCache.InvalidateCache(cacheKey);
         }
-        */
+
         #endregion
     }
 }

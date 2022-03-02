@@ -25,8 +25,6 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         #region Menu Methods
 
-        //TODO: Migrate with MW.
-        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
@@ -50,7 +48,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             // Create and return response
             return new IOMenuUpdateResponseModel();
         }
-        */
+
         [IOUserRole(UserRoles.User)]
         [HttpGet]
         public virtual IOMenuListResponseModel ListMenuItems()
@@ -61,7 +59,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             // Create and return response
             return new IOMenuListResponseModel(menuItems);
         }
-        /*
+
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
         [HttpPost]
@@ -73,7 +71,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             // Create and return response
             return new IOMenuUpdateResponseModel();
         }
-        */
+
         #endregion
 
     }

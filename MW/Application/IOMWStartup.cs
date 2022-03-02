@@ -97,7 +97,6 @@ namespace IOBootstrap.NET.MW.Application
                 ConfigureClientEndpoints(endpoints);
                 ConfigureAuthenticationEndpoints(endpoints);
                 ConfigureConfigurationEndpoints(endpoints);
-                ConfigureHandshakeEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
@@ -182,17 +181,6 @@ namespace IOBootstrap.NET.MW.Application
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
         }
 
-        public virtual void ConfigureHandshakeEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            /*
-            string handshakeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.HandshakeControllerName);
-            IORoute indexRoute = new IORoute("Index", handshakeControllerName);
-            IORoute checkSessionRoute = new IORoute("CheckSession", handshakeControllerName);
-            endpoints.MapControllerRoute("index", indexRoute.GetRouteString());
-            endpoints.MapControllerRoute("checkSession", checkSessionRoute.GetRouteString());
-            */
-        }
-
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)
         {
             /*
@@ -207,14 +195,14 @@ namespace IOBootstrap.NET.MW.Application
         public virtual void ConfigureMenuEndpoints(IEndpointRouteBuilder endpoints)
         {
             string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            // IORoute addMenuItemRoute = new IORoute("AddMenuItem", menuControllerName);
-            // IORoute deleteMenuItemRoute = new IORoute("DeleteMenuItem", menuControllerName);
+            IORoute addMenuItemRoute = new IORoute("AddMenuItem", menuControllerName);
+            IORoute deleteMenuItemRoute = new IORoute("DeleteMenuItem", menuControllerName);
             IORoute listMenuItemsRoute = new IORoute("ListMenuItems", menuControllerName);
-            // IORoute updateMenuItemRoute = new IORoute("UpdateMenuItem", menuControllerName);
-            // endpoints.MapControllerRoute("addMenuItem", addMenuItemRoute.GetRouteString());
-            // endpoints.MapControllerRoute("deleteMenuItem", deleteMenuItemRoute.GetRouteString());
+            IORoute updateMenuItemRoute = new IORoute("UpdateMenuItem", menuControllerName);
+            endpoints.MapControllerRoute("addMenuItem", addMenuItemRoute.GetRouteString());
+            endpoints.MapControllerRoute("deleteMenuItem", deleteMenuItemRoute.GetRouteString());
             endpoints.MapControllerRoute("listMenuItems", listMenuItemsRoute.GetRouteString());
-            // endpoints.MapControllerRoute("updateMenuItem", updateMenuItemRoute.GetRouteString());
+            endpoints.MapControllerRoute("updateMenuItem", updateMenuItemRoute.GetRouteString());
         }
 
         public virtual void ConfigureMessagesEndpoints(IEndpointRouteBuilder endpoints)

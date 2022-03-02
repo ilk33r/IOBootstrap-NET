@@ -1,11 +1,12 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Messages.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Messages;
+using IOBootstrap.NET.Common.Models.Messages;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 {
@@ -23,8 +24,6 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 
         #endregion
 
-        //TODO: Migrate with MW.
-        /*
         [IOUserRole(UserRoles.User)]
         [HttpGet]
         public virtual IOListMessagesResponseModel ListMessages()
@@ -82,6 +81,5 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
             // Create and return response
             return new IOMessageUpdateResponseModel();
         }
-        */
     }
 }

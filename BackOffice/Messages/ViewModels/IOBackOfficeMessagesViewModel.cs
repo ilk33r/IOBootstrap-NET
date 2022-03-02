@@ -1,4 +1,9 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Messages;
+using IOBootstrap.NET.Common.Models.Messages;
 using IOBootstrap.NET.Core.ViewModels;
 
 namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
@@ -14,87 +19,44 @@ namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
 
         #endregion
 
-        //TODO: Migrate with MW.
-        /*
         public IList<IOMessageModel> GetMessages()
         {
-            DateTime currentDate = DateTime.Now;
-            var messages = DatabaseContext.Messages.Where((arg) => arg.MessageStartDate < currentDate && arg.MessageEndDate > currentDate)
-                                          .OrderByDescending((arg) => arg.MessageCreateDate);
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel();
+            IOMWListResponseModel<IOMessageModel> responseModel = MWConnector.Get<IOMWListResponseModel<IOMessageModel>>(controller + "/" + "ListMessages", requestModel);
 
-            return messages.ToList().ConvertAll<IOMessageModel>(input =>
-            {
-                IOMessageModel messageModel = new IOMessageModel() 
-                {
-                    ID = input.ID,
-                    Message = input.Message,
-                    MessageCreateDate = input.MessageCreateDate,
-                    MessageStartDate = input.MessageStartDate,
-                    MessageEndDate = input.MessageEndDate
-                };
-
-                return messageModel;
-            });
+            return responseModel.Items;
         }
 
         public IList<IOMessageModel> GetAllMessages()
         {
-            var messages = DatabaseContext.Messages.OrderByDescending((arg) => arg.MessageCreateDate);
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel();
+            IOMWListResponseModel<IOMessageModel> responseModel = MWConnector.Get<IOMWListResponseModel<IOMessageModel>>(controller + "/" + "ListAllMessages", requestModel);
 
-            return messages.ToList().ConvertAll<IOMessageModel>(input =>
-            {
-                IOMessageModel messageModel = new IOMessageModel() 
-                {
-                    ID = input.ID,
-                    Message = input.Message,
-                    MessageCreateDate = input.MessageCreateDate,
-                    MessageStartDate = input.MessageStartDate,
-                    MessageEndDate = input.MessageEndDate
-                };
-
-                return messageModel;
-            });
+            return responseModel.Items;
         }
 
         public void AddMessage(IOMessageAddRequestModel request) 
         {
-            IOBackOfficeMessageEntity messageEntity = new IOBackOfficeMessageEntity()
-            {
-                Message = request.Message,
-                MessageCreateDate = DateTimeOffset.Now,
-                MessageStartDate = request.MessageStartDate,
-                MessageEndDate = request.MessageEndDate
-            };
-
-            DatabaseContext.Add(messageEntity);
-            DatabaseContext.SaveChanges();
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            MWConnector.Get<IOResponseModel>(controller + "/" + "AddMessagesItem", request);
         }
 
         public void DeleteMessage(int messageId)
         {
-            IOBackOfficeMessageEntity messageEntity = DatabaseContext.Messages.Find(messageId);
-
-            if (messageEntity != null) 
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
             {
-                DatabaseContext.Remove(messageEntity);
-                DatabaseContext.SaveChanges();
-            }
+                ID = messageId
+            };
+            MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteMessagesItem", requestModel);
         }
 
         public void UpdateMessage(IOMessageUpdateRequestModel request)
         {
-            IOBackOfficeMessageEntity messageEntity = DatabaseContext.Messages.Find(request.MessageId);
-
-            if (messageEntity != null)
-            {
-                messageEntity.Message = request.Message;
-                messageEntity.MessageStartDate = request.MessageStartDate;
-                messageEntity.MessageEndDate = request.MessageEndDate;
-
-                DatabaseContext.Update(messageEntity);
-                DatabaseContext.SaveChanges();
-            }
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
+            MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateMessagesItem", request);
         }
-        */
     }
 }

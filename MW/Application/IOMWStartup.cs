@@ -219,7 +219,6 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigureMessagesEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
             IORoute addMessagesItemRoute = new IORoute("AddMessagesItem", messagesControllerName);
             IORoute deleteMessagesItemRoute = new IORoute("DeleteMessagesItem", messagesControllerName);
@@ -231,7 +230,6 @@ namespace IOBootstrap.NET.MW.Application
             endpoints.MapControllerRoute("listAllMessagesItems", listAllMessagesItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("listMessagesItems", listMessagesItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateMessagesItem", updateMessagesItemRoute.GetRouteString());
-            */
         }
 
         public virtual void ConfigurePushNotificationEndpoints(IEndpointRouteBuilder endpoints)

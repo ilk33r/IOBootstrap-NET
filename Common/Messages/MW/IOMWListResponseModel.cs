@@ -8,6 +8,7 @@ namespace IOBootstrap.Net.Common.Messages.MW
     {
         #region Properties
 
+		public int? Count { get; set; }
 		public IList<TObject> Items { get; set; }
 
 		#endregion

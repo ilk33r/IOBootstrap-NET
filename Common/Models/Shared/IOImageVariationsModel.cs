@@ -12,6 +12,8 @@ namespace IOBootstrap.NET.Common.Models.Shared
         [StringLength(128)]
         public string FileName { get; set; }
 
+        public string FileType { get; set; }
+
         public int? Width { get; set; }
 
         public int? Height { get; set; }

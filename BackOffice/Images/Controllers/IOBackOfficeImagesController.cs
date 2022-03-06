@@ -1,11 +1,16 @@
 using System;
+using System.Text.RegularExpressions;
 using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Images;
+using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Images.Controllers
 {
@@ -24,25 +29,12 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         #region API Methods
 
-        //TODO: Migrate with MW.
-        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost]
         public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
         {
-            Tuple<int, IList<IOImageVariationsModel>> images = ViewModel.GetImages(requestModel.Start, requestModel.Count);
-            IOGetImagesResponseModel responseModel = new IOGetImagesResponseModel(images.Item1, images.Item2);
-            return responseModel;
-        }
-
-        [IOValidateRequestModel]
-        [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost]
-        public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
-        {
-            ViewModel.DeleteImages(requestModel.ImagesIdList);
-            return new IOResponseModel();
+            return ViewModel.GetImages(requestModel);
         }
 
         [IOValidateRequestModel]
@@ -72,12 +64,21 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             string contentType = "image/" + fileType;
             string globalFileName = IORandomUtilities.GenerateGUIDString();
 
-            IList<IOImageVariationsModel> imageList = ViewModel.SaveImage(fileData, fileType, contentType, globalFileName, requestModel.Sizes);
+            IList<IOImageVariationsModel> imageList = ViewModel.SaveImages(fileData, fileType, contentType, globalFileName, requestModel.Sizes);
 
             // Create and return response
             return new IOSaveImageResponseModel(imageList);
         }
-        */
+
+        [IOValidateRequestModel]
+        [IOUserRole(UserRoles.CustomUser)]
+        [HttpPost]
+        public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
+        {
+            ViewModel.DeleteImages(requestModel);
+            return new IOResponseModel();
+        }
+
         #endregion
     }
 }

@@ -32,7 +32,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             IOMWUserResponseModel findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserFromName", requestModel);
 
 			// Check user finded
-            if (findedUserEntity == null)
+            if (findedUserEntity == null || findedUserEntity.Status.Success)
             {
                 // Return response
                 throw new IOInvalidCredentialsException();

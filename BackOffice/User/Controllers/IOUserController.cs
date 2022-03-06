@@ -1,11 +1,13 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.User.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Users;
+using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Core.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
@@ -24,18 +26,13 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         #region User Methods
 
-        //TODO: Migrate with MW.
-        /*
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost]
         public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
         {
-            // Obtain add user response
-            Tuple<int, string> addUserStatus = ViewModel.AddUser(requestModel.UserName, requestModel.Password, requestModel.UserRole);
-
 			// Create and return response
-            return new IOAddUserResponseModel(addUserStatus.Item1, addUserStatus.Item2);
+            return ViewModel.AddUser(requestModel);
 		}
 
         [IOValidateRequestModel]
@@ -50,36 +47,12 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 			return new IOResponseModel();
         }
 
-        [IOValidateRequestModel]
-        [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
-		public virtual IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
-        {
-            // Obtain user entity
-            IOUserEntity userEntity = DatabaseContext.Users.Find(requestModel.UserId);
-            int currentUserRole = ViewModel.UserEntity.UserRole;
-
-			// Check user entity is not null
-            if (userEntity != null && currentUserRole <= userEntity.UserRole)
-			{
-                // Delete all entity
-                DatabaseContext.Remove(userEntity);
-                DatabaseContext.SaveChanges();
-
-				// Then return response
-				return new IOResponseModel();
-			}
-
-			// Return bad request
-            throw new IOUserNotFoundException();
-        }
-
         [IOUserRole(UserRoles.Admin)]
         [HttpGet]
         public virtual IOListUserResponseModel ListUsers() 
         {
             // Obtain user list
-            List<IOUserInfoModel> users = ViewModel.ListUsers();
+            IList<IOUserInfoModel> users = ViewModel.ListUsers();
 
 			// Create and return response
 			return new IOListUserResponseModel(users);
@@ -93,7 +66,16 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
             ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel();
         }
-        */
+
+        [IOValidateRequestModel]
+        [IOUserRole(UserRoles.Admin)]
+        [HttpPost]
+		public virtual IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
+        {
+            ViewModel.DeleteUser(requestModel);
+            return new IOResponseModel();
+        }
+
         #endregion
 
     }

@@ -1,4 +1,13 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Exceptions.Members;
+using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.Users;
+using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels
@@ -16,138 +25,127 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
         #region View Model Methods
 
-        //TODO: Migrate with MW.
-        /*
-        public virtual Tuple<int, string> AddUser(string userName, string password, int userRole)
+        public virtual IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel)
         {
-            // Obtain users entity
-            IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
+            requestModel.Password = IOPasswordUtilities.HashPassword(requestModel.Password);
+            IOAddUserResponseModel response = MWConnector.Get<IOAddUserResponseModel>(controller + "/" + "AddUser", requestModel);
 
-			// Check push notification entity exists
-            if (user != null)
-			{
-                // Return user exists response
-                throw new IOUserExistsException();
-			}
+            // Check user added
+            MWConnector.HandleResponse(response, code => {
+                if (code == 500)
+                {
+                    // Return user exists response
+                    throw new IOUserExistsException();
+                }
+            });
 
-			// Create a users entity 
-			IOUserEntity newUserEntity = new IOUserEntity()
-			{
-				UserName = userName.ToLower(),
-                Password = IOPasswordUtilities.HashPassword(password),
-				UserRole = userRole,
-				UserToken = null,
-				TokenDate = DateTime.UtcNow
-			};
-
-            // Write user to database
-            DatabaseContext.Add(newUserEntity);
-            DatabaseContext.SaveChanges();
-
-            // Return status
-            return new Tuple<int, string>(newUserEntity.ID, userName);
+            // Return response
+            return response;
         }
 
         public void ChangePassword(string userName, string oldPassword, string newPassword) 
         {
-            // Obtain user entity
-            IOUserEntity user = IOUserEntity.FindUserFromName(DatabaseContext.Users, userName);
-
-            // Check user found
-            if (user == null)
+            string authController = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+            IOMWFindRequestModel userRequestModel = new IOMWFindRequestModel()
             {
+                Where = userName
+            };
+            IOMWUserResponseModel currentUser = MWConnector.Get<IOMWUserResponseModel>(authController + "/" + "FindUserFromName", userRequestModel);
+            MWConnector.HandleResponse(currentUser, code => {
+                // Return user exists response
                 throw new IOUserNotFoundException();
-            }
+            });
 
             // Check user old password is valid
-            if (((UserRoles)UserEntity.UserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, user.Password))
+            if (((UserRoles)UserModel.UserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, currentUser.Password))
 			{
-				// Update user password properties
-                user.Password = IOPasswordUtilities.HashPassword(newPassword);
-			    user.UserToken = null;
+                string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
+                IOMWFindRequestModel changePasswordRequest = new IOMWFindRequestModel()
+                {
+                    ID = currentUser.ID,
+                    Where = IOPasswordUtilities.HashPassword(newPassword)
+                };
+                IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "ChangePassword", changePasswordRequest);
+                MWConnector.HandleResponse(response, code => {
+                    // Return user exists response
+                    throw new IOUserNotFoundException();
+                });
 
-                // Update user password
-                DatabaseContext.Update(user);
-                DatabaseContext.SaveChanges();
                 return;
-			}
+            }
 
             // Return response
             throw new IOInvalidPermissionException();
         }
-
-        public virtual List<IOUserInfoModel> ListUsers()
+        
+        public virtual IList<IOUserInfoModel> ListUsers()
         {
-			// Create list for clients
-			List<IOUserInfoModel> users = new List<IOUserInfoModel>();
+			string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
+            IOMWFindRequestModel requestModel = new IOMWFindRequestModel();
+            IOMWListResponseModel<IOUserInfoModel> response = MWConnector.Get<IOMWListResponseModel<IOUserInfoModel>>(controller + "/" + "ListUsers", requestModel);
 
-            // Obtain users from realm
-            var user = DatabaseContext.Users.OrderBy(u => u.ID);
+            if (MWConnector.HandleResponse(response, code => {}))
+            {
+                return response.Items;
+            }
 
-			// Check users is not null
-			if (user != null)
-			{
-				// Loop throught clients
-				for (int i = 0; i < user.Count(); i++)
-				{
-					// Obtain users entity
-					IOUserEntity currentUserEntity = user.Skip(i).First();
-
-					// Create user info model
-					IOUserInfoModel model = new IOUserInfoModel()
-					{
-                        ID = currentUserEntity.ID,
-                        UserName = currentUserEntity.UserName,
-                        UserRole = currentUserEntity.UserRole,
-                        UserToken = currentUserEntity.UserToken,
-                        TokenDate = currentUserEntity.TokenDate
-					};
-
-					// Add model to user list
-					users.Add(model);
-				}
-			}
-
-            // Return users
-            return users;
+            return new List<IOUserInfoModel>();
         }
 
         public void UpdateUser(IOUpdateUserRequestModel request)
         {
-            IOUserEntity user = DatabaseContext.Users.Find(request.UserId);
-            string userName = request.UserName.ToLower();
-
-            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserEntity.UserRole))
+            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserModel.UserRole))
             {
                 throw new IOInvalidPermissionException();
             }
 
-            if (user == null)
-            {
-                throw new IOUserNotFoundException();
-            }
-
-            var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
-            if (newUsers == null || newUsers.Count() != 0)
-            {
-                throw new IOUserExistsException();
-            }
-
-            // Update user properties
-            user.UserName = userName;
-            user.UserRole = request.UserRole;
-
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             if (!String.IsNullOrEmpty(request.UserPassword))
             {
-                user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
-                user.UserToken = null;
+                request.UserPassword = IOPasswordUtilities.HashPassword(request.UserPassword);
             }
+            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateUser", request);
+            MWConnector.HandleResponse(response, code => {
+                if (code == 500)
+                {
+                    throw new IOUserNotFoundException();
+                }
 
-            // Update user password
-            DatabaseContext.Update(user);
-            DatabaseContext.SaveChanges();
+                if (code == 501)
+                {
+                    throw new IOUserExistsException();
+                }
+            });
         }
-        */
+
+        public void DeleteUser(IODeleteUserRequestModel request)
+        {
+            string authController = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
+            IOMWFindRequestModel userRequestModel = new IOMWFindRequestModel()
+            {
+                ID = request.UserId
+            };
+            IOMWUserResponseModel userEntity = MWConnector.Get<IOMWUserResponseModel>(authController + "/" + "FindUserById", userRequestModel);
+            MWConnector.HandleResponse(userEntity, code => {
+                throw new IOUserNotFoundException();
+            });
+
+			// Check user entity is not null
+            if (UserModel.UserRole <= userEntity.UserRole)
+			{
+                string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
+                IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteUser", request);
+                MWConnector.HandleResponse(userEntity, code => {
+                    throw new IOUserNotFoundException();
+                });
+
+                return;
+			}
+
+            throw new IOInvalidPermissionException();
+        }
+
         #endregion
     }
 }

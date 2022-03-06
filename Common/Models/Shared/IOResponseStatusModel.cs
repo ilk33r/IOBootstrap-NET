@@ -8,15 +8,19 @@ namespace IOBootstrap.NET.Common.Models.Shared
 
         #region Properties
 
-        public int Code { get; }
-        public String DetailedMessage { get; }
-        public String Message { get; }
-        public bool Success { get; }
+        public int Code { get; set; }
+        public String DetailedMessage { get; set; }
+        public String Message { get; set; }
+        public bool Success { get; set; }
 
         #endregion
 
         #region Initialization Methods
 
+        public IOResponseStatusModel()
+        {
+        }
+        
         public IOResponseStatusModel(int code, String detailedMessage = "")
         {
             // Setup properties

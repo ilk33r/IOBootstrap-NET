@@ -241,7 +241,6 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigureUserEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
             IORoute addUserRoute = new IORoute("AddUser", userControllerName);
             IORoute changePasswordRoute = new IORoute("ChangePassword", userControllerName);
@@ -253,7 +252,6 @@ namespace IOBootstrap.NET.MW.Application
             endpoints.MapControllerRoute("deleteUser", deleteUserRoute.GetRouteString());
             endpoints.MapControllerRoute("listUsers", listUsersRoute.GetRouteString());
             endpoints.MapControllerRoute("updateUsers", updateUsersRoute.GetRouteString());
-            */
         }
 
         #endregion

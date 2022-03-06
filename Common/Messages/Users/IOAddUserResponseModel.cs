@@ -15,11 +15,19 @@ namespace IOBootstrap.NET.Common.Messages.Users
 
 		#region Initialization Methods
 
+        public IOAddUserResponseModel(int responseStatusMessage) : base(responseStatusMessage)
+        {
+        }
+
         public IOAddUserResponseModel(int userId, string userName): base() {
 			// Setup properties
             UserId = userId;
             UserName = userName;
 		}
+
+        public IOAddUserResponseModel() : base()
+        {
+        }
 
         #endregion
 

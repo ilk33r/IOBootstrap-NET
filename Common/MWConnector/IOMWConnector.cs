@@ -8,6 +8,7 @@ using IOBootstrap.NET.Common.HTTP.Utils;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
+using static IOBootstrap.Net.Common.MWConnector.IOMWConnectorProtocol;
 
 namespace IOBootstrap.Net.Common.MWConnector
 {
@@ -73,7 +74,11 @@ namespace IOBootstrap.Net.Common.MWConnector
             {
                 try
                 {
-                    jsonObject = JsonSerializer.Deserialize<TObject>(decryptedResult);
+                    jsonObject = JsonSerializer.Deserialize<TObject>(decryptedResult, new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.Never
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -82,13 +87,24 @@ namespace IOBootstrap.Net.Common.MWConnector
                 }
             }
 
-            if (jsonObject == null || !jsonObject.Status.Success)
+            return jsonObject;
+        }
+
+        public bool HandleResponse<TObject>(TObject response, IOMWConnectorResponseHandler handler) where TObject : IOResponseModel, new()
+        {
+            if (response == null)
             {
-                // Log call
-                jsonObject = null;
+                handler(0);
+                return false;
             }
 
-            return jsonObject;
+            if (!response.Status.Success)
+            {
+                handler(response.Status.Code);
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace IOBootstrap.NET.Common.Messages.Base
 
         #region Properties
 
-        public IOResponseStatusModel Status { get; }
+        public IOResponseStatusModel Status { get; set; }
 
         #endregion
 

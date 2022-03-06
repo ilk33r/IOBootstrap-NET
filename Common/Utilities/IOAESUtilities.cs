@@ -61,7 +61,7 @@ namespace IOBootstrap.NET.Common.Utilities
             CryptoStream csEncrypt = new CryptoStream(msEncrypt, crypto, CryptoStreamMode.Write);
             StreamWriter swEncrypt = new StreamWriter(csEncrypt);
 
-            //Write all data to the stream.
+            // Write all data to the stream.
             swEncrypt.Write(plainString);
 
             swEncrypt.Flush();

@@ -5,6 +5,8 @@ namespace IOBootstrap.Net.Common.MWConnector
 {
     public interface IOMWConnectorProtocol
     {
+        public delegate void IOMWConnectorResponseHandler(int code);
         public TObject Get<TObject>(string path, Object request) where TObject : IOResponseModel, new();
+        public bool HandleResponse<TObject>(TObject response, IOMWConnectorResponseHandler handler) where TObject : IOResponseModel, new();
     }
 }

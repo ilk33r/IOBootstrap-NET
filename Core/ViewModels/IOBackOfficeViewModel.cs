@@ -1,4 +1,5 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Exceptions.Common;
 using IOBootstrap.Net.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
@@ -34,6 +35,9 @@ namespace IOBootstrap.NET.Core.ViewModels
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IOMWObjectResponseModel<IOClientInfoModel> client = MWConnector.Get<IOMWObjectResponseModel<IOClientInfoModel>>(controller + "/" + "AddClient", requestModel);
+            MWConnector.HandleResponse(client, code => {
+                throw new IOMWConnectionException();
+            });
 
             // Create and return client info
             return client.Item;
@@ -44,41 +48,33 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Obtain client entity
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IOResponseModel deletedClient = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteClient", requestModel);
-
-            // Check client finded
-            if (deletedClient.Status.Success)
-            {
+            MWConnector.HandleResponse(deletedClient, code => {
                 // Return response
-                return;
-            }
-
-            // Return response
-            throw new IOInvalidClientException("Client not found.");
+                throw new IOInvalidClientException("Client not found.");
+            });
         }
         
         public IList<IOClientInfoModel> GetClients()
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IOMWListResponseModel<IOClientInfoModel> clients = MWConnector.Get<IOMWListResponseModel<IOClientInfoModel>>(controller + "/" + "ListClients", new IOMWFindRequestModel());
-
-            // Return clients
-            return clients.Items;
+            if (MWConnector.HandleResponse(clients, code => {}))
+            {
+                // Return clients
+                return clients.Items;
+            }
+            
+            return new List<IOClientInfoModel>();
         }
 
         public void UpdateClient(IOClientUpdateRequestModel requestModel)
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IOResponseModel updateClient = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateClient", requestModel);
-            
-            // Check client finded
-            if (updateClient.Status.Success)
-            {
+            MWConnector.HandleResponse(updateClient, code => {
                 // Return response
-                return;
-            }
-
-            // Return response
-            throw new IOInvalidClientException("Client not found.");
+                throw new IOInvalidClientException("Client not found.");
+            });
         }
 
         public bool IsBackOffice()
@@ -121,6 +117,11 @@ namespace IOBootstrap.NET.Core.ViewModels
                 else
                 {
                     findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
+                    if (!MWConnector.HandleResponse(findedUserEntity, code => {}))
+                    {
+                        // Return is not back office
+                        return false;
+                    }
                 }
 
                 // Check user entity is not null

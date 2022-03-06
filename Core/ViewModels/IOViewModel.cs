@@ -78,20 +78,14 @@ namespace IOBootstrap.NET.Core.ViewModels
             requestModel.ClientSecret = clientSecret;
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
             IOMWCheckClientResponseModel clientEntity = MWConnector.Get<IOMWCheckClientResponseModel>(controller + "/" + "CheckClient", requestModel);
+            MWConnector.HandleResponse(clientEntity, code => {
+                // Then return invalid clients
+			    throw new IOInvalidClientException();
+            });
 
-			// Check finded client counts is greater than zero
-			if (clientEntity != null)
-			{
-                // Update properties
-                ClientId = clientEntity.ClientID;
-                ClientDescription = clientEntity.ClientDescription;
-
-                // Then return client valid
-                return;   
-			}
-
-			// Then return invalid clients
-			throw new IOInvalidClientException();
+            // Update properties
+            ClientId = clientEntity.ClientID;
+            ClientDescription = clientEntity.ClientDescription;
 		}
 
         public virtual int GetUserRole()

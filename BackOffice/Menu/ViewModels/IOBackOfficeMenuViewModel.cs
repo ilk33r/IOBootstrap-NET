@@ -1,4 +1,5 @@
 ﻿using System;
+using IOBootstrap.Net.Common.Exceptions.Common;
 using IOBootstrap.Net.Common.Messages.MW;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
@@ -24,7 +25,11 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
         public void AddMenuItem(IOMenuAddRequestModel requestModel)
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            MWConnector.Get<IOResponseModel>(controller + "/" + "AddMenuItem", requestModel);
+            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "AddMenuItem", requestModel);
+            MWConnector.HandleResponse(response, code => {
+                // Return response
+                throw new IOMWConnectionException();
+            });
         }
 
         public void DeleteMenuItem(int menuId)
@@ -34,7 +39,11 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
             {
                 ID = menuId
             };
-            MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteMenuItem", requestModel);
+            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteMenuItem", requestModel);
+            MWConnector.HandleResponse(response, code => {
+                // Return response
+                throw new IOMWConnectionException();
+            });
         }
 
         public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
@@ -45,13 +54,22 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
                 ID = requiredRole
             };
             IOMWListResponseModel<IOMenuListModel> menuTreeResponse = MWConnector.Get<IOMWListResponseModel<IOMenuListModel>>(controller + "/" + "GetMenuTree", requestModel);
-            return menuTreeResponse.Items;
+            if (MWConnector.HandleResponse(menuTreeResponse, code => {}))
+            {
+                return menuTreeResponse.Items;
+            }
+
+            return new List<IOMenuListModel>();
         }
 
         public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateMenuItem", requestModel);
+            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateMenuItem", requestModel);
+            MWConnector.HandleResponse(response, code => {
+                // Return response
+                throw new IOMWConnectionException();
+            });
         }
 
         #endregion

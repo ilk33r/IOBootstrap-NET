@@ -30,13 +30,10 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
                 Where = userName
             };
             IOMWUserResponseModel findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserFromName", requestModel);
-
-			// Check user finded
-            if (findedUserEntity == null || findedUserEntity.Status.Success)
-            {
+            MWConnector.HandleResponse(findedUserEntity, code => {
                 // Return response
                 throw new IOInvalidCredentialsException();
-            }
+            });
 
 			// Check user password is wrong
             if (!IOPasswordUtilities.VerifyPassword(password, findedUserEntity.Password))
@@ -73,6 +70,10 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
                 TokenDate = tokenDate
             };
 			IOResponseModel tokenResponse = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateUserToken", updatedUser);
+            MWConnector.HandleResponse(tokenResponse, code => {
+                // Return response
+                throw new IOInvalidCredentialsException();
+            });
 
             // Return response
             return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUserEntity.UserName, findedUserEntity.UserRole);
@@ -90,13 +91,10 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
                 ID = tokenData.Item2
             };
             IOMWUserResponseModel findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
-
-            // Check user entity is not null
-            if (findedUserEntity == null)
-            {
-                // Return status
+            MWConnector.HandleResponse(findedUserEntity, code => {
+                // Return response
                 throw new IOInvalidCredentialsException();
-            }
+            });
 
             // Obtain token life from configuration
             int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);

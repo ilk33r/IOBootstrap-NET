@@ -175,10 +175,12 @@ namespace IOBootstrap.NET.MW.Application
             IORoute deleteConfigurationItemRoute = new IORoute("DeleteConfigItem", configurationControllerName);
             IORoute listConfigurationItemsRoute = new IORoute("ListConfigurationItems", configurationControllerName);
             IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
+            IORoute getConfigItemRoute = new IORoute("GetConfigItem", configurationControllerName);
             endpoints.MapControllerRoute("addConfigurationItem", addConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("deleteConfigurationItem", deleteConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
+            endpoints.MapControllerRoute("getConfigItem", getConfigItemRoute.GetRouteString());
         }
 
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)

@@ -7,6 +7,8 @@ using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.Net.Common.MWConnector;
 using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Models.Configuration;
+using IOBootstrap.NET.Common.Cache;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
@@ -141,5 +143,31 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #endregion
 
+        #region Configuration
+
+        public virtual IOConfigurationModel GetDBConfig(string configKey)
+        {
+            string cacheKey = IOCacheKeys.ConfigurationCacheKey + configKey;
+            IOCacheObject cachedObject = IOCache.GetCachedObject(cacheKey);
+            if (cachedObject != null)
+            {
+                IOConfigurationModel configurationModel = (IOConfigurationModel)cachedObject.Value;
+                return configurationModel;
+            }
+
+            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
+            IOMWObjectResponseModel<IOConfigurationModel> configuration = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "GetConfigItem", new IOMWFindRequestModel());
+            if (MWConnector.HandleResponse(configuration, code => {}))
+            {
+                cachedObject = new IOCacheObject(cacheKey, configuration.Item, 0);
+                IOCache.CacheObject(cachedObject);
+
+                return configuration.Item;
+            }
+
+            return null;
+        }
+
+        #endregion
     }
 }

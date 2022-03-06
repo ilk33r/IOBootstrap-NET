@@ -8,6 +8,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
@@ -286,17 +287,14 @@ namespace IOBootstrap.NET.Core.Controllers
                 }
             }
 
-            //TODO: Migrate with MW.
-            /*
             if (!isBackofficePage)
             {
-                int isMaintenanceModeOn = IOConfigurationEntity.ConfigForKey(IOConfigurationKeys.IsMaintenanceModeOn, DatabaseContext).IntValue();
-                if (isMaintenanceModeOn == 1)
+                IOConfigurationModel isMaintenanceModeOn = ViewModel.GetDBConfig(IOConfigurationKeys.IsMaintenanceModeOn);
+                if (isMaintenanceModeOn != null && isMaintenanceModeOn.IntValue() == 1)
                 {
                     throw new IOMaintenanceException();
                 }
             }
-            */
         }
 
         public virtual string GetControllerName()

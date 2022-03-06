@@ -1,6 +1,7 @@
 using System;
 using IOBootstrap.Net.Common.Messages.MW;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Configuration;
@@ -57,6 +58,19 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
 
             // Create and return response
             return new IOResponseModel();
+        }
+
+        [IORequireHTTPS]
+        [HttpPost]
+        public IOMWObjectResponseModel<IOConfigurationModel> GetConfigItem([FromBody] IOMWFindRequestModel requestModel)
+        {
+            IOConfigurationModel configuration = ViewModel.GetConfigItem(requestModel.Where);
+            if (configuration == null)
+            {
+                return new IOMWObjectResponseModel<IOConfigurationModel>(IOResponseStatusMessages.UnkownException);
+            }
+            
+            return new IOMWObjectResponseModel<IOConfigurationModel>(configuration);
         }
     }
 }

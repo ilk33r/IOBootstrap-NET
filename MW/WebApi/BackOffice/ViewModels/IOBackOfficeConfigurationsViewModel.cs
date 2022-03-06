@@ -78,5 +78,17 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels
             DatabaseContext.Update(configurationEntity);
             DatabaseContext.SaveChanges();
         }
+
+        public IOConfigurationModel GetConfigItem(string key)
+        {
+            return DatabaseContext.Configurations
+                                            .Select(c => new IOConfigurationModel()
+                                            {
+                                                ConfigKey = c.ConfigKey,
+                                                ConfigIntValue = c.ConfigIntValue,
+                                                ConfigStringValue = c.ConfigStringValue
+                                            })
+                                            .FirstOrDefault();
+        }
     }
 }

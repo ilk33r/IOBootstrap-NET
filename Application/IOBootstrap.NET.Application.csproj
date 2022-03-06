@@ -10,7 +10,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>NETCORE_6_0</DefineConstants>
-    <!-- <OutputType>Library</OutputType> -->
+    <OutputType>Library</OutputType>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
   </PropertyGroup>
 

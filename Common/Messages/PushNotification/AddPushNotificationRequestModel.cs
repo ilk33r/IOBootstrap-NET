@@ -22,6 +22,8 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
 		[StringLength(128)]
 		public String DeviceId { get; set; }
 
+		public String ClientId { get; set; }
+
 		[Required]
 		[StringLength(128)]
 		public String DeviceName { get; set; }

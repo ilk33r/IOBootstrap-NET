@@ -4,10 +4,7 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.WebApi.PushNotification.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
 {
@@ -30,8 +27,7 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
         public virtual AddPushNotificationResponseModel AddPushNotificationTokenV2([FromBody] AddPushNotificationRequestModel requestModel)
         {
             // Add menu
-            //TODO: Migrate with MW.
-            // ViewModel.AddTokenV2(requestModel);
+            ViewModel.AddTokenV2(requestModel);
 
             // Create and return response
             return new AddPushNotificationResponseModel();

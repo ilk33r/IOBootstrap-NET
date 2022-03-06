@@ -1,9 +1,6 @@
 using System;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.WebApi.PushNotification.ViewModels;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
 {

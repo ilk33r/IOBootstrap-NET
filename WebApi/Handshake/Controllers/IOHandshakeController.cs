@@ -7,10 +7,7 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Handshake;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers
 {

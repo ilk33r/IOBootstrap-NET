@@ -5,6 +5,9 @@ using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Common.Logger;
+using Microsoft.AspNetCore.Mvc;
+using IOBootstrap.Net.Common.Messages.KeyGenerator;
+using IOBootstrap.NET.Common.Attributes;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
@@ -39,6 +42,13 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 
             // Create and return response
             return new IOKeyGeneratorResponseModel(authorizationKey, encryptionKey, encryptionIV);
+        }
+
+        [IOValidateRequestModel]
+        [HttpPost]
+        public IOEncryptResponseModel Encrypt([FromBody] IOEncryptRequestModel requestModel)
+        {
+            return ViewModel.Encrypt(requestModel);
         }
 
     }

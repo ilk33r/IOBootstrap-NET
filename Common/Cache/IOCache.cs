@@ -36,7 +36,7 @@ namespace IOBootstrap.NET.Common.Cache
         {
             IOCache.InitializeCache();
 
-            if (IOCache.CachedObjects.Count() > 0)
+            if (IOCache.CachedObjects != null && IOCache.CachedObjects.Count() > 0)
             {
                 return IOCache.CachedObjects.Find(obj => obj != null && obj.GetKey().Equals(key));
             }

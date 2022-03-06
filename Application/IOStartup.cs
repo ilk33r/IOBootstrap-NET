@@ -145,6 +145,9 @@ namespace IOBootstrap.NET.Application
         {
             IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
             endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
+
+            IORoute encryptRoute = new IORoute("Encrypt", "IOKeyGenerator");
+            endpoints.MapControllerRoute("encrypt", encryptRoute.GetRouteString());
         }
 
         public virtual void ConfigureAuthenticationEndpoints(IEndpointRouteBuilder endpoints)
@@ -235,11 +238,9 @@ namespace IOBootstrap.NET.Application
             string pushNotificationBOControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
             IORoute deleteMessageRoute = new IORoute("DeleteMessage", pushNotificationBOControllerName);
             IORoute listMessagesRoute = new IORoute("ListMessages", pushNotificationBOControllerName);
-            IORoute listTokensRoute = new IORoute("ListTokens", pushNotificationBOControllerName);
             IORoute sendNotificationRoute = new IORoute("SendNotification", pushNotificationBOControllerName);
             endpoints.MapControllerRoute("deleteMessage", deleteMessageRoute.GetRouteString());
             endpoints.MapControllerRoute("listMessages", listMessagesRoute.GetRouteString());
-            endpoints.MapControllerRoute("listTokens", listTokensRoute.GetRouteString());
             endpoints.MapControllerRoute("sendNotification", sendNotificationRoute.GetRouteString());
 
             string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);

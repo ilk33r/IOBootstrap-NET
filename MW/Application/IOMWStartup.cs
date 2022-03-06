@@ -222,21 +222,17 @@ namespace IOBootstrap.NET.MW.Application
 
         public virtual void ConfigurePushNotificationEndpoints(IEndpointRouteBuilder endpoints)
         {
-            /*
             string pushNotificationBOControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
             IORoute deleteMessageRoute = new IORoute("DeleteMessage", pushNotificationBOControllerName);
             IORoute listMessagesRoute = new IORoute("ListMessages", pushNotificationBOControllerName);
-            IORoute listTokensRoute = new IORoute("ListTokens", pushNotificationBOControllerName);
             IORoute sendNotificationRoute = new IORoute("SendNotification", pushNotificationBOControllerName);
             endpoints.MapControllerRoute("deleteMessage", deleteMessageRoute.GetRouteString());
             endpoints.MapControllerRoute("listMessages", listMessagesRoute.GetRouteString());
-            endpoints.MapControllerRoute("listTokens", listTokensRoute.GetRouteString());
             endpoints.MapControllerRoute("sendNotification", sendNotificationRoute.GetRouteString());
 
             string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);
             IORoute addPushNotificationTokenRoute = new IORoute("AddPushNotificationToken", pushNotificationControllerName);
             endpoints.MapControllerRoute("addPushNotificationToken", addPushNotificationTokenRoute.GetRouteString());
-            */
         }
 
         public virtual void ConfigureUserEndpoints(IEndpointRouteBuilder endpoints)

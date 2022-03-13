@@ -7,6 +7,7 @@ namespace IOBootstrap.Net.Common.Messages.MW
     {
 
         public int ID { get; set; }
+        public int Count { get; set; }
         public string Where { get; set; }
 
         public IOMWFindRequestModel() : base()

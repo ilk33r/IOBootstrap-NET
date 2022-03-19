@@ -9,15 +9,13 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetMWApplication",
-            // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/MW/Application/bin/Debug/net6.0/IOBootstrap.NET.MW.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MW/Application",
             "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
@@ -28,23 +26,38 @@
             }
         },
         {
-            "name": "IOBootstrap.Net.Application",
+            "name": "IOBootstrap.Net.Default.Application",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildIOBootstrapNetApplication",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Application/bin/Debug/net6.0/IOBootstrap.NET.Application.dll",
+            "preLaunchTask": "buildIOBootstrapNetDefaultApplication",
+            "program": "${workspaceFolder}/Default/Application/bin/Debug/net6.0/IOBootstrap.NET.Default.Application.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Application",
+            "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "ASPNETCORE_URLS": "http://localhost:5000"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "IOBootstrap.Net.Functions.PushNotifications",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildIOBootstrapNetFunctionsPushNotifications",
+            "program": "${workspaceFolder}/Functions/PushNotifications/bin/Debug/net6.0/IOBootstrap.Net.Functions.PushNotification.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Functions/PushNotifications",
+            "stopAtEntry": false,
+            "requireExactSource": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -61,9 +74,11 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetBatch",
-            // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/Batch/bin/Debug/netcoreapp6.0/IOBootstrap.NET.Batch.dll",
-            "args": ["dev", "${workspaceFolder}/SevenK/Application"],
+            "args": [
+                "dev",
+                "${workspaceFolder}/SevenK/Application"
+            ],
             "cwd": "${workspaceFolder}/Batch",
             "stopAtEntry": false,
             "requireExactSource": false,
@@ -98,6 +113,12 @@
                 "ASPNETCORE_ENVIRONMENT": "Release",
                 "ASPNETCORE_URLS": "http://localhost:5000"
             }
+        },
+        {
+            "name": "Attach to .NET Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}"
         }
     ]
 }

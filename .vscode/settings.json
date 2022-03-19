@@ -2,5 +2,11 @@
     "files.autoSave": "afterDelay",
     "editor.rename.enablePreview": false,
     "workbench.editor.enablePreview": false,
-    "csharp.maxProjectFileCountForDiagnosticAnalysis": 10000
+    "csharp.maxProjectFileCountForDiagnosticAnalysis": 10000,
+    "azureFunctions.deploySubpath": "Functions/bin/Release/netcoreapp3.1/publish",
+    "azureFunctions.projectLanguage": "C#",
+    "azureFunctions.projectRuntime": "~3",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectSubpath": "Functions",
+    "azureFunctions.preDeployTask": "publish (functions)"
 }

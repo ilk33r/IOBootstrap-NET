@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebApi\IOBootstrap.NET.WebApi.csproj" />
+    <ProjectReference Include="..\..\BackOffice\IOBootstrap.NET.BackOffice.csproj" />
+    <ProjectReference Include="..\..\Application\IOBootstrap.NET.Application.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DefineConstants>NETCORE_6_0</DefineConstants>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <DefineConstants>USE_MYSQL_DATABASE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <NoStdLib>false</NoStdLib>
+    <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+   <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
+  </PropertyGroup>
+
+  <ItemGroup> 
+    <Content Include="Certificates\**" LinkBase="Certificates">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <None Include="Webjobs\**" LinkBase="Webjobs" />
+    <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
+  </ItemGroup>
+
+</Project>

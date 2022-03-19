@@ -1,6 +1,6 @@
 using System;
 
-namespace IOBootstrap.NET.MW.Application
+namespace IOBootstrap.NET.Default.MW.Application
 {
     public class Program
     {
@@ -8,7 +8,7 @@ namespace IOBootstrap.NET.MW.Application
 
         public static IHost BuildWebHost(string[] args) => Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
                                                                      {
-                                                                         webBuilder.UseStartup<IOMWStartupDefault>();
+                                                                         webBuilder.UseStartup<Startup>();
                                                                      }).Build();
 
         public static void Main(string[] args)

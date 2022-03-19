@@ -47,39 +47,22 @@
             }
         },
         {
-            "name": "IOBootstrap.Net.Functions.PushNotifications",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "buildIOBootstrapNetFunctionsPushNotifications",
-            "program": "${workspaceFolder}/Functions/PushNotifications/bin/Debug/net6.0/IOBootstrap.Net.Functions.PushNotification.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Functions/PushNotifications",
-            "stopAtEntry": false,
-            "requireExactSource": false,
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "IOBootstrapNetBatch",
+            "name": "IOBootstrap.Net.Default.Functions",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildIOBootstrapNetBatch",
-            "program": "${workspaceFolder}/Batch/bin/Debug/netcoreapp6.0/IOBootstrap.NET.Batch.dll",
+            "preLaunchTask": "buildIOBootstrapNetDefaultFunctions",
+            "program": "${workspaceFolder}/Default/Functions/bin/Debug/net6.0/IOBootstrap.NET.Default.Functions.dll",
             "args": [
                 "dev",
-                "${workspaceFolder}/SevenK/Application"
+                "${workspaceFolder}/Default/Application"
             ],
-            "cwd": "${workspaceFolder}/Batch",
+            "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,
             "requireExactSource": false,
             "env": {

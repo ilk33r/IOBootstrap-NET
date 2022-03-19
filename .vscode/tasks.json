@@ -26,24 +26,12 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildIOBootstrapNetFunctionsPushNotifications",
+            "label": "buildIOBootstrapNetDefaultFunctions",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Functions/PushNotifications/IOBootstrap.Net.Functions.PushNotification.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "buildIOBootstrapNetBatch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/Batch/IOBootstrap.NET.Batch.csproj",
+                "${workspaceFolder}/Default/Functions/IOBootstrap.NET.Default.Functions.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

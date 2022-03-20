@@ -113,10 +113,14 @@ namespace IOBootstrap.NET.MW.WebApi.Functions.ViewModels
             }
 
             DatabaseContext.SaveChanges();
+            DeleteInvalidDevices(requestModel.InvalidDevices);
+        }
 
-            if (requestModel.InvalidDevices != null && requestModel.InvalidDevices.Count > 0)
+        public virtual void DeleteInvalidDevices(IList<PushNotificationDevicesModel> invalidDevices)
+        {
+            if (invalidDevices != null && invalidDevices.Count > 0)
             {
-                foreach (PushNotificationDevicesModel device in requestModel.InvalidDevices)
+                foreach (PushNotificationDevicesModel device in invalidDevices)
                 {
                     PushNotificationEntity pushNotification = DatabaseContext.PushNotifications
                                                                                 .Include(pushNotification => pushNotification.DeliveredMessages)

@@ -100,6 +100,7 @@ namespace IOBootstrap.NET.MW.Application
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
+                ConfigurePushNotificationFunctionsEndpoints(endpoints);
                 ConfigureImagesEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
@@ -235,6 +236,19 @@ namespace IOBootstrap.NET.MW.Application
             string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);
             IORoute addPushNotificationTokenRoute = new IORoute("AddPushNotificationToken", pushNotificationControllerName);
             endpoints.MapControllerRoute("addPushNotificationToken", addPushNotificationTokenRoute.GetRouteString());
+        }
+
+        public virtual void ConfigurePushNotificationFunctionsEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            string pushNotificationFControllerName = Configuration.GetValue<string>(IOConfigurationConstants.FunctionsPushNotificationControllerNameKey);
+            IORoute pendingMessagesRoute = new IORoute("PendingMessages", pushNotificationFControllerName);
+            IORoute getDevicesRoute = new IORoute("GetDevices", pushNotificationFControllerName);
+            IORoute updateDeliveredMessagesRoute = new IORoute("UpdateDeliveredMessages", pushNotificationFControllerName);
+            IORoute setMessageSendedRoute = new IORoute("SetMessageSended", pushNotificationFControllerName);
+            endpoints.MapControllerRoute("pendingMessages", pendingMessagesRoute.GetRouteString());
+            endpoints.MapControllerRoute("getDevices", getDevicesRoute.GetRouteString());
+            endpoints.MapControllerRoute("updateDeliveredMessages", updateDeliveredMessagesRoute.GetRouteString());
+            endpoints.MapControllerRoute("setMessageSended", setMessageSendedRoute.GetRouteString());
         }
 
         public virtual void ConfigureUserEndpoints(IEndpointRouteBuilder endpoints)

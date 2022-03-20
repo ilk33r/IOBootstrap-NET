@@ -9,14 +9,11 @@ namespace IOBootstrap.NET.Default.Functions
         static void Main(string[] args)
         {
             // Check argument count is correct
-            if (args.Length != 2) {
+            if (args.Length != 1) {
                 Console.WriteLine("Incorrect parameters");
-                Console.WriteLine("Usage: [env] [config path]");
+                Console.WriteLine("Usage: [env]");
                 return;
             }
-
-            // Obtain is arguments
-            string configPath = args[1];
 
             ILoggerFactory loggerFactory = LoggerFactory.Create(builder => {
                 builder.AddFilter("Microsoft", LogLevel.Warning)

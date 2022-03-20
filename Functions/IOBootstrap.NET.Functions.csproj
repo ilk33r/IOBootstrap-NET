@@ -15,4 +15,8 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\IOBootstrap.NET.Common.csproj" />
+  </ItemGroup>
 </Project>

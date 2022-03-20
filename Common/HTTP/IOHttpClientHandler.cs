@@ -1,18 +1,13 @@
 using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using IOBootstrap.NET.Common.Logger;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Common.HTTP
 {
     public class IOHttpClientHandler : DelegatingHandler
     {
 
-        private ILogger<IOLoggerType> Logger;
+        private ILogger Logger;
 
-        public IOHttpClientHandler(HttpMessageHandler innerHandler, ILogger<IOLoggerType> logger) : base(innerHandler) {
+        public IOHttpClientHandler(HttpMessageHandler innerHandler, ILogger logger) : base(innerHandler) {
             this.Logger = logger;
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
 using IOBootstrap.NET.Common.HTTP.Utils;
-using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Models.Firebase;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Common.Firebase
 {
@@ -21,13 +19,13 @@ namespace IOBootstrap.NET.Common.Firebase
 
         private string FirebaseApiUrl;
         private string FirebaseToken;
-        private ILogger<IOLoggerType> Logger;
+        private ILogger Logger;
 
         #endregion
 
         #region Initialization Methods
 
-        public FirebaseUtils(string firebaseApiUrl, string firebaseToken, ILogger<IOLoggerType> logger)
+        public FirebaseUtils(string firebaseApiUrl, string firebaseToken, ILogger logger)
         {
             // Setup properties
             FirebaseApiUrl = firebaseApiUrl;

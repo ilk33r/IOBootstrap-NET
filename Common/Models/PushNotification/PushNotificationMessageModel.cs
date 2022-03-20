@@ -16,6 +16,7 @@ namespace IOBootstrap.NET.Common.Models.PushNotification
         public string NotificationMessage { get; set; }
         public string NotificationTitle { get; set; }
         public int IsCompleted { get; set; }
+        public PushNotificationModel PushNotificationDeviceID { get; set; }
 
         public PushNotificationMessageModel() : base()
         {

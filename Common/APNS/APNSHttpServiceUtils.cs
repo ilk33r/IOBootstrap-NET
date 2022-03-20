@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Text;
 using System.Text.Json;
 using IOBootstrap.NET.Common.Models.APNS;
@@ -7,7 +6,6 @@ using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
 using IOBootstrap.NET.Common.HTTP.Utils;
 using IOBootstrap.NET.Common.Logger;
-using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
@@ -34,13 +32,13 @@ namespace IOBootstrap.NET.Common.APNS
         private string APNSBundleID;
         private string APNSKeyFilePath;
         private string APNSTeamID;
-        private ILogger<IOLoggerType> Logger;
+        private ILogger Logger;
 
         #endregion
 
         #region Initialization Methods
 
-        public APNSHttpServiceUtils(string apnsApiUrl, string apnsAuthKeyID, string apnsBundleID, string apnsKeyFilePath, string apnsTeamID, ILogger<IOLoggerType> logger)
+        public APNSHttpServiceUtils(string apnsApiUrl, string apnsAuthKeyID, string apnsBundleID, string apnsKeyFilePath, string apnsTeamID, ILogger logger)
         {
             // Setup properties
             APNSApiUrl = apnsApiUrl;

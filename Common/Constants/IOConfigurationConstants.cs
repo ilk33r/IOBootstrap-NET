@@ -29,6 +29,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string CheckClientInfo = "IOCheckClientInfo";
         public static string FirebaseApiUrl = "IOFirebaseApiUrl";
         public static string FirebaseToken = "IOFirebaseToken";
+        public static string FunctionsPushNotificationControllerNameKey = "IOFunctionsPushNotificationControllerName";
         public static string EncryptionKey = "IOEncryptionKey";
         public static string EncryptionIV = "IOEncryptionIV";
         public static string HandshakeControllerName = "IOHandshakeControllerName";

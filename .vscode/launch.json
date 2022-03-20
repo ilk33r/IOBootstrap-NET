@@ -59,10 +59,9 @@
             "preLaunchTask": "buildIOBootstrapNetDefaultFunctions",
             "program": "${workspaceFolder}/Default/Functions/bin/Debug/net6.0/IOBootstrap.NET.Default.Functions.dll",
             "args": [
-                "dev",
-                "${workspaceFolder}/Default/Application"
+                "dev"
             ],
-            "cwd": "${workspaceFolder}/Default/Application",
+            "cwd": "${workspaceFolder}/Default/Functions",
             "stopAtEntry": false,
             "requireExactSource": false,
             "env": {

@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
 using IOBootstrap.NET.Common.HTTP.Utils;
-using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
 using static IOBootstrap.Net.Common.MWConnector.IOMWConnectorProtocol;
@@ -19,11 +18,11 @@ namespace IOBootstrap.Net.Common.MWConnector
 
         private IOAESUtilities AESUtilities;
         private IOHTTPClient HTTPClient;
-        private ILogger<IOLoggerType> Logger;
+        private ILogger Logger;
 
         #endregion
 
-        public IOMWConnector(ILogger<IOLoggerType> logger, IConfiguration configuration)
+        public IOMWConnector(ILogger logger, IConfiguration configuration)
         {
             Logger = logger;
 
@@ -33,6 +32,22 @@ namespace IOBootstrap.Net.Common.MWConnector
 
             string baseURL = configuration.GetValue<string>(IOMWConfigurationConstants.MiddlewareURL);
             string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey);
+            HTTPClient = new IOHTTPClient(baseURL, logger);
+            HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
+            HTTPClient.SetContentType("text/plain");
+            HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
+        }
+
+        public IOMWConnector(ILogger logger, string encryptionKey, string encryptionIV, string authorizationKey, string url)
+        {
+            Logger = logger;
+
+            byte[] keyBytes = Convert.FromBase64String(encryptionKey);
+            byte[] ivBytes = Convert.FromBase64String(encryptionIV);
+            AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
+
+            string baseURL = url;
+            string authorization  = authorizationKey;
             HTTPClient = new IOHTTPClient(baseURL, logger);
             HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
             HTTPClient.SetContentType("text/plain");

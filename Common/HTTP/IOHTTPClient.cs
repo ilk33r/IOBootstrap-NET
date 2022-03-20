@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common.Models.Base;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
-using IOBootstrap.NET.Common.Logger;
 
 namespace IOBootstrap.NET.Common.HTTP.Utils
 {
@@ -25,7 +24,7 @@ namespace IOBootstrap.NET.Common.HTTP.Utils
 
         #region Initialization Methods
 
-        public IOHTTPClient(string baseUrl, ILogger<IOLoggerType> logger)
+        public IOHTTPClient(string baseUrl, ILogger logger)
         {
             UseHttp2 = false;
             IgnoreNullValues = false;

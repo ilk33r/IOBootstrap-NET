@@ -1,6 +1,6 @@
 ﻿using System;
-using IOBootstrap.Net.Common.Exceptions.Common;
-using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;

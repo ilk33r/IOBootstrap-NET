@@ -7,9 +7,9 @@ using IOBootstrap.NET.Common.HTTP.Enumerations;
 using IOBootstrap.NET.Common.HTTP.Utils;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
-using static IOBootstrap.Net.Common.MWConnector.IOMWConnectorProtocol;
+using static IOBootstrap.NET.Common.MWConnector.IOMWConnectorProtocol;
 
-namespace IOBootstrap.Net.Common.MWConnector
+namespace IOBootstrap.NET.Common.MWConnector
 {
     public class IOMWConnector : IOMWConnectorProtocol
     {

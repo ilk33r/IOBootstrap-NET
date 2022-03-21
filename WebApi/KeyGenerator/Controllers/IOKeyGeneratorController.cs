@@ -6,7 +6,6 @@ using IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Mvc;
-using IOBootstrap.Net.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Attributes;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers

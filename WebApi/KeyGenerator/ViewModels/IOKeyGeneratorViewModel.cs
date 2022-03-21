@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using IOBootstrap.Net.Common.Messages.KeyGenerator;
+using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 using Org.BouncyCastle.Crypto;

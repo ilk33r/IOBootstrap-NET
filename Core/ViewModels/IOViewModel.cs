@@ -5,8 +5,8 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Logger;
-using IOBootstrap.Net.Common.MWConnector;
-using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.MWConnector;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Cache;
 
@@ -156,7 +156,10 @@ namespace IOBootstrap.NET.Core.ViewModels
             }
 
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOMWObjectResponseModel<IOConfigurationModel> configuration = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "GetConfigItem", new IOMWFindRequestModel());
+            IOMWObjectResponseModel<IOConfigurationModel> configuration = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "GetConfigItem", new IOMWFindRequestModel()
+            {
+                Where = configKey
+            });
             if (MWConnector.HandleResponse(configuration, code => {}))
             {
                 cachedObject = new IOCacheObject(cacheKey, configuration.Item, 0);

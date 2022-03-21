@@ -1,7 +1,7 @@
 using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.Net.Common.Messages.KeyGenerator
+namespace IOBootstrap.NET.Common.Messages.KeyGenerator
 {
     public class IOEncryptRequestModel : IORequestModel
     {

@@ -1,10 +1,10 @@
 using System;
-using IOBootstrap.Net.Common.Messages.MW;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Configuration;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.MW.Core.Controllers;
 using IOBootstrap.NET.MW.DataAccess.Context;
@@ -71,6 +71,14 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.Controllers
             }
             
             return new IOMWObjectResponseModel<IOConfigurationModel>(configuration);
+        }
+
+        [IORequireHTTPS]
+        [HttpPost]
+        public IOMWListResponseModel<IOConfigurationModel> GetConfigItems([FromBody] IOMWConfigurationsRequestModel requestModel)
+        {
+            IList<IOConfigurationModel> configurations = ViewModel.GetConfigItems(requestModel);            
+            return new IOMWListResponseModel<IOConfigurationModel>(configurations);
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
-using IOBootstrap.Net.Common.Messages.MW;
-using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.MW;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.MW.Core.ViewModels;

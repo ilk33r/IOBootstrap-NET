@@ -1,7 +1,7 @@
 using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.Net.Common.Messages.MW
+namespace IOBootstrap.NET.Common.Messages.MW
 {
     public class IOMWUserResponseModel : IOResponseModel
     {

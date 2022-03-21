@@ -1,5 +1,5 @@
 using System;
-using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.MW.Core.ViewModels;
 using IOBootstrap.NET.MW.DataAccess.Context;
 using IOBootstrap.NET.MW.DataAccess.Entities;

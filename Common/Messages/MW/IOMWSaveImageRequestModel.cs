@@ -2,7 +2,7 @@ using System;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Shared;
 
-namespace IOBootstrap.Net.Common.Messages.MW
+namespace IOBootstrap.NET.Common.Messages.MW
 {
     public class IOMWSaveImageRequestModel : IORequestModel
     {

@@ -1,5 +1,5 @@
 using System;
-using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;

@@ -1,7 +1,7 @@
 using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.Net.Common.MWConnector
+namespace IOBootstrap.NET.Common.MWConnector
 {
     public interface IOMWConnectorProtocol
     {

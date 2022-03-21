@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using IOBootstrap.Net.Common.Exceptions.Common;
-using IOBootstrap.Net.Common.Messages.MW;
-using IOBootstrap.Net.Common.MWConnector;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Messages.MW;
+using IOBootstrap.NET.Common.MWConnector;
 using IOBootstrap.NET.Common.APNS;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Firebase;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Models.Firebase;
 using IOBootstrap.NET.Common.Models.PushNotification;
@@ -23,7 +22,7 @@ namespace IOBootstrap.NET.Functions
     {
 
         [FunctionName("PushNotifications")]
-        public static void Run([TimerTrigger("0 */5 * * * *")]TimerInfo timer, ILogger log)
+        public static void Run([TimerTrigger("*/15 * * * * *")]TimerInfo timer, ILogger log)
         {
             string projectDirectory = Directory.GetCurrentDirectory();
             string configFilePath = Path.Combine(projectDirectory, "config.json");

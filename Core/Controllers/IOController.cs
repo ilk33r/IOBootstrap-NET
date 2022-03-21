@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text.Json;
-using IOBootstrap.Net.Common.MWConnector;
+using IOBootstrap.NET.Common.MWConnector;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;

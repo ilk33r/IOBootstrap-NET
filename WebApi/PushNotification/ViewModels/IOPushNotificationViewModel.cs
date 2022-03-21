@@ -1,5 +1,5 @@
 using System;
-using IOBootstrap.Net.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.PushNotification;

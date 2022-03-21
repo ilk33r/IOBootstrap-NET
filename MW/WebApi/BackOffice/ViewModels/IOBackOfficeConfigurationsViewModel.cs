@@ -1,5 +1,6 @@
 using System;
 using IOBootstrap.NET.Common.Messages.Configuration;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.MW.Core.ViewModels;
 using IOBootstrap.NET.MW.DataAccess.Context;
@@ -88,7 +89,21 @@ namespace IOBootstrap.NET.MW.WebApi.BackOffice.ViewModels
                                                 ConfigIntValue = c.ConfigIntValue,
                                                 ConfigStringValue = c.ConfigStringValue
                                             })
+                                            .Where(config => config.ConfigKey.Equals(key))
                                             .FirstOrDefault();
+        }
+
+        public IList<IOConfigurationModel> GetConfigItems(IOMWConfigurationsRequestModel requestModel)
+        {
+            return DatabaseContext.Configurations
+                                            .Select(c => new IOConfigurationModel()
+                                            {
+                                                ConfigKey = c.ConfigKey,
+                                                ConfigIntValue = c.ConfigIntValue,
+                                                ConfigStringValue = c.ConfigStringValue
+                                            })
+                                            .Where(config => requestModel.ConfigKeys.Contains(config.ConfigKey))
+                                            .ToList();
         }
     }
 }

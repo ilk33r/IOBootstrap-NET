@@ -1,5 +1,5 @@
 using System;
-using IOBootstrap.Net.Common.Messages.MW;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.MW.Core.ViewModels;

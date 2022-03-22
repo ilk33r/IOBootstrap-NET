@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace IOBootstrap.NET.Core.EMail
+namespace IOBootstrap.NET.Common.EMail
 {
     public class IOEMailUtilities
     {

@@ -17,9 +17,8 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
 {
     public static class PushSenderUtilities
     {
-        public static void Run(ILogger log)
+        public static void Run(string projectDirectory, ILogger log)
         {
-            string projectDirectory = Directory.GetCurrentDirectory();
             string configFilePath = Path.Combine(projectDirectory, "../config.json");
             string configurationJson = System.IO.File.ReadAllText(configFilePath);
 

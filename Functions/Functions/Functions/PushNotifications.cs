@@ -9,9 +9,9 @@ namespace IOBootstrap.NET.Functions
     {
 
         [FunctionName("PushNotifications")]
-        public static void Run([TimerTrigger("*/15 * * * * *")]TimerInfo timer, ILogger log)
+        public static void Run([TimerTrigger("*/15 * * * * *")]TimerInfo timer, ExecutionContext context, ILogger log)
         {
-            PushSenderUtilities.Run(log);
+            PushSenderUtilities.Run(context.FunctionDirectory, log);
         }
     }
 }

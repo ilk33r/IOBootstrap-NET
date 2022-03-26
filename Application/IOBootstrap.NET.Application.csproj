@@ -11,7 +11,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DefineConstants>NETCORE_6_0</DefineConstants>
     <OutputType>Library</OutputType>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles> 
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -33,6 +34,11 @@
     </Content>
     <None Include="Webjobs\**" LinkBase="Webjobs" />
     <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
+    <Content Remove="compilerconfig.json;package.json;package-lock.json;tsconfig.json"/>
+    <None Include="compilerconfig.json;package.json;package-lock.json;tsconfig.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
   <!--
   <ItemGroup> 

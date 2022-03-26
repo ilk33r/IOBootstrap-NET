@@ -1,8 +1,2 @@
-Configuration -> Path Mappings
-
-/PushSender site\jobs\triggered\CreateSearchIndex
-
-isDirectory = false
-
 Configuration -> Application Settings
 ASPNETCORE_ENVIRONMENT Staging

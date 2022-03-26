@@ -1,6 +1,6 @@
 using System;
 
-namespace IOBootstrap.NET.Functions.Common.Models
+namespace IOBootstrap.NET.PushNotificationFunctionHelper.Common.Models
 {
     public class ConfigurationModel
     {

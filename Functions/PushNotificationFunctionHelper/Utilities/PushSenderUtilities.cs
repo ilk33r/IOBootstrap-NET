@@ -1,31 +1,26 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
-using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.MW;
-using IOBootstrap.NET.Common.MWConnector;
 using IOBootstrap.NET.Common.APNS;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Firebase;
 using IOBootstrap.NET.Common.Messages.Base;
+using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Models.Firebase;
 using IOBootstrap.NET.Common.Models.PushNotification;
-using IOBootstrap.NET.Functions.Common.Models;
-using Microsoft.Azure.WebJobs;
+using IOBootstrap.NET.Common.MWConnector;
+using IOBootstrap.NET.PushNotificationFunctionHelper.Common.Models;
 using Microsoft.Extensions.Logging;
 
-namespace IOBootstrap.NET.Functions
+namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
 {
-    public static class PushNotifications
+    public static class PushSenderUtilities
     {
-
-        [FunctionName("PushNotifications")]
-        public static void Run([TimerTrigger("*/15 * * * * *")]TimerInfo timer, ILogger log)
+        public static void Run(ILogger log)
         {
             string projectDirectory = Directory.GetCurrentDirectory();
-            string configFilePath = Path.Combine(projectDirectory, "config.json");
+            string configFilePath = Path.Combine(projectDirectory, "../config.json");
             string configurationJson = System.IO.File.ReadAllText(configFilePath);
 
             ConfigurationModel configuration = JsonSerializer.Deserialize<ConfigurationModel>(configurationJson);
@@ -40,7 +35,7 @@ namespace IOBootstrap.NET.Functions
             SendNotifications(pendingMessages, mwConnector, pushNotificationFunctionControllerName, log, firebase, apns);
         }
 
-        private static IList<PushNotificationMessageModel> GetPendingMessages(IOMWConnector connector, string controllerName)
+        public static IList<PushNotificationMessageModel> GetPendingMessages(IOMWConnector connector, string controllerName)
         {
             string path = controllerName + "/PendingMessages";
             IOMWListResponseModel<PushNotificationMessageModel> response = connector.Get<IOMWListResponseModel<PushNotificationMessageModel>>(path, new IOMWFindRequestModel());
@@ -51,7 +46,7 @@ namespace IOBootstrap.NET.Functions
             return response.Items;
         }
 
-        private static IList<PushNotificationDevicesModel> PrepareDevices(IOMWConnector connector, string controllerName, DeviceTypes deviceType, int messageID, int? clientID)
+        public static IList<PushNotificationDevicesModel> PrepareDevices(IOMWConnector connector, string controllerName, DeviceTypes deviceType, int messageID, int? clientID)
         {
             string path = controllerName + "/GetDevices";
             IOMWListResponseModel<PushNotificationDevicesModel> response = connector.Get<IOMWListResponseModel<PushNotificationDevicesModel>>(path, new IOMWPushNotificationDevicesRequestModel()
@@ -64,7 +59,7 @@ namespace IOBootstrap.NET.Functions
             return (response != null) ? response.Items : new List<PushNotificationDevicesModel>();
         }
 
-        private static void SendNotifications(IList<PushNotificationMessageModel> pushNotificationMessages, IOMWConnector connector, string controllerName, ILogger log, FirebaseUtils firebase, APNSHttpServiceUtils apnsUtils)
+        public static void SendNotifications(IList<PushNotificationMessageModel> pushNotificationMessages, IOMWConnector connector, string controllerName, ILogger log, FirebaseUtils firebase, APNSHttpServiceUtils apnsUtils)
         {
             // Loop throught messages
             foreach(PushNotificationMessageModel message in pushNotificationMessages)
@@ -118,7 +113,7 @@ namespace IOBootstrap.NET.Functions
             }
         }
 
-        private static void SendNotificationToAllFirebaseDevices(PushNotificationMessageModel message, IList<PushNotificationDevicesModel> firebaseDevices, ILogger log, FirebaseUtils firebase, IOMWConnector connector, string controllerName)
+        public static void SendNotificationToAllFirebaseDevices(PushNotificationMessageModel message, IList<PushNotificationDevicesModel> firebaseDevices, ILogger log, FirebaseUtils firebase, IOMWConnector connector, string controllerName)
         {
             // Log call 
             log.LogDebug("Firebase devices found size of {0}", firebaseDevices.Count);

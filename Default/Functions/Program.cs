@@ -1,6 +1,7 @@
 using System;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Functions;
+using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Default.Functions
 {
@@ -23,8 +24,11 @@ namespace IOBootstrap.NET.Default.Functions
             });
             ILogger<IOLoggerType> logger = loggerFactory.CreateLogger<IOLoggerType>();
 
+            Microsoft.Azure.WebJobs.ExecutionContext context = new Microsoft.Azure.WebJobs.ExecutionContext();
+            context.FunctionDirectory = Directory.GetCurrentDirectory() + "/bin";
+
             // Start batch
-            PushNotifications.Run(null, logger);
+            PushNotifications.Run(null, context, logger);
         }
     }
 }

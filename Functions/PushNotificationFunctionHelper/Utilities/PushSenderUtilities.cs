@@ -26,7 +26,7 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
 
             FirebaseUtils firebase = new FirebaseUtils(configuration.IOFirebaseApiUrl, configuration.IOFirebaseToken, log);
 
-            string apnsFilePath = Path.Combine(projectDirectory, configuration.IOAPNSKeyFilePath);
+            string apnsFilePath = Path.Combine(projectDirectory, "../" + configuration.IOAPNSKeyFilePath);
             APNSHttpServiceUtils apns = new APNSHttpServiceUtils(configuration.IOAPNSApiURL, configuration.IOAPNSAuthKeyID, configuration.IOAPNSBundleID, apnsFilePath, configuration.IOAPNSTeamID, log);
             IOMWConnector mwConnector = new IOMWConnector(log, configuration.IOMWEncryptionKey, configuration.IOMWEncryptionIV, configuration.IOMWAuthorizationKey, configuration.IOMWURL);
 

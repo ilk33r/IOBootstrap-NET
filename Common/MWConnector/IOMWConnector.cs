@@ -98,7 +98,7 @@ namespace IOBootstrap.NET.Common.MWConnector
                 catch (Exception ex)
                 {
                     // Log call
-                    Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);
+                    Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace + '\n' + path + '\n' + decryptedResult);
                 }
             }
 

@@ -25,7 +25,9 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
             ConfigurationModel configuration = JsonSerializer.Deserialize<ConfigurationModel>(configurationJson);
 
             FirebaseUtils firebase = new FirebaseUtils(configuration.IOFirebaseApiUrl, configuration.IOFirebaseToken, log);
-            APNSHttpServiceUtils apns = new APNSHttpServiceUtils(configuration.IOAPNSApiURL, configuration.IOAPNSAuthKeyID, configuration.IOAPNSBundleID, configuration.IOAPNSKeyFilePath, configuration.IOAPNSTeamID, log);
+
+            string apnsFilePath = Path.Combine(projectDirectory, configuration.IOAPNSKeyFilePath);
+            APNSHttpServiceUtils apns = new APNSHttpServiceUtils(configuration.IOAPNSApiURL, configuration.IOAPNSAuthKeyID, configuration.IOAPNSBundleID, apnsFilePath, configuration.IOAPNSTeamID, log);
             IOMWConnector mwConnector = new IOMWConnector(log, configuration.IOMWEncryptionKey, configuration.IOMWEncryptionIV, configuration.IOMWAuthorizationKey, configuration.IOMWURL);
 
             string pushNotificationFunctionControllerName = configuration.IOFunctionsPushNotificationControllerName;

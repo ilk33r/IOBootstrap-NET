@@ -64,7 +64,7 @@ namespace IOBootstrap.NET.MW.WebApi.Functions.ViewModels
                                                                                 DeviceId = device.DeviceId,
                                                                                 DeviceToken = device.DeviceToken,
                                                                                 DeviceType = device.DeviceType,
-                                                                                DeliveredMessages = device.DeliveredMessages.Select(dm => dm.ID).ToList()
+                                                                                DeliveredMessages = device.DeliveredMessages.Select(dm => dm.PushNotificationMessage.ID).ToList()
                                                                             })
                                                                             .Where(device => device.DeviceType == requestModel.DeviceType)
                                                                             .Where(device => device.DeliveredMessages.All(dm => dm != requestModel.MessageId))
@@ -82,23 +82,38 @@ namespace IOBootstrap.NET.MW.WebApi.Functions.ViewModels
 
         public void UpdateDeliveredMessages(IOMWUpdatePushNotificationDeliveredMessages requestModel)
         {
+            List<PushNotificationEntity> attachedPushNotifications = new List<PushNotificationEntity>();
+            List<PushNotificationMessageEntity> attachedPushNotificationMessages = new List<PushNotificationMessageEntity>();
+
             foreach (PushNotificationDeliveredMessageModel message in requestModel.DeliveredMessages)
             {
-                PushNotificationEntity pushNotification = new PushNotificationEntity()
-                {
-                    ID = message.PushNotificationID
-                };
+                PushNotificationEntity pushNotification = attachedPushNotifications.Where(p => p.ID == message.PushNotificationID)
+                                                                                    .FirstOrDefault();
+                PushNotificationMessageEntity pushNotificationMessage = attachedPushNotificationMessages.Where(p => p.ID == message.PushNotificationMessageID)
+                                                                                                        .FirstOrDefault();
 
-                PushNotificationMessageEntity pushNotificationMessage = new PushNotificationMessageEntity()
+                if (pushNotification == null)
                 {
-                    ID = message.PushNotificationMessageID
-                };
+                    pushNotification = new PushNotificationEntity()
+                    {
+                        ID = message.PushNotificationID
+                    };
+                    DatabaseContext.Attach(pushNotification);
+                    attachedPushNotifications.Add(pushNotification);
+                }
+
+                if (pushNotificationMessage == null)
+                {
+                    pushNotificationMessage = new PushNotificationMessageEntity()
+                    {
+                        ID = message.PushNotificationMessageID
+                    };
+                    DatabaseContext.Attach(pushNotificationMessage);
+                    attachedPushNotificationMessages.Add(pushNotificationMessage);
+                }
 
                 try
                 {
-                    DatabaseContext.Attach(pushNotification);
-                    DatabaseContext.Attach(pushNotificationMessage);
-
                     PushNotificationDeliveredMessagesEntity deliveredMessageEntity = new PushNotificationDeliveredMessagesEntity() 
                     {
                         PushNotification = pushNotification,
@@ -106,8 +121,9 @@ namespace IOBootstrap.NET.MW.WebApi.Functions.ViewModels
                     };
                     DatabaseContext.Add(deliveredMessageEntity);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Logger.LogError(e, e.StackTrace);
                 }
             }
 

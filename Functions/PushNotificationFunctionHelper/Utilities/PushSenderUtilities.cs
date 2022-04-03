@@ -142,7 +142,7 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
                     };
                     deliveredMessages.Add(deliveredMessage);
                 }
-                else if (response == FirebaseUtils.FirebaseUtilsMessageTypes.DeviceNotFound)
+                else
                 {
                     invalidDevices.Add(pushNotification);
                 }

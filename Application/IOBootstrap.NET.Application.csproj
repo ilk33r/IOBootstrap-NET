@@ -34,11 +34,15 @@
     </Content>
     <None Include="Webjobs\**" LinkBase="Webjobs" />
     <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
-    <Content Remove="compilerconfig.json;package.json;package-lock.json;tsconfig.json"/>
+    <Content Remove="compilerconfig.json;package.json;package-lock.json;tsconfig.json" />
     <None Include="compilerconfig.json;package.json;package-lock.json;tsconfig.json">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
   <!--
   <ItemGroup> 

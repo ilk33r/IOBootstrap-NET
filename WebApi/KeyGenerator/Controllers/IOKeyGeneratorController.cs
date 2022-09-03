@@ -8,8 +8,12 @@ using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Mvc;
 using IOBootstrap.NET.Common.Attributes;
 
+#if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
+    [Produces("application/json")]
+    [ApiController]
+    [Route("[controller]")]
     public class IOKeyGeneratorController : IOController<IOKeyGeneratorViewModel>
     {
 
@@ -23,6 +27,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 
         #endregion
 
+        [HttpGet("[action]")]
         public IOKeyGeneratorResponseModel GenerateKeys() 
         {
             // Generate keys
@@ -44,7 +49,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
         }
 
         [IOValidateRequestModel]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOEncryptResponseModel Encrypt([FromBody] IOEncryptRequestModel requestModel)
         {
             return ViewModel.Encrypt(requestModel);
@@ -52,3 +57,4 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 
     }
 }
+#endif

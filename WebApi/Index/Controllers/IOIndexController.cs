@@ -11,8 +11,8 @@ namespace IOBootstrap.NET.WebApi.Index.Controllers
     public class IOIndexController : IOController<IOIndexViewModel>
     {
         public IOIndexController(IConfiguration configuration, 
-                                IWebHostEnvironment environment,
-                                ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                 IWebHostEnvironment environment,
+                                 ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
         {
         }
 

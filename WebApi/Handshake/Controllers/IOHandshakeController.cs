@@ -26,7 +26,7 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
         #region Handshake Methods
 
         [IORequireHTTPS]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual HandshakeResponseModel Index()
         {
             // Get public key
@@ -45,7 +45,7 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
         }
 
         [IORequireHTTPS]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual IOResponseModel CheckSession()
         {
             return new IOResponseModel();

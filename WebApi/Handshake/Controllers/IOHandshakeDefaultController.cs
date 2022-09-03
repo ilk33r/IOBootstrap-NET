@@ -1,9 +1,13 @@
 using System;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers
 {
+    [Produces("application/json")]
+    [ApiController]
+    [Route("[controller]")]
     public class IOHandshakeDefaultController : IOHandshakeController<IOHandshakeDefaultViewModel>
     {
         public IOHandshakeDefaultController(IConfiguration configuration, 

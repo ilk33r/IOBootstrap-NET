@@ -151,6 +151,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Errors
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual IOResponseModel Error404()
         {
             // Update response status code
@@ -176,6 +177,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
         #region Web Page
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual IActionResult GetWebIndex(string layoutName)
         {
             // Obtain web root
@@ -229,6 +231,7 @@ namespace IOBootstrap.NET.Core.Controllers
             throw new IOInvalidKeyIDException();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual void CheckRole(ActionExecutingContext context)
         {
             // Obtain action desctriptor
@@ -254,6 +257,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual void CheckHttpsRequired(ActionExecutingContext context)
         {   
             if (HasControllerAttribute<IORequireHTTPSAttribute>(context))
@@ -268,6 +272,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual void CheckIsMaintenanceMode(ActionExecutingContext context)
         {
             // Obtain action desctriptor
@@ -297,6 +302,7 @@ namespace IOBootstrap.NET.Core.Controllers
             }
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual string GetControllerName()
         {
             // Obtain class name
@@ -308,6 +314,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return controllerName.First();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual bool HasControllerAttribute<T>(ActionExecutingContext context)
         {
             // Obtain action desctriptor
@@ -328,6 +335,7 @@ namespace IOBootstrap.NET.Core.Controllers
             return false;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public virtual void ValidateRequestModel(ActionExecutingContext context)
         {
             if (!HasControllerAttribute<IOValidateRequestModelAttribute>(context))

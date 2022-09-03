@@ -37,9 +37,12 @@ namespace IOBootstrap.NET.Application
                         options.SuppressModelStateInvalidFilter = true;
                     });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            // builder.Services.AddEndpointsApiExplorer();
-            // builder.Services.AddSwaggerGen();
+            if (Environment.IsDevelopment() || Environment.IsStaging())
+            {
+                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+                // builder.Services.AddEndpointsApiExplorer();
+                services.AddSwaggerGen();
+            }
 
             services.AddRouting();
             services.AddLogging(loggingBuilder =>
@@ -85,12 +88,19 @@ namespace IOBootstrap.NET.Application
             // Use session
             app.UseSession();
 
-            // Log
+            // Swagger
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
-                // app.UseSwagger();
-                // app.UseSwaggerUI();
+                app.UseSwagger(options =>
+                {
+                    options.SerializeAsV2 = true;
+                });
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "IOBootstrapt");
+                    options.RoutePrefix = "swagger-ui";
+                });
             }
 
             // Use middleware
@@ -127,12 +137,10 @@ namespace IOBootstrap.NET.Application
                 ConfigureClientEndpoints(endpoints);
                 ConfigureAuthenticationEndpoints(endpoints);
                 ConfigureConfigurationEndpoints(endpoints);
-                ConfigureHandshakeEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
                 ConfigureImagesEndpoints(endpoints);
-                ConfigureEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
         }
@@ -140,15 +148,6 @@ namespace IOBootstrap.NET.Application
         #endregion
 
         #region Routing
-
-        public virtual void ConfigureEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            IORoute generateKeyRoute = new IORoute("GenerateKeys", "IOKeyGenerator");
-            endpoints.MapControllerRoute("generateKeys", generateKeyRoute.GetRouteString());
-
-            IORoute encryptRoute = new IORoute("Encrypt", "IOKeyGenerator");
-            endpoints.MapControllerRoute("encrypt", encryptRoute.GetRouteString());
-        }
 
         public virtual void ConfigureAuthenticationEndpoints(IEndpointRouteBuilder endpoints)
         {
@@ -185,15 +184,6 @@ namespace IOBootstrap.NET.Application
             endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
             endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
             endpoints.MapControllerRoute("resetCache", resetCacheRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureHandshakeEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string handshakeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.HandshakeControllerName);
-            IORoute indexRoute = new IORoute("Index", handshakeControllerName);
-            IORoute checkSessionRoute = new IORoute("CheckSession", handshakeControllerName);
-            endpoints.MapControllerRoute("index", indexRoute.GetRouteString());
-            endpoints.MapControllerRoute("checkSession", checkSessionRoute.GetRouteString());
         }
 
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)

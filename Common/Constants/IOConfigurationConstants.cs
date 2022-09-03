@@ -32,7 +32,6 @@ namespace IOBootstrap.NET.Common.Constants
         public static string FunctionsPushNotificationControllerNameKey = "IOFunctionsPushNotificationControllerName";
         public static string EncryptionKey = "IOEncryptionKey";
         public static string EncryptionIV = "IOEncryptionIV";
-        public static string HandshakeControllerName = "IOHandshakeControllerName";
         public static string HttpsRequired = "IOHttpsRequired";
         public static string IndexControllerNameKey = "IOIndexControllerName";
         public static string PushNotificationControllerNameKey = "IOPushNotificationControllerName";

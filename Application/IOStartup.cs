@@ -1,8 +1,10 @@
 ﻿using System;
+using IOBootstrap.NET.Application.Filters;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
 using IOBootstrap.NET.Common.Routes;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IOBootstrap.NET.Application
 {
@@ -41,7 +43,10 @@ namespace IOBootstrap.NET.Application
             {
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 // builder.Services.AddEndpointsApiExplorer();
-                services.AddSwaggerGen();
+                services.AddSwaggerGen(options =>
+                {
+                    ConfigureSwagger(options);
+                });
             }
 
             services.AddRouting();
@@ -143,6 +148,11 @@ namespace IOBootstrap.NET.Application
                 ConfigureImagesEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
+        }
+
+        public virtual void ConfigureSwagger(SwaggerGenOptions options)
+        {
+            options.OperationFilter<IODefaultHeaderFilter>();
         }
 
         #endregion

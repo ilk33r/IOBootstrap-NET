@@ -4,7 +4,6 @@ using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;

@@ -26,16 +26,26 @@ namespace IOBootstrap.NET.Common.MWConnector
         {
             Logger = logger;
 
-            byte[] keyBytes = Convert.FromBase64String(configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey));
-            byte[] ivBytes = Convert.FromBase64String(configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV));
-            AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
+            String mwEncryptionKey = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey);
+            String mwEncryptionIV = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV);
+
+            if (!String.IsNullOrEmpty(mwEncryptionKey) && !String.IsNullOrEmpty(mwEncryptionIV))
+            {
+                byte[] keyBytes = Convert.FromBase64String(mwEncryptionKey);
+                byte[] ivBytes = Convert.FromBase64String(mwEncryptionIV);
+                AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
+            }
 
             string baseURL = configuration.GetValue<string>(IOMWConfigurationConstants.MiddlewareURL);
-            string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey);
-            HTTPClient = new IOHTTPClient(baseURL, logger);
-            HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
-            HTTPClient.SetContentType("text/plain");
-            HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
+            
+            if (!String.IsNullOrEmpty(baseURL))
+            {
+                string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey);
+                HTTPClient = new IOHTTPClient(baseURL, logger);
+                HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
+                HTTPClient.SetContentType("text/plain");
+                HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
+            }
         }
 
         public IOMWConnector(ILogger logger, string encryptionKey, string encryptionIV, string authorizationKey, string url)
@@ -56,8 +66,14 @@ namespace IOBootstrap.NET.Common.MWConnector
 
         public TObject Get<TObject>(string path, Object request) where TObject : IOResponseModel, new()
         {
-            string decryptedResult = null;
             TObject jsonObject = null;
+
+            if (AESUtilities == null || HTTPClient == null)
+            {
+                return jsonObject;
+            }
+
+            string decryptedResult = null;
             string serializedRequest = JsonSerializer.Serialize(request, new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

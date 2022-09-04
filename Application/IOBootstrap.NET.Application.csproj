@@ -28,6 +28,7 @@
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>
 
+  <!--
   <ItemGroup> 
     <Content Include="Certificates\**" LinkBase="Certificates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
@@ -40,7 +41,7 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
-
+  -->
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>

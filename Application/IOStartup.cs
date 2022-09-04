@@ -1,5 +1,6 @@
 ﻿using System;
 using IOBootstrap.NET.Application.Filters;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
@@ -43,6 +44,11 @@ namespace IOBootstrap.NET.Application
             {
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 // builder.Services.AddEndpointsApiExplorer();
+
+                string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey);
+                IOCacheObject authorizationCache = new IOCacheObject(IOCacheKeys.SwaggerAuthorization, authorization, 0);
+                IOCache.CacheObject(authorizationCache);
+
                 services.AddSwaggerGen(options =>
                 {
                     ConfigureSwagger(options);

@@ -61,11 +61,11 @@ namespace IOBootstrap.NET.Core.Controllers
             // Check https is required
             CheckHttpsRequired(context);
 
-            // Check user role
-            CheckRole(context);
-
             // Update view model request value
             ViewModel.Request = Request;
+
+            // Check user role
+            CheckRole(context);
 
             // Check authorization
             ViewModel.CheckAuthorizationHeader();

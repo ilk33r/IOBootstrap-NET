@@ -41,5 +41,29 @@ namespace IOBootstrap.NET.Common.Utilities
 
             return true;
         }
+
+        public static bool HasSpecialCharacter(string text)
+        {
+            return !text.All(c => 
+            {
+                int num = (int)c;
+                if (num >= 97 && num <= 122)
+                {
+                    return true;
+                }
+
+                if (num >= 65 && num <= 90)
+                {
+                    return true;
+                }
+
+                if (num >= 48 && num <= 57)
+                {
+                    return true;
+                }
+
+                return false;
+            });
+        }
     }
 }

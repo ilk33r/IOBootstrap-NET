@@ -19,6 +19,13 @@ namespace IOBootstrap.NET.Common.Utilities
                               .Select(s => s[new Random().Next(s.Length)]).ToArray());
         }
 
+        public static string GenerateRandomNumericString(int characterCount)
+        {
+            const string chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, characterCount)
+                              .Select(s => s[new Random().Next(s.Length)]).ToArray());
+        }
+
         #endregion
 
     }

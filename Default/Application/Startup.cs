@@ -8,9 +8,5 @@ namespace IOBootstrap.NET.Default.Application
         public Startup(IConfiguration configuration, IWebHostEnvironment env) : base(configuration, env)
         {
         }
-
-        public override void ConfigureEndpoints(IEndpointRouteBuilder endpoints) 
-        {
-        }
     }
 }

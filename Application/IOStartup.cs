@@ -146,7 +146,6 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllers();
                 ConfigureUserEndpoints(endpoints);
                 ConfigureClientEndpoints(endpoints);
-                ConfigureAuthenticationEndpoints(endpoints);
                 ConfigureConfigurationEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
@@ -164,15 +163,6 @@ namespace IOBootstrap.NET.Application
         #endregion
 
         #region Routing
-
-        public virtual void ConfigureAuthenticationEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string authenticationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-            IORoute authenticateRoute = new IORoute("Authenticate", authenticationControllerName);
-            IORoute checkTokenRoute = new IORoute("CheckToken", authenticationControllerName);
-            endpoints.MapControllerRoute("authenticate", authenticateRoute.GetRouteString());
-            endpoints.MapControllerRoute("checktoken", checkTokenRoute.GetRouteString());
-        }
 
         public virtual void ConfigureClientEndpoints(IEndpointRouteBuilder endpoints)
         {

@@ -23,8 +23,8 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         #region Authentication Api
 
-        [HttpPost]
         [IOValidateRequestModel]
+        [HttpPost("[action]")]
         public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
             // Authenticate user
@@ -34,8 +34,8 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
             return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
         }
 
-        [HttpPost]
         [IOValidateRequestModel]
+        [HttpPost("[action]")]
         public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
             // Check token

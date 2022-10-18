@@ -21,7 +21,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 
         #region View Model Methods
 
-        public Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
+        public virtual Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
             // Obtain user entity
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
@@ -79,7 +79,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUserEntity.UserName, findedUserEntity.UserRole);
         }
 
-        public Tuple<DateTimeOffset, string, int> CheckToken(string token)
+        public virtual Tuple<DateTimeOffset, string, int> CheckToken(string token)
         {
             // Parse token data
             Tuple<string, int> tokenData = ParseToken(token);

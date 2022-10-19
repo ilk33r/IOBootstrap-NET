@@ -76,7 +76,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             });
         }
 
-        public bool IsBackOffice()
+        public virtual bool IsBackOffice()
         {
             // Check back office is not open and token exists
             if (Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))

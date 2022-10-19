@@ -12,6 +12,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class IOBackOfficeAuthenticationDefaultController : IOAuthenticationController<IOBackOfficeAuthenticationDefaultViewModel>
     {
         public IOBackOfficeAuthenticationDefaultController(IConfiguration configuration, 

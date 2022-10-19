@@ -29,7 +29,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOConfigurationAddResponseModel AddConfigItem([FromBody] IOConfigurationAddRequestModel requestModel)
         {
             // Add menu
@@ -41,7 +41,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOConfigurationDeleteResponseModel DeleteConfigItem([FromBody] IOConfigurationDeleteRequestModel requestModel)
         {
             // Add menu
@@ -52,7 +52,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
         }
 
         [IOUserRole(UserRoles.User)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public IOConfigurationListResponseModel ListConfigurationItems()
         {
             // Obtain configuration items
@@ -64,7 +64,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOConfigurationUpdateResponseModel UpdateConfigItem([FromBody] IOConfigurationUpdateRequestModel requestModel)
         {
             // Add menu
@@ -75,7 +75,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
         }
 
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual IOConfigurationUpdateResponseModel ResetCache()
         {
             IOCache.ClearCache();

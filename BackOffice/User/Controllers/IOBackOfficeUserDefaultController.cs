@@ -13,6 +13,7 @@ namespace IOBootstrap.NET.BackOffice.User.Controllers
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class IOBackOfficeUserDefaultController : IOUserController<IOBackOfficeUserDefaultViewModel>
     {
         public IOBackOfficeUserDefaultController(IConfiguration configuration, 

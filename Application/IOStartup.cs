@@ -145,7 +145,6 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
                 endpoints.MapControllers();
                 ConfigureClientEndpoints(endpoints);
-                ConfigureConfigurationEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
@@ -174,21 +173,6 @@ namespace IOBootstrap.NET.Application
             endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
             endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
             endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureConfigurationEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string configurationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IORoute addConfigurationItemRoute = new IORoute("AddConfigItem", configurationControllerName);
-            IORoute deleteConfigurationItemRoute = new IORoute("DeleteConfigItem", configurationControllerName);
-            IORoute listConfigurationItemsRoute = new IORoute("ListConfigurationItems", configurationControllerName);
-            IORoute updateConfigurationItemRoute = new IORoute("UpdateConfigItem", configurationControllerName);
-            IORoute resetCacheRoute = new IORoute("ResetCache", configurationControllerName);
-            endpoints.MapControllerRoute("addConfigurationItem", addConfigurationItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteConfigurationItem", deleteConfigurationItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("listConfigurationItems", listConfigurationItemsRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateConfigurationItem", updateConfigurationItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("resetCache", resetCacheRoute.GetRouteString());
         }
 
         public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)

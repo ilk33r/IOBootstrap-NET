@@ -8,6 +8,7 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class IOHandshakeDefaultController : IOHandshakeController<IOHandshakeDefaultViewModel>
     {
         public IOHandshakeDefaultController(IConfiguration configuration, 

@@ -22,7 +22,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 
         #region Menu Methods
 
-        public void AddConfigItem(IOConfigurationAddRequestModel requestModel)
+        public virtual void AddConfigItem(IOConfigurationAddRequestModel requestModel)
         {
             // MW connection
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
             }
         }
 
-        public void DeleteConfigItem(int configurationId)
+        public virtual void DeleteConfigItem(int configurationId)
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
             IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
@@ -50,7 +50,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
             }
         }
 
-        public IList<IOConfigurationModel> GetConfigurations()
+        public virtual IList<IOConfigurationModel> GetConfigurations()
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
             IOMWListResponseModel<IOConfigurationModel> configurations = MWConnector.Get<IOMWListResponseModel<IOConfigurationModel>>(controller + "/" + "ListConfigurationItems", new IOMWFindRequestModel());
@@ -62,7 +62,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
             return new List<IOConfigurationModel>();
         }
 
-        public void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel)
+        public virtual void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel)
         {
             // MW connection
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);

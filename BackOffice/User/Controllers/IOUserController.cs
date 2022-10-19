@@ -28,7 +28,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel) 
         {
 			// Create and return response
@@ -37,7 +37,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
-		[HttpPost]
+		[HttpPost("[action]")]
         public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
         {
             // Check change password is success
@@ -48,7 +48,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         }
 
         [IOUserRole(UserRoles.Admin)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual IOListUserResponseModel ListUsers() 
         {
             // Obtain user list
@@ -60,7 +60,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {
             ViewModel.UpdateUser(requestModel);
@@ -69,7 +69,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
 		public virtual IOResponseModel DeleteUser([FromBody] IODeleteUserRequestModel requestModel) 
         {
             ViewModel.DeleteUser(requestModel);

@@ -144,7 +144,6 @@ namespace IOBootstrap.NET.Application
             {
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
                 endpoints.MapControllers();
-                ConfigureUserEndpoints(endpoints);
                 ConfigureClientEndpoints(endpoints);
                 ConfigureConfigurationEndpoints(endpoints);
                 ConfigureMenuEndpoints(endpoints);
@@ -244,21 +243,6 @@ namespace IOBootstrap.NET.Application
             string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);
             IORoute addPushNotificationTokenRoute = new IORoute("AddPushNotificationToken", pushNotificationControllerName);
             endpoints.MapControllerRoute("addPushNotificationToken", addPushNotificationTokenRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureUserEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string userControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficeUserControllerNameKey);
-            IORoute addUserRoute = new IORoute("AddUser", userControllerName);
-            IORoute changePasswordRoute = new IORoute("ChangePassword", userControllerName);
-            IORoute deleteUserRoute = new IORoute("DeleteUser", userControllerName);
-            IORoute listUsersRoute = new IORoute("ListUsers", userControllerName);
-            IORoute updateUsersRoute = new IORoute("UpdateUser", userControllerName);
-            endpoints.MapControllerRoute("addUser", addUserRoute.GetRouteString());
-            endpoints.MapControllerRoute("changePassword", changePasswordRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteUser", deleteUserRoute.GetRouteString());
-            endpoints.MapControllerRoute("listUsers", listUsersRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateUsers", updateUsersRoute.GetRouteString());
         }
 
         #endregion

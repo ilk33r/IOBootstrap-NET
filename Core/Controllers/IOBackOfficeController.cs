@@ -43,7 +43,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
         {
             // Obtain client info from view model
@@ -55,7 +56,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel)
         {
             // Check delete client is success
@@ -66,7 +68,8 @@ namespace IOBootstrap.NET.Core.Controllers
         }
         
         [IOUserRole(UserRoles.Admin)]
-        [HttpGet]
+        [HttpGet("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IOClientListResponseModel ListClients()
         {
             // Obtain client infos
@@ -78,7 +81,8 @@ namespace IOBootstrap.NET.Core.Controllers
         
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
-        [HttpPost]
+        [HttpPost("[action]")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IOResponseModel UpdateClient([FromBody] IOClientUpdateRequestModel requestModel)
         {
             // Check update client is success

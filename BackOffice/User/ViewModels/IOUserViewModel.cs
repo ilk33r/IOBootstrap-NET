@@ -44,7 +44,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             return response;
         }
 
-        public void ChangePassword(string userName, string oldPassword, string newPassword) 
+        public virtual void ChangePassword(string userName, string oldPassword, string newPassword) 
         {
             string authController = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
             IOMWFindRequestModel userRequestModel = new IOMWFindRequestModel()
@@ -93,7 +93,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             return new List<IOUserInfoModel>();
         }
 
-        public void UpdateUser(IOUpdateUserRequestModel request)
+        public virtual void UpdateUser(IOUpdateUserRequestModel request)
         {
             if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserModel.UserRole))
             {
@@ -119,7 +119,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             });
         }
 
-        public void DeleteUser(IODeleteUserRequestModel request)
+        public virtual void DeleteUser(IODeleteUserRequestModel request)
         {
             string authController = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
             IOMWFindRequestModel userRequestModel = new IOMWFindRequestModel()

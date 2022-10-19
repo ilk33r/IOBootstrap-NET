@@ -3,13 +3,16 @@ using IOBootstrap.NET.BackOffice.User.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.WebApi.User.Controllers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.User.Controllers
 {
     [IOBackoffice]
+    [EnableCors]
+    [Produces("application/json")]
+    [ApiController]
+    [Route("[controller]")]
     public class IOBackOfficeUserDefaultController : IOUserController<IOBackOfficeUserDefaultViewModel>
     {
         public IOBackOfficeUserDefaultController(IConfiguration configuration, 

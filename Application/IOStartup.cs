@@ -115,7 +115,7 @@ namespace IOBootstrap.NET.Application
             }
 
             // Use middleware
-            app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
+            ConfigureMiddleWare(app, env, logger);
 
             string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey);
             IORoute errorRoute = new IORoute("Error404", indexControllerName);
@@ -156,6 +156,11 @@ namespace IOBootstrap.NET.Application
         public virtual void ConfigureSwagger(SwaggerGenOptions options)
         {
             options.OperationFilter<IODefaultHeaderFilter>();
+        }
+
+        public virtual void ConfigureMiddleWare(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
+        {
+            app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
         }
 
         #endregion

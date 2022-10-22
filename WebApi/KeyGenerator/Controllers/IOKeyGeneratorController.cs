@@ -11,6 +11,7 @@ using IOBootstrap.NET.Common.Attributes;
 #if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
+    [Obsolete("This Method is Deprecated", false)]
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]

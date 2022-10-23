@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.User.ViewModels;
+using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
     [IOBackoffice]
-    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOUserViewModel, new()
+    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOUserViewModel, new()
     {
         #region Controller Lifecycle
 

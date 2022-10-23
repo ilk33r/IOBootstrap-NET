@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
+using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
     [IOBackoffice]
-    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IOAuthenticationViewModel, new()
+    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IIOAuthenticationViewModel, new()
     {
         #region Controller Lifecycle
 

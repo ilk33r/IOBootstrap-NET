@@ -5,10 +5,11 @@ using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 {
-    public abstract class IOAuthenticationViewModel : IOBackOfficeViewModel
+    public abstract class IOAuthenticationViewModel : IOBackOfficeViewModel, IIOAuthenticationViewModel
     {
 
         #region Initialization Methods

@@ -9,10 +9,11 @@ using IOBootstrap.NET.Common.MWConnector;
 using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Core.Interfaces;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOViewModel
+    public abstract class IOViewModel : IIOViewModel
     {
 
         #region Publics

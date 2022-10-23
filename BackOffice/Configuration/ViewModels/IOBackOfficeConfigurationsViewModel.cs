@@ -6,10 +6,11 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Configuration;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.BackOffice.Configuration.Interfaces;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 {
-    public class IOBackOfficeConfigurationsViewModel : IOBackOfficeViewModel
+    public class IOBackOfficeConfigurationsViewModel : IOBackOfficeViewModel, IIOBackOfficeConfigurationsViewModel
     {
 
         #region Initialization Methods

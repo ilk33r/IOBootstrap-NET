@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.Menu.ViewModels;
+using IOBootstrap.NET.BackOffice.Menu.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeMenuViewModel, new()
+    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOBackOfficeMenuViewModel, new()
     {
         #region Controller Lifecycle
 

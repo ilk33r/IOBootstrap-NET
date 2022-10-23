@@ -17,7 +17,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Publics
 
-        public IOMWUserResponseModel UserModel;
+        public IOMWUserResponseModel UserModel  { get; set; }
 
         #endregion
 

@@ -6,10 +6,11 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Menu;
 using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.BackOffice.Menu.Interfaces;
 
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 {
-    public class IOBackOfficeMenuViewModel : IOBackOfficeViewModel
+    public class IOBackOfficeMenuViewModel : IOBackOfficeViewModel, IIOBackOfficeMenuViewModel
     {
 
         #region Initialization Methods
@@ -46,7 +47,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
             });
         }
 
-        public virtual IList<IOMenuListModel> GetMenuTree(int requiredRole)
+        public IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
             string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
             IOMWFindRequestModel requestModel = new IOMWFindRequestModel()

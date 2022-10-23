@@ -25,7 +25,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         [IOValidateRequestModel]
         [HttpPost("[action]")]
-        public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
+        public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
             // Authenticate user
             Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
@@ -36,7 +36,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         [IOValidateRequestModel]
         [HttpPost("[action]")]
-        public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
+        public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
             // Check token
             Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);

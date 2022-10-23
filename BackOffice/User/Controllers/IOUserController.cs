@@ -38,7 +38,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
 		[HttpPost("[action]")]
-        public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
+        public virtual IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
         {
             // Check change password is success
             ViewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword);
@@ -61,7 +61,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost("[action]")]
-        public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
+        public virtual IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {
             ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel();

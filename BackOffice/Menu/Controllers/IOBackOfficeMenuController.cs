@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuAddResponseModel AddMenuItem([FromBody] IOMenuAddRequestModel requestModel)
         {
             // Add menu
@@ -39,7 +39,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuDeleteRequestModel requestModel)
         {
             // Add menu
@@ -50,7 +50,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
         }
 
         [IOUserRole(UserRoles.User)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual IOMenuListResponseModel ListMenuItems()
         {
             // Obtain menu items
@@ -62,7 +62,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuUpdateResponseModel UpdateMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
         {
             // Add menu

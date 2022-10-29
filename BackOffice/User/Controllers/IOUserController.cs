@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.User.ViewModels;
+using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
     [IOBackoffice]
-    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOUserViewModel, new()
+    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOUserViewModel, new()
     {
         #region Controller Lifecycle
 
@@ -38,7 +38,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
 		[HttpPost("[action]")]
-        public IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
+        public virtual IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel) 
         {
             // Check change password is success
             ViewModel.ChangePassword(requestModel.UserName, requestModel.OldPassword, requestModel.NewPassword);
@@ -61,7 +61,7 @@ namespace IOBootstrap.NET.WebApi.User.Controllers
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.Admin)]
         [HttpPost("[action]")]
-        public IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
+        public virtual IOUpdateUserResponseModel UpdateUser([FromBody] IOUpdateUserRequestModel requestModel)
         {
             ViewModel.UpdateUser(requestModel);
             return new IOUpdateUserResponseModel();

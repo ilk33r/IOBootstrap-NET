@@ -1,0 +1,28 @@
+using IOBootstrap.NET.Common.Messages.Clients;
+using IOBootstrap.NET.Common.Messages.MW;
+using IOBootstrap.NET.Common.Models.Clients;
+
+namespace IOBootstrap.NET.Core.Interfaces;
+
+public interface IIOBackOfficeViewModel : IIOViewModel
+{
+    #region Publics
+
+    public IOMWUserResponseModel UserModel { get; set; }
+
+    #endregion
+        
+    #region View Model Methods
+
+    public IOClientInfoModel CreateClient(IOClientAddRequestModel requestModel);
+
+    public void DeleteClient(IOClientDeleteRequestModel requestModel);
+
+    public IList<IOClientInfoModel> GetClients();
+
+    public void UpdateClient(IOClientUpdateRequestModel requestModel);
+    
+    public bool IsBackOffice();
+
+    #endregion
+}

@@ -1,12 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json;
-using IOBootstrap.NET.Common.Cache;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Models.Base;
-using IOBootstrap.NET.MW.DataAccess.Context;
 
 namespace IOBootstrap.NET.MW.DataAccess.Entities
 {

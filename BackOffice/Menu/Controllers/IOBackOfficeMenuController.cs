@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.Menu.ViewModels;
+using IOBootstrap.NET.BackOffice.Menu.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeMenuViewModel, new()
+    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOBackOfficeMenuViewModel, new()
     {
         #region Controller Lifecycle
 
@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuAddResponseModel AddMenuItem([FromBody] IOMenuAddRequestModel requestModel)
         {
             // Add menu
@@ -39,7 +39,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuDeleteRequestModel requestModel)
         {
             // Add menu
@@ -50,7 +50,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
         }
 
         [IOUserRole(UserRoles.User)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public virtual IOMenuListResponseModel ListMenuItems()
         {
             // Obtain menu items
@@ -62,7 +62,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.SuperAdmin)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOMenuUpdateResponseModel UpdateMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
         {
             // Add menu

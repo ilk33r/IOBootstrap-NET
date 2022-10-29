@@ -9,10 +9,11 @@ using IOBootstrap.NET.Common.Messages.Users;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.BackOffice.User.Interfaces;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels
 {
-    public class IOUserViewModel : IOBackOfficeViewModel
+    public class IOUserViewModel : IOBackOfficeViewModel, IIOUserViewModel
     {
 
         #region Initialization Methods
@@ -44,7 +45,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
             return response;
         }
 
-        public virtual void ChangePassword(string userName, string oldPassword, string newPassword) 
+        public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
         {
             string authController = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
             IOMWFindRequestModel userRequestModel = new IOMWFindRequestModel()

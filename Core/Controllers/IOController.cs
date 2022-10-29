@@ -11,15 +11,15 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
-using IOBootstrap.NET.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using IOBootstrap.NET.Core.Interfaces;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TViewModel> : Controller where TViewModel : IOViewModel, new()
+    public abstract class IOController<TViewModel> : Controller where TViewModel : IIOViewModel, new()
     {
 
         #region Properties

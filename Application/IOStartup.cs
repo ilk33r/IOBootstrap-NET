@@ -115,7 +115,7 @@ namespace IOBootstrap.NET.Application
             }
 
             // Use middleware
-            app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
+            ConfigureMiddleWare(app, env, logger);
 
             string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey);
             IORoute errorRoute = new IORoute("Error404", indexControllerName);
@@ -145,7 +145,6 @@ namespace IOBootstrap.NET.Application
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
                 endpoints.MapControllers();
                 ConfigureClientEndpoints(endpoints);
-                ConfigureMenuEndpoints(endpoints);
                 ConfigureMessagesEndpoints(endpoints);
                 ConfigurePushNotificationEndpoints(endpoints);
                 ConfigureImagesEndpoints(endpoints);
@@ -156,6 +155,11 @@ namespace IOBootstrap.NET.Application
         public virtual void ConfigureSwagger(SwaggerGenOptions options)
         {
             options.OperationFilter<IODefaultHeaderFilter>();
+        }
+
+        public virtual void ConfigureMiddleWare(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
+        {
+            app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
         }
 
         #endregion
@@ -184,19 +188,6 @@ namespace IOBootstrap.NET.Application
             endpoints.MapControllerRoute("getImages", getImagesRoute.GetRouteString());
             endpoints.MapControllerRoute("saveImages", saveImagesRoute.GetRouteString());
             endpoints.MapControllerRoute("deleteImages", deleteImagesRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureMenuEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string menuControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            IORoute addMenuItemRoute = new IORoute("AddMenuItem", menuControllerName);
-            IORoute deleteMenuItemRoute = new IORoute("DeleteMenuItem", menuControllerName);
-            IORoute listMenuItemsRoute = new IORoute("ListMenuItems", menuControllerName);
-            IORoute updateMenuItemRoute = new IORoute("UpdateMenuItem", menuControllerName);
-            endpoints.MapControllerRoute("addMenuItem", addMenuItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteMenuItem", deleteMenuItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("listMenuItems", listMenuItemsRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateMenuItem", updateMenuItemRoute.GetRouteString());
         }
 
         public virtual void ConfigureMessagesEndpoints(IEndpointRouteBuilder endpoints)

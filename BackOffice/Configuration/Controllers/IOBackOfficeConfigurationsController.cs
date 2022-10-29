@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.Configuration.ViewModels;
+using IOBootstrap.NET.BackOffice.Configuration.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Enumerations;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 {
     [IOBackoffice]
-    public class IOBackOfficeConfigurationsController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeConfigurationsViewModel, new()
+    public class IOBackOfficeConfigurationsController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOBackOfficeConfigurationsViewModel, new()
     {
         
         #region Controller Lifecycle

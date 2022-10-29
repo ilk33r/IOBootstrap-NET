@@ -8,15 +8,16 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Interfaces;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOBackOfficeViewModel : IOViewModel
+    public abstract class IOBackOfficeViewModel : IOViewModel, IIOBackOfficeViewModel
     {
 
         #region Publics
 
-        public IOMWUserResponseModel UserModel;
+        public IOMWUserResponseModel UserModel  { get; set; }
 
         #endregion
 
@@ -76,7 +77,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             });
         }
 
-        public bool IsBackOffice()
+        public virtual bool IsBackOffice()
         {
             // Check back office is not open and token exists
             if (Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))

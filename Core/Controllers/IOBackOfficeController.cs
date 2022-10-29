@@ -6,14 +6,14 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
-using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeController<TViewModel> : IOController<TViewModel> where TViewModel : IOBackOfficeViewModel, new()
+    public abstract class IOBackOfficeController<TViewModel> : IOController<TViewModel> where TViewModel : IIOBackOfficeViewModel, new()
     {
 
         #region Controller Lifecycle

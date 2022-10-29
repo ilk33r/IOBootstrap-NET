@@ -1,5 +1,5 @@
 ﻿using System;
-using IOBootstrap.NET.BackOffice.Authentication.ViewModels;
+using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
     [IOBackoffice]
-    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IOAuthenticationViewModel, new()
+    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IIOAuthenticationViewModel, new()
     {
         #region Controller Lifecycle
 
@@ -25,7 +25,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         [IOValidateRequestModel]
         [HttpPost("[action]")]
-        public IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
+        public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
             // Authenticate user
             Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
@@ -36,7 +36,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 
         [IOValidateRequestModel]
         [HttpPost("[action]")]
-        public IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
+        public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
             // Check token
             Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);

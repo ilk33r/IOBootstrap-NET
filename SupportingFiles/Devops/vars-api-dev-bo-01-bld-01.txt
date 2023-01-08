@@ -2,7 +2,7 @@ IO.BO.Environment.Name
 staging
 
 IO.BO.NodeVersion
->=6.14.0
+==16.16.0
 
 IO.BO.WorkingFolder
 SevenK/Application/Backoffice.UI

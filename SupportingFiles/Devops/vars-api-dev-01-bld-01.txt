@@ -2,10 +2,10 @@ IO.Environment
 Release
 
 IO.NetCoreSDKVersion
-5.x
+6.x
 
 IO.NetCoreAppDirectory
-netcoreapp5.0
+net6.0
 
 IO.Environment.Name
 Staging

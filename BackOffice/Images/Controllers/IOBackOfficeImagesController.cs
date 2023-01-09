@@ -35,7 +35,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
         {
             return ViewModel.GetImages(requestModel);
@@ -43,7 +43,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOSaveImageResponseModel SaveImages([FromBody] IOSaveImageRequestModel requestModel)
         {
             // Add File
@@ -76,7 +76,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
         {
             ViewModel.DeleteImages(requestModel);

@@ -1,15 +1,16 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.MW;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Models.Clients;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
 {
-    public class IOPushNotificationBackOfficeViewModel : IOBackOfficeViewModel
+    public class IOPushNotificationBackOfficeViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
         
         #region Initialization Methods
@@ -24,38 +25,101 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
 
         public virtual IList<PushNotificationMessageModel> ListMessages()
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel();
-            IOMWListResponseModel<PushNotificationMessageModel> response = MWConnector.Get<IOMWListResponseModel<PushNotificationMessageModel>>(controller + "/" + "ListMessages", requestModel);
+            // Obtain push notification entity
+            IList<PushNotificationMessageModel> messages = DatabaseContext.PushNotificationMessages
+                                                                                .Select(pm => new PushNotificationMessageModel()
+                                                                                {
+                                                                                    ID = pm.ID,
+                                                                                    Client = (pm.Client == null) ? null : new IOClientInfoModel(pm.Client.ID, 
+                                                                                                                                                pm.Client.ClientId,
+                                                                                                                                                pm.Client.ClientSecret,
+                                                                                                                                                pm.Client.ClientDescription,
+                                                                                                                                                pm.Client.IsEnabled,
+                                                                                                                                                pm.Client.RequestCount,
+                                                                                                                                                pm.Client.MaxRequestCount),
+                                                                                    DeviceType = pm.DeviceType,
+                                                                                    NotificationCategory = pm.NotificationCategory,
+                                                                                    NotificationData = pm.NotificationData,
+                                                                                    NotificationDate = pm.NotificationDate,
+                                                                                    NotificationTitle = pm.NotificationTitle,
+                                                                                    NotificationMessage = pm.NotificationMessage,
+                                                                                    IsCompleted = pm.IsCompleted
+                                                                                })
+                                                                                .OrderByDescending(p => p.ID)
+                                                                                .ToList();
 
-            if (MWConnector.HandleResponse(response, code => {}))
+            if (messages == null)
             {
-                return response.Items;
+                return new List<PushNotificationMessageModel>();
             }
 
-            return new List<PushNotificationMessageModel>();
+            return messages;
         }
 
         public void SendNotifications(SendPushNotificationRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
-            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "SendNotification", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                throw new IOMWConnectionException();
-            });
+            // Obtain client
+            IOClientsEntity clientsEntity = null;
+            
+            if (requestModel.ClientId != null)
+            {
+                clientsEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
+            }
+
+            // Create push notification message entity
+            PushNotificationMessageEntity pushNotificationMessageEntity = new PushNotificationMessageEntity()
+            {
+                Client = clientsEntity,
+                DeviceType = (int)requestModel.DeviceType,
+                NotificationCategory = requestModel.NotificationCategory,
+                NotificationData = requestModel.NotificationData,
+                NotificationMessage = requestModel.NotificationMessage,
+                NotificationTitle = requestModel.NotificationTitle,
+                NotificationDate = DateTime.UtcNow,
+                IsCompleted = 0
+            };
+
+            // Write message to database
+            DatabaseContext.Add(pushNotificationMessageEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public void DeleteMessage(int messageId)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            // Obtain message 
+            PushNotificationMessageEntity messageEntity = DatabaseContext.PushNotificationMessages.Find(messageId);
+
+            // Check message entity
+            if (messageEntity == null)
             {
-                ID = messageId
-            };
-            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteMessage", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                throw new IOMWConnectionException();
-            });
+                throw new IOInvalidRequestException();
+            }
+
+            // Set message completed
+            if (messageEntity.IsCompleted == 0) 
+            {
+                messageEntity.IsCompleted = 1;
+                DatabaseContext.Update(messageEntity);
+                DatabaseContext.SaveChanges();
+            }
+
+            // Obtain delivered messages
+            var deliveredMessages = DatabaseContext.PushNotificationDeliveredMessages
+                                                   .Where((arg) => arg.PushNotificationMessage == messageEntity);
+
+            // Loop throught delivered messages
+            foreach (PushNotificationDeliveredMessagesEntity deliveredMessage in deliveredMessages) 
+            {
+                DatabaseContext.Remove(deliveredMessage);
+            }
+
+            if (deliveredMessages.Count() > 0)
+            {
+                DatabaseContext.SaveChanges();
+            }
+
+            DatabaseContext.Remove(messageEntity);
+            DatabaseContext.SaveChanges();
         }
 
         #endregion

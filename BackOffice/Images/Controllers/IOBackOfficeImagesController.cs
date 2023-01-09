@@ -10,18 +10,22 @@ using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Images.Controllers
 {
     [IOBackoffice]
-    public class IOBackOfficeImagesController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOBackOfficeImagesViewModel, new()
+    public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     {
         #region Controller Lifecycle
 
         public IOBackOfficeImagesController(IConfiguration configuration, 
                                             IWebHostEnvironment environment, 
-                                            ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                            ILogger<IOLoggerType> logger,
+                                            TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

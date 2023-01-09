@@ -6,18 +6,22 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Menu;
 using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Menu.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeMenuController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOBackOfficeMenuViewModel, new()
+    public abstract class IOBackOfficeMenuController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
     {
         #region Controller Lifecycle
 
         protected IOBackOfficeMenuController(IConfiguration configuration, 
                                              IWebHostEnvironment environment, 
-                                             ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                             ILogger<IOLoggerType> logger,
+                                             TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

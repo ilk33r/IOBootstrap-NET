@@ -2,18 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildIOBootstrapNetDefaultMWApplication",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/Default/MWApplication/IOBootstrap.NET.Default.MW.Application.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
             "label": "buildIOBootstrapNetDefaultApplication",
             "command": "dotnet",
             "type": "process",

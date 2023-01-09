@@ -1,14 +1,15 @@
 using IOBootstrap.NET.Common.Messages.Clients;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Clients;
+using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Interfaces;
 
-public interface IIOBackOfficeViewModel : IIOViewModel
+public interface IIOBackOfficeViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
 {
     #region Publics
 
-    public IOMWUserResponseModel UserModel { get; set; }
+    public IOUserInfoModel UserModel { get; set; }
 
     #endregion
         

@@ -5,11 +5,14 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
 using IOBootstrap.NET.Common.Routes;
+using IOBootstrap.NET.DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IOBootstrap.NET.Application
 {
-    public abstract class IOStartup
+    public abstract class IOStartup<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Properties
@@ -33,6 +36,7 @@ namespace IOBootstrap.NET.Application
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
             services.AddDistributedMemoryCache();
             services.AddControllers()
                     .ConfigureApiBehaviorOptions(options =>
@@ -144,12 +148,19 @@ namespace IOBootstrap.NET.Application
             {
                 endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
                 endpoints.MapControllers();
-                ConfigureClientEndpoints(endpoints);
-                ConfigureMessagesEndpoints(endpoints);
-                ConfigurePushNotificationEndpoints(endpoints);
-                ConfigureImagesEndpoints(endpoints);
                 endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
             });
+
+            // Start static caching
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                TDBContext? context = services.GetService<TDBContext>();
+                if (context != null) 
+                {
+                    ConfigureStaticCaching(context);
+                }
+            }
         }
 
         public virtual void ConfigureSwagger(SwaggerGenOptions options)
@@ -160,64 +171,16 @@ namespace IOBootstrap.NET.Application
         public virtual void ConfigureMiddleWare(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
         {
             app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
+            app.UseMiddleware(typeof(IOFNRequestDecryptorMiddleware));
         }
 
-        #endregion
-
-        #region Routing
-
-        public virtual void ConfigureClientEndpoints(IEndpointRouteBuilder endpoints)
+        public virtual void ConfigureStaticCaching(TDBContext databaseContext)
         {
-            string backofficeControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IORoute addClientRoute = new IORoute("AddClient", backofficeControllerName);
-            IORoute deleteClientRoute = new IORoute("DeleteClient", backofficeControllerName);
-            IORoute listClientRoute = new IORoute("ListClients", backofficeControllerName);
-            IORoute updateClientRoute = new IORoute("UpdateClient", backofficeControllerName);
-            endpoints.MapControllerRoute("addClient", addClientRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteClient", deleteClientRoute.GetRouteString());
-            endpoints.MapControllerRoute("listClient", listClientRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateClient", updateClientRoute.GetRouteString());
         }
 
-        public virtual void ConfigureImagesEndpoints(IEndpointRouteBuilder endpoints)
+        public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
         {
-            string imagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
-            IORoute getImagesRoute = new IORoute("GetImages", imagesControllerName);
-            IORoute saveImagesRoute = new IORoute("SaveImages", imagesControllerName);
-            IORoute deleteImagesRoute = new IORoute("DeleteImages", imagesControllerName);
-            endpoints.MapControllerRoute("getImages", getImagesRoute.GetRouteString());
-            endpoints.MapControllerRoute("saveImages", saveImagesRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteImages", deleteImagesRoute.GetRouteString());
-        }
-
-        public virtual void ConfigureMessagesEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string messagesControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMessagesControllerNameKey);
-            IORoute addMessagesItemRoute = new IORoute("AddMessagesItem", messagesControllerName);
-            IORoute deleteMessagesItemRoute = new IORoute("DeleteMessagesItem", messagesControllerName);
-            IORoute listAllMessagesItemsRoute = new IORoute("ListAllMessages", messagesControllerName);
-            IORoute listMessagesItemsRoute = new IORoute("ListMessages", messagesControllerName);
-            IORoute updateMessagesItemRoute = new IORoute("UpdateMessagesItem", messagesControllerName);
-            endpoints.MapControllerRoute("addMessagesItem", addMessagesItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("deleteMessagesItem", deleteMessagesItemRoute.GetRouteString());
-            endpoints.MapControllerRoute("listAllMessagesItems", listAllMessagesItemsRoute.GetRouteString());
-            endpoints.MapControllerRoute("listMessagesItems", listMessagesItemsRoute.GetRouteString());
-            endpoints.MapControllerRoute("updateMessagesItem", updateMessagesItemRoute.GetRouteString());
-        }
-
-        public virtual void ConfigurePushNotificationEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            string pushNotificationBOControllerName = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficePushNotificationControllerNameKey);
-            IORoute deleteMessageRoute = new IORoute("DeleteMessage", pushNotificationBOControllerName);
-            IORoute listMessagesRoute = new IORoute("ListMessages", pushNotificationBOControllerName);
-            IORoute sendNotificationRoute = new IORoute("SendNotification", pushNotificationBOControllerName);
-            endpoints.MapControllerRoute("deleteMessage", deleteMessageRoute.GetRouteString());
-            endpoints.MapControllerRoute("listMessages", listMessagesRoute.GetRouteString());
-            endpoints.MapControllerRoute("sendNotification", sendNotificationRoute.GetRouteString());
-
-            string pushNotificationControllerName = Configuration.GetValue<string>(IOConfigurationConstants.PushNotificationControllerNameKey);
-            IORoute addPushNotificationTokenRoute = new IORoute("AddPushNotificationToken", pushNotificationControllerName);
-            endpoints.MapControllerRoute("addPushNotificationToken", addPushNotificationTokenRoute.GetRouteString());
+            options.UseInMemoryDatabase("IOMemory");
         }
 
         #endregion

@@ -1,8 +1,6 @@
 using System;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Messages.Images;
@@ -11,10 +9,13 @@ using IOBootstrap.NET.Core.ViewModels;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
-    public class IOBackOfficeImagesViewModel : IOBackOfficeViewModel
+    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
         #region Initialization Methods
 
@@ -28,13 +29,23 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
         public IOGetImagesResponseModel GetImages(IOGetImagesRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
-            IOMWListResponseModel<IOImageVariationsModel> response = MWConnector.Get<IOMWListResponseModel<IOImageVariationsModel>>(controller + "/" + "GetImages", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                throw new IOMWConnectionException();
-            });
+            IQueryable<IOImagesEntity> images = DatabaseContext.Images;
+            int imageCount = images.Count();
+            IList<IOImageVariationsModel> paginatedImages = images
+                                                                .Select(i => new IOImageVariationsModel()
+                                                                {
+                                                                    ID = i.ID,
+                                                                    FileName = i.FileName,
+                                                                    Width = i.Width,
+                                                                    Height = i.Height,
+                                                                    Scale = i.Scale
+                                                                })
+                                                                .OrderBy(i => i.ID)
+                                                                .Skip(requestModel.Start)
+                                                                .Take(requestModel.Count)
+                                                                .ToList();
 
-            return new IOGetImagesResponseModel(response.Count ?? 0, response.Items);
+            return new IOGetImagesResponseModel(imageCount, paginatedImages);
         }
 
         public IList<IOImageVariationsModel> SaveImages(string fileData, string fileType, string contentType, string globalFileName, IList<IOImageVariationsModel> sizes)
@@ -68,33 +79,70 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
                 }
             }
 
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
-            IOMWSaveImageRequestModel requestModel = new IOMWSaveImageRequestModel()
-            {
-                Variations = imagesList
-            };
-            IOMWListResponseModel<IOImageVariationsModel> response = MWConnector.Get<IOMWListResponseModel<IOImageVariationsModel>>(controller + "/" + "SaveImages", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                throw new IOMWConnectionException();
-            });
+            List<IOImagesEntity> images = new List<IOImagesEntity>();
 
-            return response.Items;
+            foreach (IOImageVariationsModel variationsModel in imagesList)
+            {
+                IOImagesEntity imageEntity = new IOImagesEntity()
+                {
+                    FileName = variationsModel.FileName,
+                    FileType = variationsModel.FileType,
+                    Width = variationsModel.Width,
+                    Height = variationsModel.Height,
+                    Scale = variationsModel.Scale
+                };
+
+                DatabaseContext.Add(imageEntity);
+                images.Add(imageEntity);
+            }
+
+            DatabaseContext.SaveChanges();
+
+            return images.ConvertAll(i => new IOImageVariationsModel()
+            {
+                ID = i.ID,
+                FileName = i.FileName,
+                Width = i.Width,
+                Height = i.Height,
+                Scale = i.Scale
+            });
         }
 
         public void DeleteImages(IODeleteImagesRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeImagesControllerNameKey);
-            IOMWListResponseModel<IOImageVariationsModel> response = MWConnector.Get<IOMWListResponseModel<IOImageVariationsModel>>(controller + "/" + "DeleteImages", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                throw new IOMWConnectionException();
-            });
+            List<IOImageVariationsModel> imageVariations = new List<IOImageVariationsModel>();
 
-            if (response.Items == null)
+            foreach (int imageId in requestModel.ImagesIdList)
+            {
+                IOImagesEntity imagesEntity = DatabaseContext.Images.Find(imageId);
+                if (imagesEntity == null)
+                {
+                    continue;
+                }
+
+                imageVariations.Add(new IOImageVariationsModel()
+                {
+                    ID = imagesEntity.ID,
+                    FileName = new string(imagesEntity.FileName),
+                    FileType = imagesEntity.FileType,
+                    Width = imagesEntity.Width,
+                    Height = imagesEntity.Height,
+                    Scale = imagesEntity.Scale
+                });
+
+                DatabaseContext.Remove(imagesEntity);
+            }
+
+            if (imageVariations.Count() > 0)
+            {
+                DatabaseContext.SaveChanges();
+            }
+            else
             {
                 throw new IOImageNotFoundException();
             }
 
-            foreach (IOImageVariationsModel variation in response.Items)
+            foreach (IOImageVariationsModel variation in imageVariations)
             {
                 try {
                     Task<bool> deleteStatus = DeleteFromBlob(variation.FileName);

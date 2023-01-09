@@ -1,10 +1,10 @@
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Models.Configuration;
-using IOBootstrap.NET.Common.MWConnector;
+using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Interfaces;
 
-public interface IIOViewModel
+public interface IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
 {
     #region Properties
 
@@ -12,7 +12,7 @@ public interface IIOViewModel
     public IWebHostEnvironment Environment { get; set; }
     public ILogger<IOLoggerType> Logger { get; set; }
     public HttpRequest Request { get; set; }
-    public IOMWConnectorProtocol MWConnector { get; set; }
+    public TDBContext DatabaseContext { get; set; }
 
     #endregion
 

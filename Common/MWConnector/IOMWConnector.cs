@@ -43,6 +43,7 @@ namespace IOBootstrap.NET.Common.MWConnector
                 string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey);
                 HTTPClient = new IOHTTPClient(baseURL, logger);
                 HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
+                HTTPClient.AddHeader(IORequestHeaderConstants.IsEncrypted, "true");
                 HTTPClient.SetContentType("text/plain");
                 HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
             }
@@ -60,6 +61,7 @@ namespace IOBootstrap.NET.Common.MWConnector
             string authorization  = authorizationKey;
             HTTPClient = new IOHTTPClient(baseURL, logger);
             HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
+            HTTPClient.AddHeader(IORequestHeaderConstants.IsEncrypted, "true");
             HTTPClient.SetContentType("text/plain");
             HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
         }

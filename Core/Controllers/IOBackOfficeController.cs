@@ -7,20 +7,24 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
     [IOBackoffice]
-    public abstract class IOBackOfficeController<TViewModel> : IOController<TViewModel> where TViewModel : IIOBackOfficeViewModel, new()
+    public abstract class IOBackOfficeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOBackOfficeViewModel<TDBContext>, new()
     {
 
         #region Controller Lifecycle
 
         public IOBackOfficeController(IConfiguration configuration,
                                       IWebHostEnvironment environment,
-                                      ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                      ILogger<IOLoggerType> logger,
+                                      TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

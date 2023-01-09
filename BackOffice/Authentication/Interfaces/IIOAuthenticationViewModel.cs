@@ -1,8 +1,10 @@
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 
-public interface IIOAuthenticationViewModel : IIOBackOfficeViewModel
+public interface IIOAuthenticationViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
+where TDBContext : IODatabaseContext<TDBContext> 
 {
     #region View Model Methods
 

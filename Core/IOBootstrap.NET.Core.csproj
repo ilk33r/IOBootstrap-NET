@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\IOBootstrap.NET.Common.csproj" />
+    <ProjectReference Include="..\DataAccess\IOBootstrap.NET.DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Sendgrid" Version="9.25.3" />

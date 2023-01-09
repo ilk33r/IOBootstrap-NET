@@ -7,19 +7,23 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Configuration;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.Controllers
 {
     [IOBackoffice]
-    public class IOBackOfficeConfigurationsController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOBackOfficeConfigurationsViewModel, new()
+    public class IOBackOfficeConfigurationsController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     {
         
         #region Controller Lifecycle
 
         public IOBackOfficeConfigurationsController(IConfiguration configuration, 
                                                     IWebHostEnvironment environment, 
-                                                    ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                                    ILogger<IOLoggerType> logger,
+                                                    TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

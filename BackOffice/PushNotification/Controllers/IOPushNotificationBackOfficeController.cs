@@ -7,19 +7,23 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 {
     [IOBackoffice]
-    public class IOPushNotificationBackOfficeController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IOPushNotificationBackOfficeViewModel, new()
+    public class IOPushNotificationBackOfficeController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     {
 
 		#region Initialization Methods
 
         public IOPushNotificationBackOfficeController(IConfiguration configuration, 
                                                       IWebHostEnvironment environment, 
-                                                      ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                                      ILogger<IOLoggerType> logger,
+                                                      TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 
@@ -28,7 +32,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
         #region Back Office Methods
 
         [IOUserRole(UserRoles.User)]
-        [HttpGet]
+        [HttpGet("[action]")]
         public ListPushNotificationMessageResponseModel ListMessages()
         {
             // Obtain devices from view model
@@ -41,7 +45,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
         {
             // Send notification to all devices
@@ -53,7 +57,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers
 
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.User)]
-        [HttpPost]
+        [HttpPost("[action]")]
         public PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
         {
             ViewModel.DeleteMessage(requestModel.ID);

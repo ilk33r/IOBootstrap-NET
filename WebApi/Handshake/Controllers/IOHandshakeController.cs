@@ -6,18 +6,22 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Handshake;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers
 {
-    public class IOHandshakeController<TViewModel> : IOController<TViewModel> where TViewModel : IOHandshakeViewModel, new()
+    public class IOHandshakeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IOHandshakeViewModel<TDBContext>, new()
     {        
         #region Controller Lifecycle
 
         public IOHandshakeController(IConfiguration configuration, 
                                     IWebHostEnvironment environment, 
-                                    ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                    ILogger<IOLoggerType> logger,
+                                    TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

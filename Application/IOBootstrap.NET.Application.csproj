@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebApi\IOBootstrap.NET.WebApi.csproj" />
     <ProjectReference Include="..\BackOffice\IOBootstrap.NET.BackOffice.csproj" />
+    <ProjectReference Include="..\FunctionsApi\IOBootstrap.NET.FunctionsApi.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

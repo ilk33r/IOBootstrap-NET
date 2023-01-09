@@ -7,18 +7,22 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.WebApi.User.Controllers
 {
     [IOBackoffice]
-    public abstract class IOUserController<TViewModel> : IOBackOfficeController<TViewModel> where TViewModel : IIOUserViewModel, new()
+    public abstract class IOUserController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOUserViewModel<TDBContext>, new()
     {
         #region Controller Lifecycle
 
         protected IOUserController(IConfiguration configuration, 
                                    IWebHostEnvironment environment, 
-                                   ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                   ILogger<IOLoggerType> logger,
+                                   TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

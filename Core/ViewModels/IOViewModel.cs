@@ -5,15 +5,15 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Logger;
-using IOBootstrap.NET.Common.MWConnector;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOViewModel : IIOViewModel
+    public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Publics
@@ -29,7 +29,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public IWebHostEnvironment Environment { get; set; }
         public ILogger<IOLoggerType> Logger { get; set; }
         public HttpRequest Request { get; set; }
-        public IOMWConnectorProtocol MWConnector { get; set; }
+        public TDBContext DatabaseContext { get; set; }
 
         #endregion
 
@@ -76,19 +76,40 @@ namespace IOBootstrap.NET.Core.ViewModels
             string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
 
             // Find client
-            IOMWCheckClientRequestModel requestModel = new IOMWCheckClientRequestModel();
-            requestModel.ClientID = clientId;
-            requestModel.ClientSecret = clientSecret;
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IOMWCheckClientResponseModel clientEntity = MWConnector.Get<IOMWCheckClientResponseModel>(controller + "/" + "CheckClient", requestModel);
-            MWConnector.HandleResponse(clientEntity, code => {
+            var clientsEntity = DatabaseContext.Clients.Where((arg1) => arg1.ClientId.Equals(clientId));
+
+			// Check finded client counts is greater than zero
+			if (clientsEntity.Count() == 0)
+			{
                 // Then return invalid clients
 			    throw new IOInvalidClientException();
-            });
+			}
 
-            // Update properties
-            ClientId = clientEntity.ClientID;
-            ClientDescription = clientEntity.ClientDescription;
+            // Obtain client
+			IOClientsEntity client = clientsEntity.First();
+
+			// Check client secret
+            if (client.IsEnabled == 1 && client.ClientSecret.Equals(clientSecret))
+			{
+                // Obtain request counts
+                long requestCount = client.RequestCount + 1;
+                long maxRequestCount = client.MaxRequestCount;
+
+                // Check request counts
+                if (requestCount <= maxRequestCount)
+                {
+                    // Update request count
+                    client.RequestCount = requestCount;
+
+                    // Update properties
+                    ClientId = clientId;
+                    ClientDescription = client.ClientDescription;
+
+                    // Update client 
+                    DatabaseContext.Update(client);
+                    DatabaseContext.SaveChanges();
+                }
+			}
 		}
 
         public virtual int GetUserRole()
@@ -156,17 +177,23 @@ namespace IOBootstrap.NET.Core.ViewModels
                 return configurationModel;
             }
 
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOMWObjectResponseModel<IOConfigurationModel> configuration = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "GetConfigItem", new IOMWFindRequestModel()
+            IOConfigurationModel configuration = DatabaseContext.Configurations
+                                                                            .Select(c => new IOConfigurationModel()
+                                                                            {
+                                                                                ConfigKey = c.ConfigKey,
+                                                                                ConfigIntValue = c.ConfigIntValue,
+                                                                                ConfigStringValue = c.ConfigStringValue
+                                                                            })
+                                                                            .Where(config => config.ConfigKey.Equals(configKey))
+                                                                            .FirstOrDefault();
+
+            
+            if (configuration != null)
             {
-                Where = configKey
-            });
-            if (MWConnector.HandleResponse(configuration, code => {}))
-            {
-                cachedObject = new IOCacheObject(cacheKey, configuration.Item, 0);
+                cachedObject = new IOCacheObject(cacheKey, configuration, 0);
                 IOCache.CacheObject(cachedObject);
 
-                return configuration.Item;
+                return configuration;
             }
 
             return null;

@@ -1,10 +1,12 @@
 using IOBootstrap.NET.Common.Messages.Menu;
 using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.BackOffice.Menu.Interfaces;
 
-public interface IIOBackOfficeMenuViewModel : IIOBackOfficeViewModel
+public interface IIOBackOfficeMenuViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
+where TDBContext : IODatabaseContext<TDBContext> 
 {
     public void AddMenuItem(IOMenuAddRequestModel requestModel);
 

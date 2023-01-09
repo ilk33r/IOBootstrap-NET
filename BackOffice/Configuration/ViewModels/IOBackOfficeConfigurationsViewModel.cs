@@ -1,16 +1,17 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Configuration;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Configuration.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 {
-    public class IOBackOfficeConfigurationsViewModel : IOBackOfficeViewModel, IIOBackOfficeConfigurationsViewModel
+    public class IOBackOfficeConfigurationsViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOBackOfficeConfigurationsViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
 
         #region Initialization Methods
@@ -25,55 +26,85 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 
         public virtual void AddConfigItem(IOConfigurationAddRequestModel requestModel)
         {
-            // MW connection
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOResponseModel configurations = MWConnector.Get<IOMWListResponseModel<IOResponseModel>>(controller + "/" + "AddConfigItem", requestModel);
-            if (MWConnector.HandleResponse(configurations, code => {}))
+            // Create configuration item entity
+            IOConfigurationEntity configurationEntity = new IOConfigurationEntity()
             {
-                // Invalidate cache
-                string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
-                IOCache.InvalidateCache(cacheKey);
-            }
+                ConfigKey = requestModel.ConfigKey,
+                ConfigIntValue = requestModel.IntValue,
+                ConfigStringValue = requestModel.StrValue
+            };
+
+            // Add config entity to database
+            DatabaseContext.Add(configurationEntity);
+            DatabaseContext.SaveChanges();
+
+            // Invalidate cache
+            string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
+            IOCache.InvalidateCache(cacheKey);
         }
 
         public virtual void DeleteConfigItem(int configurationId)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            IOConfigurationEntity configuration = DatabaseContext.Configurations.Find(configurationId);
+            if (configuration != null)
             {
-                ID = configurationId
-            };
-            IOMWObjectResponseModel<IOConfigurationModel> responseModel = MWConnector.Get<IOMWObjectResponseModel<IOConfigurationModel>>(controller + "/" + "DeleteConfigItem", requestModel);
-            if (MWConnector.HandleResponse(responseModel, code => {}))
-            {
-                string cacheKey = IOCacheKeys.ConfigurationCacheKey + responseModel.Item.ConfigKey;
+                DatabaseContext.Remove(configuration);
+                DatabaseContext.SaveChanges();
+
+                IOConfigurationModel response = new IOConfigurationModel()
+                {
+                    ID = configuration.ID,
+                    ConfigKey = configuration.ConfigKey
+                };
+
+                string cacheKey = IOCacheKeys.ConfigurationCacheKey + configuration.ConfigKey;
                 IOCache.InvalidateCache(cacheKey);
             }
         }
 
         public virtual IList<IOConfigurationModel> GetConfigurations()
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOMWListResponseModel<IOConfigurationModel> configurations = MWConnector.Get<IOMWListResponseModel<IOConfigurationModel>>(controller + "/" + "ListConfigurationItems", new IOMWFindRequestModel());
-            if (MWConnector.HandleResponse(configurations, code => {}))
+            IList<IOConfigurationModel> configurations = DatabaseContext.Configurations
+                                                                            .Select(c => new IOConfigurationModel()
+                                                                            {
+                                                                                ID = c.ID,
+                                                                                ConfigKey = c.ConfigKey,
+                                                                                ConfigIntValue = c.ConfigIntValue,
+                                                                                ConfigStringValue = c.ConfigStringValue
+                                                                            })
+                                                                            .ToList();
+
+            if (configurations == null)
             {
-                return configurations.Items;
+                return new List<IOConfigurationModel>();
             }
 
-            return new List<IOConfigurationModel>();
+            return configurations;            
         }
 
         public virtual void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel)
         {
-            // MW connection
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeConfigurationControllerNameKey);
-            IOResponseModel configurations = MWConnector.Get<IOMWListResponseModel<IOResponseModel>>(controller + "/" + "UpdateConfigItem", requestModel);
-            if (MWConnector.HandleResponse(configurations, code => {}))
+            // Obtain configuration item entity
+            IOConfigurationEntity configurationEntity = DatabaseContext.Configurations.Find(requestModel.ConfigId);
+
+            // Check config is not exists
+            if (configurationEntity == null)
             {
-                // Invalidate cache
-                string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
-                IOCache.InvalidateCache(cacheKey);
+                return;
             }
+
+            // Update config item entity
+            configurationEntity.ConfigKey = requestModel.ConfigKey;
+            configurationEntity.ConfigIntValue = requestModel.IntValue;
+            configurationEntity.ConfigStringValue = requestModel.StrValue;
+
+            // Add menu entity to database
+            DatabaseContext.Update(configurationEntity);
+            DatabaseContext.SaveChanges();
+
+            // Invalidate cache
+            string cacheKey = IOCacheKeys.ConfigurationCacheKey + requestModel.ConfigKey;
+            IOCache.InvalidateCache(cacheKey);
         }
 
         #endregion

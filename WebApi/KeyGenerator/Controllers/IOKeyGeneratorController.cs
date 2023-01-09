@@ -7,6 +7,7 @@ using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Mvc;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.DataAccess.Context;
 
 #if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
@@ -15,14 +16,16 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
-    public class IOKeyGeneratorController : IOController<IOKeyGeneratorViewModel>
+    public class IOKeyGeneratorController<TDBContext> : IOController<IOKeyGeneratorViewModel<TDBContext>, TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
 
         #region Controller Lifecycle
 
         public IOKeyGeneratorController(IConfiguration configuration, 
                                         IWebHostEnvironment environment,
-                                        ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                        ILogger<IOLoggerType> logger,
+                                        TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

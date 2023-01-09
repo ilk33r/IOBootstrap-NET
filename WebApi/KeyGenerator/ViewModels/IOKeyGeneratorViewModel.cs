@@ -3,6 +3,7 @@ using System.Text;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
+using IOBootstrap.NET.DataAccess.Context;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
@@ -11,7 +12,8 @@ using Org.BouncyCastle.Math;
 
 namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels
 {
-    public class IOKeyGeneratorViewModel : IOViewModel
+    public class IOKeyGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
 
         public override void CheckAuthorizationHeader()

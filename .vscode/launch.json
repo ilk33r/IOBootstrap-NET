@@ -5,27 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "IOBootstrap.Net.Default.MW.Application",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "buildIOBootstrapNetDefaultMWApplication",
-            "program": "${workspaceFolder}/Default/MWApplication/bin/Debug/net6.0/IOBootstrap.NET.Default.MW.Application.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Default/MWApplication",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:5004"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
             "name": "IOBootstrap.Net.Default.Application",
             "type": "coreclr",
             "request": "launch",

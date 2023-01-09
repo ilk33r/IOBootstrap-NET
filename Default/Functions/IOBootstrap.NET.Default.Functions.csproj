@@ -13,12 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup> 
-    <Content Include="Certificates\**" LinkBase="Certificates">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
-    </Content>
-    <None Update="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <!-- <Content Include="Certificates\**" LinkBase="Certificates"> -->
+      <!-- <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> -->
+    <!--</Content>-->
+    <!--<None Update="config.json">-->
+      <!--<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>-->
+    <!--</None>-->
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,17 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
-using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 {
-    public abstract class IOAuthenticationViewModel : IOBackOfficeViewModel, IIOAuthenticationViewModel
+    public abstract class IOAuthenticationViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOAuthenticationViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
 
         #region Initialization Methods
@@ -24,20 +26,18 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 
         public virtual Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
-            // Obtain user entity
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            IOUserEntity findedUser = DatabaseContext.Users
+                                                        .Where(u => u.UserName.Equals(userName))
+                                                        .FirstOrDefault();
+
+            if (findedUser == null)
             {
-                Where = userName
-            };
-            IOMWUserResponseModel findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserFromName", requestModel);
-            MWConnector.HandleResponse(findedUserEntity, code => {
                 // Return response
                 throw new IOInvalidCredentialsException();
-            });
+            }
 
 			// Check user password is wrong
-            if (!IOPasswordUtilities.VerifyPassword(password, findedUserEntity.Password))
+            if (!IOPasswordUtilities.VerifyPassword(password, findedUser.Password))
 			{
                 // Return response
                 throw new IOInvalidCredentialsException();
@@ -47,7 +47,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             string userTokenString = IORandomUtilities.GenerateGUIDString();
 
 			// Create decrypted user token string
-			string decryptedUserToken = String.Format("{0},{1}", findedUserEntity.ID, userTokenString);
+			string decryptedUserToken = String.Format("{0},{1}", findedUser.ID, userTokenString);
 
 			// Convert key and iv to byte array
 			byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
@@ -64,20 +64,14 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 			int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
 			// Update entity properties
-            IOMWUpdateTokenRequestModel updatedUser = new IOMWUpdateTokenRequestModel()
-            {
-                ID = findedUserEntity.ID,
-                UserToken = userTokenString,
-                TokenDate = tokenDate
-            };
-			IOResponseModel tokenResponse = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateUserToken", updatedUser);
-            MWConnector.HandleResponse(tokenResponse, code => {
-                // Return response
-                throw new IOInvalidCredentialsException();
-            });
+            findedUser.UserToken = userTokenString;
+            findedUser.TokenDate = tokenDate;
+            
+            DatabaseContext.Update(findedUser);
+            DatabaseContext.SaveChanges();
 
             // Return response
-            return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUserEntity.UserName, findedUserEntity.UserRole);
+            return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUser.UserName, findedUser.UserRole);
         }
 
         public virtual Tuple<DateTimeOffset, string, int> CheckToken(string token)
@@ -85,30 +79,36 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             // Parse token data
             Tuple<string, int> tokenData = ParseToken(token);
 
-            // Obtain user entity from database
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            IOUserInfoModel findedUser = DatabaseContext.Users
+                                                        .Select(u => new IOUserInfoModel()
+                                                        {
+                                                            ID = u.ID,
+                                                            Password = u.Password,
+                                                            UserName = u.UserName,
+                                                            UserRole = u.UserRole,
+                                                            UserToken = u.UserToken,
+                                                            TokenDate = u.TokenDate
+                                                        })
+                                                        .Where(u => u.ID == tokenData.Item2)
+                                                        .FirstOrDefault();
+
+            if (findedUser == null)
             {
-                ID = tokenData.Item2
-            };
-            IOMWUserResponseModel findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
-            MWConnector.HandleResponse(findedUserEntity, code => {
-                // Return response
                 throw new IOInvalidCredentialsException();
-            });
+            }
 
             // Obtain token life from configuration
             int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
             // Calculate token end seconds and current seconds
             long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
-            long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(findedUserEntity.TokenDate.DateTime) + tokenLife;
+            long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(findedUser.TokenDate.DateTime) + tokenLife;
 
             // Compare user token
-            if (findedUserEntity.UserToken != null && currentSeconds < tokenEndSeconds && findedUserEntity.UserToken.Equals(tokenData.Item1))
+            if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
             {
                 // Return status
-                return new Tuple<DateTimeOffset, string, int>(findedUserEntity.TokenDate.DateTime, findedUserEntity.UserName, findedUserEntity.UserRole);
+                return new Tuple<DateTimeOffset, string, int>(findedUser.TokenDate.DateTime, findedUser.UserName, findedUser.UserRole);
             }
 
             // Return status

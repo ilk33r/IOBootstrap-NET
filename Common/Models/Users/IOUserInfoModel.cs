@@ -9,6 +9,7 @@ namespace IOBootstrap.NET.Common.Models.Users
 		#region Properties
 
 		public int ID { get; set; }
+		public string Password { get; set; }
 		public string UserName { get; set; }
 		public int UserRole { get; set; }
 		public string UserToken { get; set; }

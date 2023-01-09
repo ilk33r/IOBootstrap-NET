@@ -1,16 +1,15 @@
 ﻿using System;
-using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.MW;
-using IOBootstrap.NET.Common.Constants;
-using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Menu;
 using IOBootstrap.NET.Common.Models.Menu;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Menu.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 {
-    public class IOBackOfficeMenuViewModel : IOBackOfficeViewModel, IIOBackOfficeMenuViewModel
+    public class IOBackOfficeMenuViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOBackOfficeMenuViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext> 
     {
 
         #region Initialization Methods
@@ -25,52 +24,111 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
 
         public void AddMenuItem(IOMenuAddRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "AddMenuItem", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                // Return response
-                throw new IOMWConnectionException();
-            });
+            // Create menu item entity
+            IOMenuEntity menuEntity = new IOMenuEntity()
+            {
+                Action = requestModel.Action,
+                CssClass = requestModel.CssClass,
+                Name = requestModel.Name,
+                MenuOrder = requestModel.MenuOrder,
+                RequiredRole = requestModel.RequiredRole,
+                ParentEntityID = null
+            };
+
+            // Check parent entity defined
+            if (requestModel.ParentEntityID != null && requestModel.ParentEntityID != 0)
+            {
+                menuEntity.ParentEntityID = requestModel.ParentEntityID;
+            }
+
+            // Add menu entity to database
+            DatabaseContext.Add(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public void DeleteMenuItem(int menuId)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            // Obtain menu item entity
+            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(menuId);
+
+            // Check menu is not exists
+            if (menuEntity == null)
             {
-                ID = menuId
-            };
-            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteMenuItem", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                // Return response
-                throw new IOMWConnectionException();
-            });
+                return;
+            }
+
+            // Add menu entity to database
+            DatabaseContext.Remove(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         public IList<IOMenuListModel> GetMenuTree(int requiredRole)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
+            List<IOMenuListModel> menuTree = DatabaseContext.Menu
+                                                                .Select(m => new IOMenuListModel()
+                                                                {
+                                                                    ID = m.ID,
+                                                                    MenuOrder = m.MenuOrder,
+                                                                    RequiredRole = m.RequiredRole,
+                                                                    Action = m.Action,
+                                                                    CssClass = m.CssClass,
+                                                                    Name = m.Name,
+                                                                    ParentEntityID = m.ParentEntityID,
+                                                                    ChildItems = DatabaseContext.Menu
+                                                                                                    .Select(cm => new IOMenuListModel()
+                                                                                                    {
+                                                                                                        ID = cm.ID,
+                                                                                                        MenuOrder = cm.MenuOrder,
+                                                                                                        RequiredRole = cm.RequiredRole,
+                                                                                                        Action = cm.Action,
+                                                                                                        CssClass = cm.CssClass,
+                                                                                                        Name = cm.Name,
+                                                                                                        ParentEntityID = cm.ParentEntityID,
+                                                                                                    })
+                                                                                                    .Where(cm => cm.RequiredRole >= requiredRole && cm.ParentEntityID == m.ID)
+                                                                                                    .OrderBy(cm => cm.MenuOrder)
+                                                                                                    .ToList()
+                                                                })
+                                                                .Where(m => m.RequiredRole >= requiredRole && m.ParentEntityID == null)
+                                                                .OrderBy(m => m.MenuOrder)
+                                                                .ToList();
+
+            if (menuTree == null)
             {
-                ID = requiredRole
-            };
-            IOMWListResponseModel<IOMenuListModel> menuTreeResponse = MWConnector.Get<IOMWListResponseModel<IOMenuListModel>>(controller + "/" + "GetMenuTree", requestModel);
-            if (MWConnector.HandleResponse(menuTreeResponse, code => {}))
-            {
-                return menuTreeResponse.Items;
+                return new List<IOMenuListModel>();
             }
 
-            return new List<IOMenuListModel>();
+            return menuTree;
         }
 
         public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeMenuControllerNameKey);
-            IOResponseModel response = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateMenuItem", requestModel);
-            MWConnector.HandleResponse(response, code => {
-                // Return response
-                throw new IOMWConnectionException();
-            });
+            // Obtain menu item entity
+            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(requestModel.ID);
+
+            // Check menu is not exists
+            if (menuEntity == null)
+            {
+                return;
+            }
+
+            // Update menu item entity
+            menuEntity.Action = requestModel.Action;
+            menuEntity.CssClass = requestModel.CssClass;
+            menuEntity.Name = requestModel.Name;
+            menuEntity.MenuOrder = requestModel.MenuOrder;
+            menuEntity.RequiredRole = requestModel.RequiredRole;
+            menuEntity.ParentEntityID = null;
+
+            // Check parent entity defined
+            if (requestModel.ParentEntityID != null && requestModel.ParentEntityID != 0)
+            {
+                menuEntity.ParentEntityID = requestModel.ParentEntityID;
+            }
+
+            // Add menu entity to database
+            DatabaseContext.Update(menuEntity);
+            DatabaseContext.SaveChanges();
         }
 
         #endregion

@@ -5,7 +5,7 @@ using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Firebase;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.MW;
+using IOBootstrap.NET.Common.Messages.FN;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Models.Firebase;
 using IOBootstrap.NET.Common.Models.PushNotification;
@@ -39,8 +39,8 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
         public static IList<PushNotificationMessageModel> GetPendingMessages(IOMWConnector connector, string controllerName)
         {
             string path = controllerName + "/PendingMessages";
-            IOMWListResponseModel<PushNotificationMessageModel> response = connector.Get<IOMWListResponseModel<PushNotificationMessageModel>>(path, new IOMWFindRequestModel());
-            connector.HandleResponse<IOMWListResponseModel<PushNotificationMessageModel>>(response, code => {
+            IOFNListResponseModel<PushNotificationMessageModel> response = connector.Get<IOFNListResponseModel<PushNotificationMessageModel>>(path, new IOFNFindRequestModel());
+            connector.HandleResponse<IOFNListResponseModel<PushNotificationMessageModel>>(response, code => {
                 throw new IOMWConnectionException();
             });
 
@@ -50,7 +50,7 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
         public static IList<PushNotificationDevicesModel> PrepareDevices(IOMWConnector connector, string controllerName, DeviceTypes deviceType, int messageID, int? clientID)
         {
             string path = controllerName + "/GetDevices";
-            IOMWListResponseModel<PushNotificationDevicesModel> response = connector.Get<IOMWListResponseModel<PushNotificationDevicesModel>>(path, new IOMWPushNotificationDevicesRequestModel()
+            IOFNListResponseModel<PushNotificationDevicesModel> response = connector.Get<IOFNListResponseModel<PushNotificationDevicesModel>>(path, new IOFNPushNotificationDevicesRequestModel()
             {
                 DeviceType = deviceType,
                 MessageId = messageID,
@@ -191,7 +191,7 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
         private static void UpdateDeliveredMessages(IList<PushNotificationDevicesModel> invalidDevices, IList<PushNotificationDeliveredMessageModel> deliveredMessages, IOMWConnector connector, string controllerName)
         {
             string path = controllerName + "/UpdateDeliveredMessages";
-            IOResponseModel response = connector.Get<IOResponseModel>(path, new IOMWUpdatePushNotificationDeliveredMessages()
+            IOResponseModel response = connector.Get<IOResponseModel>(path, new IOFNUpdatePushNotificationDeliveredMessages()
             {
                 InvalidDevices = invalidDevices,
                 DeliveredMessages = deliveredMessages
@@ -201,7 +201,7 @@ namespace IOBootstrap.NET.PushNotificationFunctionHelper.Utilities
         private static void SetMessageToSended(PushNotificationMessageModel message, IOMWConnector connector, string controllerName)
         {
             string path = controllerName + "/SetMessageSended";
-            IOResponseModel response = connector.Get<IOResponseModel>(path, new IOMWFindRequestModel()
+            IOResponseModel response = connector.Get<IOResponseModel>(path, new IOFNFindRequestModel()
             {
                 ID = message.ID
             });

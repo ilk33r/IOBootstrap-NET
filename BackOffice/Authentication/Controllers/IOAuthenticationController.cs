@@ -4,18 +4,22 @@ using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
 {
     [IOBackoffice]
-    public abstract class IOAuthenticationController<TViewModel> : IOController<TViewModel> where TViewModel : IIOAuthenticationViewModel, new()
+    public abstract class IOAuthenticationController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     {
         #region Controller Lifecycle
 
         protected IOAuthenticationController(IConfiguration configuration, 
                                              IWebHostEnvironment environment, 
-                                             ILogger<IOLoggerType> logger) : base(configuration, environment, logger)
+                                             ILogger<IOLoggerType> logger,
+                                             TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
         {
         }
 

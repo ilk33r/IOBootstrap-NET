@@ -1,23 +1,25 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Exceptions.Common;
-using IOBootstrap.NET.Common.Messages.MW;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Clients;
 using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Common.Models.Users;
 
 namespace IOBootstrap.NET.Core.ViewModels
 {
-    public abstract class IOBackOfficeViewModel : IOViewModel, IIOBackOfficeViewModel
+    public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext>, IIOBackOfficeViewModel<TDBContext>
+    where TDBContext : IODatabaseContext<TDBContext>
     {
 
         #region Publics
 
-        public IOMWUserResponseModel UserModel  { get; set; }
+        public IOUserInfoModel UserModel  { get; set; }
 
         #endregion
 
@@ -33,48 +35,93 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         public virtual IOClientInfoModel CreateClient(IOClientAddRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IOMWObjectResponseModel<IOClientInfoModel> client = MWConnector.Get<IOMWObjectResponseModel<IOClientInfoModel>>(controller + "/" + "AddClient", requestModel);
-            MWConnector.HandleResponse(client, code => {
-                throw new IOMWConnectionException();
-            });
+            // Create a client entity
+            IOClientsEntity clientEntity = new IOClientsEntity()
+            {
+                ClientId = IORandomUtilities.GenerateGUIDString(),
+                ClientSecret = IORandomUtilities.GenerateGUIDString(),
+                ClientDescription = requestModel.ClientDescription,
+                IsEnabled = 1,
+                RequestCount = 0,
+                MaxRequestCount = requestModel.RequestCount
+            };
+
+            // Write client to database
+            DatabaseContext.Clients.Add(clientEntity);
+            DatabaseContext.SaveChanges();
 
             // Create and return client info
-            return client.Item;
+            return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, clientEntity.MaxRequestCount);
         }
 
         public void DeleteClient(IOClientDeleteRequestModel requestModel)
         {
-            // Obtain client entity
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IOResponseModel deletedClient = MWConnector.Get<IOResponseModel>(controller + "/" + "DeleteClient", requestModel);
-            MWConnector.HandleResponse(deletedClient, code => {
-                // Return response
+            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
+
+            // Check client entity is not null
+            if (clientEntity == null)
+            {
                 throw new IOInvalidClientException("Client not found.");
-            });
+            }
+
+            // Delete all entity
+            DatabaseContext.Remove(clientEntity);
+            DatabaseContext.SaveChanges();
         }
         
         public IList<IOClientInfoModel> GetClients()
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IOMWListResponseModel<IOClientInfoModel> clients = MWConnector.Get<IOMWListResponseModel<IOClientInfoModel>>(controller + "/" + "ListClients", new IOMWFindRequestModel());
-            if (MWConnector.HandleResponse(clients, code => {}))
+            // Create list for clients
+            List<IOClientInfoModel> clientInfos = new List<IOClientInfoModel>();
+
+            // Obtain clients from realm
+            var clients = DatabaseContext.Clients;
+
+            // Check clients is not null
+            if (clients != null)
             {
-                // Return clients
-                return clients.Items;
+                List<IOClientsEntity> clientsEntity = clients.ToList();
+                clientInfos = clientsEntity.ConvertAll(client =>
+                {
+                    // Create back office info model
+                    return new IOClientInfoModel(client.ID,
+                                                client.ClientId,
+                                                client.ClientSecret,
+                                                client.ClientDescription,
+                                                client.IsEnabled,
+                                                client.RequestCount,
+                                                client.MaxRequestCount);
+                });
             }
-            
-            return new List<IOClientInfoModel>();
+
+            // Return clients
+            return clientInfos;
         }
 
         public void UpdateClient(IOClientUpdateRequestModel requestModel)
         {
-            string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeControllerNameKey);
-            IOResponseModel updateClient = MWConnector.Get<IOResponseModel>(controller + "/" + "UpdateClient", requestModel);
-            MWConnector.HandleResponse(updateClient, code => {
+            // Obtain client entity
+            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
+
+            // Check client finded
+            if (clientEntity != null)
+            {
+                // Update client properties
+                clientEntity.ClientDescription = requestModel.ClientDescription;
+                clientEntity.IsEnabled = requestModel.IsEnabled;
+                clientEntity.RequestCount = requestModel.RequestCount;
+                clientEntity.MaxRequestCount = requestModel.MaxRequestCount;
+
+                // Update client
+                DatabaseContext.Update(clientEntity);
+                DatabaseContext.SaveChanges();
+
                 // Return response
-                throw new IOInvalidClientException("Client not found.");
-            });
+                return;
+            }
+
+            // Return response
+            throw new IOInvalidClientException("Client not found.");
         }
 
         public virtual bool IsBackOffice()
@@ -101,29 +148,32 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Check token data is correct
             if (tokenData.Count() > 1)
             {
+                IOUserInfoModel findedUserEntity;
+                
                 // Obtain user entity from database
-                string controller = Configuration.GetValue<string>(IOConfigurationConstants.BackOfficeAuthenticationControllerNameKey);
-                IOMWFindRequestModel requestModel = new IOMWFindRequestModel()
-                {
-                    ID = userId
-                };
-                IOMWUserResponseModel findedUserEntity;
                 string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, userId);
                 IOCacheObject userCache = IOCache.GetCachedObject(cacheKey);
+
                 if (userCache != null)
                 {
-                    findedUserEntity = (IOMWUserResponseModel)userCache.Value;
+                    findedUserEntity = (IOUserInfoModel)userCache.Value;
                 }
                 else
                 {
-                    findedUserEntity = MWConnector.Get<IOMWUserResponseModel>(controller + "/" + "FindUserById", requestModel);
-                    if (!MWConnector.HandleResponse(findedUserEntity, code => {}))
-                    {
-                        // Return is not back office
-                        return false;
-                    }
+                    findedUserEntity = DatabaseContext.Users
+                                                        .Select(u => new IOUserInfoModel()
+                                                        {
+                                                            ID = u.ID,
+                                                            Password = u.Password,
+                                                            UserName = u.UserName,
+                                                            UserRole = u.UserRole,
+                                                            UserToken = u.UserToken,
+                                                            TokenDate = u.TokenDate
+                                                        })
+                                                        .Where(u => u.ID == userId)
+                                                        .FirstOrDefault();
                 }
-
+                
                 // Check user entity is not null
                 if (findedUserEntity == null)
                 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Text.Json;
-using IOBootstrap.NET.Common.MWConnector;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
@@ -16,10 +15,13 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Controllers
 {
-    public abstract class IOController<TViewModel> : Controller where TViewModel : IIOViewModel, new()
+    public abstract class IOController<TViewModel, TDBContext> : Controller 
+    where TDBContext : IODatabaseContext<TDBContext> 
+    where TViewModel : IIOViewModel<TDBContext>, new()
     {
 
         #region Properties
@@ -36,7 +38,8 @@ namespace IOBootstrap.NET.Core.Controllers
 
         public IOController(IConfiguration configuration, 
                             IWebHostEnvironment environment,
-                            ILogger<IOLoggerType> logger)
+                            ILogger<IOLoggerType> logger,
+                            TDBContext databaseContext)
         {
             // Setup properties
             Configuration = configuration;
@@ -51,7 +54,7 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.Configuration = configuration;
             ViewModel.Environment = environment;
             ViewModel.Logger = logger;
-            ViewModel.MWConnector = new IOMWConnector(logger, configuration);
+            ViewModel.DatabaseContext = databaseContext;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

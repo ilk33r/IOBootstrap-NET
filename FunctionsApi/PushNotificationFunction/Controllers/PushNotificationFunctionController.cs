@@ -50,7 +50,8 @@ namespace IOBootstrap.NET.FunctionsApi.PushNotificationFunction.Controllers
         }
 
         [IORequireHTTPS]
-        [HttpPost]
+        [HttpPost("[action]")]
+        [IOUserRole(UserRoles.AnonmyMouse)]
         public IOResponseModel SetMessageSended([FromBody] IOFNFindRequestModel requestModel)
         {
             ViewModel.SetMessageSended(requestModel);

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.FunctionsApi.PushNotificationFunction.Controllers
 {
-    [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
     [ApiExplorerSettings(IgnoreApi = true)]

@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers
         #region Push Notification Methods
 
         [IOValidateRequestModel]
-        [HttpPost]
+        [HttpPost("[action]")]
         public virtual AddPushNotificationResponseModel AddPushNotificationTokenV2([FromBody] AddPushNotificationRequestModel requestModel)
         {
             // Add menu

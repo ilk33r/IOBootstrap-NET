@@ -22,6 +22,7 @@ namespace IOBootstrap.NET.Common.Cache
             if (IOCache.CacheExists(cache) < 0)
             {
                 cache.SetCacheTime();
+                IOCache.InvalidateCache(cache.GetKey());
                 IOCache.CachedObjects.Add(cache);
             }
         }

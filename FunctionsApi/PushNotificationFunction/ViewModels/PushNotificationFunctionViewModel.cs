@@ -43,7 +43,7 @@ namespace IOBootstrap.NET.FunctionsApi.PushNotificationFunction.ViewModels
                                                                                                     }
                                                                                                 })
                                                                                                 .Where(push => push.IsCompleted == 0)
-                                                                                                .OrderByDescending(push => push.NotificationDate)
+                                                                                                .OrderBy(push => push.NotificationDate)
                                                                                                 .Take(MaxLimit)
                                                                                                 .ToList();
 

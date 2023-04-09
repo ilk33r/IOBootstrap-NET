@@ -49,9 +49,12 @@ namespace IOBootstrap.NET.Common.Cache
         {
             IOCache.InitializeCache();
             int index = IOCache.CachedObjects.FindIndex(obj => obj != null && obj.GetKey().Equals(key));
-            if (index >= 0)
+            if (index >= 0 && index < IOCache.CachedObjects.Count)
             {
-                IOCache.CachedObjects.RemoveAt(index);
+                try {
+                    IOCache.CachedObjects.RemoveAt(index);
+                } catch {
+                }
             }
         }
 

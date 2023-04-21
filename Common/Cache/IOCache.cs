@@ -87,7 +87,7 @@ namespace IOBootstrap.NET.Common.Cache
             long currentTimeStamp = currentTimeOffset.ToUnixTimeSeconds();
             List<int> forRemoveIndexes = new List<int>();
 
-            foreach (IOCacheObject cache in IOCache.CachedObjects)
+            foreach (IOCacheObject cache in IOCache.CachedObjects.ToList())
             {
                 if (cache == null)
                 {

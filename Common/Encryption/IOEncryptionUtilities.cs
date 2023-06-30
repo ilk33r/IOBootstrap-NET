@@ -2,6 +2,7 @@ using System;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
+using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
@@ -47,6 +48,20 @@ namespace IOBootstrap.NET.Common.Encryption
             rsaEngine.Init(false, privateKey);
             byte[] decryptedData = rsaEngine.ProcessBlock(encryptedData, 0, encryptedData.Length);
             return decryptedData;
+        }
+
+        public static bool VerifyECSignature(byte[] publicKey, byte[] plainData, byte[] signedData)
+        {
+            var curve = SecNamedCurves.GetByName("secp256r1");
+            var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
+            var point = curve.Curve.DecodePoint(publicKey);
+            ECPublicKeyParameters PublicKey = new ECPublicKeyParameters(point, domain);
+
+            ISigner signer = SignerUtilities.GetSigner("SHA256withECDSA");
+            signer.Init(false, PublicKey);
+            signer.BlockUpdate(plainData, 0, plainData.Length);
+
+            return signer.VerifySignature(signedData);
         }
     }
 }

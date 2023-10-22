@@ -1,4 +1,4 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import BreadcrumbNavigationModel from "../models/BreadcrumbNavigationModel";
 
 class BreadcrumbNavigationProps {
     

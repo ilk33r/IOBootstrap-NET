@@ -71,6 +71,7 @@ namespace IOBootstrap.NET.DataAccess.Context
             GenerateNotificationMenu(modelBuilder);
             GenerateResourceMenu(modelBuilder);
             GenerateImagesMenu(modelBuilder);
+            GenerateTemplatesMenu(modelBuilder);
             GenerateBOUser(modelBuilder);
         }
 
@@ -444,6 +445,21 @@ namespace IOBootstrap.NET.DataAccess.Context
                 ParentEntityID = 27
             };
             modelBuilder.Entity<IOMenuEntity>().HasData(imageAddEntity);
+        }
+
+        private void GenerateTemplatesMenu(ModelBuilder modelBuilder)
+        {
+            IOMenuEntity templatesEntity = new IOMenuEntity()
+            {
+                ID = 30,
+                Action = "actionGenerateBOPage",
+                CssClass = "fa-file-code",
+                Name = "Generate BO Page",
+                MenuOrder = 30,
+                RequiredRole = (int)UserRoles.SuperAdmin,
+                ParentEntityID = null
+            };
+            modelBuilder.Entity<IOMenuEntity>().HasData(templatesEntity);
         }
 
         private void GenerateBOUser(ModelBuilder modelBuilder)

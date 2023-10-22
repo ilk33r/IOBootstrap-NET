@@ -1,4 +1,4 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import BreadcrumbNavigationModel from "../models/BreadcrumbNavigationModel";
 
 type QuestionViewErrorHandler = () => void;
 type QuestionViewSuccessHandler = () => void;

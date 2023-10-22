@@ -38,7 +38,9 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
             
             if (e.originalEvent !== undefined) {
                 const originalEvent = e.originalEvent as unknown as MessageEvent;
-                weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                if (originalEvent.data.itemID !== undefined) {
+                    weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                }
 
                 const newState = new FormViewState();
                 newState.inputValue = originalEvent.data.itemValue;

@@ -25,10 +25,10 @@ namespace IOBootstrap.NET.Common.Cache
 
         public IOCacheObject(string key, Object objectValue, long cacheInterval)
         {
-            this.CacheInterval = cacheInterval;
-            this.Key = key;
-            this.Value = objectValue;
-            this.CacheID = IORandomUtilities.GenerateGUIDString();
+            CacheInterval = cacheInterval;
+            Key = key;
+            Value = objectValue;
+            CacheID = IORandomUtilities.GenerateGUIDString();
         }
 
         #endregion
@@ -37,22 +37,22 @@ namespace IOBootstrap.NET.Common.Cache
 
         public string GetCacheID()
         {
-            return this.CacheID;
+            return CacheID;
         }
 
         public long GetCacheEndTimeStamp()
         {
-            if (this.CacheInterval == 0)
+            if (CacheInterval == 0)
             {
                 return 0;
             }
 
-            return this.CacheTime + this.CacheInterval;
+            return CacheTime + CacheInterval;
         }
 
         public string GetKey()
         {
-            return this.Key;
+            return Key;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace IOBootstrap.NET.Common.Cache
         public void SetCacheTime()
         {
             DateTimeOffset timeOffset = DateTimeOffset.Now;
-            this.CacheTime = timeOffset.ToUnixTimeSeconds();
+            CacheTime = timeOffset.ToUnixTimeSeconds();
         }
 
         #endregion

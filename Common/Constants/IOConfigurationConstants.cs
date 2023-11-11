@@ -19,6 +19,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
         public static string BackofficePagePath = "IOBackofficePagePath";
         public static string CheckClientInfo = "IOCheckClientInfo";
+        public static string DataAccessAssembly = "IODataAccessAssembly";
         public static string FirebaseApiUrl = "IOFirebaseApiUrl";
         public static string FirebaseToken = "IOFirebaseToken";
         public static string EncryptionKey = "IOEncryptionKey";

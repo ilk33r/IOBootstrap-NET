@@ -99,6 +99,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
         else if (underlayingType.IsEnum)
         {
+            entityModel.EnumTypeName = underlayingType.FullName.Split(".").Last();
             entityModel.EnumType = CustomEnumTypeFromName(underlayingType.FullName);
         }
         

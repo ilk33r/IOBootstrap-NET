@@ -116,7 +116,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             {
                 entityModelProperties += "    [Required]\n";
             }
-            string itemModelData = String.Format("    public {0} {1} {{ get; set; }}\n\n", PropertyAPITypeName(item.Type), item.PropertyName);
+            string itemModelData = String.Format("    public {0} {1} {{ get; set; }}\n\n", PropertyAPITypeName(item), item.PropertyName);
             entityModelProperties += itemModelData;
         }
 
@@ -127,16 +127,16 @@ where TDBContext : IODatabaseContext<TDBContext>
         return variables;
     }
 
-    private string PropertyAPITypeName(IOBOPagePropertyType type)
+    private string PropertyAPITypeName(IOBOPageEntityModel item)
     {
-        return type switch
+        return item.Type switch
         {
             IOBOPagePropertyType.Int => "int",
             IOBOPagePropertyType.String => "string",
             IOBOPagePropertyType.Double => "double",
             IOBOPagePropertyType.Float => "float",
             IOBOPagePropertyType.DateTimeOffset => "DateTimeOffset",
-            IOBOPagePropertyType.Enum => "Enum",
+            IOBOPagePropertyType.Enum => item.EnumTypeName,
             _ => throw new ArgumentException("Input IOBOPagePropertyType is not defined."),
         };
     }

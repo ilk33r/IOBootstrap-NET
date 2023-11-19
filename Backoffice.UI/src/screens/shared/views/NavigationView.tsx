@@ -35,6 +35,7 @@ import UsersListController from "../../users/controllers/UsersListController";
 import UsersLogoutController from "../../users/controllers/UsersLogoutController";
 import UsersUpdateController from "../../users/controllers/UsersUpdateController";
 import View from "../../../presentation/views/View";
+import GenerateBOPageController from "../../generatebopage/controllers/GenerateBOPageController";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 
@@ -199,6 +200,10 @@ class NavigationView extends View<NavigationProps, NavigationState> {
             return <ImagesModifyController />
         }
 
+        if (this.state.pageHash === "actionGenerateBOPage") {
+            return <GenerateBOPageController />
+        }
+        
         return (
             <React.StrictMode>
                 <DashboardController />

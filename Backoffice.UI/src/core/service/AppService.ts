@@ -76,6 +76,55 @@ class AppService {
             errorHandler(response.message);
         });
     }
+
+    public postDownloadFile(path: string, fileName: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<BaseResponseModel>, errorHandler: AppServiceErrorHandler) {
+        const requestUrl = `${this.baseUrl}/${path}`;
+        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+
+        fetch(requestUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-IO-AUTHORIZATION': this.authorization,
+                'X-IO-AUTHORIZATION-TOKEN': (userToken == null) ? '' : userToken,
+                'X-IO-CLIENT-ID': this.clientID,
+                'X-IO-CLIENT-SECRET': this.clientSecret
+            },
+            body: JSON.stringify(request)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            // const file = window.URL.createObjectURL(blob);
+            const file = this.blobToFile(blob, fileName)
+            window.open(window.URL.createObjectURL(file), "", 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
+
+            const responseModel = new BaseResponseModel();
+            successHandler(responseModel);
+        })
+        .catch(errorData => {
+            const response = errorData as { message: string }
+            errorHandler(response.message);
+        });
+    }
+
+    private blobToFile(theBlob: Blob, fileName: string): File {
+        const fileNames = fileName.split(".");
+        const extension = fileNames[fileNames.length -1 ];
+        let contentType = theBlob.type;
+
+        if (extension === "zip") {
+            contentType = "application/zip";
+        }
+
+        return new File(
+            [theBlob as any], // cast as any
+            fileName, 
+            {
+                lastModified: new Date().getTime(),
+                type: contentType
+            }
+        )
+    }
 }
 
 export default AppService;

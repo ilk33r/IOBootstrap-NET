@@ -1,0 +1,30 @@
+using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Logger;
+using __ProjectName__.Common;
+using __ProjectName__.Core;
+using __ProjectName__.DataAccess.Context;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+
+namespace __ProjectName__.BackOffice;
+
+[IOBackoffice]
+[EnableCors]
+[Produces("application/json")]
+[ApiController]
+[Route("[controller]")]
+public class BackOffice__EntityDisplayName__Controller : BackOfficeController<BackOffice__EntityDisplayName__ViewModel>
+{
+    public BackOffice__EntityDisplayName__Controller(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, DatabaseContext databaseContext) : base(configuration, environment, logger, databaseContext)
+    {
+    }
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.Admin)]
+    [HttpPost("[action]")]
+    public BO__ListEntityDisplayName__ResponseModel Get__EntityDisplayName__([FromBody] BO__ListEntityDisplayName__RequestModel requestModel) 
+    {
+        return ViewModel.Get__EntityDisplayName__(requestModel.Start, requestModel.Count);
+    }
+}

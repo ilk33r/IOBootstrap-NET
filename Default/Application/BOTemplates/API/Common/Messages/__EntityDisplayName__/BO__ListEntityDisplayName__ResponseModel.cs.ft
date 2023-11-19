@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using __ProjectName__.Common.Messages.Base;
+
+namespace __ProjectName__.Common;
+
+public class BO__ListEntityDisplayName__ResponseModel : ResponseModel
+{
+    public int Count { get; set; }
+    public IList<BO__EntityItemName__Model> __ListEntityDisplayName__ { get; set; }
+
+    public BO__ListEntityDisplayName__ResponseModel(int count, IList<BO__EntityItemName__Model> __ListEntityName__) : base()
+    {
+        Count = count;
+        __ListEntityDisplayName__ = __ListEntityName__;
+    }
+}

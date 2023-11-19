@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 
@@ -47,7 +48,11 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         IOGenerateBOPageResponseModel response = new IOGenerateBOPageResponseModel();
         response.EntityName = entityName;
+        response.EntityDisplayName = entityName.Replace("Entity", "s");
+        response.EntityItemName = entityName.Replace("Entity", "");
         response.Properties = properties;
+        response.ListEntityDisplayName = entityName.Replace("Entity", "List");
+        response.ListEntityName = response.ListEntityDisplayName.ToLowerFirst();
 
         return response;
     }

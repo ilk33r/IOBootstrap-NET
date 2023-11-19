@@ -1,0 +1,23 @@
+using __ProjectName__.Common;
+using __ProjectName__.Core;
+
+namespace __ProjectName__.BackOffice;
+
+public class BackOffice__EntityDisplayName__ViewModel : BackOfficeViewModel
+{
+    public BO__ListEntityDisplayName__ResponseModel Get__EntityDisplayName__(int start, int count)
+    {
+        int __ListEntityDisplayName__Count = DatabaseContext.__EntityDisplayName__.Count();
+        IList<BO__EntityItemName__Model> paginated__EntityDisplayName__ = DatabaseContext.__EntityDisplayName__
+                                                    .Select(e => new BO__EntityItemName__Model()
+                                                    {
+__EntitySelectProperties__
+                                                    })
+                                                    .OrderBy(e => e.__EntityIDProperty__)
+                                                    .Skip(start)
+                                                    .Take(count)
+                                                    .ToList();
+
+        return new BO__ListEntityDisplayName__ResponseModel(__ListEntityDisplayName__Count, paginated__EntityDisplayName__);
+    }
+}

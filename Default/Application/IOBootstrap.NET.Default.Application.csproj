@@ -32,6 +32,13 @@
     <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
   
+  <ItemGroup>
+    <Content Include="BOTemplates\**" LinkBase="BOTemplates">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
+  </ItemGroup>
+
   <PropertyGroup>
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>

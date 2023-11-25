@@ -99,6 +99,22 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
             );
         }
 
+        const menuParentViewDescriptions = [
+            "Name: " + this.state.boPageDataResponse.entityDisplayName,
+            "Action: action" + this.state.boPageDataResponse.entityDisplayName,
+            "CSS Class Name: fa-circle-o"
+        ];
+
+        const menuListViewDescriptions = [
+            "Name: List " + this.state.boPageDataResponse.entityDisplayName,
+            "Action: " + this.state.boPageDataResponse.listEntityName,
+            "CSS Class Name: fa-circle-o"
+        ];
+
+        const listNavigationViewDescriptions = [
+            "import " + this.state.boPageDataResponse.listEntityDisplayName + " from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.listEntityDisplayName + "\";",
+            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.listEntityName + "\") { return <" + this.state.boPageDataResponse.listEntityDisplayName + " /> }"
+        ];
         return (
             <React.StrictMode>
                 <div className="content-wrapper">
@@ -122,6 +138,19 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
                                 </div>
                             </div>
                         </div>
+                        <div className="clearfix"></div>
+                        <CodeBlockView title="Menu"
+                            sectionTitle="Add Menu Item"
+                            descriptions={menuParentViewDescriptions} />
+
+                        <CodeBlockView title="Menu"
+                            sectionTitle="Add Menu Item"
+                            descriptions={menuListViewDescriptions} />
+
+                        <div className="clearfix"></div>
+                        <CodeBlockView title="Navigation"
+                            sectionTitle="Backoffice.UI/src/screens/shared/views/NavigationView.tsx"
+                            descriptions={listNavigationViewDescriptions} />
                     </div>
                 </div>
             </React.StrictMode>

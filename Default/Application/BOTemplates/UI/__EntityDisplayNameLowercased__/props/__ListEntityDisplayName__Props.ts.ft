@@ -1,0 +1,5 @@
+interface __ListEntityDisplayName__Props {
+
+}
+
+export default __ListEntityDisplayName__Props;

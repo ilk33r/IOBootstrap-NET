@@ -9,7 +9,6 @@ class GenerateBOPageFilesRequestModel extends BaseRequestModel {
     properties: BOPageEntityModel[];
     listEntityName: string;
     listEntityAPIPath: string;
-    listEntityAction: string;
     listEntityDisplayName: string;
 
     constructor() {
@@ -21,7 +20,6 @@ class GenerateBOPageFilesRequestModel extends BaseRequestModel {
         this.properties = [];
         this.listEntityName = "";
         this.listEntityAPIPath = "";
-        this.listEntityAction = "";
         this.listEntityDisplayName = "";
     }
 }

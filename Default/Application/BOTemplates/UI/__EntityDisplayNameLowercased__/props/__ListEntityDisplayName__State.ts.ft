@@ -1,0 +1,14 @@
+import BO__EntityItemName__Model from "../models/BO__EntityItemName__Model";
+
+class __ListEntityDisplayName__State {
+
+    count: number;
+    __ListEntityName__: BO__EntityItemName__Model[];
+
+    constructor() {
+        this.count = 0;
+        this.__ListEntityName__ = [];
+    }
+}
+
+export default __ListEntityDisplayName__State;

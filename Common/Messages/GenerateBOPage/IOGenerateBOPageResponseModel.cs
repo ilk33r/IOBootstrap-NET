@@ -11,7 +11,6 @@ public class IOGenerateBOPageResponseModel : IOResponseModel
     public IList<IOBOPageEntityModel> Properties { get; set; }
     public string ListEntityName { get; set; }
     public string ListEntityAPIPath { get; set; }
-    public string ListEntityAction { get; set; }
     public string ListEntityDisplayName { get; set; }
 
     public IOGenerateBOPageResponseModel() : base()

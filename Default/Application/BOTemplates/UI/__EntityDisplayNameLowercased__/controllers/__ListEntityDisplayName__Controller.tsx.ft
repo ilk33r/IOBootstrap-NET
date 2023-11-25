@@ -1,0 +1,102 @@
+import React from "react";
+import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import Controller from "../../../presentation/controllers/Controller";
+import ListDataItemModel from "../../shared/models/ListDataItemModel";
+import ListDataPaginationModel from "../../shared/models/ListDataPaginationModel";
+import ListView from "../../shared/views/ListView";
+import __ListEntityDisplayName__State from "../props/__ListEntityDisplayName__State";
+import __ListEntityDisplayName__Props from "../props/__ListEntityDisplayName__Props";
+import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDisplayName__RequestModel";
+import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
+__UIEnumImports__
+
+class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
+
+    private requestModel: BO__ListEntityDisplayName__RequestModel;
+
+    constructor(props: __ListEntityDisplayName__Props) {
+        super(props);
+
+        this.requestModel = new BO__ListEntityDisplayName__RequestModel();
+        this.state = new __ListEntityDisplayName__State();
+
+        this.pageChangeHandler = this.pageChangeHandler.bind(this);
+    }
+
+    private loadMembers() {
+        this.indicatorPresenter.present();
+
+        const requestPath = "__ListEntityAPIPath__";
+        const weakSelf = this;
+
+        this.service.post(requestPath, this.requestModel, function (response: BO__ListEntityDisplayName__ResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                const newState = new __ListEntityDisplayName__State();
+                newState.count = response.count;
+                newState.__ListEntityName__ = response.__ListEntityName__;
+
+                weakSelf.setState(newState);
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    public componentDidMount?(): void {
+        this.requestModel.start = 0;
+        this.requestModel.count = 25;
+        this.loadMembers();
+    }
+
+    private pageChangeHandler(start: number, length: number) {
+        this.requestModel.start = start;
+        this.requestModel.count = length;
+        this.loadMembers();
+    }
+
+    render() {
+        const navigation: BreadcrumbNavigationModel[] = [
+            BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__")
+        ];
+
+        const listDataHeaders = [
+__UIListDataHeaders__
+        ];
+
+        const items = this.state.__ListEntityName__.map(__EntityItemNameLowercased__ => {
+            const itemModel = new ListDataItemModel();
+__UIIetmListParameters__
+            itemModel.itemList = [
+__UIIetmListParameterArray__
+            ];
+
+            return itemModel;
+        });
+
+        const pagination = new ListDataPaginationModel();
+        pagination.start = this.requestModel.start;
+        pagination.length = this.requestModel.count;
+        pagination.count = this.state.count;
+        pagination.pageClickHandler = this.pageChangeHandler;
+
+        return (
+            <React.StrictMode>
+                <ListView navigation={navigation} 
+                    listDataHeaders={listDataHeaders} 
+                    items={items}
+                    resourceDelete="Delete"
+                    resourceEdit="Edit"
+                    resourceHome="Home"
+                    resourceOptions="Options"
+                    resourceSelect=""
+                    extras={null}
+                    deleteDataHandler={null}
+                    updateDataHandler={null}
+                    selectDataHandler={null}
+                    pagination={pagination} />
+            </React.StrictMode>
+        );
+    }
+}
+
+export default __ListEntityDisplayName__Controller;

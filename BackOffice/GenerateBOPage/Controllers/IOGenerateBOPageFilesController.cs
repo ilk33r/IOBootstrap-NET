@@ -47,5 +47,29 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
         return fileResult;
     }
 
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.SuperAdmin)]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> CreateUIFiles([FromBody] IOGenerateBOPageFilesRequestModel requestModel)
+    {
+        string projectDir = Environment.ContentRootPath;
+        string generatedFolderName = "GeneratedUI";
+        string generatedZipFileName = "UIFiles.zip";
+        string uiFilesPath = ViewModel.CreateUIFiles(requestModel, projectDir, generatedFolderName, generatedZipFileName);
+        byte[] result = await System.IO.File.ReadAllBytesAsync(uiFilesPath);
+
+        FileContentResult fileResult = File(result, "application/octet-stream", generatedZipFileName);
+        
+        string tempPath = Path.GetTempPath();
+        string generatedFolderPath = Path.Join(tempPath, generatedFolderName);
+
+        if (Directory.Exists(generatedFolderPath))
+        {
+            Directory.Delete(generatedFolderPath, true);
+        }
+
+        return fileResult;
+    }
+
     #endregion
 }

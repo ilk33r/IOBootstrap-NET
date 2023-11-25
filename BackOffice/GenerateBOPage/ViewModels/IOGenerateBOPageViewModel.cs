@@ -53,6 +53,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         response.Properties = properties;
         response.ListEntityDisplayName = entityName.Replace("Entity", "List");
         response.ListEntityName = response.ListEntityDisplayName.ToLowerFirst();
+        response.ListEntityAPIPath = String.Format("BackOffice{0}/Get{1}", response.EntityDisplayName, response.EntityDisplayName);
 
         return response;
     }

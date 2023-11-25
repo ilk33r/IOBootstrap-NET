@@ -23,6 +23,7 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         this.handleFormError = this.handleFormError.bind(this);
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
         this.downloadAPIFiles = this.downloadAPIFiles.bind(this);
+        this.downloadUIFiles = this.downloadUIFiles.bind(this);
     }
 
     handleFormError(errorTitle: string, errorMessage: string) {
@@ -55,6 +56,20 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         
         const weakSelf = this;
         this.service.postDownloadFile(requestPath, "APIFiles.zip", request, function () {
+            weakSelf.indicatorPresenter.dismiss();
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    downloadUIFiles(event: React.MouseEvent<HTMLButtonElement>) {
+        this.indicatorPresenter.present();
+
+        const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateUIFiles`;
+        const request = this.createRequest();
+        
+        const weakSelf = this;
+        this.service.postDownloadFile(requestPath, "UIFiles.zip", request, function () {
             weakSelf.indicatorPresenter.dismiss();
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
@@ -102,7 +117,7 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
                                         <button type="button" onClick={this.downloadAPIFiles} className="btn btn-success btn-flat">Download API Files</button>
                                     </div>
                                     <div className="col-md-3">
-                                        <button type="button" className="btn btn-success btn-flat">Download UI Files</button>
+                                        <button type="button" onClick={this.downloadUIFiles} className="btn btn-success btn-flat">Download UI Files</button>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +136,6 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         request.properties = this.state.boPageDataResponse?.properties ?? [];
         request.listEntityName = this.state.boPageDataResponse?.listEntityName ?? "";
         request.listEntityAPIPath = this.state.boPageDataResponse?.listEntityAPIPath ?? "";
-        request.listEntityAction = this.state.boPageDataResponse?.listEntityAction ?? "";
         request.listEntityDisplayName = this.state.boPageDataResponse?.listEntityDisplayName ?? "";
 
         return request;

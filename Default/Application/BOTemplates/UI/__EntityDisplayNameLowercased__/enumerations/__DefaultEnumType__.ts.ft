@@ -1,0 +1,14 @@
+enum __DefaultEnumType__ {
+
+__ENUM_VALUES__
+}
+
+namespace __DefaultEnumType__ {
+
+    export function get__DefaultEnumType__Name(type: __DefaultEnumType__): string {
+__ENUM_TYPE_NAMES__
+    }
+
+}
+
+export default __DefaultEnumType__;

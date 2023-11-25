@@ -1,0 +1,11 @@
+__UIEnumImports__
+
+class BO__EntityItemName__Model {
+
+__UIModelProperties__
+    constructor() {
+__UIConstructorProperties__
+    }
+}
+
+export default BO__EntityItemName__Model;

@@ -20,11 +20,8 @@ public class IOGenerateBOPageFilesRequestModel : IORequestModel
     [Required]
     public string ListEntityName { get; set; }
 
-    // [Required]
+    [Required]
     public string ListEntityAPIPath { get; set; }
-
-    // [Required]
-    public string ListEntityAction { get; set; }
 
     [Required]
     public string ListEntityDisplayName { get; set; }

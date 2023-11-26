@@ -26,4 +26,12 @@ public class IOGenerateBOPageFilesRequestModel : IORequestModel
     [Required]
     public string ListEntityDisplayName { get; set; }
 
+    [Required]
+    public string UpdateEntityName { get; set; }
+
+    [Required]
+    public string UpdateEntityAPIPath { get; set; }
+
+    [Required]
+    public string UpdateEntityDisplayName { get; set; }
 }

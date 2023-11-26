@@ -166,6 +166,9 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         request.listEntityName = this.state.boPageDataResponse?.listEntityName ?? "";
         request.listEntityAPIPath = this.state.boPageDataResponse?.listEntityAPIPath ?? "";
         request.listEntityDisplayName = this.state.boPageDataResponse?.listEntityDisplayName ?? "";
+        request.updateEntityName = this.state.boPageDataResponse?.updateEntityName ?? "";
+        request.updateEntityAPIPath = this.state.boPageDataResponse?.updateEntityAPIPath ?? "";
+        request.updateEntityDisplayName = this.state.boPageDataResponse?.updateEntityDisplayName ?? "";
 
         return request;
     }

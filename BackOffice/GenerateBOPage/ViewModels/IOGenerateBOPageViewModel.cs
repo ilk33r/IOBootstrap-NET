@@ -54,6 +54,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         response.ListEntityDisplayName = entityName.Replace("Entity", "List");
         response.ListEntityName = response.ListEntityDisplayName.ToLowerFirst();
         response.ListEntityAPIPath = String.Format("BackOffice{0}/Get{1}", response.EntityDisplayName, response.EntityDisplayName);
+        response.UpdateEntityDisplayName = entityName.Replace("Entity", "Update");
+        response.UpdateEntityName = response.UpdateEntityDisplayName.ToLowerFirst();
+        response.UpdateEntityAPIPath = String.Format("BackOffice{0}/Update{1}", response.EntityDisplayName, response.EntityItemName);
 
         return response;
     }

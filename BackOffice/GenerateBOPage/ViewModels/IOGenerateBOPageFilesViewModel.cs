@@ -146,11 +146,15 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__ListEntityName__", requestModel.ListEntityName);
         variables.Add("__EntityItemName__", requestModel.EntityItemName);
         variables.Add("__ListEntityAPIPath__", requestModel.ListEntityAPIPath);
+        variables.Add("__UpdateEntityDisplayName__", requestModel.UpdateEntityDisplayName);
+        variables.Add("__UpdateEntityName__", requestModel.UpdateEntityName);
+        variables.Add("__UpdateEntityAPIPath__", requestModel.UpdateEntityAPIPath);
 
         string itemNameLowercased = requestModel.EntityItemName.ToLower();
         variables.Add("__EntityItemNameLowercased__", itemNameLowercased);
 
         string entitySelectProperties = "";
+        string entityUpdateProperties = "";
         string entityModelProperties = "";
         string idPropertyName = "";
         string uiEnumImports = "";
@@ -170,9 +174,16 @@ where TDBContext : IODatabaseContext<TDBContext>
             string itemData = String.Format("                                                        {0} = e.{1},\n", item.PropertyName, item.PropertyName);
             entitySelectProperties += itemData;
 
+            entityUpdateProperties += String.Format("        {0}.{1} = requestModel.{2};\n", itemNameLowercased, item.PropertyName, item.PropertyName);
+
             if (!item.Nullable)
             {
                 entityModelProperties += "    [Required]\n";
+            }
+
+            if (item.StringLength != null)
+            {
+                entityModelProperties += String.Format("    [StringLength({0})]\n", item.StringLength);
             }
 
             string propertyAPITypeName = PropertyAPITypeName(item);
@@ -198,6 +209,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__EntitySelectProperties__", entitySelectProperties);
         variables.Add("__EntityIDProperty__", idPropertyName);
         variables.Add("__EntityModelProperties__", entityModelProperties);
+        variables.Add("__EntityUpdateProperties__", entityUpdateProperties);
         variables.Add("__UIEnumImports__", uiEnumImports);
         variables.Add("__UIModelProperties__", uiModelProperties);
         variables.Add("__UIConstructorProperties__", uiConstructorProperties);

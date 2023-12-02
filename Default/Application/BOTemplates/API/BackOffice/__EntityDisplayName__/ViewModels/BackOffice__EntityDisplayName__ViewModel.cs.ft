@@ -1,5 +1,7 @@
+using IOBootstrap.NET.Common.Exceptions.Common;
 using __ProjectName__.Common;
 using __ProjectName__.Core;
+using __ProjectName__.DataAccess.Entities;
 
 namespace __ProjectName__.BackOffice;
 
@@ -19,5 +21,16 @@ __EntitySelectProperties__
                                                     .ToList();
 
         return new BO__ListEntityDisplayName__ResponseModel(__ListEntityDisplayName__Count, paginated__EntityDisplayName__);
+    }
+
+    public void Update__EntityItemName__(BO__UpdateEntityDisplayName__RequestModel requestModel)
+    {
+        __EntityName__ __EntityItemNameLowercased__ = DatabaseContext.Find<__EntityName__>(requestModel.__EntityIDProperty__) ?? throw new IOInvalidRequestException("Item not found");
+
+        // Update item entity
+__EntityUpdateProperties__
+        // Update entity to database
+        DatabaseContext.Update(__EntityItemNameLowercased__);
+        DatabaseContext.SaveChanges();
     }
 }

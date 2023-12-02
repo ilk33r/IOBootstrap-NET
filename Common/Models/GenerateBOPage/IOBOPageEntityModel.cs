@@ -8,6 +8,7 @@ public class IOBOPageEntityModel : IOModel
     public string PropertyJsonKey { get; set; }
     public IOBOPagePropertyType Type { get; set; }
     public bool Nullable { get; set; }
+    public int? StringLength { get; set; }
     public string EnumTypeName { get; set; }
     public IList<IOBOPageEntityCustomEnumTypeModel> EnumType { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common;
@@ -93,7 +94,12 @@ where TDBContext : IODatabaseContext<TDBContext>
             if (propertyAttribute.AttributeType.Name.Contains("Required"))
             {
                 entityModel.Nullable = false;
-                break;
+            }
+
+            if (propertyAttribute.AttributeType.Name.Contains("StringLength"))
+            {
+                StringLengthAttribute attribute = (StringLengthAttribute)member.GetCustomAttribute(propertyAttribute.AttributeType);
+                entityModel.StringLength = attribute.MaximumLength;
             }
         }
 

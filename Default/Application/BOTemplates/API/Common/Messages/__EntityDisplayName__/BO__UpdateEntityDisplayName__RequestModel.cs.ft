@@ -1,0 +1,13 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using __ProjectName__.Common.Enumerations;
+using __ProjectName__.Common.Messages.Base;
+
+namespace __ProjectName__.Common;
+
+public class BO__UpdateEntityDisplayName__RequestModel : RequestModel
+{
+
+    [Required]
+__EntityModelProperties__
+}

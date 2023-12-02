@@ -7,6 +7,7 @@ class BOPageEntityModel {
     propertyJsonKey: string;
     type: BOPagePropertyType;
     nullable: boolean;
+    stringLength: number | null;
     enumTypeName: string | null;
     enumType: BOPageEntityCustomEnumTypeModel[] | null;
 
@@ -15,6 +16,7 @@ class BOPageEntityModel {
         this.propertyJsonKey = "";
         this.type = BOPagePropertyType.String;
         this.nullable = false;
+        this.stringLength = null;
         this.enumTypeName = null;
         this.enumType = null;
     }

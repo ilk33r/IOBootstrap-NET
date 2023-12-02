@@ -2,6 +2,7 @@ using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
 using __ProjectName__.Common;
+using __ProjectName__.Common.Messages.Base;
 using __ProjectName__.Core;
 using __ProjectName__.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
@@ -26,5 +27,17 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     public BO__ListEntityDisplayName__ResponseModel Get__EntityDisplayName__([FromBody] BO__ListEntityDisplayName__RequestModel requestModel) 
     {
         return ViewModel.Get__EntityDisplayName__(requestModel.Start, requestModel.Count);
+    }
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.Admin)]
+    [HttpPost("[action]")]
+    public ResponseModel Update__EntityItemName__([FromBody] BO__UpdateEntityDisplayName__RequestModel requestModel)
+    {
+        // Add menu
+        ViewModel.Update__EntityItemName__(requestModel);
+
+        // Create and return response
+        return new ResponseModel();
     }
 }

@@ -34,8 +34,20 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     [HttpPost("[action]")]
     public ResponseModel Update__EntityItemName__([FromBody] BO__UpdateEntityDisplayName__RequestModel requestModel)
     {
-        // Add menu
+        // Update item
         ViewModel.Update__EntityItemName__(requestModel);
+
+        // Create and return response
+        return new ResponseModel();
+    }
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.Admin)]
+    [HttpPost("[action]")]
+    public ResponseModel Delete__EntityItemName__([FromBody] BO__DeleteEntityDisplayName__RequestModel requestModel)
+    {
+        // Delete item
+        ViewModel.Delete__EntityItemName__(requestModel.__EntityIDProperty__);
 
         // Create and return response
         return new ResponseModel();

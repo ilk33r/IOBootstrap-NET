@@ -13,6 +13,9 @@ class GenerateBOPageResponseModel extends BaseResponseModel {
     updateEntityName: string;
     updateEntityAPIPath: string;
     updateEntityDisplayName: string;
+    deleteEntityName: string;
+    deleteEntityAPIPath: string;
+    deleteEntityDisplayName: string;
 
     constructor() {
         super();
@@ -27,6 +30,9 @@ class GenerateBOPageResponseModel extends BaseResponseModel {
         this.updateEntityName = "";
         this.updateEntityAPIPath = "";
         this.updateEntityDisplayName = "";
+        this.deleteEntityName = "";
+        this.deleteEntityAPIPath = "";
+        this.deleteEntityDisplayName = "";
     }
 }
 

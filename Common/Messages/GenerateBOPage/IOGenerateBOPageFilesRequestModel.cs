@@ -34,4 +34,13 @@ public class IOGenerateBOPageFilesRequestModel : IORequestModel
 
     [Required]
     public string UpdateEntityDisplayName { get; set; }
+
+    [Required]
+    public string DeleteEntityName { get; set; }
+
+    [Required]
+    public string DeleteEntityAPIPath { get; set; }
+
+    [Required]
+    public string DeleteEntityDisplayName { get; set; }
 }

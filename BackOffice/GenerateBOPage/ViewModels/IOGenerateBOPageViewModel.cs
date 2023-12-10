@@ -58,6 +58,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         response.UpdateEntityDisplayName = entityName.Replace("Entity", "Update");
         response.UpdateEntityName = response.UpdateEntityDisplayName.ToLowerFirst();
         response.UpdateEntityAPIPath = String.Format("BackOffice{0}/Update{1}", response.EntityDisplayName, response.EntityItemName);
+        response.DeleteEntityDisplayName = entityName.Replace("Entity", "Delete");
+        response.DeleteEntityName = response.DeleteEntityDisplayName.ToLowerFirst();
+        response.DeleteEntityAPIPath = String.Format("BackOffice{0}/Delete{1}", response.EntityDisplayName, response.EntityItemName);
 
         return response;
     }

@@ -33,4 +33,20 @@ __EntityUpdateProperties__
         DatabaseContext.Update(__EntityItemNameLowercased__);
         DatabaseContext.SaveChanges();
     }
+
+    public void Delete__EntityItemName__(int id)
+    {
+        // Obtain item entity
+        __EntityName__? __EntityItemNameLowercased__ = DatabaseContext.Find<__EntityName__>(id);
+
+        // Check item is not exists
+        if (__EntityItemNameLowercased__ == null)
+        {
+            return;
+        }
+
+        // Remove entity
+        DatabaseContext.Remove(__EntityItemNameLowercased__);
+        DatabaseContext.SaveChanges();
+    }
 }

@@ -15,6 +15,9 @@ public class IOGenerateBOPageResponseModel : IOResponseModel
     public string UpdateEntityName { get; set; }
     public string UpdateEntityAPIPath { get; set; }
     public string UpdateEntityDisplayName { get; set; }
+    public string DeleteEntityName { get; set; }
+    public string DeleteEntityAPIPath { get; set; }
+    public string DeleteEntityDisplayName { get; set; }
 
     public IOGenerateBOPageResponseModel() : base()
     {

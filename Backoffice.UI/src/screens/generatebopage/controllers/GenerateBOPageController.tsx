@@ -212,6 +212,9 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         request.deleteEntityName = this.state.boPageDataResponse?.deleteEntityName ?? "";
         request.deleteEntityAPIPath = this.state.boPageDataResponse?.deleteEntityAPIPath ?? "";
         request.deleteEntityDisplayName = this.state.boPageDataResponse?.deleteEntityDisplayName ?? "";
+        request.createEntityName = this.state.boPageDataResponse?.createEntityName ?? "";
+        request.createEntityAPIPath = this.state.boPageDataResponse?.createEntityAPIPath ?? "";
+        request.createEntityDisplayName = this.state.boPageDataResponse?.createEntityDisplayName ?? "";
 
         return request;
     }

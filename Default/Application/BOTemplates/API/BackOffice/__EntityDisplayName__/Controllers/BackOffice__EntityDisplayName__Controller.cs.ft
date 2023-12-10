@@ -52,4 +52,16 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
         // Create and return response
         return new ResponseModel();
     }
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.Admin)]
+    [HttpPost("[action]")]
+    public ResponseModel Create__EntityItemName__([FromBody] BO__CreateEntityDisplayName__RequestModel requestModel)
+    {
+        // Create item
+        ViewModel.Create__EntityItemName__(requestModel);
+
+        // Create and return response
+        return new ResponseModel();
+    }
 }

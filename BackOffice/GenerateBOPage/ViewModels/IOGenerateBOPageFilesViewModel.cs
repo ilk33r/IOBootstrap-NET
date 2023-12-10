@@ -161,6 +161,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         string entitySelectProperties = "";
         string entityUpdateProperties = "";
+        string entityCreateProperties = "";
         string entityModelProperties = "";
         string idPropertyName = "";
         string idJsonPropertyName = "";
@@ -220,6 +221,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             else
             {
                 GenerateUIUpdateProperties(item, index, ref uiEntityUpdateProperties, ref uiEntityUpdateDateProperties, ref uiEntityUpdateFormProperties);
+                entityCreateProperties += String.Format("        {0}.{1} = requestModel.{2};\n", itemNameLowercased, item.PropertyName, item.PropertyName);
                 index += 1;
             }
         }
@@ -229,6 +231,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__EntityIDJsonProperty__", idJsonPropertyName);
         variables.Add("__EntityModelProperties__", entityModelProperties);
         variables.Add("__EntityUpdateProperties__", entityUpdateProperties);
+        variables.Add("__EntityCreateProperties__", entityCreateProperties);
         variables.Add("__UIEnumImports__", uiEnumImports);
         variables.Add("__UIModelProperties__", uiModelProperties);
         variables.Add("__UIConstructorProperties__", uiConstructorProperties);

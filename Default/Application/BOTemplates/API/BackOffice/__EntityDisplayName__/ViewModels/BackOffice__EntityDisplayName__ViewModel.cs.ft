@@ -49,4 +49,16 @@ __EntityUpdateProperties__
         DatabaseContext.Remove(__EntityItemNameLowercased__);
         DatabaseContext.SaveChanges();
     }
+
+    public void Create__EntityItemName__(BO__CreateEntityDisplayName__RequestModel requestModel)
+    {
+        __EntityName__ __EntityItemNameLowercased__ = new __EntityName__();
+
+        // Create item entity
+__EntityCreateProperties__
+
+        // Create entity to database
+        DatabaseContext.Add(__EntityItemNameLowercased__);
+        DatabaseContext.SaveChanges();
+    }
 }

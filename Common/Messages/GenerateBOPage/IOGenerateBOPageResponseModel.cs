@@ -18,6 +18,9 @@ public class IOGenerateBOPageResponseModel : IOResponseModel
     public string DeleteEntityName { get; set; }
     public string DeleteEntityAPIPath { get; set; }
     public string DeleteEntityDisplayName { get; set; }
+    public string CreateEntityName { get; set; }
+    public string CreateEntityAPIPath { get; set; }
+    public string CreateEntityDisplayName { get; set; }
 
     public IOGenerateBOPageResponseModel() : base()
     {

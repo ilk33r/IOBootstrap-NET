@@ -152,6 +152,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__DeleteEntityDisplayName__", requestModel.DeleteEntityDisplayName);
         variables.Add("__DeleteEntityName__", requestModel.DeleteEntityName);
         variables.Add("__DeleteEntityAPIPath__", requestModel.DeleteEntityAPIPath);
+        variables.Add("__CreateEntityDisplayName__", requestModel.CreateEntityDisplayName);
+        variables.Add("__CreateEntityName__", requestModel.CreateEntityName);
+        variables.Add("__CreateEntityAPIPath__", requestModel.CreateEntityAPIPath);
 
         string itemNameLowercased = requestModel.EntityItemName.ToLower();
         variables.Add("__EntityItemNameLowercased__", itemNameLowercased);

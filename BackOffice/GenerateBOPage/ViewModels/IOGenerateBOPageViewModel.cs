@@ -61,6 +61,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         response.DeleteEntityDisplayName = entityName.Replace("Entity", "Delete");
         response.DeleteEntityName = response.DeleteEntityDisplayName.ToLowerFirst();
         response.DeleteEntityAPIPath = String.Format("BackOffice{0}/Delete{1}", response.EntityDisplayName, response.EntityItemName);
+        response.CreateEntityDisplayName = entityName.Replace("Entity", "Add");
+        response.CreateEntityName = response.CreateEntityDisplayName.ToLowerFirst();
+        response.CreateEntityAPIPath = String.Format("BackOffice{0}/Create{1}", response.EntityDisplayName, response.EntityItemName);
 
         return response;
     }

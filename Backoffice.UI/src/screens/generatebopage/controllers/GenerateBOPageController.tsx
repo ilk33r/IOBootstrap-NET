@@ -111,6 +111,12 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
             "CSS Class Name: fa-circle-o"
         ];
 
+        const menuCreateViewDescriptions = [
+            "Name: Add " + this.state.boPageDataResponse.entityItemName,
+            "Action: " + this.state.boPageDataResponse.createEntityName,
+            "CSS Class Name: fa-circle-o"
+        ];
+
         const listNavigationViewDescriptions = [
             "import " + this.state.boPageDataResponse.listEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.listEntityDisplayName + "Controller\";",
             "if (this.state.pageHash === \"" + this.state.boPageDataResponse.listEntityName + "\") { return <" + this.state.boPageDataResponse.listEntityDisplayName + "Controller /> }"
@@ -120,10 +126,17 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
             "import " + this.state.boPageDataResponse.updateEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.updateEntityDisplayName + "Controller\";",
             "if (this.state.pageHash === \"" + this.state.boPageDataResponse.updateEntityName + "\") { return <" + this.state.boPageDataResponse.updateEntityDisplayName + "Controller /> }"
         ];
+
         const deleteNavigationViewDescriptions = [
             "import " + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller\";",
             "if (this.state.pageHash === \"" + this.state.boPageDataResponse.deleteEntityName + "\") { return <" + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller /> }"
         ];
+
+        const createNavigationViewDescriptions = [
+            "import " + this.state.boPageDataResponse.createEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.createEntityDisplayName + "Controller\";",
+            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.createEntityName + "\") { return <" + this.state.boPageDataResponse.createEntityDisplayName + "Controller /> }"
+        ];
+        
         return (
             <React.StrictMode>
                 <div className="content-wrapper">
@@ -157,6 +170,11 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
                             descriptions={menuListViewDescriptions} />
 
                         <div className="clearfix"></div>
+                        <CodeBlockView title="Menu"
+                            sectionTitle="Add Menu Item"
+                            descriptions={menuCreateViewDescriptions} />
+
+                        <div className="clearfix"></div>
                         <CodeBlockView title="Navigation"
                             sectionTitle="Backoffice.UI/src/screens/shared/views/NavigationView.tsx"
                             descriptions={listNavigationViewDescriptions} />
@@ -169,6 +187,10 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
                         <CodeBlockView title="Navigation"
                             sectionTitle="Backoffice.UI/src/screens/shared/views/NavigationView.tsx"
                             descriptions={deleteNavigationViewDescriptions} />
+
+                        <CodeBlockView title="Navigation"
+                            sectionTitle="Backoffice.UI/src/screens/shared/views/NavigationView.tsx"
+                            descriptions={createNavigationViewDescriptions} />
                     </div>
                 </div>
             </React.StrictMode>

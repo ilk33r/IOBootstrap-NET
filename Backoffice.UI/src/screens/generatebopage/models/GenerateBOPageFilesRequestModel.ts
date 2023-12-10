@@ -16,6 +16,9 @@ class GenerateBOPageFilesRequestModel extends BaseRequestModel {
     deleteEntityName: string;
     deleteEntityAPIPath: string;
     deleteEntityDisplayName: string;
+    createEntityName: string;
+    createEntityAPIPath: string;
+    createEntityDisplayName: string;
 
     constructor() {
         super();
@@ -33,6 +36,9 @@ class GenerateBOPageFilesRequestModel extends BaseRequestModel {
         this.deleteEntityName = "";
         this.deleteEntityAPIPath = "";
         this.deleteEntityDisplayName = "";
+        this.createEntityName = "";
+        this.createEntityAPIPath = "";
+        this.createEntityDisplayName = "";
     }
 }
 

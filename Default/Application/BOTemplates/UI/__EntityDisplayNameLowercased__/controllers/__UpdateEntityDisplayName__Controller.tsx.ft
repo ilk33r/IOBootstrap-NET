@@ -1,0 +1,94 @@
+import React from "react";
+import Controller from "../../../presentation/controllers/Controller";
+import CalloutTypes from "../../../presentation/constants/CalloutTypes";
+import FormType from "../../shared/interfaces/FormType";
+import FormView from "../../shared/views/FormView";
+import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
+import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
+import FormTypeDateProps from "../../shared/props/FormTypeDateProps";
+import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
+import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
+import BaseResponseModel from "../../../common/models/BaseResponseModel";
+import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
+__UIEnumImports__
+
+class __UpdateEntityDisplayName__Controller extends Controller<{}, {}> {
+
+    private _updateRequest: BO__UpdateEntityDisplayName__RequestModel;
+
+    constructor(props: {}) {
+        super(props);
+
+        this._updateRequest = this.appContext.objectForKey("__UpdateEntityName__Request") as BO__UpdateEntityDisplayName__RequestModel;
+        if (this._updateRequest == null) {
+            this.navigateToPage("__ListEntityName__");
+            return;
+        }
+
+        this.handleFormError = this.handleFormError.bind(this);
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    handleFormError(errorTitle: string, errorMessage: string) {
+        this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
+    }
+
+    handleFormSuccess(values: string[]) {
+        this.indicatorPresenter.present();
+
+        const requestPath = `__UpdateEntityAPIPath__`;
+        const request = new BO__UpdateEntityDisplayName__RequestModel();
+__UIEntityUpdateIDProperty__
+__UIEntityUpdateProperties__
+        const weakSelf = this;
+        this.service.post(requestPath, request, function (response: BaseResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                weakSelf.showCalloutAndRedirectToHash("__EntityItemName__ has been updated successfully.", "__ListEntityName__");
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    render() {
+        if (this._updateRequest == null) {
+            return (<React.StrictMode></React.StrictMode>);
+        }
+    
+        const navigation: BreadcrumbNavigationModel[] = [
+            BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__"),
+            BreadcrumbNavigationModel.initialize("__UpdateEntityName__", "Update __EntityItemName__")
+        ];
+
+__UIEntityUpdateDateProperties__
+        const formElements: FormType[] = [
+__UIEntityUpdateFormProperties__
+        ];
+
+        return (
+            <React.StrictMode>
+                <FormView navigation={navigation} 
+                    resourceHome="Home"
+                    title="Update a __EntityItemNameLowercased__"
+                    submitButtonName="Save"
+                    errorHandler={this.handleFormError}
+                    successHandler={this.handleFormSuccess}
+                    formElements={formElements} />
+            </React.StrictMode>
+        );
+    }
+
+    private formatDate(date: Date): string {
+        const dateMonthValue = date.getMonth() + 1;
+        const dateMonth = (dateMonthValue < 10) ? '0' + dateMonthValue.toString() : dateMonthValue.toString();
+
+        const dateDayValue = date.getDate();
+        const dateDay = (dateDayValue < 10) ? '0' + dateDayValue.toString() : dateDayValue.toString();
+
+        return date.getFullYear() + '-' + dateMonth + '-' + dateDay;        
+    }
+}
+
+export default __UpdateEntityDisplayName__Controller;

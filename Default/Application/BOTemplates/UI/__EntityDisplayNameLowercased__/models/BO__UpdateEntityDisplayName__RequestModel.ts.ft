@@ -1,0 +1,14 @@
+import BaseRequestModel from "../../../common/models/BaseRequestModel";
+__UIEnumImports__
+
+class BO__UpdateEntityDisplayName__RequestModel extends BaseRequestModel {
+
+__UIModelProperties__
+    constructor() {
+        super();
+
+__UIConstructorProperties__
+    }
+}
+
+export default BO__UpdateEntityDisplayName__RequestModel;

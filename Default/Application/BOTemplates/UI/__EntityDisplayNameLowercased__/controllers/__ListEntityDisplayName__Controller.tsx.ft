@@ -8,6 +8,7 @@ import __ListEntityDisplayName__State from "../props/__ListEntityDisplayName__St
 import __ListEntityDisplayName__Props from "../props/__ListEntityDisplayName__Props";
 import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDisplayName__RequestModel";
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
+import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
 __UIEnumImports__
 
 class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
@@ -21,6 +22,7 @@ class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplay
         this.state = new __ListEntityDisplayName__State();
 
         this.pageChangeHandler = this.pageChangeHandler.bind(this);
+        this.updateDataHandler = this.updateDataHandler.bind(this);
     }
 
     private loadMembers() {
@@ -52,6 +54,14 @@ class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplay
         this.requestModel.start = start;
         this.requestModel.count = length;
         this.loadMembers();
+    }
+
+    private updateDataHandler(index: number) {
+        const currentUser = this.state.__ListEntityName__[index];
+        const updateRequestModel = new BO__UpdateEntityDisplayName__RequestModel();
+__UIIetmListUpdateParameters__
+        this.appContext.setObjectForKey("__UpdateEntityName__Request", updateRequestModel);
+        this.navigateToPage("__UpdateEntityName__");
     }
 
     render() {
@@ -91,7 +101,7 @@ __UIIetmListParameterArray__
                     resourceSelect=""
                     extras={null}
                     deleteDataHandler={null}
-                    updateDataHandler={null}
+                    updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
                     pagination={pagination} />
             </React.StrictMode>

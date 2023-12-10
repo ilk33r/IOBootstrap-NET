@@ -163,17 +163,16 @@ where TDBContext : IODatabaseContext<TDBContext>
         string uiListDataHeaders = "";
         string uiItemListParameters = "";
         string uiItemListParameterArray = "";
+        string uiIetmListUpdateParameters = "";
+        string uiEntityUpdateIDProperty = "";
+        string uiEntityUpdateProperties = "";
+        string uiEntityUpdateDateProperties = "";
+        string uiEntityUpdateFormProperties = "";
 
+        int index = 0;
         foreach (IOBOPageEntityModel item in requestModel.Properties)
         {
-            if (item.PropertyJsonKey.Equals("id"))
-            {
-                idPropertyName = item.PropertyName;
-            }
-
-            string itemData = String.Format("                                                        {0} = e.{1},\n", item.PropertyName, item.PropertyName);
-            entitySelectProperties += itemData;
-
+            entitySelectProperties += String.Format("                                                        {0} = e.{1},\n", item.PropertyName, item.PropertyName);;
             entityUpdateProperties += String.Format("        {0}.{1} = requestModel.{2};\n", itemNameLowercased, item.PropertyName, item.PropertyName);
 
             if (!item.Nullable)
@@ -187,8 +186,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             }
 
             string propertyAPITypeName = PropertyAPITypeName(item);
-            string itemModelData = String.Format("    public {0} {1} {{ get; set; }}\n\n", propertyAPITypeName, item.PropertyName);
-            entityModelProperties += itemModelData;
+            entityModelProperties += String.Format("    public {0} {1} {{ get; set; }}\n\n", propertyAPITypeName, item.PropertyName);
 
             if (item.Type == IOBOPagePropertyType.Enum)
             {
@@ -204,6 +202,18 @@ where TDBContext : IODatabaseContext<TDBContext>
             uiListDataHeaders += String.Format("            '{0}',\n", item.PropertyName);
             uiItemListParameters += PropertyItemParameter(item, itemNameLowercased);
             uiItemListParameterArray += String.Format("                {0},\n", item.PropertyJsonKey);
+            uiIetmListUpdateParameters += String.Format("        updateRequestModel.{0} = currentUser.{1};\n", item.PropertyJsonKey, item.PropertyJsonKey);
+
+            if (item.PropertyJsonKey.Equals("id"))
+            {
+                idPropertyName = item.PropertyName;
+                uiEntityUpdateIDProperty = String.Format("        request.{0} = this._updateRequest.{1};", item.PropertyJsonKey, item.PropertyJsonKey);
+            }
+            else
+            {
+                GenerateUIUpdateProperties(item, index, ref uiEntityUpdateProperties, ref uiEntityUpdateDateProperties, ref uiEntityUpdateFormProperties);
+                index += 1;
+            }
         }
 
         variables.Add("__EntitySelectProperties__", entitySelectProperties);
@@ -216,6 +226,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__UIListDataHeaders__", uiListDataHeaders);
         variables.Add("__UIIetmListParameters__", uiItemListParameters);
         variables.Add("__UIIetmListParameterArray__", uiItemListParameterArray);
+        variables.Add("__UIIetmListUpdateParameters__", uiIetmListUpdateParameters);
+        variables.Add("__UIEntityUpdateIDProperty__", uiEntityUpdateIDProperty);
+        variables.Add("__UIEntityUpdateProperties__", uiEntityUpdateProperties);
+        variables.Add("__UIEntityUpdateDateProperties__", uiEntityUpdateDateProperties);
+        variables.Add("__UIEntityUpdateFormProperties__", uiEntityUpdateFormProperties);
 
         return variables;
     }
@@ -314,6 +329,93 @@ where TDBContext : IODatabaseContext<TDBContext>
         else
         {
             return String.Format("            const {0} = {1}.{2}{3};\n", item.PropertyJsonKey, itemNameLowercased, item.PropertyJsonKey, toStringMethod);
+        }
+    }
+
+    private void GenerateUIUpdateProperties(IOBOPageEntityModel item, int index, ref string uiEntityUpdateProperties, ref string uiEntityUpdateDateProperties, ref string uiEntityUpdateFormProperties)
+    {
+        switch (item.Type)
+        {
+            case IOBOPagePropertyType.Int:
+            uiEntityUpdateProperties += String.Format("        request.{0} = Number(values[{1}]);\n", item.PropertyJsonKey, index);
+                if (item.Nullable)
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeNumberProps.initialize(\"{0}\", (this._updateRequest.{1} ?? 0).toString(), true),\n",
+                    item.PropertyName, item.PropertyJsonKey);
+                }
+                else
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeNumberProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+                }
+                break;
+
+            case IOBOPagePropertyType.String:
+                uiEntityUpdateProperties += String.Format("        request.{0} = values[{1}];\n", item.PropertyJsonKey, index);
+                if (item.Nullable)
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", this._updateRequest.{1} ?? \"\", true),\n",
+                    item.PropertyName, item.PropertyJsonKey);
+                }
+                else
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+                }
+                break;
+
+            case IOBOPagePropertyType.Double:
+            case IOBOPagePropertyType.Float:
+                uiEntityUpdateProperties += String.Format("        request.{0} = Number(values[{1}]);\n", item.PropertyJsonKey, index);
+                if (item.Nullable)
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", (this._updateRequest.{1} ?? 0).toString(), true),\n",
+                    item.PropertyName, item.PropertyJsonKey);
+                }
+                else
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+                }
+                break;
+
+            case IOBOPagePropertyType.DateTimeOffset:
+                uiEntityUpdateProperties += String.Format("        request.{0} = values[{1}];\n", item.PropertyJsonKey, index);
+                uiEntityUpdateDateProperties += String.Format("        let {0}String = \"\";\n        if (this._updateRequest.{1} != null) {{\n            const {2} = new Date(this._updateRequest.{3});\n            {4}String = this.formatDate({5});\n        }}\n\n",
+                item.PropertyJsonKey, item.PropertyJsonKey, item.PropertyJsonKey, item.PropertyJsonKey, item.PropertyJsonKey, item.PropertyJsonKey);
+
+                if (item.Nullable)
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initialize(\"{0}\", {1}String, true),\n",
+                    item.PropertyName, item.PropertyJsonKey);
+                }
+                else
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", {1}String, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+                }
+                break;
+
+            case IOBOPagePropertyType.Enum:
+                uiEntityUpdateProperties += String.Format("        request.{0} = Number(values[{1}]);\n", item.PropertyJsonKey, index);
+                string enumCases = "";
+                foreach (IOBOPageEntityCustomEnumTypeModel enumItem in item.EnumType)
+                {
+                    enumCases += String.Format("                FormDataOptionModel.initialize({0}.get{1}Name({2}.{3}), {4}.{5}.toString()),\n",
+                    item.EnumTypeName, item.EnumTypeName, item.EnumTypeName, enumItem.Name, item.EnumTypeName, enumItem.Name);
+                }
+
+                if (item.Nullable)
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeSelectProps.initialize(\"{0}\", this._updateRequest.{1}.toString(), true, [\n{2}            ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, enumCases);
+                }
+                else
+                {
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeSelectProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [\n{2}            ], [ ValidationRequiredRule.initialize(\"{3} is required.\", \"Invalid {4}.\") ]),\n",
+                    item.PropertyName, item.PropertyJsonKey, enumCases, item.PropertyName, item.PropertyName);
+                }
+                break;
         }
     }
 

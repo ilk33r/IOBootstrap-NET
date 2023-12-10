@@ -8,6 +8,7 @@ import __ListEntityDisplayName__State from "../props/__ListEntityDisplayName__St
 import __ListEntityDisplayName__Props from "../props/__ListEntityDisplayName__Props";
 import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDisplayName__RequestModel";
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
+import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
 __UIEnumImports__
 
@@ -23,9 +24,10 @@ class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplay
 
         this.pageChangeHandler = this.pageChangeHandler.bind(this);
         this.updateDataHandler = this.updateDataHandler.bind(this);
+        this.deleteDataHandler = this.deleteDataHandler.bind(this);
     }
 
-    private loadMembers() {
+    private load__EntityDisplayName__() {
         this.indicatorPresenter.present();
 
         const requestPath = "__ListEntityAPIPath__";
@@ -47,21 +49,30 @@ class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplay
     public componentDidMount?(): void {
         this.requestModel.start = 0;
         this.requestModel.count = 25;
-        this.loadMembers();
+        this.load__EntityDisplayName__();
     }
 
     private pageChangeHandler(start: number, length: number) {
         this.requestModel.start = start;
         this.requestModel.count = length;
-        this.loadMembers();
+        this.load__EntityDisplayName__();
     }
 
     private updateDataHandler(index: number) {
-        const currentUser = this.state.__ListEntityName__[index];
+        const current__EntityItemName__ = this.state.__ListEntityName__[index];
         const updateRequestModel = new BO__UpdateEntityDisplayName__RequestModel();
 __UIIetmListUpdateParameters__
         this.appContext.setObjectForKey("__UpdateEntityName__Request", updateRequestModel);
         this.navigateToPage("__UpdateEntityName__");
+    }
+
+    private deleteDataHandler(index: number) {
+        const current__EntityItemName__ = this.state.__ListEntityName__[index];
+        const deleteRequestModel = new BO__DeleteEntityDisplayName__RequestModel();
+        deleteRequestModel.__EntityIDJsonProperty__ = current__EntityItemName__.__EntityIDJsonProperty__ ?? 0;
+        
+        this.appContext.setObjectForKey("__DeleteEntityName__Request", deleteRequestModel);
+        this.navigateToPage("__DeleteEntityName__");
     }
 
     render() {
@@ -100,7 +111,7 @@ __UIIetmListParameterArray__
                     resourceOptions="Options"
                     resourceSelect=""
                     extras={null}
-                    deleteDataHandler={null}
+                    deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
                     pagination={pagination} />

@@ -1,0 +1,14 @@
+import BaseRequestModel from "../../../common/models/BaseRequestModel";
+
+class BO__DeleteEntityDisplayName__RequestModel extends BaseRequestModel {
+
+    __EntityIDJsonProperty__: number;
+
+    constructor() {
+        super();
+        
+        this.__EntityIDJsonProperty__ = 0;
+    }
+}
+
+export default BO__DeleteEntityDisplayName__RequestModel;

@@ -160,6 +160,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string entityUpdateProperties = "";
         string entityModelProperties = "";
         string idPropertyName = "";
+        string idJsonPropertyName = "";
         string uiEnumImports = "";
         string uiModelProperties = "";
         string uiConstructorProperties = "";
@@ -205,11 +206,12 @@ where TDBContext : IODatabaseContext<TDBContext>
             uiListDataHeaders += String.Format("            '{0}',\n", item.PropertyName);
             uiItemListParameters += PropertyItemParameter(item, itemNameLowercased);
             uiItemListParameterArray += String.Format("                {0},\n", item.PropertyJsonKey);
-            uiIetmListUpdateParameters += String.Format("        updateRequestModel.{0} = currentUser.{1};\n", item.PropertyJsonKey, item.PropertyJsonKey);
+            uiIetmListUpdateParameters += String.Format("        updateRequestModel.{0} = current{1}.{2};\n", item.PropertyJsonKey, requestModel.EntityItemName, item.PropertyJsonKey);
 
             if (item.PropertyJsonKey.Equals("id"))
             {
                 idPropertyName = item.PropertyName;
+                idJsonPropertyName = item.PropertyJsonKey;
                 uiEntityUpdateIDProperty = String.Format("        request.{0} = this._updateRequest.{1};", item.PropertyJsonKey, item.PropertyJsonKey);
             }
             else
@@ -221,6 +223,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         variables.Add("__EntitySelectProperties__", entitySelectProperties);
         variables.Add("__EntityIDProperty__", idPropertyName);
+        variables.Add("__EntityIDJsonProperty__", idJsonPropertyName);
         variables.Add("__EntityModelProperties__", entityModelProperties);
         variables.Add("__EntityUpdateProperties__", entityUpdateProperties);
         variables.Add("__UIEnumImports__", uiEnumImports);

@@ -1,0 +1,70 @@
+import BaseResponseModel from "../../../common/models/BaseResponseModel";
+import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import Controller from "../../../presentation/controllers/Controller";
+import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
+import QuestionView from "../../shared/views/QuestionView";
+import React from "react";
+
+class __DeleteEntityDisplayName__Controller extends Controller<{}, {}> {
+
+    private _deleteRequest: BO__DeleteEntityDisplayName__RequestModel;
+
+    constructor(props: {}) {
+        super(props);
+
+        this._deleteRequest = this.appContext.objectForKey("__DeleteEntityName__Request") as BO__DeleteEntityDisplayName__RequestModel;
+        if (this._deleteRequest == null) {
+            this.navigateToPage("__ListEntityName__");
+            return;
+        }
+
+        this.handleFormError = this.handleFormError.bind(this);
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    private handleFormError() {
+        this.navigateToPage("__ListEntityName__");
+    }
+
+    private handleFormSuccess() {
+        this.indicatorPresenter.present();
+
+        const requestPath = `__DeleteEntityAPIPath__`;
+        const request = new BO__DeleteEntityDisplayName__RequestModel();
+        request.__EntityIDJsonProperty__ = this._deleteRequest.__EntityIDJsonProperty__;
+
+        const weakSelf = this;
+        this.service.post(requestPath, request, function (response: BaseResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                weakSelf.showCalloutAndRedirectToHash("__EntityDisplayName__ has been deleted successfully.", "__ListEntityName__");
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    render() {
+        if (this._deleteRequest == null) {
+            return (<React.StrictMode></React.StrictMode>);
+        }
+    
+        const navigation: BreadcrumbNavigationModel[] = [
+            BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__"),
+            BreadcrumbNavigationModel.initialize("__deleteEntityName__", "Delete __EntityDisplayName__")
+        ];
+
+        return (
+            <React.StrictMode>
+                <QuestionView navigation={navigation} 
+                    resourceHome="Home"
+                    title="Delete a __EntityItemNameLowercased__"
+                    questionMessage="Are you sure want to delete this __EntityItemNameLowercased__ ?"
+                    errorHandler={this.handleFormError}
+                    successHandler={this.handleFormSuccess}
+                     />
+            </React.StrictMode>
+        );
+    }
+}
+
+export default __DeleteEntityDisplayName__Controller;

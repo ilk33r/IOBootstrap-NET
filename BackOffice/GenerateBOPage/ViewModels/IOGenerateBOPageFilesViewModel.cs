@@ -176,6 +176,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string uiEntityUpdateProperties = "";
         string uiEntityUpdateDateProperties = "";
         string uiEntityUpdateFormProperties = "";
+        string uiEntityCreateFormProperties = "";
 
         int index = 0;
         foreach (IOBOPageEntityModel item in requestModel.Properties)
@@ -220,7 +221,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             }
             else
             {
-                GenerateUIUpdateProperties(item, index, ref uiEntityUpdateProperties, ref uiEntityUpdateDateProperties, ref uiEntityUpdateFormProperties);
+                GenerateUIUpdateProperties(item, index, ref uiEntityUpdateProperties, ref uiEntityUpdateDateProperties, ref uiEntityUpdateFormProperties, ref uiEntityCreateFormProperties);
                 entityCreateProperties += String.Format("        {0}.{1} = requestModel.{2};\n", itemNameLowercased, item.PropertyName, item.PropertyName);
                 index += 1;
             }
@@ -243,6 +244,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         variables.Add("__UIEntityUpdateProperties__", uiEntityUpdateProperties);
         variables.Add("__UIEntityUpdateDateProperties__", uiEntityUpdateDateProperties);
         variables.Add("__UIEntityUpdateFormProperties__", uiEntityUpdateFormProperties);
+        variables.Add("__UIEntityCreateFormProperties__", uiEntityCreateFormProperties);
 
         return variables;
     }
@@ -344,7 +346,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
     }
 
-    private void GenerateUIUpdateProperties(IOBOPageEntityModel item, int index, ref string uiEntityUpdateProperties, ref string uiEntityUpdateDateProperties, ref string uiEntityUpdateFormProperties)
+    private void GenerateUIUpdateProperties(IOBOPageEntityModel item, int index, ref string uiEntityUpdateProperties, ref string uiEntityUpdateDateProperties, ref string uiEntityUpdateFormProperties, ref string uiEntityCreateFormProperties)
     {
         switch (item.Type)
         {
@@ -354,11 +356,17 @@ where TDBContext : IODatabaseContext<TDBContext>
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeNumberProps.initialize(\"{0}\", (this._updateRequest.{1} ?? 0).toString(), true),\n",
                     item.PropertyName, item.PropertyJsonKey);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeNumberProps.initialize(\"{0}\", \"\", true),\n",
+                    item.PropertyName);
                 }
                 else
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeNumberProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeNumberProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
+                    item.PropertyName, item.PropertyName, item.PropertyName);
                 }
                 break;
 
@@ -368,11 +376,17 @@ where TDBContext : IODatabaseContext<TDBContext>
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", this._updateRequest.{1} ?? \"\", true),\n",
                     item.PropertyName, item.PropertyJsonKey);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", \"\", true),\n",
+                    item.PropertyName);
                 }
                 else
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
+                    item.PropertyName, item.PropertyName, item.PropertyName);
                 }
                 break;
 
@@ -383,11 +397,17 @@ where TDBContext : IODatabaseContext<TDBContext>
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", (this._updateRequest.{1} ?? 0).toString(), true),\n",
                     item.PropertyName, item.PropertyJsonKey);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeTextProps.initialize(\"{0}\", \"\", true),\n",
+                    item.PropertyName);
                 }
                 else
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeTextProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
+                    item.PropertyName, item.PropertyName, item.PropertyName);
                 }
                 break;
 
@@ -400,11 +420,17 @@ where TDBContext : IODatabaseContext<TDBContext>
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initialize(\"{0}\", {1}String, true),\n",
                     item.PropertyName, item.PropertyJsonKey);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeDateProps.initialize(\"{0}\", \"\", true),\n",
+                    item.PropertyName);
                 }
                 else
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", {1}String, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
+                    item.PropertyName, item.PropertyName, item.PropertyName);
                 }
                 break;
 
@@ -417,15 +443,23 @@ where TDBContext : IODatabaseContext<TDBContext>
                     item.EnumTypeName, item.EnumTypeName, item.EnumTypeName, enumItem.Name, item.EnumTypeName, enumItem.Name);
                 }
 
+                string firstEnumCase = String.Format("{0}.{1}.toString()",
+                item.EnumTypeName, item.EnumType.First().Name);
                 if (item.Nullable)
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeSelectProps.initialize(\"{0}\", this._updateRequest.{1}.toString(), true, [\n{2}            ]),\n",
                     item.PropertyName, item.PropertyJsonKey, enumCases);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeSelectProps.initialize(\"{0}\", {1}, true, [\n{2}            ]),\n",
+                    item.PropertyName, firstEnumCase, enumCases);
                 }
                 else
                 {
                     uiEntityUpdateFormProperties += String.Format("            FormTypeSelectProps.initializeWithValidations(\"{0}\", this._updateRequest.{1}.toString(), true, [\n{2}            ], [ ValidationRequiredRule.initialize(\"{3} is required.\", \"Invalid {4}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, enumCases, item.PropertyName, item.PropertyName);
+
+                    uiEntityCreateFormProperties += String.Format("            FormTypeSelectProps.initializeWithValidations(\"{0}\", {1}, true, [\n{2}            ], [ ValidationRequiredRule.initialize(\"{3} is required.\", \"Invalid {4}.\") ]),\n",
+                    item.PropertyName, firstEnumCase, enumCases, item.PropertyName, item.PropertyName);
                 }
                 break;
         }

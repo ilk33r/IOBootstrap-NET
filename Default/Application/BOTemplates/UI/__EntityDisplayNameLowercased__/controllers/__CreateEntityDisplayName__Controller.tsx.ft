@@ -1,0 +1,71 @@
+import React from "react";
+import Controller from "../../../presentation/controllers/Controller";
+import CalloutTypes from "../../../presentation/constants/CalloutTypes";
+import FormType from "../../shared/interfaces/FormType";
+import FormView from "../../shared/views/FormView";
+import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
+import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
+import FormTypeDateProps from "../../shared/props/FormTypeDateProps";
+import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
+import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
+import BaseResponseModel from "../../../common/models/BaseResponseModel";
+import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
+__UIEnumImports__
+
+class __CreateEntityDisplayName__Controller extends Controller<{}, {}> {
+
+    constructor(props: {}) {
+        super(props);
+
+        this.handleFormError = this.handleFormError.bind(this);
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    private handleFormError(errorTitle: string, errorMessage: string) {
+        this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
+    }
+
+    private handleFormSuccess(values: string[]) {
+        this.indicatorPresenter.present();
+
+        const requestPath = `__CreateEntityAPIPath__`;
+        const request = new BO__UpdateEntityDisplayName__RequestModel();
+        request.__EntityIDJsonProperty__ = 0;
+__UIEntityUpdateProperties__
+        const weakSelf = this;
+        this.service.post(requestPath, request, function (response: BaseResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                weakSelf.showCalloutAndRedirectToHash("__EntityItemName__ has been added successfully.", "__ListEntityName__");
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    render() {
+        const navigation: BreadcrumbNavigationModel[] = [
+            BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__"),
+            BreadcrumbNavigationModel.initialize("__CreateEntityName__", "Create __EntityItemName__")
+        ];
+
+        const formElements: FormType[] = [
+__UIEntityCreateFormProperties__
+        ];
+
+        return (
+            <React.StrictMode>
+                <FormView navigation={navigation} 
+                    resourceHome="Home"
+                    title="Create a __EntityItemNameLowercased__"
+                    submitButtonName="Save"
+                    errorHandler={this.handleFormError}
+                    successHandler={this.handleFormSuccess}
+                    formElements={formElements} />
+            </React.StrictMode>
+        );
+    }
+}
+
+export default __CreateEntityDisplayName__Controller;

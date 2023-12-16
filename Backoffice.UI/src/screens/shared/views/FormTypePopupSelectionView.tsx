@@ -31,15 +31,15 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
 
     componentDidMount?() {
         const weakSelf = this;
-        $(window).on("message", function (e) {
-            if (weakSelf._openedWindow !== null) {
-                weakSelf._openedWindow.close();
-            }
-            
+        $(window).on("message", function (e) {            
             if (e.originalEvent !== undefined) {
                 const originalEvent = e.originalEvent as unknown as MessageEvent;
                 if (originalEvent.data.itemID !== undefined) {
                     weakSelf._formSelectedItemId = originalEvent.data.itemID;
+
+                    if (weakSelf._openedWindow !== null) {
+                        weakSelf._openedWindow.close();
+                    }
                 }
 
                 const newState = new FormViewState();

@@ -354,11 +354,12 @@ namespace IOBootstrap.NET.Core.Controllers
             string detailedMessage = "";
             if (ModelState.Values.Count() > 0)
             {
-                ModelStateEntry entry = ModelState.Values.First();
-                
-                if (entry.Errors.Count() > 0)
+                foreach (ModelStateEntry entry in ModelState.Values)
                 {
-                    detailedMessage = entry.Errors.First().ErrorMessage;
+                    if (entry.Errors.Count() > 0)
+                    {
+                        detailedMessage += entry.Errors.First().ErrorMessage + " - ";
+                    }
                 }
             }
             

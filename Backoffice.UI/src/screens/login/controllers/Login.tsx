@@ -4,6 +4,7 @@ import CommonConstants from '../../../common/constants/CommonConstants';
 import Controller from '../../../presentation/controllers/Controller';
 import LoginProps from '../props/LoginProps';
 import LoginState from '../props/LoginState';
+import React from 'react';
 
 class Login extends Controller<LoginProps, LoginState> {
 
@@ -81,43 +82,45 @@ class Login extends Controller<LoginProps, LoginState> {
     public render() {
         const formGroupErrorClass = (this.state.errorMessage.length > 0) ? "form-group has-error" : "form-group";
         return (
-            <div className="content-wrapper">
-                <section className="content">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="box box-info">
-                                <div className="box-header with-border">
-                                    <h3 className="box-title">{process.env.REACT_APP_APP_NAME} Backoffice</h3>
+            <React.StrictMode>
+                <div className="content-wrapper">
+                    <section className="content">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="box box-info">
+                                    <div className="box-header with-border">
+                                        <h3 className="box-title">{process.env.REACT_APP_APP_NAME} Backoffice</h3>
+                                    </div>
+                                    <form className="form-horizontal" id="loginForm" onSubmit={this.handleLogin}>
+                                        <div className="box-body">
+                                            <div className={formGroupErrorClass}>
+                                                <label htmlFor="inputEmail3" className="col-sm-2 control-label">User Name</label>
+                                                <div className="col-sm-10">
+                                                    <input type="text" className="form-control" id="inputEmail3" placeholder="User Name" value={this.state.userName} onChange={this.handleUserNameChange} />
+                                                </div>
+                                            </div>
+                                            <div className={formGroupErrorClass}>
+                                                <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
+                                                <div className="col-sm-10">
+                                                    <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
+                                                </div>
+                                            </div>
+                                            <div className={formGroupErrorClass}>
+                                                <div className="col-sm-10">
+                                                    <span className="help-block">{this.state.errorMessage}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="box-footer">
+                                            <button type="submit" className="btn btn-info pull-right">Sign in</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <form className="form-horizontal" id="loginForm" onSubmit={this.handleLogin}>
-                                    <div className="box-body">
-                                        <div className={formGroupErrorClass}>
-                                            <label htmlFor="inputEmail3" className="col-sm-2 control-label">User Name</label>
-                                            <div className="col-sm-10">
-                                                <input type="text" className="form-control" id="inputEmail3" placeholder="User Name" value={this.state.userName} onChange={this.handleUserNameChange} />
-                                            </div>
-                                        </div>
-                                        <div className={formGroupErrorClass}>
-                                            <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
-                                            <div className="col-sm-10">
-                                                <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
-                                            </div>
-                                        </div>
-                                        <div className={formGroupErrorClass}>
-                                            <div className="col-sm-10">
-                                                <span className="help-block">{this.state.errorMessage}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="box-footer">
-                                        <button type="submit" className="btn btn-info pull-right">Sign in</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
+                    </section>
+                </div>
+            </React.StrictMode>
           );
     }
 }

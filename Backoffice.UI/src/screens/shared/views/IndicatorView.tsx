@@ -2,6 +2,7 @@ import IndicatorProps from '../props/IndicatorProps';
 import IndicatorState from '../props/IndicatorState';
 import IndicatorViewPresenter from '../../../presentation/inerfaces/IndicatorViewPresenter';
 import View from '../../../presentation/views/View';
+import React from 'react';
 
 class IndicatorView extends View<IndicatorProps, IndicatorState> implements IndicatorViewPresenter {
 
@@ -28,11 +29,13 @@ class IndicatorView extends View<IndicatorProps, IndicatorState> implements Indi
     render() {
         const indicatorClassName = (this.state.isVisible) ? "" : "hidden";
         return (
-            <div id="pageIndicator" className={indicatorClassName}>
-                <div className="overlay">
-                    <i className="fa fa-spinner fa-spin fa-3x"></i>
+            <React.StrictMode>
+                <div id="pageIndicator" className={indicatorClassName}>
+                    <div className="overlay">
+                        <i className="fa fa-spinner fa-spin fa-3x"></i>
+                    </div>
                 </div>
-          </div>
+            </React.StrictMode>
         );
     }
 }

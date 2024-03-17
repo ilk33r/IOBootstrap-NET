@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.Default.Application
 
         public override void DatabaseContextOptions(DbContextOptionsBuilder<IODatabaseContextDefaultImpl> options)
         {
-            string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey);
+            string migrationAssembly = Configuration.GetValue<string>(IOConfigurationConstants.MigrationsAssemblyKey) ?? "";
             #if DEBUG
             options.UseLoggerFactory(LoggerFactory.Create(builder =>
             {

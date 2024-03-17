@@ -12,7 +12,7 @@ using IOBootstrap.NET.DataAccess.Context;
 #if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers
 {
-    [Obsolete("This Method is Deprecated", false)]
+    // [Obsolete("This Method is Deprecated", false)]
     [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]

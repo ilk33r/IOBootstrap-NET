@@ -1,4 +1,4 @@
-import IndicatorViewPresenter from "../inerfaces/IndicatorViewPresenter";
+import type { IndicatorViewPresenter } from "../inerfaces/IndicatorViewPresenter";
 
 class IndicatorPresenter implements IndicatorViewPresenter {
 

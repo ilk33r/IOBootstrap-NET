@@ -107,6 +107,34 @@ class AppService {
         });
     }
 
+    public upload<TResponse extends BaseResponseModel>(path: string, blob: Blob, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
+        const requestUrl = `${this.baseUrl}/${path}`;
+        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+
+        const form = new FormData();
+        form.append("file", blob);
+
+        fetch(requestUrl, {
+            method: 'PUT',
+            headers: {
+                'X-IO-AUTHORIZATION': this.authorization,
+                'X-IO-AUTHORIZATION-TOKEN': (userToken == null) ? '' : userToken,
+                'X-IO-CLIENT-ID': this.clientID,
+                'X-IO-CLIENT-SECRET': this.clientSecret
+            },
+            body: form
+        })
+        .then(response => response.json())
+        .then(data => {
+            const response = data as TResponse;
+            successHandler(response);
+        })
+        .catch(errorData => {
+            const response = errorData as { message: string }
+            errorHandler(response.message);
+        });
+    }
+
     private blobToFile(theBlob: Blob, fileName: string): File {
         const fileNames = fileName.split(".");
         const extension = fileNames[fileNames.length -1 ];

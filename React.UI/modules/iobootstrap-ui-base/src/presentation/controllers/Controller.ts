@@ -4,12 +4,12 @@ import AppStorage from '../../core/storage/AppStorage';
 import BaseResponseModel from '../../common/models/BaseResponseModel';
 import CalloutPresenter from '../presenters/CalloutPresenter';
 import CalloutTypes from '../constants/CalloutTypes';
-import CalloutViewPresenter from '../inerfaces/CalloutViewPresenter';
-import DI from '../../di/DI';
+import type { CalloutViewPresenter } from '../inerfaces/CalloutViewPresenter';
+import type { DI } from '../../di/DI';
 import IndicatorPresenter from '../presenters/IndicatorPresenter';
-import IndicatorViewPresenter from '../inerfaces/IndicatorViewPresenter';
+import type { IndicatorViewPresenter } from '../inerfaces/IndicatorViewPresenter';
 import React from 'react';
-import WindowMessageModel from '../../common/models/WindowMessageModel';
+import type { WindowMessageModel } from '../../common/models/WindowMessageModel';
 
 class Controller<TProps, TState> extends React.Component<TProps, TState> implements DI {
 

@@ -1,0 +1,23 @@
+{
+    "name": "build-iobootstrap-ui",
+    "version": "0.1.0",
+    "private": true,
+    "workspaces": [
+        "modules/*"
+    ],
+    "scripts": {
+        "build": "lerna run build --scope iobootstrap-ui-base",
+        "clean": "lerna run clean --scope iobootstrap-ui-base",
+        "watch": "lerna run watch --scope iobootstrap-ui-base",
+        "package": "lerna exec --scope iobootstrap-ui-base -- npm pack"
+    },
+    "dependencies": {
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "lerna": "^8.1.2",
+        "rollup": "^4.13.0",
+        "rollup-plugin-postcss": "^4.0.2",
+        "rollup-plugin-typescript2": "^0.36.0",
+        "typescript": "^4.9.5"
+    }
+}

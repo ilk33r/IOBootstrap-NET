@@ -1,4 +1,4 @@
-import ValidationRule from "../inerfaces/ValidationRule";
+import type { ValidationRule } from "../inerfaces/ValidationRule";
 
 class ValidationMaxLengthRule implements ValidationRule {
 

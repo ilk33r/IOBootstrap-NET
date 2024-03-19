@@ -1,4 +1,4 @@
-import CalloutViewPresenter from "../inerfaces/CalloutViewPresenter";
+import type { CalloutViewPresenter } from "../inerfaces/CalloutViewPresenter";
 
 class CalloutPresenter implements CalloutViewPresenter {
 

@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import ListViewProps from "../props/ListViewProps";
 import React from "react";
-import View from "../../../presentation/views/View";
-import BreadcrumbView from "./BreadcrumbView";
+import { View } from "iobootstrap-ui-base";
 import PaginationView from "./PaginationView";
+import BreadcrumbView from "./BreadcrumbView";
 
 class ListView extends View<ListViewProps, {}> {
 

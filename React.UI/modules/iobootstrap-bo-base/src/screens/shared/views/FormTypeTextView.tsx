@@ -1,15 +1,14 @@
+import { Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
-import FormTypeSelectProps from "../props/FormTypeSelectProps";
+import FormTypeTextProps from "../props/FormTypeTextProps";
 import FormViewState from "../props/FormViewState";
-import Validatable from "../../../presentation/inerfaces/Validatable";
-import View from "../../../presentation/views/View";
 import React from "react";
 
-class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implements FormElement, Validatable {
+class FormTypeTextView extends View<FormTypeTextProps, FormViewState> implements FormElement, Validatable {
 
     private _formValue: string;
 
-    constructor(props: FormTypeSelectProps) {
+    constructor(props: FormTypeTextProps) {
         super(props);
 
         this.state = new FormViewState();
@@ -18,8 +17,12 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    public getValue(): string {
+    public getValue(): string | null {
         return this._formValue;
+    }
+
+    public getBlobValue(): Blob | null {
+        return null;
     }
 
     handleValueChange(event: { target: { value: string; }; }) {
@@ -27,10 +30,10 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
     }
 
     validate(): boolean {
-        let validated = true;
-        let errorMessage = "";
-        let errorTitle= "";
-        const weakSelf = this;
+        var validated = true;
+        var errorMessage = "";
+        var errorTitle= "";
+        let weakSelf = this;
 
         this.props.validations.forEach(rule => {
             if (!rule.validationResult(weakSelf._formValue)) {
@@ -59,19 +62,12 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
         const areaClass = (this.state.hasError) ? "form-group has-error" : "form-group";
         const errorMessageClass = (this.state.errorMessage.length > 0) ? "help-block" : "help-block hidden";
 
-        const options = this.props.options.map((option, index) => {
-            const optionKey = "formOption" + this.props.index + "-" + index;
-            return (<option value={option.value} key={optionKey}>{option.name}</option>);
-        });
-
         return(
             <React.StrictMode>
                 <div className={areaClass}>
                     <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
                     <div className="col-sm-9">
-                        <select className="form-control" onChange={this.handleValueChange} disabled={!this.props.isEnabled} defaultValue={this.props.value}>
-                            {options}
-                        </select>
+                        <input type={this.props.inputType} id={formId} className="form-control" defaultValue={this.props.value} placeholder={this.props.name} onChange={this.handleValueChange} disabled={!this.props.isEnabled} />
                         <span className={errorMessageClass}>{this.state.errorMessage}</span>
                     </div>
                 </div>
@@ -80,4 +76,4 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
     }
 }
 
-export default FormTypeSelectView;
+export default FormTypeTextView;

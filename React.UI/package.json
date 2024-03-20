@@ -6,10 +6,10 @@
         "modules/*"
     ],
     "scripts": {
-        "build": "lerna run build --scope iobootstrap-ui-base",
-        "clean": "lerna run clean --scope iobootstrap-ui-base",
-        "watch": "lerna run watch --scope iobootstrap-ui-base",
-        "package": "lerna exec --scope iobootstrap-ui-base -- npm pack"
+        "build": "lerna run build",
+        "clean": "lerna run clean",
+        "watch": "lerna run watch",
+        "package": "lerna exec -- npm pack"
     },
     "dependencies": {
         "@rollup/plugin-commonjs": "^25.0.7",

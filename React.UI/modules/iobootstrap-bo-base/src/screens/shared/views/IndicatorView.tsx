@@ -1,7 +1,6 @@
 import IndicatorProps from '../props/IndicatorProps';
 import IndicatorState from '../props/IndicatorState';
-import IndicatorViewPresenter from '../../../presentation/inerfaces/IndicatorViewPresenter';
-import View from '../../../presentation/views/View';
+import { IndicatorViewPresenter, View } from "iobootstrap-ui-base";
 import React from 'react';
 
 class IndicatorView extends View<IndicatorProps, IndicatorState> implements IndicatorViewPresenter {

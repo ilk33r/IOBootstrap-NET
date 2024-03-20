@@ -1,6 +1,6 @@
+import { View } from "iobootstrap-ui-base";
 import PaginationViewProps from "../props/PaginationViewProps";
 import PaginationViewState from "../props/PaginationViewState";
-import View from "../../../presentation/views/View";
 import React from "react";
 
 class PaginationView extends View<PaginationViewProps, PaginationViewState> {

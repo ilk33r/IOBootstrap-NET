@@ -1,8 +1,7 @@
 import CalloutProps from '../props/CalloutProps';
 import CalloutState from '../props/CalloutState';
-import CalloutViewPresenter from '../../../presentation/inerfaces/CalloutViewPresenter';
 import React from 'react';
-import View from '../../../presentation/views/View';
+import { CalloutViewPresenter, View } from 'iobootstrap-ui-base';
 
 class CalloutView extends View<CalloutProps, CalloutState> implements CalloutViewPresenter {
 

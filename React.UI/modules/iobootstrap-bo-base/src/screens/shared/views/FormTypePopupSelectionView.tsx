@@ -1,16 +1,14 @@
+import { Validatable, View, WindowMessageModel } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypePopupSelectionProps from "../props/FormTypePopupSelectionProps";
 import FormViewState from "../props/FormViewState";
-import Validatable from "../../../presentation/inerfaces/Validatable";
-import View from "../../../presentation/views/View";
 import React from "react";
-import WindowMessageModel from "../../../common/models/WindowMessageModel";
 
 type MessageEvent = { data: WindowMessageModel; };
 
 class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormViewState> implements FormElement, Validatable {
 
-    private _formValue: string;
+    // private _formValue: string;
     private _formSelectedItemId: number;
     private _openedWindow: WindowProxy | null;
 
@@ -22,7 +20,7 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
 
         this.state = newState;
 
-        this._formValue = this.props.value;
+        // this._formValue = this.props.value;
         this._formSelectedItemId = this.props.selectedItemId;
         this._openedWindow = null;
         this.handleValueChange = this.handleValueChange.bind(this);
@@ -50,12 +48,16 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
         });
     }
 
-    public getValue(): string {
+    public getValue(): string | null {
         return this._formSelectedItemId.toString();
     }
 
+    public getBlobValue(): Blob | null {
+        return null;
+    }
+
     handleValueChange(event: { target: { value: string; }; }) {
-        this._formValue = event.target.value;
+        // this._formValue = event.target.value;
     }
 
     handleInputClick(event: { preventDefault: () => void; }) {

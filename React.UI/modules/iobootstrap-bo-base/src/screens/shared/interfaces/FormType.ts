@@ -1,4 +1,4 @@
-import ValidationRule from "../../../presentation/inerfaces/ValidationRule";
+import { ValidationRule } from "iobootstrap-ui-base";
 
 interface FormType {
 

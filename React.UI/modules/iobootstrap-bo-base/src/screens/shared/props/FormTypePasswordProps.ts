@@ -1,5 +1,5 @@
+import { ValidationRule } from "iobootstrap-ui-base";
 import FormType from "../interfaces/FormType";
-import ValidationRule from "../../../presentation/inerfaces/ValidationRule";
 
 class FormTypePasswordProps implements FormType {
 

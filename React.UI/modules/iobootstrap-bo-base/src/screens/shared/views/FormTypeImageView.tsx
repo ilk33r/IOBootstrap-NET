@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
+import { Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeImageProps from "../props/FormTypeImageProps";
 import FormViewState from "../props/FormViewState";
-import Validatable from "../../../presentation/inerfaces/Validatable";
-import View from "../../../presentation/views/View";
 import React from "react";
 
 class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implements FormElement, Validatable {
 
     private _formValue: string;
-    private _fileName: string;
+    private _fileValue: Blob | null;
 
     constructor(props: FormTypeImageProps) {
         super(props);
@@ -17,13 +16,17 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         this.state = new FormViewState();
 
         this._formValue = this.props.value;
-        this._fileName = this.props.fileName;
+        this._fileValue = null;
         this.handleDeleteImage = this.handleDeleteImage.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    public getValue(): string {
-        return this._fileName + "|" + this._formValue;
+    public getValue(): string | null {
+        return null;
+    }
+
+    public getBlobValue(): Blob | null {
+        return this._fileValue;
     }
 
     handleDeleteImage(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -50,6 +53,8 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         }
 
         const selectedFile = files[0];
+        this._fileValue = selectedFile;
+        
         const fileReader = new FileReader();
         const fileType = selectedFile.type;
         const weakSelf = this;
@@ -71,7 +76,6 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
             }
 
             const b64EncodedImage = btoa(binary);
-            weakSelf._fileName = selectedFile.name;
 
             const newState = new FormViewState();
             newState.imagePreviewURL = "data:" + fileType + ";base64," + b64EncodedImage;

@@ -1,6 +1,6 @@
 import FormDataOptionModel from "../models/FormDataOptionModel";
 import FormType from "../interfaces/FormType";
-import ValidationRule from "../../../presentation/inerfaces/ValidationRule";
+import { ValidationRule } from "iobootstrap-ui-base";
 
 type FormTypeSelectViewErrorHandler = (errorTitle: string, errorMessage: string) => void;
 

@@ -1,8 +1,7 @@
+import { Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeTextAreaProps from "../props/FormTypeTextProps";
 import FormViewState from "../props/FormViewState";
-import Validatable from "../../../presentation/inerfaces/Validatable";
-import View from "../../../presentation/views/View";
 import React from "react";
 
 class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> implements FormElement, Validatable {
@@ -18,8 +17,12 @@ class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> im
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    public getValue(): string {
+    public getValue(): string | null {
         return this._formValue;
+    }
+
+    public getBlobValue(): Blob | null {
+        return null;
     }
 
     handleValueChange(event: { target: { value: string; }; }) {

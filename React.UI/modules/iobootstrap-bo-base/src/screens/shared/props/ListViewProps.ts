@@ -1,7 +1,7 @@
 import BreadcrumbNavigationModel from "../models/BreadcrumbNavigationModel";
-import ListExtrasModel from "../models/ListExtrasModel";
 import ListDataItemModel from "../models/ListDataItemModel";
 import ListDataPaginationModel from "../models/ListDataPaginationModel";
+import ListExtrasModel from "../models/ListExtrasModel";
 
 type ListViewPropsItemHandler = (index: number) => void;
 

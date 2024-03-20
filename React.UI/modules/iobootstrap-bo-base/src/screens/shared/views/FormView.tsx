@@ -1,4 +1,3 @@
-import BreadcrumbView from "./BreadcrumbView";
 import FormElement from "../interfaces/FormElement";
 import FormTypeDateProps from "../props/FormTypeDateProps";
 import FormTypeImageProps from "../props/FormTypeImageProps";
@@ -14,9 +13,9 @@ import FormTypeTextAreaView from "./FormTypeTextAreaView";
 import FormTypeTextProps from "../props/FormTypeTextProps";
 import FormTypeTextView from "./FormTypeTextView";
 import FormViewProps from "../props/FormViewProps";
-import Validatable from "../../../presentation/inerfaces/Validatable";
-import View from "../../../presentation/views/View";
 import React from "react";
+import { Validatable, View } from "iobootstrap-ui-base";
+import BreadcrumbView from "./BreadcrumbView";
 
 class FormView extends View<FormViewProps, {}> {
 
@@ -39,6 +38,7 @@ class FormView extends View<FormViewProps, {}> {
 
         let isValidated = true;
         let values: string[] = [];
+        let blobs: Blob[] = [];
 
         this._formElementsRef.forEach(formElement => {
             const validatableElement = formElement.current as Validatable;
@@ -48,11 +48,20 @@ class FormView extends View<FormViewProps, {}> {
             }
 
             const formElementType = formElement.current as FormElement;
-            values.push(formElementType.getValue());
+            const stringValue = formElementType.getValue();
+
+            if (stringValue != null) {
+                values.push(stringValue);
+            }
+
+            const blobValue = formElementType.getBlobValue();
+            if (blobValue != null) {
+                blobs.push(blobValue);
+            }
         });
 
         if (isValidated) {
-            this.props.successHandler(values);
+            this.props.successHandler(values, blobs);
         }
     }
 

@@ -1,12 +1,12 @@
+import { Controller, UICommonConstants } from 'iobootstrap-ui-base';
 import AuthenticationRequestModel from '../models/AuthenticationRequestModel';
 import AuthenticationResponseModel from '../models/AuthenticationResponseModel';
-import CommonConstants from '../../../common/constants/CommonConstants';
-import Controller from '../../../presentation/controllers/Controller';
 import LoginProps from '../props/LoginProps';
 import LoginState from '../props/LoginState';
 import React from 'react';
+import { BOCommonConstants } from 'iobootstrap-bo-base';
 
-class Login extends Controller<LoginProps, LoginState> {
+class LoginController extends Controller<LoginProps, LoginState> {
 
     constructor(props: LoginProps) {
         super(props);
@@ -65,11 +65,11 @@ class Login extends Controller<LoginProps, LoginState> {
             if (weakSelf.handleServiceSuccess(response)) {
                 const token = (response.token == null) ? "" : response.token;
                 const userName = (response.userName == null) ? "" : response.userName;
-                weakSelf.storage.setStringForKey(CommonConstants.userTokenStorageKey, token);
-                weakSelf.storage.setStringForKey(CommonConstants.userNameStorageKey, userName);
+                weakSelf.storage.setStringForKey(UICommonConstants.userTokenStorageKey, token);
+                weakSelf.storage.setStringForKey(BOCommonConstants.userNameStorageKey, userName);
 
                 if (response.userRole != null) {
-                    weakSelf.appContext.setNumberForKey(CommonConstants.userRoleStorageKey, response.userRole);
+                    weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
                 weakSelf.loginSuccessHandler();
@@ -125,4 +125,4 @@ class Login extends Controller<LoginProps, LoginState> {
     }
 }
 
-export default Login;
+export default LoginController;

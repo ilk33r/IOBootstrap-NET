@@ -1,24 +1,27 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
+import ClientDeleteRequestModel from "../models/ClientDeleteRequestModel";
 import ClientListProps from "../props/ClientListProps";
 import ClientListState from "../props/ClientListState";
-import Controller from "../../../presentation/controllers/Controller";
+import ClientUpdateRequestModel from "../models/ClientUpdateRequestModel";
 import ListClientsResponseModel from "../models/ListClientsResponseModel";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListView from "../../shared/views/ListView";
 import React from "react";
-import WindowMessageModel from "../../../common/models/WindowMessageModel";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class ClientSelectController extends Controller<ClientListProps, ClientListState> {
+class ClientListController extends Controller<ClientListProps, ClientListState> {
 
     constructor(props: ClientListProps) {
         super(props);
 
         this.state = new ClientListState();
 
-        this.selectDataHandler = this.selectDataHandler.bind(this);
+        this.deleteDataHandler = this.deleteDataHandler.bind(this);
+        this.updateDataHandler = this.updateDataHandler.bind(this);
     }
 
     public componentDidMount?(): void {
+        this.appContext.removeObject("clientDeleteRequest");
+        this.appContext.removeObject("clientUpdateRequest");
+
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONTROLLER_NAME}/ListClients`;
@@ -36,10 +39,26 @@ class ClientSelectController extends Controller<ClientListProps, ClientListState
         });
     }
 
-    selectDataHandler(index: number) {
+    deleteDataHandler(index: number) {
         const client = this.state.clientList[index];
-        const selectedClient: WindowMessageModel = { itemID: client.id, itemValue: client.clientDescription };
-        this.postMessage(selectedClient);
+        const deleteRequestModel = new ClientDeleteRequestModel();
+        deleteRequestModel.ClientId = client.id;
+        
+        this.appContext.setObjectForKey("clientDeleteRequest", deleteRequestModel);
+        this.navigateToPage("clientsDelete");
+    }
+
+    updateDataHandler(index: number) {
+        const client = this.state.clientList[index];
+        const updateRequestModel = new ClientUpdateRequestModel();
+        updateRequestModel.ClientId = client.id;
+        updateRequestModel.ClientDescription = client.clientDescription;
+        updateRequestModel.IsEnabled = (client.isEnabled) ? 1 : 0;
+        updateRequestModel.RequestCount = client.requestCount;
+        updateRequestModel.MaxRequestCount = client.maxRequestCount;
+        
+        this.appContext.setObjectForKey("clientUpdateRequest", updateRequestModel);
+        this.navigateToPage("clientsUpdate");
     }
 
     render() {
@@ -85,13 +104,13 @@ class ClientSelectController extends Controller<ClientListProps, ClientListState
                     resourceOptions="Options"
                     resourceSelect=""
                     extras={null}
-                    deleteDataHandler={null}
-                    updateDataHandler={null}
-                    selectDataHandler={this.selectDataHandler}
+                    deleteDataHandler={this.deleteDataHandler}
+                    updateDataHandler={this.updateDataHandler}
+                    selectDataHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );
     }
 }
 
-export default ClientSelectController;
+export default ClientListController;

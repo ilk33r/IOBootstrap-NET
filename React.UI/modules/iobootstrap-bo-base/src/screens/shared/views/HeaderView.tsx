@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { View } from 'iobootstrap-ui-base';
 import HeaderProps from '../props/HeaderProps';
 import HeaderState from '../props/HeaderState';
 import React from 'react';
-import View from '../../../presentation/views/View';
 
-class Header extends View<HeaderProps, HeaderState> {
+class HeaderView extends View<HeaderProps, HeaderState> {
 
     constructor(props: HeaderProps) {
         super(props);
@@ -63,4 +63,4 @@ class Header extends View<HeaderProps, HeaderState> {
     }
 }
 
-export default Header;
+export default HeaderView;

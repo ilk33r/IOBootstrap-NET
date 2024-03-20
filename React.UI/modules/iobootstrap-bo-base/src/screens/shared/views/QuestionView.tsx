@@ -1,7 +1,7 @@
-import BreadcrumbView from "./BreadcrumbView";
-import View from "../../../presentation/views/View";
 import QuestionViewProps from "../props/QuestionViewProps";
 import React from "react";
+import { View } from "iobootstrap-ui-base";
+import BreadcrumbView from "./BreadcrumbView";
 
 class QuestionView extends View<QuestionViewProps, {}> {
 

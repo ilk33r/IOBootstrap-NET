@@ -35,3 +35,8 @@ export { default as FormTypeSelectView } from "./screens/shared/views/FormTypeSe
 export { default as FormTypeTextAreaView } from "./screens/shared/views/FormTypeTextAreaView";
 export { default as FormTypeTextView } from "./screens/shared/views/FormTypeTextView";
 export { default as FormView } from "./screens/shared/views/FormView";
+export { default as HeaderProps } from "./screens/shared/props/HeaderProps";
+export { default as HeaderState } from "./screens/shared/props/HeaderState";
+export { default as HeaderView } from "./screens/shared/views/HeaderView";
+export { default as QuestionViewProps } from "./screens/shared/props/QuestionViewProps";
+export { default as QuestionView } from "./screens/shared/views/QuestionView";

@@ -6,6 +6,7 @@
   "dependencies": {
     "iobootstrap-ui-base": "file:../React.UI/modules/iobootstrap-ui-base",
     "iobootstrap-bo-base": "file:../React.UI/modules/iobootstrap-bo-base",
+    "iobootstrap-bo-menu": "file:../React.UI/modules/iobootstrap-bo-menu",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

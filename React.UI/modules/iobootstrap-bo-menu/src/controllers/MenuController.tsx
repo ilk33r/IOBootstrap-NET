@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import Controller from '../../../presentation/controllers/Controller';
 import MenuProps from '../props/MenuProps';
 import MenuResponseModel from '../models/MenuResponseModel';
 import MenuState from '../props/MenuState';
 import React from 'react';
 import MenuModel from '../models/MenuModel';
+import { Controller } from 'iobootstrap-ui-base';
 
-class Menu extends Controller<MenuProps, MenuState> {
+class MenuController extends Controller<MenuProps, MenuState> {
 
     constructor(props: MenuProps) {
         super(props);
@@ -104,4 +104,4 @@ class Menu extends Controller<MenuProps, MenuState> {
     }
 }
 
-export default Menu;
+export default MenuController;

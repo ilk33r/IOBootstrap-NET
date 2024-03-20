@@ -10,10 +10,12 @@ export default {
     {
       file: './lib/cjs/index.js',
       format: 'cjs',
+      sourcemap: 'inline'
     },
     {
       file: './lib/esm/index.js',
       format: 'es',
+      sourcemap: 'inline'
     },
   ],
   external: [...Object.keys(pkg.peerDependencies || {})],
@@ -22,6 +24,8 @@ export default {
     commonjs(),
     typescript({
       typescript: require('typescript'),
+      sourceMap: false, 
+      inlineSources: true
     })
   ],
 };

@@ -1,7 +1,5 @@
-import CalloutView from './screens/shared/views/CalloutView';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import IndicatorView from './screens/shared/views/IndicatorView';
 import Main from './screens/main/controllers/Main';
 import reportWebVitals from './reportWebVitals';
 import 'jquery/src/jquery'
@@ -12,6 +10,7 @@ import './presentation/styles/AdminLTE.css';
 import './presentation/styles/AdminSkins.css';
 import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
+import { CalloutView, IndicatorView } from 'iobootstrap-bo-base';
 
 let calloutViewRef = React.createRef<CalloutView>();
 const calloutView = (<CalloutView ref={calloutViewRef} />);

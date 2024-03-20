@@ -6,6 +6,7 @@
         "modules/*"
     ],
     "scripts": {
+        "build:development": "lerna run build:development",
         "build": "lerna run build",
         "clean": "lerna run clean",
         "watch": "lerna run watch",

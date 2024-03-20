@@ -1,15 +1,12 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
 import DeleteUserRequestModel from "../models/DeleteUserRequestModel";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListExtrasModel from "../../shared/models/ListExtrasModel";
 import ListUserResponseModel from "../models/ListUserResponseModel";
-import ListView from "../../shared/views/ListView";
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import UserRoles from "../../../common/enumerations/UserRoles";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
+import { UserRoles } from "iobootstrap-bo-base";
 
 class UsersListController extends Controller<UsersListProps, UsersListState> {
 

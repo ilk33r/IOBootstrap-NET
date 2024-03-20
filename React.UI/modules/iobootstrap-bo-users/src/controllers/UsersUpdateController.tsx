@@ -1,16 +1,8 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import UserRoles from "../../../common/enumerations/UserRoles";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { UserRoles } from "iobootstrap-bo-base";
 
 class UsersUpdateController extends Controller<{}, {}> {
 
@@ -33,7 +25,7 @@ class UsersUpdateController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/UpdateUser`;

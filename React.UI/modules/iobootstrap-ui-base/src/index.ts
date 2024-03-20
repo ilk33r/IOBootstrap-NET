@@ -1,4 +1,4 @@
-export { default as CommonConstants } from "./common/constants/CommonConstants";
+export { default as UICommonConstants } from "./common/constants/UICommonConstants";
 export { default as DeviceTypes } from "./common/enumerations/DeviceTypes";
 export { default as BaseRequestModel } from "./common/models/BaseRequestModel";
 export { default as BaseResponseModel } from "./common/models/BaseResponseModel";

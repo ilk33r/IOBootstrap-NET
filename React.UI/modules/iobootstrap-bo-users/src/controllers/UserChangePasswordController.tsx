@@ -1,16 +1,8 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import CommonConstants from "../../../common/constants/CommonConstants";
-import Controller from "../../../presentation/controllers/Controller";
-import FormType from "../../shared/interfaces/FormType";
-import FormView from "../../shared/views/FormView";
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserChangePasswordRequestModel from "../models/UserChangePasswordRequestModel";
-import UserRoles from "../../../common/enumerations/UserRoles";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
-import FormTypePasswordProps from "../../shared/props/FormTypePasswordProps";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOCommonConstants, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView, UserRoles } from "iobootstrap-bo-base";
 
 class UserChangePasswordController extends Controller<{}, {}> {
 
@@ -22,7 +14,7 @@ class UserChangePasswordController extends Controller<{}, {}> {
         this._updateRequest = this.appContext.objectForKey("usersChangePasswordRequest") as UpdateUserRequestModel;
         if (this._updateRequest == null) {
             this._updateRequest = new UpdateUserRequestModel();
-            this._updateRequest.userName = this.storage.stringForKey(CommonConstants.userNameStorageKey) ?? "";
+            this._updateRequest.userName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
         }
 
         this.handleFormError = this.handleFormError.bind(this);
@@ -33,12 +25,12 @@ class UserChangePasswordController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         let currentPassword: string | null;
         let password: string;
         let passwordRepeat: string;
 
-        if (this.appContext.numberForKey(CommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
+        if (this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
             currentPassword = null;
             password = values[0];
             passwordRepeat = values[1];
@@ -83,7 +75,7 @@ class UserChangePasswordController extends Controller<{}, {}> {
 
         let formElements: FormType[];
 
-        if (this.appContext.numberForKey(CommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
+        if (this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
             formElements = [
                 FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
                 FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ])

@@ -1,8 +1,6 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
-import QuestionView from "../../shared/views/QuestionView";
+import { Controller, UICommonConstants } from "iobootstrap-ui-base";
 import React from "react";
-import CommonConstants from "../../../common/constants/CommonConstants";
+import { BOCommonConstants, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
 class UsersLogoutController extends Controller<{}, {}> {
 
@@ -18,9 +16,9 @@ class UsersLogoutController extends Controller<{}, {}> {
     }
 
     handleFormSuccess() {
-        this.storage.removeObject(CommonConstants.userNameStorageKey);
-        this.storage.removeObject(CommonConstants.userTokenStorageKey);
-        this.appContext.removeObject(CommonConstants.userRoleStorageKey);
+        this.storage.removeObject(BOCommonConstants.userNameStorageKey);
+        this.storage.removeObject(UICommonConstants.userTokenStorageKey);
+        this.appContext.removeObject(BOCommonConstants.userRoleStorageKey);
         window.location.reload();
     }
 

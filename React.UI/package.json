@@ -6,8 +6,8 @@
         "modules/*"
     ],
     "scripts": {
-        "build:development": "lerna run build:development",
-        "build": "lerna run build",
+        "build:development": "lerna run build:development --include-dependencies",
+        "build": "lerna run build --include-dependencies",
         "clean": "lerna run clean",
         "watch": "lerna run watch",
         "package": "lerna exec -- npm pack"

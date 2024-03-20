@@ -1,7 +1,7 @@
 import AppStorage from "../storage/AppStorage";
 import BaseRequestModel from "../../common/models/BaseRequestModel";
 import BaseResponseModel from "../../common/models/BaseResponseModel";
-import CommonConstants from "../../common/constants/CommonConstants";
+import UICommonConstants from "../../common/constants/UICommonConstants";
 
 type AppServiceSuccessHandler<T extends BaseResponseModel> = (response: T) => void;
 type AppServiceErrorHandler = (error: string) => void;
@@ -28,7 +28,7 @@ class AppService {
 
     public get<TResponse extends BaseResponseModel>(path: string, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+        const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
 
         fetch(requestUrl, {
             method: 'GET',
@@ -53,7 +53,7 @@ class AppService {
 
     public post<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+        const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
 
         fetch(requestUrl, {
             method: 'POST',
@@ -79,7 +79,7 @@ class AppService {
 
     public postDownloadFile(path: string, fileName: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<BaseResponseModel>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+        const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
 
         fetch(requestUrl, {
             method: 'POST',
@@ -109,7 +109,7 @@ class AppService {
 
     public upload<TResponse extends BaseResponseModel>(path: string, blob: Blob, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const userToken = AppStorage.Instance.stringForKey(CommonConstants.userTokenStorageKey);
+        const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
 
         const form = new FormData();
         form.append("file", blob);

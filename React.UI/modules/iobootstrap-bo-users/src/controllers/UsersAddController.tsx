@@ -1,17 +1,8 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypePasswordProps from "../../shared/props/FormTypePasswordProps";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import React from "react";
-import UserRoles from "../../../common/enumerations/UserRoles";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { UserRoles } from "iobootstrap-bo-base";
 
 class UsersAddController extends Controller<{}, {}> {
 
@@ -26,7 +17,7 @@ class UsersAddController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         if (values[1] !== values[2]) {
             this.handleFormError("Passwords did not match.", "Invalid password.");
             return;

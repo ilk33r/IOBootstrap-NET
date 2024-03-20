@@ -28,14 +28,9 @@ import PushNotificationDeleteController from "../../pushnotifications/controller
 import PushNotificationListController from "../../pushnotifications/controllers/PushNotificationListController";
 import PushNotificationSendController from "../../pushnotifications/controllers/PushNotificationSendController";
 import React from "react";
-import UsersAddController from "../../users/controllers/UsersAddController";
-import UserChangePasswordController from "../../users/controllers/UserChangePasswordController";
-import UsersDeleteController from "../../users/controllers/UsersDeleteController";
-import UsersListController from "../../users/controllers/UsersListController";
-import UsersLogoutController from "../../users/controllers/UsersLogoutController";
-import UsersUpdateController from "../../users/controllers/UsersUpdateController";
-import View from "../../../presentation/views/View";
 import GenerateBOPageController from "../../generatebopage/controllers/GenerateBOPageController";
+import { View } from "iobootstrap-ui-base";
+import { UserChangePasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

@@ -1,4 +1,4 @@
-import BaseRequestModel from "../../../common/models/BaseRequestModel";
+import { BaseRequestModel } from "iobootstrap-ui-base";
 
 class MessageAddRequestModel extends BaseRequestModel {
 

@@ -1,14 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeDateProps from "../../shared/props/FormTypeDateProps";
-import FormTypeTextAreaProps from "../../shared/props/FormTypeTextAreaProps";
-import FormView from "../../shared/views/FormView";
 import MessageAddRequestModel from "../models/MessageAddRequestModel";
 import React from "react";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
 
 class MessagesAddController extends Controller<{}, {}> {
 
@@ -23,7 +16,7 @@ class MessagesAddController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/AddMessagesItem`;

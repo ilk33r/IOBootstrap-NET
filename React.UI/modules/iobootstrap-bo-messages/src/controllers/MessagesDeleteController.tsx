@@ -1,9 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
 import MessageDeleteRequestModel from "../models/MessageDeleteRequestModel";
-import QuestionView from "../../shared/views/QuestionView";
 import React from "react";
+import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
 class MessagesDeleteController extends Controller<{}, {}> {
 

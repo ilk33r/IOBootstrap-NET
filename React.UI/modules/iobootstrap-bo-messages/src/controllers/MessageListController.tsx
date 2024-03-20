@@ -1,13 +1,11 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListView from "../../shared/views/ListView";
 import MessageDeleteRequestModel from "../models/MessageDeleteRequestModel";
 import MessageListProps from "../props/MessageListProps";
 import MessageListResponseModel from "../models/MessageListResponseModel";
 import MessageListState from "../props/MessageListState";
 import MessageUpdateRequestModel from "../models/MessageUpdateRequestModel";
 import React from "react";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MessageListController extends Controller<MessageListProps, MessageListState> {
 

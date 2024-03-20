@@ -10,6 +10,7 @@
     "iobootstrap-bo-users": "file:../React.UI/modules/iobootstrap-bo-users",
     "iobootstrap-bo-configurations": "file:../React.UI/modules/iobootstrap-bo-configurations",
     "iobootstrap-bo-login": "file:../React.UI/modules/iobootstrap-bo-login",
+    "iobootstrap-bo-messages": "file:../React.UI/modules/iobootstrap-bo-messages",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

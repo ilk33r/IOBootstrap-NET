@@ -1,19 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
-import FormTypePopupSelectionProps from "../../shared/props/FormTypePopupSelectionProps";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
-import UserRoles from "../../../common/enumerations/UserRoles";
-import ValidationMinAmountRule from "../../../presentation/validations/ValidationMinAmountRule";
-import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView, UserRoles } from "iobootstrap-bo-base";
 
 class MenuEditorUpdateController extends Controller<{}, {}> {
 
@@ -36,7 +24,7 @@ class MenuEditorUpdateController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME}/UpdateMenuItem`;

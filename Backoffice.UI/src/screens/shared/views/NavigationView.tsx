@@ -8,11 +8,6 @@ import ImagesAddController from "../../images/controllers/ImagesAddController";
 import ImagesEditController from "../../images/controllers/ImagesEditController";
 import ImagesModifyController from "../../images/controllers/ImagesModifyController";
 import ImagesUploadController from "../../images/controllers/ImagesUploadController";
-import MenuEditorAddController from "../../menueditor/controllers/MenuEditorAddController";
-import MenuEditorDeleteController from "../../menueditor/controllers/MenuEditorDeleteController";
-import MenuEditorListController from "../../menueditor/controllers/MenuEditorListController";
-import MenuEditorSelectionController from "../../menueditor/controllers/MenuEditorSelectionController";
-import MenuEditorUpdateController from "../../menueditor/controllers/MenuEditorUpdateController";
 import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
 import PushNotificationDeleteController from "../../pushnotifications/controllers/PushNotificationDeleteController";
@@ -24,6 +19,7 @@ import { View } from "iobootstrap-ui-base";
 import { UserChangePasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
 import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 import { MessageListController, MessagesAddController, MessagesDeleteController, MessagesUpdateController } from "iobootstrap-bo-messages";
+import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

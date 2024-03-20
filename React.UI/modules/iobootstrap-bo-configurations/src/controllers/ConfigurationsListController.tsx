@@ -1,13 +1,11 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
 import ConfigurationDeleteRequestModel from "../models/ConfigurationDeleteRequestModel";
 import ConfigurationListProps from "../props/ConfigurationListProps";
 import ConfigurationListResponseModel from "../models/ConfigurationListResponseModel";
 import ConfigurationListState from "../props/ConfigurationListState";
 import ConfigurationUpdateRequestModel from "../models/ConfigurationUpdateRequestModel";
-import Controller from "../../../presentation/controllers/Controller";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListView from "../../shared/views/ListView";
 import React from "react";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class ConfigurationsListController extends Controller<ConfigurationListProps, ConfigurationListState> {
 

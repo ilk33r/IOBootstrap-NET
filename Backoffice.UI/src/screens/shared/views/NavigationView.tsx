@@ -3,11 +3,6 @@ import ClientDeleteController from "../../clients/controllers/ClientDeleteContro
 import ClientListController from "../../clients/controllers/ClientListController";
 import ClientSelectController from "../../clients/controllers/ClientSelectController";
 import ClientUpdateController from "../../clients/controllers/ClientUpdateController";
-import ConfigurationsAddController from "../../configurations/controllers/ConfigurationsAddController";
-import ConfigurationsDeleteController from "../../configurations/controllers/ConfigurationsDeleteController";
-import ConfigurationsListController from "../../configurations/controllers/ConfigurationsListController";
-import ConfigurationsResetCacheController from "../../configurations/controllers/ConfigurationsResetCacheController";
-import ConfigurationsUpdateController from "../../configurations/controllers/ConfigurationsUpdateController";
 import DashboardController from "../../dashboard/controllers/DashboardController";
 import ImagesAddController from "../../images/controllers/ImagesAddController";
 import ImagesEditController from "../../images/controllers/ImagesEditController";
@@ -31,6 +26,7 @@ import React from "react";
 import GenerateBOPageController from "../../generatebopage/controllers/GenerateBOPageController";
 import { View } from "iobootstrap-ui-base";
 import { UserChangePasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
+import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

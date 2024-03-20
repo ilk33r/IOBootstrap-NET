@@ -8,6 +8,7 @@
     "iobootstrap-bo-base": "file:../React.UI/modules/iobootstrap-bo-base",
     "iobootstrap-bo-menu": "file:../React.UI/modules/iobootstrap-bo-menu",
     "iobootstrap-bo-users": "file:../React.UI/modules/iobootstrap-bo-users",
+    "iobootstrap-bo-configurations": "file:../React.UI/modules/iobootstrap-bo-configurations",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

@@ -1,15 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
 import ConfigurationAddRequestModel from "../models/ConfigurationAddRequestModel";
-import Controller from "../../../presentation/controllers/Controller";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
-import FormTypeTextAreaProps from "../../shared/props/FormTypeTextAreaProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import React from "react";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class ConfigurationsAddController extends Controller<{}, {}> {
 
@@ -24,7 +16,7 @@ class ConfigurationsAddController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/AddConfigItem`;

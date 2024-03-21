@@ -6,13 +6,13 @@ import ImagesUploadController from "../../images/controllers/ImagesUploadControl
 import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
 import React from "react";
-import GenerateBOPageController from "../../generatebopage/controllers/GenerateBOPageController";
 import { View } from "iobootstrap-ui-base";
 import { UserChangePasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
 import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 import { MessageListController, MessagesAddController, MessagesDeleteController, MessagesUpdateController } from "iobootstrap-bo-messages";
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
+import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

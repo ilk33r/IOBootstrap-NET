@@ -1,17 +1,12 @@
 import React from "react";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import GenerateBOPageProps from "../props/GenerateBOPageProps";
 import GenerateBOPageState from "../props/GenerateBOPageState";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
 import GenerateBOPageRequestModel from "../models/GenerateBOPageRequestModel";
 import GenerateBOPageResponseModel from "../models/GenerateBOPageResponseModel";
 import CodeBlockView from "../views/CodeBlockView";
 import GenerateBOPageFilesRequestModel from "../models/GenerateBOPageFilesRequestModel";
+import { CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateBOPageState> {
 
@@ -30,7 +25,7 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_CONTROLLER_NAME}/CreateModel`;

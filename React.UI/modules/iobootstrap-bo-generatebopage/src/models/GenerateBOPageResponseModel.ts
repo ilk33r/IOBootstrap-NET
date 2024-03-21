@@ -1,7 +1,7 @@
-import BaseRequestModel from "../../../common/models/BaseRequestModel";
+import { BaseResponseModel } from "iobootstrap-ui-base";
 import BOPageEntityModel from "./BOPageEntityModel";
 
-class GenerateBOPageFilesRequestModel extends BaseRequestModel {
+class GenerateBOPageResponseModel extends BaseResponseModel {
 
     entityName: string;
     entityDisplayName: string;
@@ -42,4 +42,4 @@ class GenerateBOPageFilesRequestModel extends BaseRequestModel {
     }
 }
 
-export default GenerateBOPageFilesRequestModel;
+export default GenerateBOPageResponseModel;

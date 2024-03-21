@@ -1,6 +1,6 @@
 import React from "react";
 import CodeBlockViewProps from "../props/CodeBlockViewProps";
-import View from "../../../presentation/views/View";
+import { View } from "iobootstrap-ui-base";
 
 class CodeBlockView extends View<CodeBlockViewProps, {}> {
 

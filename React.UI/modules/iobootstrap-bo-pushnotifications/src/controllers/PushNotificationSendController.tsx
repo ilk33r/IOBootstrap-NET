@@ -1,20 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import DeviceTypes from "../../../common/enumerations/DeviceTypes";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypePopupSelectionProps from "../../shared/props/FormTypePopupSelectionProps";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormTypeTextAreaProps from "../../shared/props/FormTypeTextAreaProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormView from "../../shared/views/FormView";
 import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
-import ValidationMaxLengthRule from "../../../presentation/validations/ValidationMaxLengthRule";
-import ValidationMinLengthRule from "../../../presentation/validations/ValidationMinLengthRule";
-import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import { BaseResponseModel, CalloutTypes, Controller, DeviceTypes, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class PushNotificationSendController extends Controller<{}, {}> {
 
@@ -29,7 +16,7 @@ class PushNotificationSendController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/SendNotification`;

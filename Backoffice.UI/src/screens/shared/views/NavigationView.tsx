@@ -5,9 +5,6 @@ import ImagesModifyController from "../../images/controllers/ImagesModifyControl
 import ImagesUploadController from "../../images/controllers/ImagesUploadController";
 import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
-import PushNotificationDeleteController from "../../pushnotifications/controllers/PushNotificationDeleteController";
-import PushNotificationListController from "../../pushnotifications/controllers/PushNotificationListController";
-import PushNotificationSendController from "../../pushnotifications/controllers/PushNotificationSendController";
 import React from "react";
 import GenerateBOPageController from "../../generatebopage/controllers/GenerateBOPageController";
 import { View } from "iobootstrap-ui-base";
@@ -15,6 +12,7 @@ import { UserChangePasswordController, UsersAddController, UsersDeleteController
 import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 import { MessageListController, MessagesAddController, MessagesDeleteController, MessagesUpdateController } from "iobootstrap-bo-messages";
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
+import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

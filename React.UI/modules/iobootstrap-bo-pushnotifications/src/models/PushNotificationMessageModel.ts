@@ -1,4 +1,4 @@
-import ClientModel from "../../clients/models/ClientModel";
+import { ClientModel } from "iobootstrap-bo-clients";
 
 class PushNotificationMessageModel {
 

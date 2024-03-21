@@ -1,12 +1,10 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
 import ListPushNotificationMessageResponseModel from "../models/ListPushNotificationMessageResponseModel";
-import ListView from "../../shared/views/ListView";
 import PushNotificationMessageDeleteRequestModel from "../models/PushNotificationMessageDeleteRequestModel";
 import PushNotificationListProops from "../props/PushNotificationListProops";
 import PushNotificationListState from "../props/PushNotificationListState";
 import React from "react";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class PushNotificationListController extends Controller<PushNotificationListProops, PushNotificationListState> {
 

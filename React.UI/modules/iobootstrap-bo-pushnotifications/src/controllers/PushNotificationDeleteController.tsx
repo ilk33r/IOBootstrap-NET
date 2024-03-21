@@ -1,9 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
 import PushNotificationMessageDeleteRequestModel from "../models/PushNotificationMessageDeleteRequestModel";
-import QuestionView from "../../shared/views/QuestionView";
 import React from "react";
+import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
 class PushNotificationDeleteController extends Controller<{}, {}> {
 

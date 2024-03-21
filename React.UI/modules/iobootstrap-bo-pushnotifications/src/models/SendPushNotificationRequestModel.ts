@@ -1,5 +1,4 @@
-import BaseRequestModel from "../../../common/models/BaseRequestModel";
-import DeviceTypes from "../../../common/enumerations/DeviceTypes";
+import { BaseRequestModel, DeviceTypes } from "iobootstrap-ui-base";
 
 class SendPushNotificationRequestModel extends BaseRequestModel {
 

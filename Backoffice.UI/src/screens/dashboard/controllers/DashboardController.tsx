@@ -1,10 +1,10 @@
 import BoxView from "../views/BoxView";
-import Controller from "../../../presentation/controllers/Controller";
 import DashboardProps from "../props/DashboardProps";
 import DashboardState from "../props/DashboardState";
 import MessageView from "../views/MessageView";
 import MessagesResponseModel from "../models/MessagesResponseModel";
 import React from "react";
+import { Controller } from "iobootstrap-ui-base";
 
 class DashboardController extends Controller<DashboardProps, DashboardState> {
 

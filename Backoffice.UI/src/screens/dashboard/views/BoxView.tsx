@@ -1,6 +1,6 @@
+import { View } from "iobootstrap-ui-base";
 import BoxViewProps from "../props/BoxViewProps";
 import React from "react";
-import View from "../../../presentation/views/View";
 
 class BoxView extends View<BoxViewProps, {}> {
 

@@ -1,5 +1,4 @@
-import CalloutView from "../../shared/views/CalloutView";
-import IndicatorView from "../../shared/views/IndicatorView";
+import { CalloutView, IndicatorView } from "iobootstrap-bo-base";
 import React from "react";
 
 interface MainProps {

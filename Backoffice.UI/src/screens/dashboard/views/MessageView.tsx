@@ -1,5 +1,5 @@
+import { View } from "iobootstrap-ui-base";
 import MessageViewProps from "../props/MessageViewProps";
-import View from "../../../presentation/views/View";
 import React from "react";
 
 class MessageView extends View<MessageViewProps, {}> {

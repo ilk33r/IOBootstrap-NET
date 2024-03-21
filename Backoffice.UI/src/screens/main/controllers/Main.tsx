@@ -1,19 +1,13 @@
-import CalloutPresenter from '../../../presentation/presenters/CalloutPresenter';
-import CalloutViewPresenter from '../../../presentation/inerfaces/CalloutViewPresenter';
 import CheckTokenRequestModel from '../models/CheckTokenRequestModel';
 import CheckTokenResponseModel from '../models/CheckTokenResponseModel';
-import CommonConstants from '../../../common/constants/CommonConstants';
-import Controller from '../../../presentation/controllers/Controller';
-import Footer from '../../shared/views/Footer';
-import Header from '../../shared/views/Header';
-import IndicatorPresenter from '../../../presentation/presenters/IndicatorPresenter';
-import IndicatorViewPresenter from '../../../presentation/inerfaces/IndicatorViewPresenter';
-import Login from '../../login/controllers/Login';
 import MainProps from '../props/MainProps';
 import MainState from '../props/MainState';
-import Menu from '../../shared/controllers/Menu';
 import NavigationView from '../../shared/views/NavigationView';
 import React from 'react';
+import { CalloutPresenter, CalloutViewPresenter, Controller, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants } from 'iobootstrap-ui-base';
+import { BOCommonConstants, FooterView, HeaderView } from 'iobootstrap-bo-base';
+import { MenuController } from 'iobootstrap-bo-menu';
+import { LoginController } from 'iobootstrap-bo-login';
 
 class Main extends Controller<MainProps, MainState> {
 
@@ -45,7 +39,7 @@ class Main extends Controller<MainProps, MainState> {
             window.location.hash = "#!dashboard";
         }
         
-        const userToken = this.storage.stringForKey(CommonConstants.userTokenStorageKey);
+        const userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
         const newState = new MainState();
         newState.isLoggedIn = false;
 
@@ -67,10 +61,10 @@ class Main extends Controller<MainProps, MainState> {
                 }
 
                 if (response.userRole != null) {
-                    weakSelf.appContext.setNumberForKey(CommonConstants.userRoleStorageKey, response.userRole);
+                    weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.storage.setStringForKey(CommonConstants.userNameStorageKey, response.userName ?? "");
+                weakSelf.storage.setStringForKey(BOCommonConstants.userNameStorageKey, response.userName ?? "");
                     
                 newState.isLoggedIn = true;       
                 weakSelf.setState(newState);
@@ -95,24 +89,24 @@ class Main extends Controller<MainProps, MainState> {
 
     render() {
         if (this.state.isLoggedIn) {
-            const userName = this.storage.stringForKey(CommonConstants.userNameStorageKey);
+            const userName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey);
 
             return (
                 <React.StrictMode>
-                    <Header userName={userName} />
-                    <Menu userName={userName}
+                    <HeaderView userName={userName} />
+                    <MenuController userName={userName}
                     controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} />
                     <NavigationView />
-                    <Footer />
+                    <FooterView />
                 </React.StrictMode>
             );
         }
         
         return (
             <React.StrictMode>
-                <Login controllerName={process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
+                <LoginController controllerName={process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
                  loginSuccessHandler={this.handleLoginSuccess} />
-                <Footer />
+                <FooterView />
             </React.StrictMode>
         );
     }

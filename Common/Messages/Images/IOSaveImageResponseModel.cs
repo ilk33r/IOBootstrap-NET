@@ -7,11 +7,11 @@ namespace IOBootstrap.NET.Common.Messages.Images
 {
     public class IOSaveImageResponseModel : IOResponseModel
     {
-        public IList<IOImageVariationsModel> Files { get; set; }
+        public IOImageVariationsModel File { get; set; }
 
-        public IOSaveImageResponseModel(IList<IOImageVariationsModel> files) : base()
+        public IOSaveImageResponseModel(IOImageVariationsModel file) : base()
         {
-            Files = files;
+            File = file;
         }
     }
 }

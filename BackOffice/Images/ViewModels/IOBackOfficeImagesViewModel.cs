@@ -3,18 +3,18 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Images;
+using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.ViewModels;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Core.Interfaces;
+using IOBootstrap.NET.Common.Utilities;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
-    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
+    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOImageViewModel
     where TDBContext : IODatabaseContext<TDBContext> 
     {
         #region Initialization Methods
@@ -48,64 +48,39 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             return new IOGetImagesResponseModel(imageCount, paginatedImages);
         }
 
-        public IList<IOImageVariationsModel> SaveImages(string fileData, string fileType, string contentType, string globalFileName, IList<IOImageVariationsModel> sizes)
+        public IOImageVariationsModel SaveImagesMetaData(string filePath, string fileName)
         {
-            byte[] imageData = Convert.FromBase64String(fileData);
-            MemoryStream ms = new MemoryStream(imageData);
-            List<IOImageVariationsModel> imagesList = new List<IOImageVariationsModel>();
+            string globalFileName = IORandomUtilities.GenerateGUIDString();
+            string variationFileName = globalFileName + "-" + fileName.RemoveNonASCII() + ".jpg";
 
-            foreach (IOImageVariationsModel variation in sizes)
+            if (!File.Exists(filePath))
             {
-                string variationFileName = globalFileName + "-" + variation.FileName + ".png";
-                Image rawImage = Image.Load(ms);
-                byte[] scaledImage = ResizedImageFromRequest(rawImage, variation);
-                Task<bool> uploadStatus = UploadToBlob(variationFileName, "image/png", scaledImage);
-                uploadStatus.Wait();
-
-                if (uploadStatus.Result)
-                {
-                    IOImageVariationsModel requestVariation = new IOImageVariationsModel()
-                    {
-                        FileName = variationFileName,
-                        FileType = "image/png",
-                        Width = variation.Width,
-                        Height = variation.Height,
-                        Scale = variation.Scale
-                    };
-
-                    imagesList.Add(requestVariation);
-                } else {
-                    throw new IOImageNotFoundException();
-                }
+                throw new IOImageNotFoundException();
             }
 
-            List<IOImagesEntity> images = new List<IOImagesEntity>();
+            FileStream fs = File.OpenRead(filePath);
+            Image rawImage = Image.Load(fs);
 
-            foreach (IOImageVariationsModel variationsModel in imagesList)
+            IOImagesEntity imageEntity = new IOImagesEntity()
             {
-                IOImagesEntity imageEntity = new IOImagesEntity()
-                {
-                    FileName = variationsModel.FileName,
-                    FileType = variationsModel.FileType,
-                    Width = variationsModel.Width,
-                    Height = variationsModel.Height,
-                    Scale = variationsModel.Scale
-                };
+                FileName = variationFileName,
+                FileType = "image/jpeg",
+                Width = rawImage.Width,
+                Height = rawImage.Height,
+                Scale = null
+            };
 
-                DatabaseContext.Add(imageEntity);
-                images.Add(imageEntity);
-            }
-
+            DatabaseContext.Add(imageEntity);
             DatabaseContext.SaveChanges();
 
-            return images.ConvertAll(i => new IOImageVariationsModel()
+            return new IOImageVariationsModel()
             {
-                ID = i.ID,
-                FileName = i.FileName,
-                Width = i.Width,
-                Height = i.Height,
-                Scale = i.Scale
-            });
+                ID = imageEntity.ID,
+                FileName = imageEntity.FileName,
+                Width = imageEntity.Width,
+                Height = imageEntity.Height,
+                Scale = imageEntity.Scale
+            };
         }
 
         public void DeleteImages(IODeleteImagesRequestModel requestModel)
@@ -194,36 +169,6 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
         {
             string storageConnectionString = Configuration.GetConnectionString(IOConfigurationConstants.AzureStorageConnectionStringKey);
             return new BlobServiceClient(storageConnectionString);
-        }
-
-        private byte[] ResizedImageFromRequest(Image image, IOImageVariationsModel imageData)
-        {
-            int newWidth = imageData.Width ?? 0;
-            int newHeight = imageData.Height ?? 0;
-            bool keepRatio = imageData.KeepRatio;
-            if (keepRatio)
-            {
-                float originalRatio = (float)image.Width / (float)image.Height;
-                int ratioWidth = (int)(originalRatio * (float)newHeight);
-                int ratioHeight = (int)(originalRatio / (float)newWidth);
-
-                if (ratioHeight < newHeight)
-                {
-                    newWidth = ratioWidth;
-                }
-                else if (ratioWidth < newWidth)
-                {
-                    newHeight = ratioHeight;
-                }
-            }
-
-            image.Mutate(im => im.Resize(newWidth, newHeight));
-
-            var ms = new MemoryStream();
-            image.Save(ms, new PngEncoder());
-            ms.Flush();
-
-            return ms.ToArray();
         }
 
         private async Task<bool> UploadToBlob(string filename, string contentType, byte[] imageBuffer)

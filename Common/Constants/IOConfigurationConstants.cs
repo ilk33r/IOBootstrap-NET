@@ -25,6 +25,7 @@ namespace IOBootstrap.NET.Common.Constants
         public static string EncryptionKey = "IOEncryptionKey";
         public static string EncryptionIV = "IOEncryptionIV";
         public static string HttpsRequired = "IOHttpsRequired";
+        public static string ImagesFolderKey = "IOImagesFolder";
         public static string IndexControllerNameKey = "IOIndexControllerName";
         public static string MigrationsAssemblyKey = "IOMWMigrationsAssembly";
         public static string SendGridApiKey = "IOSendGridApiKey";

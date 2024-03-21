@@ -9,7 +9,7 @@ import { MessageListController, MessagesAddController, MessagesDeleteController,
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
-import { ImagesAddController, ImagesEditController, ImagesModifyController, ImagesUploadController } from "iobootstrap-bo-images";
+import { ImagesAddController, ImagesEditController, ImagesModifyController } from "iobootstrap-bo-images";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 
@@ -164,10 +164,6 @@ class NavigationView extends View<NavigationProps, NavigationState> {
 
         if (this.state.pageHash === "imageAdd") {
             return <ImagesAddController />
-        }
-
-        if (this.state.pageHash === "imageUploadFile") {
-            return <ImagesUploadController />
         }
 
         if (this.state.pageHash === "imageModify") {

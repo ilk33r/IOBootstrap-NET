@@ -1,15 +1,13 @@
 using System;
-using System.Text.RegularExpressions;
 using IOBootstrap.NET.BackOffice.Images.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
-using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
-using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Controllers;
+using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,37 +39,14 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
             return ViewModel.GetImages(requestModel);
         }
 
-        [IOValidateRequestModel]
+        [IORequireHTTPS]
         [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost("[action]")]
-        public IOSaveImageResponseModel SaveImages([FromBody] IOSaveImageRequestModel requestModel)
+        [HttpPut("[action]")]
+        public IOSaveImageResponseModel SaveImage(IFormFile file)
         {
-            // Add File
-            Regex rx = new Regex(@"data:image\/([a-zA-Z]+);base64,(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            MatchCollection matches = rx.Matches(requestModel.FileData);
-            if (matches.Count != 1)
-            {
-                // Then return validation error
-                throw new IOInvalidRequestException();
-            }
-
-            GroupCollection groups = matches[0].Groups;
-            if (groups.Count != 3)
-            {
-                // Then return validation error
-                throw new IOInvalidRequestException();
-            }
-
-            // Obtain values
-            string fileType = groups[1].Value;
-            string fileData = groups[2].Value;
-            string contentType = "image/" + fileType;
-            string globalFileName = IORandomUtilities.GenerateGUIDString();
-
-            IList<IOImageVariationsModel> imageList = ViewModel.SaveImages(fileData, fileType, contentType, globalFileName, requestModel.Sizes);
-
-            // Create and return response
-            return new IOSaveImageResponseModel(imageList);
+            string filePath = ViewModel.SaveFile(file);
+            IOImageVariationsModel imageMetadata = ViewModel.SaveImagesMetaData(filePath, file.FileName);
+            return new IOSaveImageResponseModel(imageMetadata);
         }
 
         [IOValidateRequestModel]

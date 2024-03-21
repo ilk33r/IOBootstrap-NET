@@ -18,6 +18,8 @@ namespace IOBootstrap.NET.Common.Constants
         public const int UserNotFoundCode = 701;
         public const int ImageNotFoundCode = 702;
         public const int ImageDeleteCode = 703;
+        public const int ImageCorruptCode = 704;
+        public const int ImageSaveCode = 705;
 
         public const string InvalidRequestMessage = "Invalid request.";
         public const string InvalidPermissionMessage = "Invalid permission.";
@@ -32,5 +34,7 @@ namespace IOBootstrap.NET.Common.Constants
         public const string UserNotFoundMessage = "User not found.";
         public const string ImageNotFoundMessage = "Image not found.";
         public const string ImageDeleteMessage = "Could not delete image in blob container.";
+        public const string ImageCorruptMessage = "Could not read image file.";
+        public const string ImageSaveMessage = "Could not save image file.";
     }
 }

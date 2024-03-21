@@ -3,14 +3,12 @@ import ImageVariationsModel from "./ImageVariationsModel";
 
 class SaveImageResponseModel extends BaseResponseModel {
 
-    files: ImageVariationsModel[] | null;
-    fileName: string | null;
+    file: ImageVariationsModel | null;
 
     constructor() {
         super();
 
-        this.files = [];
-        this.fileName = null;
+        this.file = null;
     }
 }
 

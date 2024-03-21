@@ -70,16 +70,15 @@ class ImagesEditController extends Controller<ImagesListProps, ImagesListState> 
 
         const listDataHeaders = [
             'ID',
-            'File Name',
+            'Image',
             'Width',
             'Height',
-            'Scale',
-            'Image'
+            'Scale'
         ];
 
         const items = this.state.images.map(image => {
             const itemModel = new ListDataItemModel();
-            const imageHtml = `<img src="${process.env.REACT_APP_STORAGE_BASE_URL}/${image.fileName}" width="150" />`
+            const imageHtml = `<img src="${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${encodeURIComponent(image.fileName)}" width="150" />`
             const imageId = (image.id == null) ? "" : image.id.toString();
             const imageWidth = (image.width == null) ? "" : image.width.toString();
             const imageHeight = (image.height == null) ? "" : image.height.toString();
@@ -87,11 +86,10 @@ class ImagesEditController extends Controller<ImagesListProps, ImagesListState> 
 
             itemModel.itemList = [
                 imageId,
-                image.fileName,
+                imageHtml,
                 imageWidth,
                 imageHeight,
-                imageScale,
-                imageHtml
+                imageScale
             ];
 
             return itemModel;

@@ -6,7 +6,7 @@ namespace IOBootstrap.NET.Core.Extensions;
 
 public static class IIOImageAssetViewModelExtension
 {
-    public static string CreateImagePublicIdt(this IIOImageAssetViewModel input, string fileName)
+    public static string CreateImagePublicId(this IIOImageAssetViewModel input, string fileName)
     {
 		byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
 		byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));

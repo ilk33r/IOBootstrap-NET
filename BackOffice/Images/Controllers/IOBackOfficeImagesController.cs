@@ -45,7 +45,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
         public IOSaveImageResponseModel SaveImage(IFormFile file)
         {
             string filePath = ViewModel.SaveFile(file);
-            IOImageVariationsModel imageMetadata = ViewModel.SaveImagesMetaData(filePath, file.FileName);
+            IOImageVariationsModel imageMetadata = ViewModel.SaveImagesMetaData(filePath);
             return new IOSaveImageResponseModel(imageMetadata);
         }
 

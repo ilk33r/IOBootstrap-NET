@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
@@ -36,24 +37,8 @@ public static class IIOImageViewModelExtension
         }
 
         string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey);
-        string folderName = DateTimeOffset.UtcNow.ToString("yyyy-MM");
-        string folderPath = Path.Combine(imagesFolder, folderName);
-
-        if (!Directory.Exists(folderPath))
-        {
-            try
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            catch
-            {
-                throw new IOImageSaveException();
-            }
-        }
-
-        string newFileName = IORandomUtilities.GenerateGUIDString();
-        string newFilePath = String.Format("{0}/{1}.jpg", folderName, newFileName);
-        string filePath = Path.Combine(imagesFolder, newFilePath);
+        string newFileName = String.Format("{0}-{1}.jpg", IORandomUtilities.GenerateGUIDString(), file.FileName.RemoveNonASCII());
+        string filePath = Path.Combine(imagesFolder, newFileName);
         
         try
         {

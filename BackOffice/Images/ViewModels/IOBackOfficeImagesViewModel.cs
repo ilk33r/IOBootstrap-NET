@@ -6,6 +6,7 @@ using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
+using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
@@ -14,7 +15,7 @@ using IOBootstrap.NET.Common.Utilities;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
-    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOImageViewModel
+    public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOImageViewModel, IIOImageAssetViewModel
     where TDBContext : IODatabaseContext<TDBContext> 
     {
         #region Initialization Methods
@@ -45,13 +46,17 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
                                                                 .Take(requestModel.Count)
                                                                 .ToList();
 
+            foreach (IOImageVariationsModel image in paginatedImages)
+            {
+                image.FileName = this.CreateImagePublicId(image.FileName);
+            }
+
             return new IOGetImagesResponseModel(imageCount, paginatedImages);
         }
 
-        public IOImageVariationsModel SaveImagesMetaData(string filePath, string fileName)
+        public IOImageVariationsModel SaveImagesMetaData(string filePath)
         {
-            string globalFileName = IORandomUtilities.GenerateGUIDString();
-            string variationFileName = globalFileName + "-" + fileName.RemoveNonASCII() + ".jpg";
+            string fileName = Path.GetFileName(filePath);
 
             if (!File.Exists(filePath))
             {
@@ -63,7 +68,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
             IOImagesEntity imageEntity = new IOImagesEntity()
             {
-                FileName = variationFileName,
+                FileName = fileName,
                 FileType = "image/jpeg",
                 Width = rawImage.Width,
                 Height = rawImage.Height,

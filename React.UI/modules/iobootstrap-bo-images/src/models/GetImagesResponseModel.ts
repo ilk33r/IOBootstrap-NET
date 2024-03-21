@@ -1,4 +1,4 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
+import { BaseResponseModel } from "iobootstrap-ui-base";
 import ImageVariationsModel from "./ImageVariationsModel";
 
 class GetImagesResponseModel extends BaseResponseModel {

@@ -1,8 +1,4 @@
 import DashboardController from "../../dashboard/controllers/DashboardController";
-import ImagesAddController from "../../images/controllers/ImagesAddController";
-import ImagesEditController from "../../images/controllers/ImagesEditController";
-import ImagesModifyController from "../../images/controllers/ImagesModifyController";
-import ImagesUploadController from "../../images/controllers/ImagesUploadController";
 import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
 import React from "react";
@@ -13,6 +9,7 @@ import { MessageListController, MessagesAddController, MessagesDeleteController,
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
+import { ImagesAddController, ImagesEditController, ImagesModifyController, ImagesUploadController } from "iobootstrap-bo-images";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 

@@ -1,14 +1,9 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeImageProps from "../../shared/props/FormTypeImageProps";
-import FormView from "../../shared/views/FormView";
 import ImageVariationsModel from "../models/ImageVariationsModel";
 import React from "react";
 import SaveImageRequestModel from "../models/SaveImageRequestModel";
 import SaveImageResponseModel from "../models/SaveImageResponseModel";
-import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import { CalloutTypes, Controller, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesUploadController extends Controller<{}, {}> {
 
@@ -32,7 +27,7 @@ class ImagesUploadController extends Controller<{}, {}> {
         }
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/SaveImages`;

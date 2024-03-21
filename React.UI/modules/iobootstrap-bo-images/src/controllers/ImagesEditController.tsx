@@ -1,13 +1,10 @@
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
 import GetImagesRequestModel from "../models/GetImagesRequestModel";
 import GetImagesResponseModel from "../models/GetImagesResponseModel";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListDataPaginationModel from "../../shared/models/ListDataPaginationModel";
-import ListView from "../../shared/views/ListView";
 import ImagesListProps from "../props/ImagesListProps";
 import ImagesListState from "../props/ImagesListState";
 import React from "react";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 
 class ImagesEditController extends Controller<ImagesListProps, ImagesListState> {
 

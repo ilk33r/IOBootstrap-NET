@@ -15,6 +15,7 @@
     "iobootstrap-bo-clients": "file:../React.UI/modules/iobootstrap-bo-clients",
     "iobootstrap-bo-pushnotifications": "file:../React.UI/modules/iobootstrap-bo-pushnotifications",
     "iobootstrap-bo-generatebopage": "file:../React.UI/modules/iobootstrap-bo-generatebopage",
+    "iobootstrap-bo-images": "file:../React.UI/modules/iobootstrap-bo-images",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

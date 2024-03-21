@@ -1,18 +1,8 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import Controller from "../../../presentation/controllers/Controller";
 import DeleteImagesRequestModel from "../models/DeleteImagesRequestModel";
-import FormType from "../../shared/interfaces/FormType";
-import FormTypeImageProps from "../../shared/props/FormTypeImageProps";
-import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormView from "../../shared/views/FormView";
 import ImageVariationsModel from "../models/ImageVariationsModel";
 import React from "react";
-import ValidationMinAmountRule from "../../../presentation/validations/ValidationMinAmountRule";
-import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeImageProps, FormTypeNumberProps, FormTypeSelectProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesModifyController extends Controller<{}, {}> {
 
@@ -58,7 +48,7 @@ class ImagesModifyController extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[]) {
+    handleFormSuccess(values: string[], blobs: Blob[]) {
 
     }
 

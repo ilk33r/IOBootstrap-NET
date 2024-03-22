@@ -3,7 +3,6 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Images;
-using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Messages.Images;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Core.Extensions;
@@ -11,7 +10,6 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Interfaces;
-using IOBootstrap.NET.Common.Utilities;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 {
@@ -88,56 +86,17 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
             };
         }
 
-        public void DeleteImages(IODeleteImagesRequestModel requestModel)
+        public void DeleteImage(IODeleteImagesRequestModel requestModel)
         {
-            List<IOImageVariationsModel> imageVariations = new List<IOImageVariationsModel>();
-
-            foreach (int imageId in requestModel.ImagesIdList)
-            {
-                IOImagesEntity imagesEntity = DatabaseContext.Images.Find(imageId);
-                if (imagesEntity == null)
-                {
-                    continue;
-                }
-
-                imageVariations.Add(new IOImageVariationsModel()
-                {
-                    ID = imagesEntity.ID,
-                    FileName = new string(imagesEntity.FileName),
-                    FileType = imagesEntity.FileType,
-                    Width = imagesEntity.Width,
-                    Height = imagesEntity.Height,
-                    Scale = imagesEntity.Scale
-                });
-
-                DatabaseContext.Remove(imagesEntity);
-            }
-
-            if (imageVariations.Count() > 0)
-            {
-                DatabaseContext.SaveChanges();
-            }
-            else
+            IOImagesEntity imagesEntity = DatabaseContext.Images.Find(requestModel.ImageId);
+            if (imagesEntity == null)
             {
                 throw new IOImageNotFoundException();
             }
 
-            foreach (IOImageVariationsModel variation in imageVariations)
-            {
-                try {
-                    Task<bool> deleteStatus = DeleteFromBlob(variation.FileName);
-                    deleteStatus.Wait();
-
-                    if (!deleteStatus.Result)
-                    {
-                        throw new IOImageDeleteException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new IOImageDeleteException(ex.Message);
-                }
-            }
+            this.RemoveFile(imagesEntity.FileName);
+            DatabaseContext.Remove(imagesEntity);
+            DatabaseContext.SaveChanges();
         }
 
         #endregion

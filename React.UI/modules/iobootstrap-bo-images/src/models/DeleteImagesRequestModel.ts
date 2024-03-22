@@ -2,12 +2,12 @@ import { BaseRequestModel } from "iobootstrap-ui-base";
 
 class DeleteImagesRequestModel extends BaseRequestModel {
 
-    imagesIdList: number[];
+    imageId: number | null;
 
     constructor() {
         super();
 
-        this.imagesIdList = [];
+        this.imageId = null;
     }
 }
 

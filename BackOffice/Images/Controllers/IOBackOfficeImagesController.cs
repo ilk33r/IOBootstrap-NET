@@ -52,9 +52,9 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers
         [IOValidateRequestModel]
         [IOUserRole(UserRoles.CustomUser)]
         [HttpPost("[action]")]
-        public IOResponseModel DeleteImages([FromBody] IODeleteImagesRequestModel requestModel)
+        public IOResponseModel DeleteImage([FromBody] IODeleteImagesRequestModel requestModel)
         {
-            ViewModel.DeleteImages(requestModel);
+            ViewModel.DeleteImage(requestModel);
             return new IOResponseModel();
         }
 

@@ -25,9 +25,9 @@ class ImagesModifyController extends Controller<{}, {}> {
 
         const imageId = (this._selectedImage?.id !== undefined && this._selectedImage?.id != null) ? this._selectedImage?.id : 0;
         const request = new DeleteImagesRequestModel();
-        request.imagesIdList = [ imageId ];
+        request.imageId = imageId;
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/DeleteImages`;
+        const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/DeleteImage`;
         const weakSelf = this;
 
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
@@ -40,7 +40,7 @@ class ImagesModifyController extends Controller<{}, {}> {
     }
 
     handleFormError(errorTitle: string, errorMessage: string) {
-        if (errorTitle === "deleteImage") {
+        if (errorTitle == "deleteImage" && errorMessage == "deleteImage") {
             this.deleteImage();
             return;
         }
@@ -64,7 +64,7 @@ class ImagesModifyController extends Controller<{}, {}> {
         const keepRatio = (this._selectedImage?.keepRatio !== undefined && this._selectedImage?.keepRatio != null) ? this._selectedImage?.keepRatio : true;
         const keepRationValue = (keepRatio) ? "1" : "0";
         const imageFileName = (this._selectedImage?.fileName !== undefined && this._selectedImage?.fileName != null) ? this._selectedImage?.fileName : "";
-        const imageUrl = `${process.env.REACT_APP_STORAGE_BASE_URL}/${imageFileName}`
+        const imageUrl = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${encodeURIComponent(imageFileName)}`
 
         const formElements: FormType[] = [
             FormTypeNumberProps.initializeWithValidations("Width", imageWidth.toString(), false, [ ValidationMinAmountRule.initialize("Width must be greater than 0.", "Invalid image width.", 0) ]),

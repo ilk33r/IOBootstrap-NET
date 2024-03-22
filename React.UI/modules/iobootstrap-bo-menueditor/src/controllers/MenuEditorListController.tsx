@@ -55,6 +55,7 @@ class MenuEditorListController extends Controller<MenuEditorListProps, MenuEdito
 
     updateDataHandler(index: number) {
         let currentIndex = 0;
+        let itemFound = false;
 
         for (const parentMenu of this.state.menuList) {
             if (currentIndex === index) {
@@ -88,12 +89,17 @@ class MenuEditorListController extends Controller<MenuEditorListProps, MenuEdito
                         updateRequestModel.parentEntityID = parentMenu.id;
                         updateRequestModel.parentEntityName = parentMenu.name;
     
+                        itemFound = true;
                         this.appContext.setObjectForKey("menuEditorUpdateRequest", updateRequestModel);
                         this.navigateToPage("menuEditorUpdate");
                         break;
                     }
 
                     currentIndex += 1;
+                }
+
+                if (itemFound) {
+                    break;
                 }
             }
         }

@@ -13,7 +13,9 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
     constructor(props: FormTypeImageProps) {
         super(props);
 
-        this.state = new FormViewState();
+        const newState = new FormViewState();
+        newState.imagePreviewURL = this.props.value;
+        this.state = newState;
 
         this._formValue = this.props.value;
         this._fileValue = null;
@@ -134,10 +136,13 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
                 inputDisabled = false;
                 deleteButtonClassName = "hidden";
             }
-        } else {
+        } else if (this.state.imagePreviewURL.length > 0) {
             imageFileAddress = this.state.imagePreviewURL;
             inputDisabled = true;
             deleteButtonClassName = "";
+        } else {
+            inputDisabled = false;
+            deleteButtonClassName = "hidden";
         }
 
         return(

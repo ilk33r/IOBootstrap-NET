@@ -1,4 +1,4 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
+import { BaseResponseModel } from "iobootstrap-ui-base";
 import BO__EntityItemName__Model from "./BO__EntityItemName__Model";
 
 class BO__ListEntityDisplayName__ResponseModel extends BaseResponseModel {

@@ -1,17 +1,7 @@
 import React from "react";
-import Controller from "../../../presentation/controllers/Controller";
-import CalloutTypes from "../../../presentation/constants/CalloutTypes";
-import FormType from "../../shared/interfaces/FormType";
-import FormView from "../../shared/views/FormView";
-import FormTypeNumberProps from "../../shared/props/FormTypeNumberProps";
-import FormTypeTextProps from "../../shared/props/FormTypeTextProps";
-import FormTypeDateProps from "../../shared/props/FormTypeDateProps";
-import FormTypeSelectProps from "../../shared/props/FormTypeSelectProps";
-import FormDataOptionModel from "../../shared/models/FormDataOptionModel";
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import ValidationRequiredRule from "../../../presentation/validations/ValidationRequiredRule";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
+import { BaseResponseModel, CalloutTypes, Controller, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormTypeDateProps, FormTypeNumberProps, FormTypeTextProps, FormTypeSelectProps, FormDataOptionModel, FormType, FormView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
 class __UpdateEntityDisplayName__Controller extends Controller<{}, {}> {

@@ -1,15 +1,12 @@
 import React from "react";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
-import ListDataItemModel from "../../shared/models/ListDataItemModel";
-import ListDataPaginationModel from "../../shared/models/ListDataPaginationModel";
-import ListView from "../../shared/views/ListView";
 import __ListEntityDisplayName__State from "../props/__ListEntityDisplayName__State";
 import __ListEntityDisplayName__Props from "../props/__ListEntityDisplayName__Props";
 import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDisplayName__RequestModel";
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
+import { Controller } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
 class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {

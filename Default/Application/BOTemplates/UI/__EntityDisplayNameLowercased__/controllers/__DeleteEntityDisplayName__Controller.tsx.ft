@@ -1,9 +1,7 @@
-import BaseResponseModel from "../../../common/models/BaseResponseModel";
-import BreadcrumbNavigationModel from "../../shared/models/BreadcrumbNavigationModel";
-import Controller from "../../../presentation/controllers/Controller";
+import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
-import QuestionView from "../../shared/views/QuestionView";
 import React from "react";
+import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
 class __DeleteEntityDisplayName__Controller extends Controller<{}, {}> {
 

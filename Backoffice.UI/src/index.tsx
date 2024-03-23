@@ -11,6 +11,9 @@ import './presentation/styles/AdminSkins.css';
 import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
 import { CalloutView, IndicatorView } from 'iobootstrap-bo-base';
+import DIUserRoleHooks from './di/DIUserRoleHooks';
+
+DIUserRoleHooks.setup();
 
 let calloutViewRef = React.createRef<CalloutView>();
 const calloutView = (<CalloutView ref={calloutViewRef} />);

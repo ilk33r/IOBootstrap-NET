@@ -4,9 +4,8 @@ import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
-import { Controller } from "iobootstrap-ui-base";
+import { Controller, DIHooks } from "iobootstrap-ui-base";
 import { BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
-import { UserRoles } from "iobootstrap-bo-base";
 
 class UsersListController extends Controller<UsersListProps, UsersListState> {
 
@@ -88,8 +87,14 @@ class UsersListController extends Controller<UsersListProps, UsersListState> {
         const items = this.state.userList.map(user => {
             const itemModel = new ListDataItemModel();
 
-            const role: UserRoles = UserRoles.fromRawValue(user.userRole);
-            const roleName = UserRoles.getRoleName(role);
+            let roleName = ""
+            const userRoleNameHook = DIHooks.Instance.hookForKey("userRoleName")
+            if (userRoleNameHook != null) {
+                const roleNameAny = userRoleNameHook(user.userRole);
+                if (roleNameAny != null) {
+                    roleName = roleNameAny;
+                }
+            }
 
             itemModel.itemList = [
                 user.id.toString(),

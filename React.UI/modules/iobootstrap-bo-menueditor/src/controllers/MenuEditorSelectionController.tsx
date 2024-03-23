@@ -2,8 +2,8 @@ import MenuEditorListProps from "../props/MenuEditorListProps";
 import MenuEditorListState from "../props/MenuEditorListState";
 import MenuListResponseModel from "../models/MenuListResponseModel";
 import React from "react";
-import { Controller, WindowMessageModel } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView, UserRoles } from "iobootstrap-bo-base";
+import { Controller, DIHooks, WindowMessageModel } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MenuEditorSelectionController extends Controller<MenuEditorListProps, MenuEditorListState> {
 
@@ -65,8 +65,14 @@ class MenuEditorSelectionController extends Controller<MenuEditorListProps, Menu
         this.state.menuList.forEach(menu => {
             const itemModel = new ListDataItemModel();
 
-            const role: UserRoles = UserRoles.fromRawValue(menu.requiredRole);
-            const roleName = UserRoles.getRoleName(role);
+            let roleName = ""
+            const userRoleNameHook = DIHooks.Instance.hookForKey("userRoleName")
+            if (userRoleNameHook != null) {
+                const roleNameAny = userRoleNameHook(menu.requiredRole);
+                if (roleNameAny != null) {
+                    roleName = roleNameAny;
+                }
+            }
 
             itemModel.itemList = [
                 menu.id.toString(),
@@ -84,8 +90,13 @@ class MenuEditorSelectionController extends Controller<MenuEditorListProps, Menu
                 menu.childItems.forEach(childMenu => {
                     const childItemModel = new ListDataItemModel();
 
-                    const childMenuRole: UserRoles = UserRoles.fromRawValue(childMenu.requiredRole);
-                    const childMenuRoleName = UserRoles.getRoleName(childMenuRole);
+                    let childMenuRoleName = "";
+                    if (userRoleNameHook != null) {
+                        const childMenuRoleNameAny = userRoleNameHook(childMenu.requiredRole);
+                        if (childMenuRoleNameAny != null) {
+                            childMenuRoleName = childMenuRoleNameAny;
+                        }
+                    }
         
                     childItemModel.itemList = [
                         childMenu.id.toString(),

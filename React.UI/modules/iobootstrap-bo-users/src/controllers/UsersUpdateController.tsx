@@ -1,8 +1,7 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, Controller, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
-import { UserRoles } from "iobootstrap-bo-base";
 
 class UsersUpdateController extends Controller<{}, {}> {
 
@@ -61,13 +60,18 @@ class UsersUpdateController extends Controller<{}, {}> {
             BreadcrumbNavigationModel.initialize("usersUpdate", "Update User")
         ];
 
+        let userRoleFormDataOptions: FormDataOptionModel[] = []
+        const userRoleFormDataOptionsHook = DIHooks.Instance.hookForKey("userRoleFormDataOptions")
+        if (userRoleFormDataOptionsHook != null) {
+            const userRoleFormDataOptionsAny = userRoleFormDataOptionsHook(null);
+            if (userRoleFormDataOptionsAny != null) {
+                userRoleFormDataOptions = userRoleFormDataOptionsAny;
+            }
+        }
+        
         const formElements: FormType[] = [
             FormTypeTextProps.initializeWithValidations("User Name", this._updateRequest.userName, true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ]),
-            FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, [
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.SuperAdmin), UserRoles.SuperAdmin.toString()),
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.Admin), UserRoles.Admin.toString()),
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.User), UserRoles.User.toString()),
-            ])
+            FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, userRoleFormDataOptions)
         ];
 
         return (

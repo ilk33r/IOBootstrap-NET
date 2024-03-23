@@ -28,7 +28,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers
 
         #endregion
 
-        [IOUserRole(UserRoles.User)]
+        [IOUserRole(UserRoles.CustomUser)]
         [HttpGet("[action]")]
         public virtual IOListMessagesResponseModel ListMessages()
         {

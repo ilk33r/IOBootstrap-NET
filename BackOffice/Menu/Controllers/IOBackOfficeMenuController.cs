@@ -53,7 +53,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers
             return new IOMenuUpdateResponseModel();
         }
 
-        [IOUserRole(UserRoles.User)]
+        [IOUserRole(UserRoles.CustomUser)]
         [HttpGet("[action]")]
         public virtual IOMenuListResponseModel ListMenuItems()
         {

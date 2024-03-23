@@ -5,8 +5,8 @@ import MenuListModel from "../models/MenuListModel";
 import MenuListResponseModel from "../models/MenuListResponseModel";
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView, UserRoles } from "iobootstrap-bo-base";
+import { Controller, DIHooks } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MenuEditorListController extends Controller<MenuEditorListProps, MenuEditorListState> {
 
@@ -124,8 +124,14 @@ class MenuEditorListController extends Controller<MenuEditorListProps, MenuEdito
         this.state.menuList.forEach(menu => {
             const itemModel = new ListDataItemModel();
 
-            const role: UserRoles = UserRoles.fromRawValue(menu.requiredRole);
-            const roleName = UserRoles.getRoleName(role);
+            let roleName = ""
+            const userRoleNameHook = DIHooks.Instance.hookForKey("userRoleName")
+            if (userRoleNameHook != null) {
+                const roleNameAny = userRoleNameHook(menu.requiredRole);
+                if (roleNameAny != null) {
+                    roleName = roleNameAny;
+                }
+            }
 
             itemModel.itemList = [
                 menu.id.toString(),
@@ -143,8 +149,13 @@ class MenuEditorListController extends Controller<MenuEditorListProps, MenuEdito
                 menu.childItems.forEach(childMenu => {
                     const childItemModel = new ListDataItemModel();
 
-                    const childMenuRole: UserRoles = UserRoles.fromRawValue(childMenu.requiredRole);
-                    const childMenuRoleName = UserRoles.getRoleName(childMenuRole);
+                    let childMenuRoleName = "";
+                    if (userRoleNameHook != null) {
+                        const childMenuRoleNameAny = userRoleNameHook(childMenu.requiredRole);
+                        if (childMenuRoleNameAny != null) {
+                            childMenuRoleName = childMenuRoleNameAny;
+                        }
+                    }
         
                     childItemModel.itemList = [
                         childMenu.id.toString(),

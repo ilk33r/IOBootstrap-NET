@@ -1,7 +1,7 @@
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView, UserRoles } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, Controller, DIHooks, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class MenuEditorUpdateController extends Controller<{}, {}> {
 
@@ -61,15 +61,20 @@ class MenuEditorUpdateController extends Controller<{}, {}> {
             BreadcrumbNavigationModel.initialize("menuEditorUpdate", "Update Menu")
         ];
 
+        let userRoleFormDataOptions: FormDataOptionModel[] = []
+        const userRoleFormDataOptionsHook = DIHooks.Instance.hookForKey("userRoleFormDataOptions")
+        if (userRoleFormDataOptionsHook != null) {
+            const userRoleFormDataOptionsAny = userRoleFormDataOptionsHook(null);
+            if (userRoleFormDataOptionsAny != null) {
+                userRoleFormDataOptions = userRoleFormDataOptionsAny;
+            }
+        }
+
         const formElements: FormType[] = [
             FormTypeTextProps.initializeWithValidations("Name", this._updateRequest.name, true, [ ValidationRequiredRule.initialize("Name is too short.", "Invalid menu name.") ]),
             FormTypeTextProps.initializeWithValidations("Action", this._updateRequest.action, true, [ ValidationRequiredRule.initialize("Action is too short.", "Invalid menu action.") ]),
             FormTypeTextProps.initialize("CSS Class Name", this._updateRequest.cssClass ?? "", true),
-            FormTypeSelectProps.initialize("Required Role", this._updateRequest.requiredRole.toString(), true, [
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.SuperAdmin), UserRoles.SuperAdmin.toString()),
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.Admin), UserRoles.Admin.toString()),
-                FormDataOptionModel.initialize(UserRoles.getRoleName(UserRoles.User), UserRoles.User.toString()),
-            ]),
+            FormTypeSelectProps.initialize("Required Role", this._updateRequest.requiredRole.toString(), true, userRoleFormDataOptions),
             FormTypeNumberProps.initializeWithValidations("Menu Order", this._updateRequest.menuOrder.toString(), true, [ 
                 ValidationRequiredRule.initialize("Menu order must be required.", "Invalid menu order."),
                 ValidationMinAmountRule.initialize("Menu order must be greater than zero.", "Invalid menu order.", 0)

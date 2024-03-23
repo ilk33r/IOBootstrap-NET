@@ -8,6 +8,7 @@ export { default as AppContext } from "./core/context/AppContext";
 export { default as AppService } from "./core/service/AppService";
 export { default as AppStorage } from "./core/storage/AppStorage";
 export type { DI } from "./di/DI";
+export { default as DIHooks } from "./di/DIHooks";
 export { default as CalloutTypes } from "./presentation/constants/CalloutTypes";
 export { default as Controller } from "./presentation/controllers/Controller";
 export type { CalloutViewPresenter } from "./presentation/inerfaces/CalloutViewPresenter";
@@ -20,4 +21,4 @@ export { default as ValidationMaxLengthRule } from "./presentation/validations/V
 export { default as ValidationMinAmountRule } from "./presentation/validations/ValidationMinAmountRule";
 export { default as ValidationMinLengthRule } from "./presentation/validations/ValidationMinLengthRule";
 export { default as ValidationRequiredRule } from "./presentation/validations/ValidationRequiredRule";
-export { default as View }from "./presentation/views/View";
+export { default as View } from "./presentation/views/View";

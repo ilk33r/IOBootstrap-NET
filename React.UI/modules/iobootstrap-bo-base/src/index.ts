@@ -22,6 +22,7 @@ export { default as FormElement } from "./screens/shared/interfaces/FormElement"
 export { default as FormType } from "./screens/shared/interfaces/FormType";
 export { default as FormDataOptionModel } from "./screens/shared/models/FormDataOptionModel";
 export { default as FormTypeDateProps } from "./screens/shared/props/FormTypeDateProps";
+export { default as FormTypeFileProps } from "./screens/shared/props/FormTypeFileProps";
 export { default as FormTypeImageProps } from "./screens/shared/props/FormTypeImageProps";
 export { default as FormTypeNumberProps } from "./screens/shared/props/FormTypeNumberProps";
 export { default as FormTypePasswordProps } from "./screens/shared/props/FormTypePasswordProps";
@@ -31,6 +32,7 @@ export { default as FormTypeTextAreaProps } from "./screens/shared/props/FormTyp
 export { default as FormTypeTextProps } from "./screens/shared/props/FormTypeTextProps";
 export { default as FormViewProps } from "./screens/shared/props/FormViewProps";
 export { default as FormViewState } from "./screens/shared/props/FormViewState";
+export { default as FormTypeFileView } from "./screens/shared/views/FormTypeFileView";
 export { default as FormTypeImageView } from "./screens/shared/views/FormTypeImageView";
 export { default as FormTypePopupSelectionView } from "./screens/shared/views/FormTypePopupSelectionView";
 export { default as FormTypeSelectView } from "./screens/shared/views/FormTypeSelectView";

@@ -16,6 +16,8 @@ import FormViewProps from "../props/FormViewProps";
 import React from "react";
 import { Validatable, View } from "iobootstrap-ui-base";
 import BreadcrumbView from "./BreadcrumbView";
+import FormTypeFileProps from "../props/FormTypeFileProps";
+import FormTypeFileView from "./FormTypeFileView";
 
 class FormView extends View<FormViewProps, {}> {
 
@@ -151,6 +153,19 @@ class FormView extends View<FormViewProps, {}> {
                             value={formElement.value}
                             selectedItemId={formElement.selectedItemId}
                             selectionURL={formElement.selectionURL}
+                            isEnabled={formElement.isEnabled}
+                            errorHandler={this.handleFormError}
+                            validations={formElement.validations}
+                            key={index}
+                            ref={this._formElementsRef[index]} />);
+            }
+
+            if (formElement instanceof FormTypeFileProps) {
+                return (<FormTypeFileView index={index}
+                            inputType={formElement.inputType}
+                            name={formElement.name}
+                            value={formElement.value}
+                            fileName={formElement.fileName}
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}

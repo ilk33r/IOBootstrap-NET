@@ -21,6 +21,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     {
     }
 
+    [IORequireHTTPS]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -29,6 +30,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
         return ViewModel.Get__EntityDisplayName__(requestModel.Start, requestModel.Count);
     }
 
+    [IORequireHTTPS]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -41,6 +43,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
         return new ResponseModel();
     }
 
+    [IORequireHTTPS]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -53,6 +56,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
         return new ResponseModel();
     }
 
+    [IORequireHTTPS]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using __ProjectName__.Common.Messages.Base;
+using __ProjectName__.Common.Models.__EntityDisplayName__;
 
-namespace __ProjectName__.Common;
+namespace __ProjectName__.Common.Messages.__EntityDisplayName__;
 
 public class BO__ListEntityDisplayName__ResponseModel : ResponseModel
 {

@@ -29,6 +29,8 @@ where TDBContext : IODatabaseContext<TDBContext>
         Assembly dataAccessAssembly = Assembly.Load(dataAccessAssemblyName);
         Type entityClass = dataAccessAssembly.GetType(dataAccessAssemblyName + ".Entities." + entityName);
         var entityClassInstance = Activator.CreateInstance(entityClass);
+        var entityNameParts = entityName.Split('.');
+        var cleanEntityName = entityNameParts.Last();
 
         string serializedBody = JsonSerializer.Serialize(entityClassInstance, new JsonSerializerOptions()
         {
@@ -48,20 +50,20 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
 
         IOGenerateBOPageResponseModel response = new IOGenerateBOPageResponseModel();
-        response.EntityName = entityName;
-        response.EntityDisplayName = entityName.Replace("Entity", "s");
-        response.EntityItemName = entityName.Replace("Entity", "");
+        response.EntityName = cleanEntityName;
+        response.EntityDisplayName = cleanEntityName.Replace("Entity", "s");
+        response.EntityItemName = cleanEntityName.Replace("Entity", "");
         response.Properties = properties;
-        response.ListEntityDisplayName = entityName.Replace("Entity", "List");
+        response.ListEntityDisplayName = cleanEntityName.Replace("Entity", "List");
         response.ListEntityName = response.ListEntityDisplayName.ToLowerFirst();
         response.ListEntityAPIPath = String.Format("BackOffice{0}/Get{1}", response.EntityDisplayName, response.EntityDisplayName);
-        response.UpdateEntityDisplayName = entityName.Replace("Entity", "Update");
+        response.UpdateEntityDisplayName = cleanEntityName.Replace("Entity", "Update");
         response.UpdateEntityName = response.UpdateEntityDisplayName.ToLowerFirst();
         response.UpdateEntityAPIPath = String.Format("BackOffice{0}/Update{1}", response.EntityDisplayName, response.EntityItemName);
-        response.DeleteEntityDisplayName = entityName.Replace("Entity", "Delete");
+        response.DeleteEntityDisplayName = cleanEntityName.Replace("Entity", "Delete");
         response.DeleteEntityName = response.DeleteEntityDisplayName.ToLowerFirst();
         response.DeleteEntityAPIPath = String.Format("BackOffice{0}/Delete{1}", response.EntityDisplayName, response.EntityItemName);
-        response.CreateEntityDisplayName = entityName.Replace("Entity", "Add");
+        response.CreateEntityDisplayName = cleanEntityName.Replace("Entity", "Add");
         response.CreateEntityName = response.CreateEntityDisplayName.ToLowerFirst();
         response.CreateEntityAPIPath = String.Format("BackOffice{0}/Create{1}", response.EntityDisplayName, response.EntityItemName);
 

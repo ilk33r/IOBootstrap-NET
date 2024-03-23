@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using __ProjectName__.Common.Enumerations;
 using __ProjectName__.Common.Models.Base;
 
-namespace __ProjectName__.Common;
+namespace __ProjectName__.Common.Models.__EntityDisplayName__;
 
 public class BO__EntityItemName__Model : Model
 {

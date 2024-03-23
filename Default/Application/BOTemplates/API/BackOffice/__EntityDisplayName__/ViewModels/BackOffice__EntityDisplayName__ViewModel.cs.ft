@@ -1,9 +1,10 @@
 using IOBootstrap.NET.Common.Exceptions.Common;
-using __ProjectName__.Common;
-using __ProjectName__.Core;
-using __ProjectName__.DataAccess.Entities;
+using __ProjectName__.Common.Messages.__EntityDisplayName__;
+using __ProjectName__.Common.Models.__EntityDisplayName__;
+using __ProjectName__.Core.ViewModels;
+using __ProjectName__.DataAccess.Entities.__EntityDisplayName__;
 
-namespace __ProjectName__.BackOffice;
+namespace __ProjectName__.BackOffice.__EntityDisplayName__;
 
 public class BackOffice__EntityDisplayName__ViewModel : BackOfficeViewModel
 {

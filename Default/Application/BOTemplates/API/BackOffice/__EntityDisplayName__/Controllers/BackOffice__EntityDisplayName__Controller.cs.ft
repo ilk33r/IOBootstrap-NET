@@ -1,14 +1,14 @@
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
-using __ProjectName__.Common;
+using __ProjectName__.Common.Messages.__EntityDisplayName__;
 using __ProjectName__.Common.Messages.Base;
-using __ProjectName__.Core;
+using __ProjectName__.Core.Controllers;
 using __ProjectName__.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace __ProjectName__.BackOffice;
+namespace __ProjectName__.BackOffice.__EntityDisplayName__;
 
 [IOBackoffice]
 [EnableCors]

@@ -42,3 +42,6 @@ export { default as HeaderState } from "./screens/shared/props/HeaderState";
 export { default as HeaderView } from "./screens/shared/views/HeaderView";
 export { default as QuestionViewProps } from "./screens/shared/props/QuestionViewProps";
 export { default as QuestionView } from "./screens/shared/views/QuestionView";
+export { default as UploadModalViewProps } from "./screens/shared/props/UploadModalViewProps";
+export { default as UploadModalViewState } from "./screens/shared/props/UploadModalViewState";
+export { default as UploadModalView } from "./screens/shared/views/UploadModalView";

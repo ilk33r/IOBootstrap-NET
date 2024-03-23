@@ -4,7 +4,7 @@ import MainProps from '../props/MainProps';
 import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
 import React from 'react';
-import { CalloutPresenter, CalloutViewPresenter, Controller, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants } from 'iobootstrap-ui-base';
+import { CalloutPresenter, CalloutViewPresenter, Controller, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
 import { BOCommonConstants, FooterView, HeaderView } from 'iobootstrap-bo-base';
 import { MenuController } from 'iobootstrap-bo-menu';
 import { LoginController } from 'iobootstrap-bo-login';
@@ -29,6 +29,11 @@ class Main extends Controller<MainProps, MainState> {
         if (props.indicatorView !== undefined) {
             const indicatorPresenter = this.indicatorPresenter as IndicatorPresenter;
             indicatorPresenter.indicatorView = props.indicatorView.current as IndicatorViewPresenter;
+        }
+
+        if (props.uploadModalView !== undefined) {
+            const uploadModalPresenter = this.uploadModalPresenter as UploadModalPresenter;
+            uploadModalPresenter.uploadModalView = props.uploadModalView.current as UploadModalViewPresenter;
         }
 
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);

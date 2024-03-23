@@ -10,7 +10,7 @@ import './presentation/styles/AdminLTE.css';
 import './presentation/styles/AdminSkins.css';
 import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
-import { CalloutView, IndicatorView } from 'iobootstrap-bo-base';
+import { CalloutView, IndicatorView, UploadModalView } from 'iobootstrap-bo-base';
 import DIUserRoleHooks from './di/DIUserRoleHooks';
 
 DIUserRoleHooks.setup();
@@ -23,12 +23,29 @@ let indicatorViewRef = React.createRef<IndicatorView>();
 const indicatorView = (<IndicatorView ref={indicatorViewRef} />);
 ReactDOM.render(indicatorView, document.getElementById('indicatorWrapper'));
 
+let uploadModalViewRef = React.createRef<UploadModalView>();
+let uploadModalViewPresentHandler = function() {
+  $('#uploadModal').modal({
+    backdrop: 'static',
+    keyboard: false
+  });
+};
+let uploadModalViewDismissHandler = function() {
+  $('#uploadModal').modal('hide');
+};
+const uploadModalView = (<UploadModalView ref={uploadModalViewRef}
+  presentHandler={uploadModalViewPresentHandler}
+  dismissHandler={uploadModalViewDismissHandler} />);
+
+ReactDOM.render(uploadModalView, document.getElementById('uploadModalWrapper'));
+
 const mainView = (<Main apiURL={process.env.REACT_APP_API_URL}
   authorization={process.env.REACT_APP_AUTHORIZATION}
   clientID={process.env.REACT_APP_BACKOFFICE_CLIENI_ID}
   clientSecret={process.env.REACT_APP_BACKOFFICE_CLIENI_SECRET} 
   calloutView={calloutViewRef}
-  indicatorView={indicatorViewRef} />);
+  indicatorView={indicatorViewRef}
+  uploadModalView={uploadModalViewRef} />);
 
 ReactDOM.render(mainView, document.getElementById('pagecontent'));
 

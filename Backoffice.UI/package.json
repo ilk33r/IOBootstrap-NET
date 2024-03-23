@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.29",
+    "@types/bootstrap": "^3.4.0",
     "@types/node": "^16.9.1"
   }
 }

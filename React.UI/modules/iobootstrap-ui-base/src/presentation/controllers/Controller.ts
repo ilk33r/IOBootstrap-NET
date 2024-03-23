@@ -10,6 +10,8 @@ import IndicatorPresenter from '../presenters/IndicatorPresenter';
 import type { IndicatorViewPresenter } from '../inerfaces/IndicatorViewPresenter';
 import React from 'react';
 import type { WindowMessageModel } from '../../common/models/WindowMessageModel';
+import { UploadModalViewPresenter } from '../inerfaces/UploadModalViewPresenter';
+import UploadModalPresenter from '../presenters/UploadModalPresenter';
 
 class Controller<TProps, TState> extends React.Component<TProps, TState> implements DI {
 
@@ -19,6 +21,7 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
 
     public calloutPresenter: CalloutViewPresenter = CalloutPresenter.Instance;
     public indicatorPresenter: IndicatorViewPresenter = IndicatorPresenter.Instance;
+    public uploadModalPresenter: UploadModalViewPresenter = UploadModalPresenter.Instance;
 
     public componentDidMount?(): void {
     }

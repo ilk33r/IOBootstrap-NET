@@ -25,7 +25,7 @@ class __UpdateEntityDisplayName__Controller extends Controller<{}, {}> {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    private handleFormSuccess(values: string[]) {
+    private handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
         const requestPath = `__UpdateEntityAPIPath__`;

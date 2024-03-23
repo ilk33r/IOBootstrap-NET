@@ -23,7 +23,7 @@ class QuestionView extends View<QuestionViewProps, {}> {
     render() {
         const noButtonStyle = {
             marginRight: '5px'
-          };
+        };
 
         return (
             <React.StrictMode>

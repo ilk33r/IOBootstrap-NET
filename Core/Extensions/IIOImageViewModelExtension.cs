@@ -45,6 +45,7 @@ public static class IIOImageViewModelExtension
             FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             fileStream.Write(jpegImage, 0, jpegImage.Length);
             fileStream.Flush();
+            fileStream.Close();
             return filePath;
         }
         catch

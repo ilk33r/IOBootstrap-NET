@@ -3,6 +3,7 @@ import BaseRequestModel from "../../common/models/BaseRequestModel";
 import BaseResponseModel from "../../common/models/BaseResponseModel";
 import UICommonConstants from "../../common/constants/UICommonConstants";
 
+type AppServiceBlobHandler = (blob: Blob) => void;
 type AppServiceSuccessHandler<T extends BaseResponseModel> = (response: T) => void;
 type AppServiceErrorHandler = (error: string) => void;
 
@@ -77,7 +78,7 @@ class AppService {
         });
     }
 
-    public postDownloadFile(path: string, fileName: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<BaseResponseModel>, errorHandler: AppServiceErrorHandler) {
+    public postDownloadFile(path: string, request: BaseRequestModel, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
         const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
 
@@ -94,12 +95,7 @@ class AppService {
         })
         .then(response => response.blob())
         .then(blob => {
-            // const file = window.URL.createObjectURL(blob);
-            const file = this.blobToFile(blob, fileName)
-            window.open(window.URL.createObjectURL(file), "", 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
-
-            const responseModel = new BaseResponseModel();
-            successHandler(responseModel);
+            successHandler(blob);
         })
         .catch(errorData => {
             const response = errorData as { message: string }
@@ -133,25 +129,6 @@ class AppService {
             const response = errorData as { message: string }
             errorHandler(response.message);
         });
-    }
-
-    private blobToFile(theBlob: Blob, fileName: string): File {
-        const fileNames = fileName.split(".");
-        const extension = fileNames[fileNames.length -1 ];
-        let contentType = theBlob.type;
-
-        if (extension === "zip") {
-            contentType = "application/zip";
-        }
-
-        return new File(
-            [theBlob as any], // cast as any
-            fileName, 
-            {
-                lastModified: new Date().getTime(),
-                type: contentType
-            }
-        )
     }
 }
 

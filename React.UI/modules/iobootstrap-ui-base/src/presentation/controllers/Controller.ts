@@ -69,6 +69,19 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             window.opener.postMessage(message, '*');
         }
     }
+
+    public downloadFile(blob: Blob, fileName: string) {
+        const objectUrl: string = URL.createObjectURL(blob);
+        const anchor: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+    
+        anchor.href = objectUrl;
+        anchor.download = fileName;
+        document.body.appendChild(anchor);
+        anchor.click();
+    
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(objectUrl);
+    }
 }
 
 export default Controller;

@@ -21,11 +21,11 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         this.downloadUIFiles = this.downloadUIFiles.bind(this);
     }
 
-    handleFormError(errorTitle: string, errorMessage: string) {
+    private handleFormError(errorTitle: string, errorMessage: string) {
         this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
     }
 
-    handleFormSuccess(values: string[], blobs: Blob[]) {
+    private handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_CONTROLLER_NAME}/CreateModel`;
@@ -43,29 +43,31 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
         });
     }
 
-    downloadAPIFiles(event: React.MouseEvent<HTMLButtonElement>) {
+    private downloadAPIFiles(event: React.MouseEvent<HTMLButtonElement>) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateAPIFiles`;
         const request = this.createRequest();
         
         const weakSelf = this;
-        this.service.postDownloadFile(requestPath, "APIFiles.zip", request, function () {
+        this.service.postDownloadFile(requestPath, request, function (blob: Blob) {
             weakSelf.indicatorPresenter.dismiss();
+            weakSelf.downloadFile(blob, "APIFiles.zip");
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
     }
 
-    downloadUIFiles(event: React.MouseEvent<HTMLButtonElement>) {
+    private downloadUIFiles(event: React.MouseEvent<HTMLButtonElement>) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateUIFiles`;
         const request = this.createRequest();
         
         const weakSelf = this;
-        this.service.postDownloadFile(requestPath, "UIFiles.zip", request, function () {
+        this.service.postDownloadFile(requestPath, request, function (blob: Blob) {
             weakSelf.indicatorPresenter.dismiss();
+            weakSelf.downloadFile(blob, "UIFiles.zip");
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });

@@ -78,6 +78,30 @@ class AppService {
         });
     }
 
+    public downloadFile(path: string, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
+        const requestUrl = `${this.baseUrl}/${path}`;
+        const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);
+
+        fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-IO-AUTHORIZATION': this.authorization,
+                'X-IO-AUTHORIZATION-TOKEN': (userToken == null) ? '' : userToken,
+                'X-IO-CLIENT-ID': this.clientID,
+                'X-IO-CLIENT-SECRET': this.clientSecret
+            }
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            successHandler(blob);
+        })
+        .catch(errorData => {
+            const response = errorData as { message: string }
+            errorHandler(response.message);
+        });
+    }
+
     public postDownloadFile(path: string, request: BaseRequestModel, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
         const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);

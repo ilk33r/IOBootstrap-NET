@@ -49,7 +49,7 @@ namespace IOBootstrap.NET.Application
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 // builder.Services.AddEndpointsApiExplorer();
 
-                string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey);
+                string authorization = Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)!;
                 IOCacheObject authorizationCache = new IOCacheObject(IOCacheKeys.SwaggerAuthorization, authorization, 0);
                 IOCache.CacheObject(authorizationCache);
 
@@ -74,7 +74,7 @@ namespace IOBootstrap.NET.Application
                 options.Cookie.Name = ".IO.Session";
             });
 
-            string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>();
+            string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>()!;
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -121,7 +121,7 @@ namespace IOBootstrap.NET.Application
             // Use middleware
             ConfigureMiddleWare(app, env, logger);
 
-            string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey);
+            string indexControllerName = Configuration.GetValue<string>(IOConfigurationConstants.IndexControllerNameKey)!;
             IORoute errorRoute = new IORoute("Error404", indexControllerName);
             app.Use(async (context, next) =>
             {

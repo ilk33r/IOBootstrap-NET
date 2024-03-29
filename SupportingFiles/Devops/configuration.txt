@@ -1,2 +1,5 @@
 Configuration -> Application Settings
 ASPNETCORE_ENVIRONMENT Staging
+
+export ASPNETCORE_ENVIRONMENT=Staging
+startup dotnet exec X.Application.dll

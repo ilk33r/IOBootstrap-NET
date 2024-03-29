@@ -78,7 +78,7 @@ class ImagesEditController extends Controller<ImagesListProps, ImagesListState> 
 
         const items = this.state.images.map(image => {
             const itemModel = new ListDataItemModel();
-            const imageHtml = `<img src="${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${encodeURIComponent(image.fileName)}" width="150" />`
+            const imageHtml = `<img src="${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${image.fileName}" width="150" />`
             const imageId = (image.id == null) ? "" : image.id.toString();
             const imageWidth = (image.width == null) ? "" : image.width.toString();
             const imageHeight = (image.height == null) ? "" : image.height.toString();

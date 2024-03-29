@@ -11,7 +11,7 @@ public static class IIOImageAssetViewModelExtension
 		byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
 		byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
-        return aesUtilities.Encrypt(fileName);
+        return IOHexUtilities.ByteArrayToHexString(aesUtilities.Encrypt(fileName));
     }
 
     public static string GetImageFileName(this IIOImageAssetViewModel input, string publicId)
@@ -21,7 +21,7 @@ public static class IIOImageAssetViewModelExtension
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
         if (!String.IsNullOrEmpty(publicId)) 
         {
-            return aesUtilities.Decrypt(publicId);
+            return aesUtilities.Decrypt(IOHexUtilities.HexStringToByteArray(publicId));
         }
 
         return null;

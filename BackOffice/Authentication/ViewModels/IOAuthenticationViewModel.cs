@@ -55,7 +55,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 
 			// Base 64 encode user token data
             IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
-			string userNewToken = aesUtilities.Encrypt(decryptedUserToken);
+			string userNewToken = Convert.ToBase64String(aesUtilities.Encrypt(decryptedUserToken));
 
 			// Create token date
 			DateTime tokenDate = DateTime.UtcNow;

@@ -15,8 +15,8 @@ namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels
         {
 			IOAESUtilities aesUtility = GetAesUtility();
 			AddPushNotificationRequestModel request = requestModel;
-			request.DeviceId = aesUtility.Decrypt(requestModel.DeviceId);
-			request.DeviceToken = aesUtility.Decrypt(requestModel.DeviceToken);
+			request.DeviceId = aesUtility.Decrypt(Convert.FromBase64String(requestModel.DeviceId));
+			request.DeviceToken = aesUtility.Decrypt(Convert.FromBase64String(requestModel.DeviceToken));
 			request.ClientId = ClientId;
 
             // Obtain client

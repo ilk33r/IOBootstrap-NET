@@ -128,13 +128,13 @@ namespace IOBootstrap.NET.Core.ViewModels
             }
 
             IOAESUtilities aesUtility = GetAesUtility();
-            return aesUtility.Decrypt(encryptedString);
+            return aesUtility.Decrypt(Convert.FromBase64String(encryptedString));
         }
 
         public virtual string EncryptString(string plainString)
         {
             IOAESUtilities aesUtility = GetAesUtility();
-            return aesUtility.Encrypt(plainString);
+            return Convert.ToBase64String(aesUtility.Encrypt(plainString));
         }
 
         public virtual IOAESUtilities GetAesUtility()

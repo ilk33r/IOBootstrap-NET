@@ -43,7 +43,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels
             byte[] encryptedSymmetricKey = rsaEngine.ProcessBlock(aesKeyBytes, 0, aesKeyBytes.Length);
             byte[] encryptedSymmetricIV = rsaEngine.ProcessBlock(aesIVBytes, 0, aesIVBytes.Length);
 
-            string encryptedString = aesUtilities.Encrypt(requestModel.PlainText);
+            string encryptedString = Convert.ToBase64String(aesUtilities.Encrypt(requestModel.PlainText));
 
             IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
             {

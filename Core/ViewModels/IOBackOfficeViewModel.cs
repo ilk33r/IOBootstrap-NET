@@ -216,7 +216,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             try
             {
                 // Obtain decrypted token value
-                string decryptedToken = aesUtilities.Decrypt(token);
+                string decryptedToken = aesUtilities.Decrypt(Convert.FromBase64String(token));
 
                 // Split user id and token value
                 string[] tokenData = decryptedToken.Split(',');

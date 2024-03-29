@@ -25,16 +25,13 @@ namespace IOBootstrap.NET.Common.Utilities
 
         #region Helper Methods
 
-        public string Decrypt(string encryptedString)
+        public string Decrypt(byte[] encryptedBytes)
         {
-            // Decode encrypted string
-            byte[] decodedBytes = Convert.FromBase64String(encryptedString);
-
             // Create a encryptor to perform the stream transform.
             ICryptoTransform crypto = Encryptor.CreateDecryptor(Encryptor.Key, Encryptor.IV);
 
             // Create the streams used for decryption.
-            MemoryStream msDecrypt = new MemoryStream(decodedBytes);
+            MemoryStream msDecrypt = new MemoryStream(encryptedBytes);
             CryptoStream csDecrypt = new CryptoStream(msDecrypt, crypto, CryptoStreamMode.Read);
             StreamReader swDecrypt = new StreamReader(csDecrypt);
 
@@ -50,7 +47,7 @@ namespace IOBootstrap.NET.Common.Utilities
             return decryptedString;
         }
 
-        public string Encrypt(string plainString)
+        public byte[] Encrypt(string plainString)
         {
             // Create a encryptor to perform the stream transform.
             ICryptoTransform crypto = Encryptor.CreateEncryptor(Encryptor.Key, Encryptor.IV);
@@ -75,7 +72,7 @@ namespace IOBootstrap.NET.Common.Utilities
             // Create encrypted bytes
             byte[] encryptedBytes = msEncrypt.ToArray();
 
-            return Convert.ToBase64String(encryptedBytes);
+            return encryptedBytes;
         }
 
         #endregion

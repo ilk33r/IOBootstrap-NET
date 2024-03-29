@@ -81,7 +81,7 @@ namespace IOBootstrap.NET.Common.MWConnector
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             });
 
-            string encryptedBody = AESUtilities.Encrypt(serializedRequest);
+            string encryptedBody = Convert.ToBase64String(AESUtilities.Encrypt(serializedRequest));
             HTTPClient.SetPostBody(encryptedBody);
             Task task = HTTPClient.Call(path, (bool status, string response, HttpResponseHeaders headers) =>
             {
@@ -90,7 +90,7 @@ namespace IOBootstrap.NET.Common.MWConnector
                     decryptedResult = response;
                     if (headers.Contains(IORequestHeaderConstants.IsEncrypted))
                     {
-                        decryptedResult = AESUtilities.Decrypt(response);
+                        decryptedResult = AESUtilities.Decrypt(Convert.FromBase64String(response));
                     }
                 } 
                 catch (Exception ex)

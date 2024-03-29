@@ -39,7 +39,7 @@ namespace IOBootstrap.NET.Common.Middlewares
                 Task<string> readerTask = streamReader.ReadToEndAsync();
                 var response = await readerTask;
 
-                string decryptedBody = AESUtilities.Decrypt(response);
+                string decryptedBody = AESUtilities.Decrypt(Convert.FromBase64String(response));
                 StringContent requestContent = new StringContent(decryptedBody, Encoding.UTF8, "application/json");
                 stream = await requestContent.ReadAsStreamAsync();
 

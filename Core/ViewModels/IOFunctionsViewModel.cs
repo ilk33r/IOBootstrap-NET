@@ -34,7 +34,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 			byte[] keyBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey));
 			byte[] ivBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV));
 			IOAESUtilities aes = new IOAESUtilities(keyBytes, ivBytes);
-			return aes.Encrypt(json);
+			return Convert.ToBase64String(aes.Encrypt(json));
 		}
     }
 }

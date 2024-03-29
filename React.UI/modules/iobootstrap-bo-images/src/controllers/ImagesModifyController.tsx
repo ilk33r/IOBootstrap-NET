@@ -64,7 +64,7 @@ class ImagesModifyController extends Controller<{}, {}> {
         const keepRatio = (this._selectedImage?.keepRatio !== undefined && this._selectedImage?.keepRatio != null) ? this._selectedImage?.keepRatio : true;
         const keepRationValue = (keepRatio) ? "1" : "0";
         const imageFileName = (this._selectedImage?.fileName !== undefined && this._selectedImage?.fileName != null) ? this._selectedImage?.fileName : "";
-        const imageUrl = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${encodeURIComponent(imageFileName)}`
+        const imageUrl = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${imageFileName}`
 
         const formElements: FormType[] = [
             FormTypeNumberProps.initializeWithValidations("Width", imageWidth.toString(), false, [ ValidationMinAmountRule.initialize("Width must be greater than 0.", "Invalid image width.", 0) ]),

@@ -19,7 +19,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Publics
 
-        public IOUserInfoModel UserModel  { get; set; }
+        public IOUserInfoModel? UserModel  { get; set; }
 
         #endregion
 
@@ -51,12 +51,12 @@ namespace IOBootstrap.NET.Core.ViewModels
             DatabaseContext.SaveChanges();
 
             // Create and return client info
-            return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription, 1, 0, clientEntity.MaxRequestCount);
+            return new IOClientInfoModel(clientEntity.ID, clientEntity.ClientId, clientEntity.ClientSecret, clientEntity.ClientDescription ?? "", 1, 0, clientEntity.MaxRequestCount);
         }
 
         public void DeleteClient(IOClientDeleteRequestModel requestModel)
         {
-            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
+            IOClientsEntity? clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
 
             // Check client entity is not null
             if (clientEntity == null)
@@ -85,9 +85,9 @@ namespace IOBootstrap.NET.Core.ViewModels
                 {
                     // Create back office info model
                     return new IOClientInfoModel(client.ID,
-                                                client.ClientId,
-                                                client.ClientSecret,
-                                                client.ClientDescription,
+                                                client.ClientId ?? "",
+                                                client.ClientSecret ?? "",
+                                                client.ClientDescription ?? "",
                                                 client.IsEnabled,
                                                 client.RequestCount,
                                                 client.MaxRequestCount);
@@ -101,7 +101,7 @@ namespace IOBootstrap.NET.Core.ViewModels
         public void UpdateClient(IOClientUpdateRequestModel requestModel)
         {
             // Obtain client entity
-            IOClientsEntity clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
+            IOClientsEntity? clientEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
 
             // Check client finded
             if (clientEntity != null)
@@ -130,7 +130,7 @@ namespace IOBootstrap.NET.Core.ViewModels
             if (Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
             {
                 // Obtain token
-                string token = Request.Headers[IORequestHeaderConstants.AuthorizationToken];
+                string token = Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
 
                 // Parse token
                 Tuple<string, int> tokenData = ParseToken(token);
@@ -148,11 +148,11 @@ namespace IOBootstrap.NET.Core.ViewModels
             // Check token data is correct
             if (tokenData.Count() > 1)
             {
-                IOUserInfoModel findedUserEntity;
+                IOUserInfoModel? findedUserEntity;
                 
                 // Obtain user entity from database
                 string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, userId);
-                IOCacheObject userCache = IOCache.GetCachedObject(cacheKey);
+                IOCacheObject? userCache = IOCache.GetCachedObject(cacheKey);
 
                 if (userCache != null)
                 {
@@ -209,8 +209,8 @@ namespace IOBootstrap.NET.Core.ViewModels
         public Tuple<string, int> ParseToken(string token)
         {
             // Convert key and iv to byte array
-            byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
-            byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
+            byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+            byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
 
             IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
             try

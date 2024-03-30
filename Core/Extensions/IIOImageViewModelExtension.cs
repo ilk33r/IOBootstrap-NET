@@ -1,12 +1,9 @@
 using System;
-using System.IO;
 using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Interfaces;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 namespace IOBootstrap.NET.Core.Extensions;
 
@@ -36,7 +33,7 @@ public static class IIOImageViewModelExtension
             throw new IOImageCorruptException();
         }
 
-        string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey);
+        string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;
         string newFileName = String.Format("{0}-{1}.jpg", IORandomUtilities.GenerateGUIDString(), file.FileName.RemoveNonASCII());
         string filePath = Path.Combine(imagesFolder, newFileName);
         
@@ -56,7 +53,7 @@ public static class IIOImageViewModelExtension
 
     public static void RemoveFile(this IIOImageViewModel input, string fileName)
     {
-        string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey);
+        string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;
         string filePath = Path.Combine(imagesFolder, fileName);
 
         if (File.Exists(filePath))

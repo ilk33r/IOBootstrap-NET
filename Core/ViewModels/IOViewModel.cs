@@ -18,8 +18,8 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Publics
 
-        public string ClientId;
-        public string ClientDescription;
+        public string? ClientId;
+        public string? ClientDescription;
 
         #endregion
 
@@ -35,7 +35,9 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Initialization Methods
 
+        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public IOViewModel()
+        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
         }
 
@@ -49,10 +51,10 @@ namespace IOBootstrap.NET.Core.ViewModels
 			if (Request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
 			{
 				// Obtain request authorization value
-				string requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
+				string? requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
 
 				// Check authorization code is equal to configuration value
-				if (requestAuthorization.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)))
+				if (requestAuthorization?.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)!) ?? false)
 				{
 					// Then authorization success
 					return;
@@ -72,11 +74,11 @@ namespace IOBootstrap.NET.Core.ViewModels
             }
 
             // Obtain client ID and Secret
-            string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? (string)Request.Headers[IORequestHeaderConstants.ClientId] : "";
-            string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? (string)Request.Headers[IORequestHeaderConstants.ClientSecret] : "";
+            string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientId]!) : "";
+            string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientSecret]!) : "";
 
             // Find client
-            var clientsEntity = DatabaseContext.Clients.Where((arg1) => arg1.ClientId.Equals(clientId));
+            var clientsEntity = DatabaseContext.Clients.Where(arg1 => arg1.ClientId!.Equals(clientId));
 
 			// Check finded client counts is greater than zero
 			if (clientsEntity.Count() == 0)
@@ -89,7 +91,7 @@ namespace IOBootstrap.NET.Core.ViewModels
 			IOClientsEntity client = clientsEntity.First();
 
 			// Check client secret
-            if (client.IsEnabled == 1 && client.ClientSecret.Equals(clientSecret))
+            if (client.IsEnabled == 1 && (client.ClientSecret?.Equals(clientSecret) ?? false))
 			{
                 // Obtain request counts
                 long requestCount = client.RequestCount + 1;
@@ -139,9 +141,14 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         public virtual IOAESUtilities GetAesUtility()
         {
-            string symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
-            string symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
+            string? symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
+            string? symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
             
+            if (String.IsNullOrEmpty(symmetricIVString) || String.IsNullOrEmpty(symmetricKeyString))
+            {
+                throw new IOInvalidKeyIDException();
+            }
+
             try {
                 byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
                 byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
@@ -167,24 +174,24 @@ namespace IOBootstrap.NET.Core.ViewModels
 
         #region Configuration
 
-        public virtual IOConfigurationModel GetDBConfig(string configKey)
+        public virtual IOConfigurationModel? GetDBConfig(string configKey)
         {
             string cacheKey = IOCacheKeys.ConfigurationCacheKey + configKey;
-            IOCacheObject cachedObject = IOCache.GetCachedObject(cacheKey);
+            IOCacheObject? cachedObject = IOCache.GetCachedObject(cacheKey);
             if (cachedObject != null)
             {
                 IOConfigurationModel configurationModel = (IOConfigurationModel)cachedObject.Value;
                 return configurationModel;
             }
 
-            IOConfigurationModel configuration = DatabaseContext.Configurations
+            IOConfigurationModel? configuration = DatabaseContext.Configurations
                                                                             .Select(c => new IOConfigurationModel()
                                                                             {
                                                                                 ConfigKey = c.ConfigKey,
                                                                                 ConfigIntValue = c.ConfigIntValue,
                                                                                 ConfigStringValue = c.ConfigStringValue
                                                                             })
-                                                                            .Where(config => config.ConfigKey.Equals(configKey))
+                                                                            .Where(config => config.ConfigKey!.Equals(configKey))
                                                                             .FirstOrDefault();
 
             

@@ -9,7 +9,7 @@ public interface IIOBackOfficeViewModel<TDBContext> : IIOViewModel<TDBContext> w
 {
     #region Publics
 
-    public IOUserInfoModel UserModel { get; set; }
+    public IOUserInfoModel? UserModel { get; set; }
 
     #endregion
         

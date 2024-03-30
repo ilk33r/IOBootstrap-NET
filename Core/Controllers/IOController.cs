@@ -80,12 +80,12 @@ namespace IOBootstrap.NET.Core.Controllers
             ViewModel.CheckClient();
 
             // Check back office page host name
-            string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName);
-            string backofficePagePath = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePagePath);
+            string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName)!;
+            string backofficePagePath = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePagePath)!;
             string requestPath = Request.Path;
             if (HttpContext.Items.ContainsKey("OriginalPath"))
             {
-                requestPath = (string)HttpContext.Items["OriginalPath"];
+                requestPath = ((string)HttpContext.Items["OriginalPath"]!);
             }
             
             bool isBackofficePath = (String.IsNullOrEmpty(requestPath) || requestPath.Contains(backofficePagePath));
@@ -108,7 +108,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 }
 
                 // Obtain layout name from configuration
-                string layoutName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName);
+                string layoutName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageIndexLayoutName)!;
                 IsBackofficePage = true;
                 
                 // Obtain index page
@@ -129,7 +129,7 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuted(context);
 
             // Check result type
-            string jsonString = null;
+            string? jsonString = null;
             if (context.Result is JsonResult)
             {
                 // Create JSON string
@@ -165,7 +165,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
             if (HttpContext.Items.ContainsKey("OriginalPath"))
             {
-                requestPath = (string)HttpContext.Items["OriginalPath"];
+                requestPath = ((string)HttpContext.Items["OriginalPath"]!);
             }
 
             // Create response status model
@@ -211,7 +211,7 @@ namespace IOBootstrap.NET.Core.Controllers
         private void CheckKeyID(ActionExecutingContext context)
         {
             // Obtain key id
-            string keyID = Request.Headers[IORequestHeaderConstants.KeyID];
+            string? keyID = Request.Headers[IORequestHeaderConstants.KeyID];
             if (String.IsNullOrEmpty(keyID))
             {
                 return;
@@ -220,7 +220,7 @@ namespace IOBootstrap.NET.Core.Controllers
             string currentKeyID = "";
 
             // Obtain key id cache
-            IOCacheObject keyIDCache = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+            IOCacheObject? keyIDCache = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
             if (keyIDCache != null)
             {
                 currentKeyID = (string)keyIDCache.Value;
@@ -247,7 +247,7 @@ namespace IOBootstrap.NET.Core.Controllers
                 {
                     if (descriptor.AttributeType == typeof(IOUserRoleAttribute) || descriptor.AttributeType == typeof(IOUserCustomRoleAttribute))
                     {
-                        object requiredRole = descriptor.ConstructorArguments[0].Value;
+                        object? requiredRole = descriptor.ConstructorArguments[0].Value;
                         int userRole = ViewModel.GetUserRole();
 
                         // Check attribute type and role
@@ -297,7 +297,7 @@ namespace IOBootstrap.NET.Core.Controllers
 
             if (!isBackofficePage)
             {
-                IOConfigurationModel isMaintenanceModeOn = ViewModel.GetDBConfig(IOConfigurationKeys.IsMaintenanceModeOn);
+                IOConfigurationModel? isMaintenanceModeOn = ViewModel.GetDBConfig(IOConfigurationKeys.IsMaintenanceModeOn);
                 if (isMaintenanceModeOn != null && isMaintenanceModeOn.IntValue() == 1)
                 {
                     throw new IOMaintenanceException();

@@ -23,7 +23,7 @@ public interface IIOViewModel<TDBContext> : IIOViewModelBase where TDBContext : 
 
     #region Configuration
 
-    public IOConfigurationModel GetDBConfig(string configKey);
+    public IOConfigurationModel? GetDBConfig(string configKey);
 
     #endregion
 }

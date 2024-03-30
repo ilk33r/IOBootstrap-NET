@@ -36,7 +36,7 @@ namespace IOBootstrap.NET.Core.Controllers
             base.OnActionExecuted(context);
 
             // Check result type
-            string jsonString = null;
+            string? jsonString = null;
             if (context.Result is JsonResult)
             {
                 // Create JSON string
@@ -79,8 +79,8 @@ namespace IOBootstrap.NET.Core.Controllers
             }
 
             // Obtain token
-            string isEncrypted = Request.Headers[IORequestHeaderConstants.IsEncrypted];
-            if (!isEncrypted.Equals("true"))
+            string? isEncrypted = Request.Headers[IORequestHeaderConstants.IsEncrypted];
+            if (!(isEncrypted?.Equals("true") ?? false))
             {
                 throw new IOInvalidRequestException();
             }

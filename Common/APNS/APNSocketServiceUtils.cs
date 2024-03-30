@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Logger;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Common.APNS
 {
@@ -47,12 +43,12 @@ namespace IOBootstrap.NET.Common.APNS
         public void SendNotifications(List<APNSSendPayloadModel> apnsSendPayloads)
         {
             // Create tcp client
-            TcpClient client = this.createTcpClientAndConnect();
+            TcpClient? client = this.createTcpClientAndConnect();
 
             // Check client connected 
             if (client != null) {
                 // Create ssl stream
-                SslStream sslStream = this.CreateAndAuthenticateSslStream(client);
+                SslStream? sslStream = this.CreateAndAuthenticateSslStream(client);
 
                 // Check if stream is not null
                 if (sslStream != null)
@@ -77,10 +73,10 @@ namespace IOBootstrap.NET.Common.APNS
 
         #region Helper Methods
 
-        private SslStream CreateAndAuthenticateSslStream(TcpClient client)
+        private SslStream? CreateAndAuthenticateSslStream(TcpClient client)
         {
             // Load client certificate
-            X509CertificateCollection certificatesCollection = this.GetCertificatesCollection();
+            X509CertificateCollection? certificatesCollection = this.GetCertificatesCollection();
 
             // Create ssl stream
             SslStream sslStream = new SslStream(client.GetStream());
@@ -102,7 +98,7 @@ namespace IOBootstrap.NET.Common.APNS
             return sslStream;
         }
 
-        private TcpClient createTcpClientAndConnect() {
+        private TcpClient? createTcpClientAndConnect() {
             // Create tcp client
             try
             {
@@ -117,7 +113,7 @@ namespace IOBootstrap.NET.Common.APNS
             }
         }
 
-        private X509CertificateCollection GetCertificatesCollection()
+        private X509CertificateCollection? GetCertificatesCollection()
         {
             try {
                 // Load client certificate

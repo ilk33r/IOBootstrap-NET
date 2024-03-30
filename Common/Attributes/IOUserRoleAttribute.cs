@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using IOBootstrap.NET.Common.Enumerations;
 
 namespace IOBootstrap.NET.Common.Attributes

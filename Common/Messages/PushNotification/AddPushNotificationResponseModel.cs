@@ -1,13 +1,11 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.Common.Messages.PushNotification
+namespace IOBootstrap.NET.Common.Messages.PushNotification;
+
+public class AddPushNotificationResponseModel : IOResponseModel
 {
-    
-    public class AddPushNotificationResponseModel : IOResponseModel
+    public AddPushNotificationResponseModel() : base()
     {
-        public AddPushNotificationResponseModel() : base()
-        {
-        }
     }
 }

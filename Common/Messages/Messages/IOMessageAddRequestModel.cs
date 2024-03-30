@@ -8,16 +8,12 @@ namespace IOBootstrap.NET.Common.Messages.Messages
     {
 
         [Required]
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         [Required]
         public DateTimeOffset MessageStartDate { get; set; }
 
         [Required]
         public DateTimeOffset MessageEndDate { get; set; }
-
-        public IOMessageAddRequestModel() : base()
-        {
-        }
     }
 }

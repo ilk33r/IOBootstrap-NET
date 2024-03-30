@@ -8,9 +8,9 @@ namespace IOBootstrap.NET.Common.Messages.FN
     public class IOFNUpdatePushNotificationDeliveredMessages : IORequestModel
     {
         [Required]
-        public IList<PushNotificationDevicesModel> InvalidDevices { get; set; }
+        public IList<PushNotificationDevicesModel>? InvalidDevices { get; set; }
 
         [Required]
-        public IList<PushNotificationDeliveredMessageModel> DeliveredMessages { get; set; }
+        public IList<PushNotificationDeliveredMessageModel>? DeliveredMessages { get; set; }
     }
 }

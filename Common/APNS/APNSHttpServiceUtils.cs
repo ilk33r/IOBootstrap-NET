@@ -4,12 +4,11 @@ using System.Text.Json;
 using IOBootstrap.NET.Common.Models.APNS;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
-using IOBootstrap.NET.Common.HTTP.Utils;
-using IOBootstrap.NET.Common.Logger;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
+using IOBootstrap.NET.Common.HTTP;
 
 namespace IOBootstrap.NET.Common.APNS
 {
@@ -79,14 +78,14 @@ namespace IOBootstrap.NET.Common.APNS
             httpClient.SetPostBody(payloadData.Payload);
 
             // Call http client
-            APNSResponseModel response = httpClient.CallJSONSync<APNSResponseModel>();
+            APNSResponseModel? response = httpClient.CallJSONSync<APNSResponseModel>();
             if (response == null) 
             {
                 Logger.LogInformation("APNS api called successfully.");
                 return APNSHttpServiceUtilsMessageTypes.Success;
             }
 
-            if (response != null && response.Reason.Equals("BadDeviceToken"))
+            if (response != null && (response.Reason?.Equals("BadDeviceToken") ?? false))
             {
                 Logger.LogError("APNS api call failed. Device not found.");
                 return APNSHttpServiceUtilsMessageTypes.DeviceNotFound;
@@ -109,7 +108,7 @@ namespace IOBootstrap.NET.Common.APNS
             string jwtHeaderAndBody = String.Format(JWTHeaderAndBody, base64EncodedJWTHeader, base64EncodedJWTBody);
             string jwtSignature = "";
 
-            ECPrivateKeyParameters privateKey = GetPrivateKey();
+            ECPrivateKeyParameters? privateKey = GetPrivateKey();
 
             try 
             {
@@ -134,9 +133,9 @@ namespace IOBootstrap.NET.Common.APNS
             return String.Format(JWTHeaderAndBody, jwtHeaderAndBody, jwtSignature);
         }
 
-        private ECPrivateKeyParameters GetPrivateKey()
+        private ECPrivateKeyParameters? GetPrivateKey()
         {
-            ECPrivateKeyParameters privateKey = null;
+            ECPrivateKeyParameters? privateKey = null;
 
             try {
                 Logger.LogInformation("Apple Private Key Path {0}", APNSKeyFilePath);

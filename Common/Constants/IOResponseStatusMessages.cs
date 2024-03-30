@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace IOBootstrap.NET.Common.Constants
+namespace IOBootstrap.NET.Common.Constants;
+
+public static class IOResponseStatusMessages
 {
-    public static class IOResponseStatusMessages
-    {
 
-        #region Messages
+    #region Messages
 
-        public static Dictionary<int, string> Messages = new Dictionary<int, string> {
+    public static Dictionary<int, string> Messages = new Dictionary<int, string> {
             {200, "OK"},
             {404, "Endpoint not found."},
             {500, "Unkown exception."}
         };
 
-        #endregion
+    #endregion
 
-        #region Status Messages
+    #region Status Messages
 
-        public static int OK = 200;
-        public const int EndpointFailure = 404;
-        public const int UnkownException = 500;
+    public static int OK = 200;
+    public const int EndpointFailure = 404;
+    public const int UnkownException = 500;
 
-        #endregion
-    }
+    #endregion
 }

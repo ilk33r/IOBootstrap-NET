@@ -1,8 +1,7 @@
-﻿using IOBootstrap.NET.BackOffice.Images.ViewModels;
-using IOBootstrap.NET.Common;
-using IOBootstrap.NET.Common.Attributes;
+﻿using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.GenerateBOPage;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;

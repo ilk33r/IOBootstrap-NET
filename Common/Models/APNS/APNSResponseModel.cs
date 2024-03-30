@@ -7,6 +7,6 @@ namespace IOBootstrap.NET.Common.Models.APNS
     public class APNSResponseModel : IOModel
     {
         [JsonPropertyName("reason")]
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 }

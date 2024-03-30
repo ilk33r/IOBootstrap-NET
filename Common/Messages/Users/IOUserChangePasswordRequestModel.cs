@@ -8,13 +8,13 @@ namespace IOBootstrap.NET.Common.Messages.Users
     {
 
         [Required]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
-        public string OldPassword { get; set; }
+        public string? OldPassword { get; set; }
 
         [Required]
         [MinLength(4)]
-        public string NewPassword { get; set; }
+        public string? NewPassword { get; set; }
 
     }
 }

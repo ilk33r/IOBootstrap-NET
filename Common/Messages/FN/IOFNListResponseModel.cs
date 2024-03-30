@@ -9,7 +9,7 @@ namespace IOBootstrap.NET.Common.Messages.FN
         #region Properties
 
 		public int? Count { get; set; }
-		public IList<TObject> Items { get; set; }
+		public IList<TObject>? Items { get; set; }
 
 		#endregion
 

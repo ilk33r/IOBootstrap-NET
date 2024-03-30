@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Common.Messages.Menu
+namespace IOBootstrap.NET.Common.Messages.Menu;
+
+public class IOMenuUpdateResponseModel : IOMenuAddResponseModel
 {
-	public class IOMenuUpdateResponseModel : IOMenuAddResponseModel
+    public IOMenuUpdateResponseModel() : base()
     {
-        public IOMenuUpdateResponseModel() : base()
-        {
-        }
     }
 }

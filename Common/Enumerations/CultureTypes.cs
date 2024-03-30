@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Common.Enumerations
+namespace IOBootstrap.NET.Common.Enumerations;
+
+public enum CultureTypes
 {
-    public enum CultureTypes
-    {
-        En = 0,
-        Tr = 1
-    }
+    En = 0,
+    Tr = 1
 }

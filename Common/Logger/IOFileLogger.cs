@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using Microsoft.Extensions.Logging;
 
 namespace IOBootstrap.NET.Common.Logger
 {
@@ -13,7 +11,7 @@ namespace IOBootstrap.NET.Common.Logger
             this.FileLoggerProvider = fileLoggerProvider;
         }
  
-        public IDisposable BeginScope<TState>(TState state)
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull
         {
             return null;
         }
@@ -23,21 +21,20 @@ namespace IOBootstrap.NET.Common.Logger
             return FileLoggerProvider.Options.Enabled;
         }
  
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             if (!IsEnabled(logLevel))
             {
                 return;
             }
  
-            string fullFilePath = FileLoggerProvider.Options.FolderPath + "/" + FileLoggerProvider.Options.FilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
+            string fileLoggerFilePath = FileLoggerProvider.Options.FilePath ?? "{date}";
+            string fullFilePath = FileLoggerProvider.Options.FolderPath + "/" + fileLoggerFilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
             string logRecord = string.Format("{0} [{1}] {2} {3}", "[" + DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00") + "]", logLevel.ToString(), formatter(state, exception), exception != null ? exception.StackTrace : "");
  
             try {
-                using (var streamWriter = new StreamWriter(fullFilePath, true))
-                {
-                    streamWriter.WriteLine(logRecord);
-                }
+                using var streamWriter = new StreamWriter(fullFilePath, true);
+                streamWriter.WriteLine(logRecord);
             } 
             catch (Exception) 
             {

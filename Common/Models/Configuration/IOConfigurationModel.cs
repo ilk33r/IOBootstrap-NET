@@ -7,9 +7,9 @@ namespace IOBootstrap.NET.Common.Models.Configuration
     public class IOConfigurationModel : IOModel
     {
         public int ID { get; set; }
-        public string ConfigKey { get; set; }
+        public string? ConfigKey { get; set; }
         public int? ConfigIntValue { get; set; }
-        public string ConfigStringValue { get; set; }
+        public string? ConfigStringValue { get; set; }
 
         public int IntValue()
         {
@@ -21,7 +21,7 @@ namespace IOBootstrap.NET.Common.Models.Configuration
             return this.ConfigStringValue ?? "";
         }
 
-        public TModel ObjectValue<TModel>() where TModel : IOModel, new()
+        public TModel? ObjectValue<TModel>() where TModel : IOModel, new()
         {
             if (String.IsNullOrEmpty(this.ConfigStringValue))
             {

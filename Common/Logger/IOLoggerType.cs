@@ -1,8 +1,7 @@
 using System;
 
-namespace IOBootstrap.NET.Common.Logger
+namespace IOBootstrap.NET.Common.Logger;
+
+public class IOLoggerType
 {
-    public class IOLoggerType
-    {
-    }
 }

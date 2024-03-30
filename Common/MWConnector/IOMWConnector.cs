@@ -3,8 +3,8 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.HTTP;
 using IOBootstrap.NET.Common.HTTP.Enumerations;
-using IOBootstrap.NET.Common.HTTP.Utils;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Utilities;
 using static IOBootstrap.NET.Common.MWConnector.IOMWConnectorProtocol;
@@ -16,8 +16,8 @@ namespace IOBootstrap.NET.Common.MWConnector
 
         #region Properties
 
-        private IOAESUtilities AESUtilities;
-        private IOHTTPClient HTTPClient;
+        private IOAESUtilities? AESUtilities;
+        private IOHTTPClient? HTTPClient;
         private ILogger Logger;
 
         #endregion
@@ -26,8 +26,8 @@ namespace IOBootstrap.NET.Common.MWConnector
         {
             Logger = logger;
 
-            String mwEncryptionKey = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey);
-            String mwEncryptionIV = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV);
+            String mwEncryptionKey = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey)!;
+            String mwEncryptionIV = configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV)!;
 
             if (!String.IsNullOrEmpty(mwEncryptionKey) && !String.IsNullOrEmpty(mwEncryptionIV))
             {
@@ -36,11 +36,11 @@ namespace IOBootstrap.NET.Common.MWConnector
                 AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
             }
 
-            string baseURL = configuration.GetValue<string>(IOMWConfigurationConstants.MiddlewareURL);
+            string baseURL = configuration.GetValue<string>(IOMWConfigurationConstants.MiddlewareURL)!;
             
             if (!String.IsNullOrEmpty(baseURL))
             {
-                string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey);
+                string authorization  = configuration.GetValue<string>(IOMWConfigurationConstants.AuthorizationKey)!;
                 HTTPClient = new IOHTTPClient(baseURL, logger);
                 HTTPClient.AddHeader(IORequestHeaderConstants.Authorization, authorization);
                 HTTPClient.AddHeader(IORequestHeaderConstants.IsEncrypted, "true");
@@ -66,16 +66,16 @@ namespace IOBootstrap.NET.Common.MWConnector
             HTTPClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
         }
 
-        public TObject Get<TObject>(string path, Object request) where TObject : IOResponseModel, new()
+        public TObject? Get<TObject>(string path, Object request) where TObject : IOResponseModel, new()
         {
-            TObject jsonObject = null;
+            TObject? jsonObject = null;
 
             if (AESUtilities == null || HTTPClient == null)
             {
                 return jsonObject;
             }
 
-            string decryptedResult = null;
+            string? decryptedResult = null;
             string serializedRequest = JsonSerializer.Serialize(request, new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
@@ -83,12 +83,12 @@ namespace IOBootstrap.NET.Common.MWConnector
 
             string encryptedBody = Convert.ToBase64String(AESUtilities.Encrypt(serializedRequest));
             HTTPClient.SetPostBody(encryptedBody);
-            Task task = HTTPClient.Call(path, (bool status, string response, HttpResponseHeaders headers) =>
+            Task task = HTTPClient.Call(path, (bool status, string response, HttpResponseHeaders? headers) =>
             {
                 try
                 {
                     decryptedResult = response;
-                    if (headers.Contains(IORequestHeaderConstants.IsEncrypted))
+                    if (headers?.Contains(IORequestHeaderConstants.IsEncrypted) ?? false)
                     {
                         decryptedResult = AESUtilities.Decrypt(Convert.FromBase64String(response));
                     }

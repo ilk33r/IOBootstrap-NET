@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace IOBootstrap.NET.Common.Cache
 {
@@ -8,7 +7,7 @@ namespace IOBootstrap.NET.Common.Cache
 
         #region Privates
 
-        private static List<IOCacheObject> CachedObjects;
+        private static List<IOCacheObject>? CachedObjects;
         private static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private static TaskFactory factory = new TaskFactory(
             cancellationTokenSource.Token, 
@@ -39,7 +38,7 @@ namespace IOBootstrap.NET.Common.Cache
                 await InvalidateCacheAsync(cache.GetKey());
 
                 cacheTask = factory.StartNew(() => {
-                    CachedObjects.Add(cache);
+                    CachedObjects?.Add(cache);
                     return true;
                 });
             }
@@ -72,20 +71,20 @@ namespace IOBootstrap.NET.Common.Cache
             return await cacheTask;
         }
 
-        public static IOCacheObject GetCachedObject(string key)
+        public static IOCacheObject? GetCachedObject(string key)
         {
-            Task<IOCacheObject> task = GetCachedObjectAsync(key);
+            Task<IOCacheObject?> task = GetCachedObjectAsync(key);
             task.Wait();
 
             return task.Result;
         }
 
-        public async static Task<IOCacheObject> GetCachedObjectAsync(string key)
+        public async static Task<IOCacheObject?> GetCachedObjectAsync(string key)
         {
             await InitializeCache();
 
-            Task<IOCacheObject> cacheTask = factory.StartNew(() => {
-                IOCacheObject returnValue = null;
+            Task<IOCacheObject?> cacheTask = factory.StartNew(() => {
+                IOCacheObject? returnValue = null;
                 if (CachedObjects != null && CachedObjects.Count() > 0)
                 {
                     returnValue = CachedObjects.Find(obj => obj != null && obj.GetKey().Equals(key));
@@ -108,11 +107,11 @@ namespace IOBootstrap.NET.Common.Cache
             await InitializeCache();
 
             Task<bool> cacheTask = factory.StartNew(() => {
-                int index = CachedObjects.FindIndex(obj => obj != null && obj.GetKey().Equals(key));
-                if (index >= 0 && index < CachedObjects.Count)
+                int index = CachedObjects?.FindIndex(obj => obj != null && obj.GetKey().Equals(key)) ?? -1;
+                if (index >= 0 && index < (CachedObjects?.Count ?? 0))
                 {
                     try {
-                        CachedObjects.RemoveAt(index);
+                        CachedObjects?.RemoveAt(index);
                         return true;
                     } catch {
                     }
@@ -150,11 +149,11 @@ namespace IOBootstrap.NET.Common.Cache
                 long currentTimeStamp = currentTimeOffset.ToUnixTimeSeconds();
                 List<int> forRemoveIndexes = new List<int>();
 
-                foreach (IOCacheObject cache in IOCache.CachedObjects.ToList())
+                foreach (IOCacheObject? cache in IOCache.CachedObjects.ToList())
                 {
                     if (cache == null)
                     {
-                        CachedObjects.Remove(cache);
+                        continue;
                     }
                     else if (cache.GetCacheEndTimeStamp() > 0 && cache.GetCacheEndTimeStamp() < currentTimeStamp)
                     {
@@ -182,7 +181,7 @@ namespace IOBootstrap.NET.Common.Cache
 
         private static int CacheIndex(IOCacheObject cache)
         {
-            return CachedObjects.FindIndex(obj => obj != null && obj.GetCacheID().Equals(cache.GetCacheID()));
+            return CachedObjects?.FindIndex(obj => obj != null && obj.GetCacheID().Equals(cache.GetCacheID())) ?? -1;
         }
 
         #endregion

@@ -8,11 +8,11 @@ namespace IOBootstrap.NET.Common.Messages.Authentication
     {
 
         [Required]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         [Required]
         [MinLength(4)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
     }
 }

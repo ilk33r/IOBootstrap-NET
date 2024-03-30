@@ -8,12 +8,8 @@ namespace IOBootstrap.NET.Common.Messages.Configuration
     {
 
         [Required]
-        public string ConfigKey { get; set; }
-        public string StrValue { get; set; }
+        public string? ConfigKey { get; set; }
+        public string? StrValue { get; set; }
         public int? IntValue { get; set; }
-
-        public IOConfigurationAddRequestModel() : base()
-        {
-        }
     }
 }

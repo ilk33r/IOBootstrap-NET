@@ -1,16 +1,15 @@
 using System;
 
-namespace IOBootstrap.NET.Common.Constants
+namespace IOBootstrap.NET.Common.Constants;
+
+public static class IOMWConfigurationConstants
 {
-    public static class IOMWConfigurationConstants
-    {
-        #region Properties
+    #region Properties
 
-        public static string AuthorizationKey = "IOMWAuthorizationKey";
-        public static string EncryptionKey = "IOMWEncryptionKey";
-        public static string EncryptionIV = "IOMWEncryptionIV";
-        public static string MiddlewareURL = "IOMWURL";
+    public static string AuthorizationKey = "IOMWAuthorizationKey";
+    public static string EncryptionKey = "IOMWEncryptionKey";
+    public static string EncryptionIV = "IOMWEncryptionIV";
+    public static string MiddlewareURL = "IOMWURL";
 
-        #endregion
-    }
+    #endregion
 }

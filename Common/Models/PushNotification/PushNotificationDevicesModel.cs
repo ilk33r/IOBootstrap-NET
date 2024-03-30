@@ -9,11 +9,11 @@ namespace IOBootstrap.NET.Common.Models.PushNotification
     {
 
         public int ID { get; set; }
-        public IOClientInfoModel Client { get; set; }
+        public IOClientInfoModel? Client { get; set; }
         public int BadgeCount { get; set; }
-        public string DeviceId { get; set; }
-        public string DeviceToken { get; set; }
+        public string? DeviceId { get; set; }
+        public string? DeviceToken { get; set; }
         public DeviceTypes DeviceType { get; set; }
-        public IList<int> DeliveredMessages { get; set; }
+        public IList<int>? DeliveredMessages { get; set; }
     }
 }

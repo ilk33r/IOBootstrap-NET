@@ -8,18 +8,14 @@ namespace IOBootstrap.NET.Common.Models.PushNotification
     {
     
         public int ID { get; set; }
-        public IOClientInfoModel Client { get; set; }
+        public IOClientInfoModel? Client { get; set; }
         public int DeviceType { get; set; }
-        public string NotificationCategory { get; set; }
-        public string NotificationData { get; set; }
+        public string? NotificationCategory { get; set; }
+        public string? NotificationData { get; set; }
         public DateTimeOffset NotificationDate { get; set; }
-        public string NotificationMessage { get; set; }
-        public string NotificationTitle { get; set; }
+        public string? NotificationMessage { get; set; }
+        public string? NotificationTitle { get; set; }
         public int IsCompleted { get; set; }
-        public PushNotificationModel PushNotificationDeviceID { get; set; }
-
-        public PushNotificationMessageModel() : base()
-        {
-        }
+        public PushNotificationModel? PushNotificationDeviceID { get; set; }
     }
 }

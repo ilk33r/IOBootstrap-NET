@@ -9,8 +9,8 @@ namespace IOBootstrap.NET.Common.Models.Shared
         #region Properties
 
         public int Code { get; set; }
-        public String DetailedMessage { get; set; }
-        public String Message { get; set; }
+        public String? DetailedMessage { get; set; }
+        public String? Message { get; set; }
         public bool Success { get; set; }
 
         #endregion

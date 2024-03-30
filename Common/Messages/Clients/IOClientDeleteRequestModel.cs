@@ -1,17 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace IOBootstrap.NET.Common.Messages.Clients
+namespace IOBootstrap.NET.Common.Messages.Clients;
+
+public class IOClientDeleteRequestModel
 {
-    public class IOClientDeleteRequestModel
-    {
 
-        #region Properties
+    #region Properties
 
-        [Required]
-        public int ClientId { get; set; }
+    [Required]
+    public int ClientId { get; set; }
 
-        #endregion
+    #endregion
 
-    }
 }

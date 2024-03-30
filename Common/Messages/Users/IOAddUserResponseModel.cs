@@ -9,7 +9,7 @@ namespace IOBootstrap.NET.Common.Messages.Users
         #region Properties
 
         public int UserId { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
 		#endregion
 

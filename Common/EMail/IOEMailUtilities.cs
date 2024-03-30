@@ -12,7 +12,7 @@ namespace IOBootstrap.NET.Common.EMail
         private string FromName;
         private string FromEmail;
 
-        private SendGridMessage GeneratedMessage;
+        private SendGridMessage? GeneratedMessage;
 
         public IOEMailUtilities(string apiKey, string fromName, string fromEmail) 
         {

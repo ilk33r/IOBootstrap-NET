@@ -7,12 +7,12 @@ namespace IOBootstrap.NET.Common.Messages.Menu
     public class IOMenuAddRequestModel : IORequestModel
     {
 
-        public string Action { get; set; }
+        public string? Action { get; set; }
         
-        public string CssClass { get; set; }
+        public string? CssClass { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         public int MenuOrder { get; set; }
@@ -20,10 +20,6 @@ namespace IOBootstrap.NET.Common.Messages.Menu
         [Required]
         public int RequiredRole { get; set; }
 
-        public Nullable<int> ParentEntityID { get; set; }
-
-        public IOMenuAddRequestModel() : base()
-        {
-        }
+        public int? ParentEntityID { get; set; }
     }
 }

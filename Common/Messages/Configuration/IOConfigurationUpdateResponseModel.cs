@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Common.Messages.Configuration
+namespace IOBootstrap.NET.Common.Messages.Configuration;
+
+public class IOConfigurationUpdateResponseModel : IOConfigurationAddResponseModel
 {
-    public class IOConfigurationUpdateResponseModel : IOConfigurationAddResponseModel
+    public IOConfigurationUpdateResponseModel() : base()
     {
-        public IOConfigurationUpdateResponseModel() : base()
-        {
-        }
     }
 }

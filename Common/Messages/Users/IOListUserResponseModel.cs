@@ -2,24 +2,24 @@
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Users;
 
-namespace IOBootstrap.NET.Common.Messages.Users
+namespace IOBootstrap.NET.Common.Messages.Users;
+
+public class IOListUserResponseModel : IOResponseModel
 {
-    public class IOListUserResponseModel : IOResponseModel
-    {
-		#region Properties
+	#region Properties
 
-        public IList<IOUserInfoModel> Users { get; }
+	public IList<IOUserInfoModel> Users { get; }
 
-		#endregion
+	#endregion
 
-		#region Initialization Methods
+	#region Initialization Methods
 
-		public IOListUserResponseModel(IList<IOUserInfoModel> users): base() {
-			// Setup properties
-            Users = users;
-		}
-
-		#endregion
-
+	public IOListUserResponseModel(IList<IOUserInfoModel> users) : base()
+	{
+		// Setup properties
+		Users = users;
 	}
+
+	#endregion
+
 }

@@ -7,9 +7,9 @@ namespace IOBootstrap.NET.Common.Messages.KeyGenerator
     {
         #region Properties
 
-        public string SymmetricKey { get; set; }
-        public string SymmetricIV { get; set; }
-        public string EncryptedValue { get; set; }
+        public string? SymmetricKey { get; set; }
+        public string? SymmetricIV { get; set; }
+        public string? EncryptedValue { get; set; }
 
 		#endregion
     }

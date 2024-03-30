@@ -7,6 +7,6 @@ namespace IOBootstrap.NET.Common.Messages.Authentication
     public class IOCheckTokenRequestModel : IORequestModel
     {
         [Required]
-        public string Token { get; set; }
+        public string? Token { get; set; }
     }
 }

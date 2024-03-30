@@ -2,25 +2,25 @@
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Clients;
 
-namespace IOBootstrap.NET.Common.Messages.Clients
+namespace IOBootstrap.NET.Common.Messages.Clients;
+
+public class IOClientAddResponseModel : IOResponseModel
 {
-    public class IOClientAddResponseModel : IOResponseModel
-    {
 
-		#region Properties
+	#region Properties
 
-		public IOClientInfoModel Client { get; }
+	public IOClientInfoModel Client { get; }
 
-		#endregion
+	#endregion
 
-		#region Initialization Methods
+	#region Initialization Methods
 
-		public IOClientAddResponseModel(IOClientInfoModel client): base() {
-			// Setup properties
-            Client = client;
-		}
+	public IOClientAddResponseModel(IOClientInfoModel client) : base()
+	{
+		// Setup properties
+		Client = client;
+	}
 
-        #endregion
+	#endregion
 
-    }
 }

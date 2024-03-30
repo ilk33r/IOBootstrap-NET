@@ -12,25 +12,25 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
 
 		[Required]
 		[StringLength(64)]
-		public String AppBundleId { get; set; }
+		public String? AppBundleId { get; set; }
 
 		[Required]
 		[StringLength(10)]
-		public String AppVersion { get; set; }
+		public String? AppVersion { get; set; }
 
 		[Required]
 		[StringLength(128)]
-		public String DeviceId { get; set; }
+		public String? DeviceId { get; set; }
 
-		public String ClientId { get; set; }
+		public String? ClientId { get; set; }
 
 		[Required]
 		[StringLength(128)]
-		public String DeviceName { get; set; }
+		public String? DeviceName { get; set; }
 
 		[Required]
 		[StringLength(512)]
-		public String DeviceToken { get; set; }
+		public String? DeviceToken { get; set; }
 
 		[Required]
         public DeviceTypes DeviceType { get; set; }

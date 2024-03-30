@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
 
 namespace IOBootstrap.NET.Common.Utilities
 {
@@ -7,10 +6,10 @@ namespace IOBootstrap.NET.Common.Utilities
     {
         #region HTTP Helpers
 
-        public static string GetUserIP(HttpRequest request)
+        public static string? GetUserIP(HttpRequest request)
         {
             // Obtain ip list from forwaded
-            string ipList = request.Headers["HTTP_X_FORWARDED_FOR"];
+            string? ipList = request.Headers["HTTP_X_FORWARDED_FOR"];
 
             // Check ip list is not null
             if (!string.IsNullOrEmpty(ipList))
@@ -19,7 +18,7 @@ namespace IOBootstrap.NET.Common.Utilities
             }
 
             // Returrn ip address
-            return request.HttpContext.Connection.RemoteIpAddress.ToString();
+            return request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
         }
 
         #endregion

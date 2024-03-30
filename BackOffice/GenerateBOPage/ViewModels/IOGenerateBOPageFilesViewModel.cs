@@ -1,6 +1,8 @@
 ﻿using System.IO.Compression;
 using IOBootstrap.NET.Common;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Messages.GenerateBOPage;
+using IOBootstrap.NET.Common.Models.GenerateBOPage;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 

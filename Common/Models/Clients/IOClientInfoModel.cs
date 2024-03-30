@@ -9,9 +9,9 @@ namespace IOBootstrap.NET.Common.Models.Clients
 		#region Properties
 
         public int Id { get; set; }
-		public string ClientID { get; set; }
-		public string ClientSecret { get; set; }
-        public string ClientDescription { get; set; }
+		public string? ClientID { get; set; }
+		public string? ClientSecret { get; set; }
+        public string? ClientDescription { get; set; }
         public int IsEnabled { get; set; }
         public long RequestCount { get; set; }
         public long MaxRequestCount { get; set; }

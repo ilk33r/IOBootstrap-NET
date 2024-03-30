@@ -10,11 +10,11 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification
 
         public int? ClientId { get; set; }
         public DeviceTypes DeviceType { get; set; }
-        public string NotificationCategory { get; set; }
-        public string NotificationData { get; set; }
+        public string? NotificationCategory { get; set; }
+        public string? NotificationData { get; set; }
 
         [Required]
-        public string NotificationMessage { get; set; }
-        public string NotificationTitle { get; set; }
+        public string? NotificationMessage { get; set; }
+        public string? NotificationTitle { get; set; }
     }
 }

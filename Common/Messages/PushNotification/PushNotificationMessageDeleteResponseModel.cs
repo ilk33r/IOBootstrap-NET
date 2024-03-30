@@ -1,12 +1,11 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.Common.Messages.PushNotification
+namespace IOBootstrap.NET.Common.Messages.PushNotification;
+
+public class PushNotificationMessageDeleteResponseModel : IOResponseModel
 {
-    public class PushNotificationMessageDeleteResponseModel : IOResponseModel
+    public PushNotificationMessageDeleteResponseModel() : base()
     {
-        public PushNotificationMessageDeleteResponseModel() : base()
-        {
-        }
     }
 }

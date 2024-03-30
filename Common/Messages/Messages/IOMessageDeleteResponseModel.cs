@@ -1,12 +1,11 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Messages.Base;
 
-namespace IOBootstrap.NET.Common.Messages.Messages
+namespace IOBootstrap.NET.Common.Messages.Messages;
+
+public class IOMessageDeleteResponseModel : IOResponseModel
 {
-    public class IOMessageDeleteResponseModel : IOResponseModel
+    public IOMessageDeleteResponseModel() : base()
     {
-        public IOMessageDeleteResponseModel() : base()
-        {
-        }
     }
 }

@@ -11,19 +11,11 @@ namespace IOBootstrap.NET.Common.Models.Menu
         public int ID { get; set; }
         public int MenuOrder { get; set; }
         public int RequiredRole { get; set; }
-        public string Action { get; set; }
-        public string CssClass { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> ParentEntityID { get; set; }
-        public IList<IOMenuListModel> ChildItems { get; set; }
-
-        #endregion
-
-        #region Initialization Methods
-
-        public IOMenuListModel() : base()
-        {
-        }
+        public string? Action { get; set; }
+        public string? CssClass { get; set; }
+        public string? Name { get; set; }
+        public int? ParentEntityID { get; set; }
+        public IList<IOMenuListModel>? ChildItems { get; set; }
 
         #endregion
     }

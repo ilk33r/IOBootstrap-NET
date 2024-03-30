@@ -9,7 +9,7 @@ namespace IOBootstrap.NET.Common.Messages.Clients
 
         [Required]
         [StringLength(64, MinimumLength = 2)]
-        public string ClientDescription { get; set; }
+        public string? ClientDescription { get; set; }
 
         [Required]
         public long RequestCount { get; set; }

@@ -11,7 +11,7 @@ namespace IOBootstrap.NET.Common.Middlewares
         private readonly IConfiguration Configuration;
         private readonly ILogger<IOLoggerType> Logger;
         private readonly RequestDelegate RequestDelegate;
-        private IOAESUtilities AESUtilities;
+        private IOAESUtilities? AESUtilities;
 
         public IOFNRequestDecryptorMiddleware(RequestDelegate next, ILogger<IOLoggerType> logger, IWebHostEnvironment env, IConfiguration configuration)
         {
@@ -27,11 +27,11 @@ namespace IOBootstrap.NET.Common.Middlewares
                 context.Request.Headers.ContainsKey(IORequestHeaderConstants.IsEncrypted) &&
                 context.Request.Headers[IORequestHeaderConstants.IsEncrypted].Equals("true") && 
                 context.Request.Method.Equals("POST") && 
-                context.Request.ContentType.Contains("text/plain")
+                (context.Request.ContentType?.Contains("text/plain") ?? false)
             )
             {
-                byte[] keyBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey));
-			    byte[] ivBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV));
+                byte[] keyBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionKey)!);
+			    byte[] ivBytes = Convert.FromBase64String(Configuration.GetValue<string>(IOMWConfigurationConstants.EncryptionIV)!);
 			    AESUtilities = new IOAESUtilities(keyBytes, ivBytes);
 
                 Stream stream = context.Request.Body;

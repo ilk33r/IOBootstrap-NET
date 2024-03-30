@@ -12,10 +12,10 @@ namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.Controllers;
 [Produces("application/json")]
 [ApiController]
 [Route("[controller]")]
-public class DatabaseContentGeneratorController<TDBContext> : IOController<DatabaseContentGeneratorViewModel<TDBContext>, TDBContext>
+public class IODatabaseContentGeneratorController<TDBContext> : IOController<IODatabaseContentGeneratorViewModel<TDBContext>, TDBContext>
     where TDBContext : IODatabaseContext<TDBContext>
 {
-    public DatabaseContentGeneratorController(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
+    public IODatabaseContentGeneratorController(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
     {
     }
 

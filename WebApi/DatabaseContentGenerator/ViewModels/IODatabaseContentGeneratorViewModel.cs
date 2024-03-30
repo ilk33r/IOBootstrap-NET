@@ -8,7 +8,7 @@ using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.ViewModels;
 
-public class DatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
+public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
     where TDBContext : IODatabaseContext<TDBContext> 
 {
 

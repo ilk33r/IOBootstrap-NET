@@ -64,16 +64,16 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                             DeviceId = device.DeviceId,
                                                                             DeviceToken = device.DeviceToken,
                                                                             DeviceType = device.DeviceType,
-                                                                            DeliveredMessages = device.DeliveredMessages.Select(dm => dm.PushNotificationMessage.ID).ToList()
+                                                                            DeliveredMessages = device.DeliveredMessages!.Select(dm => dm.PushNotificationMessage!.ID).ToList()
                                                                         })
                                                                         .Where(device => device.DeviceType == requestModel.DeviceType)
-                                                                        .Where(device => device.DeliveredMessages.All(dm => dm != requestModel.MessageId))
+                                                                        .Where(device => device.DeliveredMessages!.All(dm => dm != requestModel.MessageId))
                                                                         .Take(MaxLimit)
                                                                         .ToList();
 
         if (requestModel.ClientId != null)
         {
-            devices = devices.Where(pn => pn.Client.Id == (int)requestModel.ClientId)
+            devices = devices.Where(pn => pn.Client?.Id == (int)requestModel.ClientId)
                                 .ToList();
         }
 
@@ -85,11 +85,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         List<PushNotificationEntity> attachedPushNotifications = new List<PushNotificationEntity>();
         List<PushNotificationMessageEntity> attachedPushNotificationMessages = new List<PushNotificationMessageEntity>();
 
-        foreach (PushNotificationDeliveredMessageModel message in requestModel.DeliveredMessages)
+        foreach (PushNotificationDeliveredMessageModel message in requestModel.DeliveredMessages!)
         {
-            PushNotificationEntity pushNotification = attachedPushNotifications.Where(p => p.ID == message.PushNotificationID)
+            PushNotificationEntity? pushNotification = attachedPushNotifications.Where(p => p.ID == message.PushNotificationID)
                                                                                 .FirstOrDefault();
-            PushNotificationMessageEntity pushNotificationMessage = attachedPushNotificationMessages.Where(p => p.ID == message.PushNotificationMessageID)
+            PushNotificationMessageEntity? pushNotificationMessage = attachedPushNotificationMessages.Where(p => p.ID == message.PushNotificationMessageID)
                                                                                                     .FirstOrDefault();
 
             if (pushNotification == null)
@@ -131,20 +131,23 @@ where TDBContext : IODatabaseContext<TDBContext>
         DeleteInvalidDevices(requestModel.InvalidDevices);
     }
 
-    public virtual void DeleteInvalidDevices(IList<PushNotificationDevicesModel> invalidDevices)
+    public virtual void DeleteInvalidDevices(IList<PushNotificationDevicesModel>? invalidDevices)
     {
         if (invalidDevices != null && invalidDevices.Count > 0)
         {
             foreach (PushNotificationDevicesModel device in invalidDevices)
             {
-                PushNotificationEntity pushNotification = DatabaseContext.PushNotifications
+                PushNotificationEntity? pushNotification = DatabaseContext.PushNotifications
                                                                             .Include(pushNotification => pushNotification.DeliveredMessages)
                                                                             .Where(pushNotification => pushNotification.ID == device.ID)
                                                                             .FirstOrDefault();
 
                 if (pushNotification != null)
                 {
-                    DatabaseContext.Remove(pushNotification.DeliveredMessages);
+                    if (pushNotification.DeliveredMessages != null)
+                    {
+                        DatabaseContext.Remove(pushNotification.DeliveredMessages);
+                    }
                     DatabaseContext.Remove(pushNotification);
                 }
             }
@@ -155,7 +158,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public void SetMessageSended(IOFNFindRequestModel requestModel)
     {
-        PushNotificationMessageEntity message = DatabaseContext.PushNotificationMessages
+        PushNotificationMessageEntity? message = DatabaseContext.PushNotificationMessages
                                                                     .Find(requestModel.ID);
 
         if (message != null)

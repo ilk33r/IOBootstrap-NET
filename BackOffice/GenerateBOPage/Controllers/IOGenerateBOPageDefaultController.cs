@@ -1,10 +1,11 @@
-﻿using IOBootstrap.NET.Common.Attributes;
+﻿using IOBootstrap.NET.BackOffice.GenerateBOPage.ViewModels;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.BackOffice;
+namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
 [EnableCors]

@@ -27,7 +27,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
         public virtual Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
             IOUserEntity? findedUser = DatabaseContext.Users
-                                                        .Where(u => u.UserName.Equals(userName))
+                                                        .Where(u => u.UserName!.Equals(userName))
                                                         .FirstOrDefault();
 
             if (findedUser == null)
@@ -37,7 +37,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             }
 
 			// Check user password is wrong
-            if (!IOPasswordUtilities.VerifyPassword(password, findedUser.Password))
+            if (!IOPasswordUtilities.VerifyPassword(password, findedUser.Password ?? ""))
 			{
                 // Return response
                 throw new IOInvalidCredentialsException();
@@ -71,7 +71,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             DatabaseContext.SaveChanges();
 
             // Return response
-            return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUser.UserName, findedUser.UserRole);
+            return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUser.UserName ?? "", findedUser.UserRole);
         }
 
         public virtual Tuple<DateTimeOffset, string, int> CheckToken(string token)
@@ -108,7 +108,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
             {
                 // Return status
-                return new Tuple<DateTimeOffset, string, int>(findedUser.TokenDate.DateTime, findedUser.UserName, findedUser.UserRole);
+                return new Tuple<DateTimeOffset, string, int>(findedUser.TokenDate.DateTime, findedUser.UserName ?? "", findedUser.UserRole);
             }
 
             // Return status

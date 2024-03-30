@@ -6,7 +6,7 @@ using IOBootstrap.NET.Common.Models.GenerateBOPage;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 
-namespace IOBootstrap.NET.BackOffice;
+namespace IOBootstrap.NET.BackOffice.GenerateBOPage.ViewModels;
 
 public class IOGenerateBOPageFilesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext> 
@@ -107,7 +107,7 @@ where TDBContext : IODatabaseContext<TDBContext>
     {
         string fileName = Path.GetFileName(source);
 
-        IList<IOBOPageEntityModel> enumProperties = requestModel.Properties.Where(p => p.Type == IOBOPagePropertyType.Enum)
+        IList<IOBOPageEntityModel> enumProperties = requestModel.Properties!.Where(p => p.Type == IOBOPagePropertyType.Enum)
                                                                         .ToList();
         foreach (IOBOPageEntityModel enumProperty in enumProperties)
         {
@@ -141,24 +141,24 @@ where TDBContext : IODatabaseContext<TDBContext>
         Dictionary<string, string> variables = new Dictionary<string, string>();
         variables.Add(".ft", "");
         variables.Add("__ProjectName__", projectName);
-        variables.Add("__EntityName__", requestModel.EntityName);
-        variables.Add("__EntityDisplayName__", requestModel.EntityDisplayName);
-        variables.Add("__EntityDisplayNameLowercased__", requestModel.EntityDisplayName.ToLower());
-        variables.Add("__ListEntityDisplayName__", requestModel.ListEntityDisplayName);
-        variables.Add("__ListEntityName__", requestModel.ListEntityName);
-        variables.Add("__EntityItemName__", requestModel.EntityItemName);
-        variables.Add("__ListEntityAPIPath__", requestModel.ListEntityAPIPath);
-        variables.Add("__UpdateEntityDisplayName__", requestModel.UpdateEntityDisplayName);
-        variables.Add("__UpdateEntityName__", requestModel.UpdateEntityName);
-        variables.Add("__UpdateEntityAPIPath__", requestModel.UpdateEntityAPIPath);
-        variables.Add("__DeleteEntityDisplayName__", requestModel.DeleteEntityDisplayName);
-        variables.Add("__DeleteEntityName__", requestModel.DeleteEntityName);
-        variables.Add("__DeleteEntityAPIPath__", requestModel.DeleteEntityAPIPath);
-        variables.Add("__CreateEntityDisplayName__", requestModel.CreateEntityDisplayName);
-        variables.Add("__CreateEntityName__", requestModel.CreateEntityName);
-        variables.Add("__CreateEntityAPIPath__", requestModel.CreateEntityAPIPath);
+        variables.Add("__EntityName__", requestModel.EntityName!);
+        variables.Add("__EntityDisplayName__", requestModel.EntityDisplayName!);
+        variables.Add("__EntityDisplayNameLowercased__", requestModel.EntityDisplayName!.ToLower());
+        variables.Add("__ListEntityDisplayName__", requestModel.ListEntityDisplayName!);
+        variables.Add("__ListEntityName__", requestModel.ListEntityName!);
+        variables.Add("__EntityItemName__", requestModel.EntityItemName!);
+        variables.Add("__ListEntityAPIPath__", requestModel.ListEntityAPIPath!);
+        variables.Add("__UpdateEntityDisplayName__", requestModel.UpdateEntityDisplayName!);
+        variables.Add("__UpdateEntityName__", requestModel.UpdateEntityName!);
+        variables.Add("__UpdateEntityAPIPath__", requestModel.UpdateEntityAPIPath!);
+        variables.Add("__DeleteEntityDisplayName__", requestModel.DeleteEntityDisplayName!);
+        variables.Add("__DeleteEntityName__", requestModel.DeleteEntityName!);
+        variables.Add("__DeleteEntityAPIPath__", requestModel.DeleteEntityAPIPath!);
+        variables.Add("__CreateEntityDisplayName__", requestModel.CreateEntityDisplayName!);
+        variables.Add("__CreateEntityName__", requestModel.CreateEntityName!);
+        variables.Add("__CreateEntityAPIPath__", requestModel.CreateEntityAPIPath!);
 
-        string itemNameLowercased = requestModel.EntityItemName.ToLower();
+        string itemNameLowercased = requestModel.EntityItemName!.ToLower();
         variables.Add("__EntityItemNameLowercased__", itemNameLowercased);
 
         string entitySelectProperties = "";
@@ -181,7 +181,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string uiEntityCreateFormProperties = "";
 
         int index = 0;
-        foreach (IOBOPageEntityModel item in requestModel.Properties)
+        foreach (IOBOPageEntityModel item in requestModel.Properties!)
         {
             entitySelectProperties += String.Format("                                                        {0} = e.{1},\n", item.PropertyName, item.PropertyName);;
             entityUpdateProperties += String.Format("        {0}.{1} = requestModel.{2};\n", itemNameLowercased, item.PropertyName, item.PropertyName);
@@ -215,9 +215,9 @@ where TDBContext : IODatabaseContext<TDBContext>
             uiItemListParameterArray += String.Format("                {0},\n", item.PropertyJsonKey);
             uiIetmListUpdateParameters += String.Format("        updateRequestModel.{0} = current{1}.{2};\n", item.PropertyJsonKey, requestModel.EntityItemName, item.PropertyJsonKey);
 
-            if (item.PropertyJsonKey.Equals("id"))
+            if (item.PropertyJsonKey!.Equals("id"))
             {
-                idPropertyName = item.PropertyName;
+                idPropertyName = item.PropertyName!;
                 idJsonPropertyName = item.PropertyJsonKey;
                 uiEntityUpdateIDProperty = String.Format("        request.{0} = this._updateRequest.{1};", item.PropertyJsonKey, item.PropertyJsonKey);
             }
@@ -255,11 +255,11 @@ where TDBContext : IODatabaseContext<TDBContext>
     {
         Dictionary<string, string> variables = new Dictionary<string, string>();
         variables.Add(".ft", "");
-        variables.Add("__DefaultEnumType__", item.EnumTypeName);
+        variables.Add("__DefaultEnumType__", item.EnumTypeName!);
         
         string enumValues = "";
         string enumTypeNames = "";
-        foreach (IOBOPageEntityCustomEnumTypeModel enumType in item.EnumType)
+        foreach (IOBOPageEntityCustomEnumTypeModel enumType in item.EnumType!)
         {
             enumValues += String.Format("    {0} = {1},\n", enumType.Name, enumType.IntValue);
             enumTypeNames += String.Format("        if (type === {0}.{1}) {{\n            return \"{2}\";\n        }}\n\n", item.EnumTypeName, enumType.Name, enumType.Name);
@@ -275,14 +275,14 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     private string PropertyAPITypeName(IOBOPageEntityModel item)
     {
-        return item.Type switch
+        return item.Type! switch
         {
             IOBOPagePropertyType.Int => "int",
             IOBOPagePropertyType.String => "string",
             IOBOPagePropertyType.Double => "double",
             IOBOPagePropertyType.Float => "float",
             IOBOPagePropertyType.DateTimeOffset => "DateTimeOffset",
-            IOBOPagePropertyType.Enum => item.EnumTypeName,
+            IOBOPagePropertyType.Enum => item.EnumTypeName!,
             _ => throw new ArgumentException("Input IOBOPagePropertyType is not defined."),
         };
     }
@@ -296,7 +296,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             IOBOPagePropertyType.Double => (item.Nullable) ? "number | null" : "number",
             IOBOPagePropertyType.Float => (item.Nullable) ? "number | null" : "number",
             IOBOPagePropertyType.DateTimeOffset => (item.Nullable) ? "string | null" : "string",
-            IOBOPagePropertyType.Enum => (item.Nullable) ? item.EnumTypeName + " | null" : item.EnumTypeName,
+            IOBOPagePropertyType.Enum => (item.Nullable) ? item.EnumTypeName! + " | null" : item.EnumTypeName!,
             _ => throw new ArgumentException("Input IOBOPagePropertyType is not defined."),
         };
     }
@@ -315,7 +315,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             IOBOPagePropertyType.Double => "0",
             IOBOPagePropertyType.Float => "0",
             IOBOPagePropertyType.DateTimeOffset => "\"\"",
-            IOBOPagePropertyType.Enum => item.EnumTypeName + "." + item.EnumType.First().Name,
+            IOBOPagePropertyType.Enum => item.EnumTypeName + "." + item.EnumType!.First().Name,
             _ => throw new ArgumentException("Input IOBOPagePropertyType is not defined."),
         };
     }
@@ -439,7 +439,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             case IOBOPagePropertyType.Enum:
                 uiEntityUpdateProperties += String.Format("        request.{0} = Number(values[{1}]);\n", item.PropertyJsonKey, index);
                 string enumCases = "";
-                foreach (IOBOPageEntityCustomEnumTypeModel enumItem in item.EnumType)
+                foreach (IOBOPageEntityCustomEnumTypeModel enumItem in item.EnumType!)
                 {
                     enumCases += String.Format("                FormDataOptionModel.initialize({0}.get{1}Name({2}.{3}), {4}.{5}.toString()),\n",
                     item.EnumTypeName, item.EnumTypeName, item.EnumTypeName, enumItem.Name, item.EnumTypeName, enumItem.Name);

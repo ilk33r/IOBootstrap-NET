@@ -6,21 +6,20 @@ using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.BackOffice.Messages.Controllers
+namespace IOBootstrap.NET.BackOffice.Messages.Controllers;
+
+[IOBackoffice]
+[EnableCors]
+[Produces("application/json")]
+[ApiController]
+[Route("[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
+public class IOBackOfficeMessagesDefaultController : IOBackOfficeMessagesController<IOBackOfficeMessagesDefaultViewModel, IODatabaseContextDefaultImpl>
 {
-    [IOBackoffice]
-    [EnableCors]
-    [Produces("application/json")]
-    [ApiController]
-    [Route("[controller]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public class IOBackOfficeMessagesDefaultController : IOBackOfficeMessagesController<IOBackOfficeMessagesDefaultViewModel, IODatabaseContextDefaultImpl>
+    public IOBackOfficeMessagesDefaultController(IConfiguration configuration,
+                                                 IWebHostEnvironment environment,
+                                                 ILogger<IOLoggerType> logger,
+                                                 IODatabaseContextDefaultImpl databaseContext) : base(configuration, environment, logger, databaseContext)
     {
-        public IOBackOfficeMessagesDefaultController(IConfiguration configuration, 
-                                                     IWebHostEnvironment environment, 
-                                                     ILogger<IOLoggerType> logger,
-                                                     IODatabaseContextDefaultImpl databaseContext) : base(configuration, environment, logger, databaseContext)
-        {
-        }
     }
 }

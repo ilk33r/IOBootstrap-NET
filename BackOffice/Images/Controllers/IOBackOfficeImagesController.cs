@@ -11,53 +11,52 @@ using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.BackOffice.Images.Controllers
+namespace IOBootstrap.NET.BackOffice.Images.Controllers;
+
+[IOBackoffice]
+public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
+where TDBContext : IODatabaseContext<TDBContext>
+where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
 {
-    [IOBackoffice]
-    public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext> 
-    where TDBContext : IODatabaseContext<TDBContext> 
-    where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
+    #region Controller Lifecycle
+
+    public IOBackOfficeImagesController(IConfiguration configuration,
+                                        IWebHostEnvironment environment,
+                                        ILogger<IOLoggerType> logger,
+                                        TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
     {
-        #region Controller Lifecycle
-
-        public IOBackOfficeImagesController(IConfiguration configuration, 
-                                            IWebHostEnvironment environment, 
-                                            ILogger<IOLoggerType> logger,
-                                            TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
-        {
-        }
-
-        #endregion
-
-        #region API Methods
-
-        [IOValidateRequestModel]
-        [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost("[action]")]
-        public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
-        {
-            return ViewModel.GetImages(requestModel);
-        }
-
-        [IORequireHTTPS]
-        [IOUserRole(UserRoles.CustomUser)]
-        [HttpPut("[action]")]
-        public IOSaveImageResponseModel SaveImage(IFormFile file)
-        {
-            string filePath = ViewModel.SaveFile(file);
-            IOImageVariationsModel imageMetadata = ViewModel.SaveImagesMetaData(filePath);
-            return new IOSaveImageResponseModel(imageMetadata);
-        }
-
-        [IOValidateRequestModel]
-        [IOUserRole(UserRoles.CustomUser)]
-        [HttpPost("[action]")]
-        public IOResponseModel DeleteImage([FromBody] IODeleteImagesRequestModel requestModel)
-        {
-            ViewModel.DeleteImage(requestModel);
-            return new IOResponseModel();
-        }
-
-        #endregion
     }
+
+    #endregion
+
+    #region API Methods
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.CustomUser)]
+    [HttpPost("[action]")]
+    public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
+    {
+        return ViewModel.GetImages(requestModel);
+    }
+
+    [IORequireHTTPS]
+    [IOUserRole(UserRoles.CustomUser)]
+    [HttpPut("[action]")]
+    public IOSaveImageResponseModel SaveImage(IFormFile file)
+    {
+        string filePath = ViewModel.SaveFile(file);
+        IOImageVariationsModel imageMetadata = ViewModel.SaveImagesMetaData(filePath);
+        return new IOSaveImageResponseModel(imageMetadata);
+    }
+
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.CustomUser)]
+    [HttpPost("[action]")]
+    public IOResponseModel DeleteImage([FromBody] IODeleteImagesRequestModel requestModel)
+    {
+        ViewModel.DeleteImage(requestModel);
+        return new IOResponseModel();
+    }
+
+    #endregion
 }

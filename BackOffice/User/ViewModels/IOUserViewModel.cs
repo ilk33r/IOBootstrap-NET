@@ -10,164 +10,165 @@ using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.BackOffice.User.ViewModels
+namespace IOBootstrap.NET.BackOffice.User.ViewModels;
+
+public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOUserViewModel<TDBContext>
+where TDBContext : IODatabaseContext<TDBContext>
 {
-    public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOUserViewModel<TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext> 
+
+    #region Initialization Methods
+
+    public IOUserViewModel() : base()
     {
+    }
 
-        #region Initialization Methods
+    #endregion
 
-        public IOUserViewModel() : base()
+    #region View Model Methods
+
+    public virtual IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel)
+    {
+        // Obtain users entity
+        IOUserEntity? user = DatabaseContext.Users
+                                            .Where(u => u.UserName!.Equals(requestModel.UserName))
+                                            .FirstOrDefault();
+
+        // Check push notification entity exists
+        if (user != null)
         {
+            // Return user exists response
+            throw new IOUserExistsException();
         }
 
-        #endregion
-
-        #region View Model Methods
-
-        public virtual IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel)
+        // Create a users entity 
+        IOUserEntity newUserEntity = new IOUserEntity()
         {
-            // Obtain users entity
-            IOUserEntity? user = DatabaseContext.Users
-                                                .Where(u => u.UserName.Equals(requestModel.UserName))
-                                                .FirstOrDefault();
+            UserName = requestModel.UserName!.ToLower(),
+            Password = IOPasswordUtilities.HashPassword(requestModel.Password!),
+            UserRole = requestModel.UserRole,
+            UserToken = null,
+            TokenDate = DateTime.UtcNow
+        };
 
-			// Check push notification entity exists
-            if (user != null)
-			{
-                // Return user exists response
-                throw new IOUserExistsException();
-			}
+        // Write user to database
+        DatabaseContext.Add(newUserEntity);
+        DatabaseContext.SaveChanges();
 
-			// Create a users entity 
-			IOUserEntity newUserEntity = new IOUserEntity()
-			{
-				UserName = requestModel.UserName.ToLower(),
-                Password = IOPasswordUtilities.HashPassword(requestModel.Password),
-				UserRole = requestModel.UserRole,
-				UserToken = null,
-				TokenDate = DateTime.UtcNow
-			};
+        // Return status
+        return new IOAddUserResponseModel(newUserEntity.ID, requestModel.UserName);
+    }
 
-            // Write user to database
-            DatabaseContext.Add(newUserEntity);
-            DatabaseContext.SaveChanges();
+    public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
+    {
+        IOUserEntity? currentUser = DatabaseContext.Users
+                                                    .Where(u => u.UserName!.Equals(userName))
+                                                    .FirstOrDefault();
 
-            // Return status
-            return new IOAddUserResponseModel(newUserEntity.ID, requestModel.UserName);
+        if (currentUser == null)
+        {
+            // Return user exists response
+            throw new IOUserNotFoundException();
         }
 
-        public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
+        // Check user old password is valid
+        UserRoles currentUserRole = ((UserRoles?)UserModel?.UserRole) ?? UserRoles.AnonmyMouse;
+        if ((currentUserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, currentUser.Password ?? ""))
         {
-            IOUserEntity? currentUser = DatabaseContext.Users
-                                                        .Where(u => u.UserName.Equals(userName))
-                                                        .FirstOrDefault();
-
-            if (currentUser == null)
-            {
-                // Return user exists response
-                throw new IOUserNotFoundException();
-            }
-
-            // Check user old password is valid
-            if (((UserRoles)UserModel.UserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, currentUser.Password))
-			{
-                // Update user password properties
-                currentUser.Password = IOPasswordUtilities.HashPassword(newPassword);
-			    currentUser.UserToken = null;
-
-                // Update user password
-                DatabaseContext.Update(currentUser);
-                DatabaseContext.SaveChanges();
-
-                return;
-            }
-
-            // Return response
-            throw new IOInvalidPermissionException();
-        }
-        
-        public virtual IList<IOUserInfoModel> ListUsers()
-        {
-            IList<IOUserInfoModel> userList = DatabaseContext.Users
-                                                                .Select(u => new IOUserInfoModel()
-                                                                {
-                                                                    ID = u.ID,
-                                                                    UserName = u.UserName,
-                                                                    UserRole = u.UserRole,
-                                                                    UserToken = u.UserToken,
-                                                                    TokenDate = u.TokenDate
-                                                                })
-                                                                .OrderBy(u => u.ID)
-                                                                .ToList();
-
-            if (userList == null)
-            {
-                return new List<IOUserInfoModel>();
-            }
-
-            return userList;
-        }
-
-        public virtual void UpdateUser(IOUpdateUserRequestModel request)
-        {
-            if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, (UserRoles)UserModel.UserRole))
-            {
-                throw new IOInvalidPermissionException();
-            }
-
-            IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
-            string userName = request.UserName.ToLower();
-
-            if (user == null)
-            {
-                throw new IOUserNotFoundException();
-            }
-
-            var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
-            if (newUsers == null || newUsers.Count() != 0)
-            {
-                throw new IOUserExistsException();
-            }
-
-            // Update user properties
-            user.UserName = userName;
-            user.UserRole = request.UserRole;
-
-            if (!String.IsNullOrEmpty(request.UserPassword))
-            {
-                user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
-                user.UserToken = null;
-            }
+            // Update user password properties
+            currentUser.Password = IOPasswordUtilities.HashPassword(newPassword);
+            currentUser.UserToken = null;
 
             // Update user password
-            DatabaseContext.Update(user);
+            DatabaseContext.Update(currentUser);
             DatabaseContext.SaveChanges();
+
+            return;
         }
 
-        public virtual void DeleteUser(IODeleteUserRequestModel request)
+        // Return response
+        throw new IOInvalidPermissionException();
+    }
+
+    public virtual IList<IOUserInfoModel> ListUsers()
+    {
+        IList<IOUserInfoModel> userList = DatabaseContext.Users
+                                                            .Select(u => new IOUserInfoModel()
+                                                            {
+                                                                ID = u.ID,
+                                                                UserName = u.UserName,
+                                                                UserRole = u.UserRole,
+                                                                UserToken = u.UserToken,
+                                                                TokenDate = u.TokenDate
+                                                            })
+                                                            .OrderBy(u => u.ID)
+                                                            .ToList();
+
+        if (userList == null)
         {
-            IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
+            return new List<IOUserInfoModel>();
+        }
 
-            if (user == null)
-            {
-                throw new IOUserNotFoundException();
-            }
+        return userList;
+    }
 
-            // Check user entity is not null
-            if (UserModel.UserRole <= user.UserRole)
-			{
-                // Update user password
-                DatabaseContext.Remove(user);
-                DatabaseContext.SaveChanges();
-
-                return;
-            }
-
+    public virtual void UpdateUser(IOUpdateUserRequestModel request)
+    {
+        UserRoles currentUserRole = ((UserRoles?)UserModel?.UserRole) ?? UserRoles.AnonmyMouse;
+        if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, currentUserRole))
+        {
             throw new IOInvalidPermissionException();
         }
 
-        #endregion
+        IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
+        string userName = request.UserName?.ToLower() ?? "";
+
+        if (user == null)
+        {
+            throw new IOUserNotFoundException();
+        }
+
+        var newUsers = DatabaseContext.Users.Where((arg) => arg.UserName == userName && arg.UserName != user.UserName);
+        if (newUsers == null || newUsers.Count() != 0)
+        {
+            throw new IOUserExistsException();
+        }
+
+        // Update user properties
+        user.UserName = userName;
+        user.UserRole = request.UserRole;
+
+        if (!String.IsNullOrEmpty(request.UserPassword))
+        {
+            user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
+            user.UserToken = null;
+        }
+
+        // Update user password
+        DatabaseContext.Update(user);
+        DatabaseContext.SaveChanges();
     }
+
+    public virtual void DeleteUser(IODeleteUserRequestModel request)
+    {
+        IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
+
+        if (user == null)
+        {
+            throw new IOUserNotFoundException();
+        }
+
+        // Check user entity is not null
+        if ((UserModel?.UserRole ?? (int)UserRoles.AnonmyMouse) <= user.UserRole)
+        {
+            // Update user password
+            DatabaseContext.Remove(user);
+            DatabaseContext.SaveChanges();
+
+            return;
+        }
+
+        throw new IOInvalidPermissionException();
+    }
+
+    #endregion
 }

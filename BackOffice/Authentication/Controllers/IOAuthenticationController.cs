@@ -32,7 +32,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
         {
             // Authenticate user
-            Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName, requestModel.Password);
+            Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName ?? "", requestModel.Password ?? "");
 
             // Check if authentication result is true
             return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
@@ -43,7 +43,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers
         public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
         {
             // Check token
-            Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token);
+            Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token ?? "");
 
             // Check if authentication result is true
             return new IOCheckTokenResponseModel(checkTokenResult.Item1, checkTokenResult.Item2, checkTokenResult.Item3);

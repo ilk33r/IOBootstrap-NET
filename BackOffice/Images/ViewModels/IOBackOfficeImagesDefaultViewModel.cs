@@ -1,12 +1,11 @@
 using System;
 using IOBootstrap.NET.DataAccess.Context;
 
-namespace IOBootstrap.NET.BackOffice.Images.ViewModels
+namespace IOBootstrap.NET.BackOffice.Images.ViewModels;
+
+public class IOBackOfficeImagesDefaultViewModel : IOBackOfficeImagesViewModel<IODatabaseContextDefaultImpl>
 {
-    public class IOBackOfficeImagesDefaultViewModel : IOBackOfficeImagesViewModel<IODatabaseContextDefaultImpl>
+    public IOBackOfficeImagesDefaultViewModel() : base()
     {
-        public IOBackOfficeImagesDefaultViewModel() : base()
-        {
-        }
     }
 }

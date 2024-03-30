@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Common.Attributes;
+﻿using IOBootstrap.NET.BackOffice.GenerateBOPage.ViewModels;
+using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.GenerateBOPage;
@@ -6,7 +7,7 @@ using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.BackOffice;
+namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
 public class IOGenerateBOPageController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
@@ -29,7 +30,7 @@ where TViewModel : IOGenerateBOPageViewModel<TDBContext>, new()
     public IOGenerateBOPageResponseModel CreateModel([FromBody] IOGenerateBOPageRequestModel requestModel)
     {
         // Create Model
-        return ViewModel.CreateModel(requestModel.EntityName);
+        return ViewModel.CreateModel(requestModel.EntityName ?? "");
     }
 
     #endregion

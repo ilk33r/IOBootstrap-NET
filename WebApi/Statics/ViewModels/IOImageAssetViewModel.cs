@@ -17,13 +17,13 @@ public class IOImageAssetViewModel<TDBContext> : IOViewModel<TDBContext>, IIOIma
 
     public FileStream GetImageFile(string publicId)
     {
-        string fileName = this.GetImageFileName(publicId);
+        string? fileName = this.GetImageFileName(publicId);
         if (String.IsNullOrEmpty(fileName))
         {
             throw new IOImageNotFoundException();
         }
 
-        string imagesFolder = Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey);
+        string imagesFolder = Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;
         string imagePath = Path.Combine(imagesFolder, fileName);
 
         if (!File.Exists(imagePath))

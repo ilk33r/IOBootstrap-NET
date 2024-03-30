@@ -6,7 +6,7 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator;
+namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.ViewModels;
 
 public class DatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
     where TDBContext : IODatabaseContext<TDBContext> 

@@ -10,51 +10,50 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.WebApi.Handshake.Controllers
+namespace IOBootstrap.NET.WebApi.Handshake.Controllers;
+
+public class IOHandshakeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
+where TDBContext : IODatabaseContext<TDBContext>
+where TViewModel : IOHandshakeViewModel<TDBContext>, new()
 {
-    public class IOHandshakeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext> 
-    where TDBContext : IODatabaseContext<TDBContext> 
-    where TViewModel : IOHandshakeViewModel<TDBContext>, new()
-    {        
-        #region Controller Lifecycle
+    #region Controller Lifecycle
 
-        public IOHandshakeController(IConfiguration configuration, 
-                                    IWebHostEnvironment environment, 
-                                    ILogger<IOLoggerType> logger,
-                                    TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
-        {
-        }
-
-        #endregion
-
-        #region Handshake Methods
-
-        [IORequireHTTPS]
-        [HttpGet("[action]")]
-        public virtual HandshakeResponseModel Index()
-        {
-            // Get public key
-            Tuple<string, string> publicKey = ViewModel.GetPuplicKey();
-
-            // Obtain key id
-            string keyID = "";
-            IOCacheObject keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
-            if (keyIDCacheObject != null) 
-            {
-                keyID = (string)keyIDCacheObject.Value;
-            }
-
-            // Create and return response
-            return new HandshakeResponseModel(publicKey.Item2, publicKey.Item1, keyID);
-        }
-
-        [IORequireHTTPS]
-        [HttpGet("[action]")]
-        public virtual IOResponseModel CheckSession()
-        {
-            return new IOResponseModel();
-        }
-
-        #endregion
+    public IOHandshakeController(IConfiguration configuration,
+                                IWebHostEnvironment environment,
+                                ILogger<IOLoggerType> logger,
+                                TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
+    {
     }
+
+    #endregion
+
+    #region Handshake Methods
+
+    [IORequireHTTPS]
+    [HttpGet("[action]")]
+    public virtual HandshakeResponseModel Index()
+    {
+        // Get public key
+        Tuple<string, string> publicKey = ViewModel.GetPuplicKey();
+
+        // Obtain key id
+        string keyID = "";
+        IOCacheObject? keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+        if (keyIDCacheObject != null)
+        {
+            keyID = (string)keyIDCacheObject.Value;
+        }
+
+        // Create and return response
+        return new HandshakeResponseModel(publicKey.Item2, publicKey.Item1, keyID);
+    }
+
+    [IORequireHTTPS]
+    [HttpGet("[action]")]
+    public virtual IOResponseModel CheckSession()
+    {
+        return new IOResponseModel();
+    }
+
+    #endregion
 }

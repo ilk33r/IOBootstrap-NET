@@ -5,21 +5,20 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using Org.BouncyCastle.Crypto.Parameters;
 
-namespace IOBootstrap.NET.WebApi.Handshake.ViewModels
+namespace IOBootstrap.NET.WebApi.Handshake.ViewModels;
+
+public class IOHandshakeViewModel<TDBContext> : IOViewModel<TDBContext>
+where TDBContext : IODatabaseContext<TDBContext>
 {
-    public class IOHandshakeViewModel<TDBContext> : IOViewModel<TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext> 
+    public Tuple<string, string> GetPuplicKey()
     {
-        public Tuple<string, string> GetPuplicKey()
-        {
-            RsaPrivateCrtKeyParameters privateKey = IOEncryptionUtilities.GenerateRSAKeyPair();
-            byte[] modulusBytes = privateKey.Modulus.ToByteArray();
-            byte[] exponentBytes = privateKey.PublicExponent.ToByteArray();
+        RsaPrivateCrtKeyParameters privateKey = IOEncryptionUtilities.GenerateRSAKeyPair();
+        byte[] modulusBytes = privateKey.Modulus.ToByteArray();
+        byte[] exponentBytes = privateKey.PublicExponent.ToByteArray();
 
-            string modulus = IOHexUtilities.ByteArrayToHexString(modulusBytes);
-            string exponent = IOHexUtilities.ByteArrayToHexString(exponentBytes);
+        string modulus = IOHexUtilities.ByteArrayToHexString(modulusBytes);
+        string exponent = IOHexUtilities.ByteArrayToHexString(exponentBytes);
 
-            return new Tuple<string, string>(modulus, exponent);
-        }
+        return new Tuple<string, string>(modulus, exponent);
     }
 }

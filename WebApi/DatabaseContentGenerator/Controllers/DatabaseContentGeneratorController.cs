@@ -3,9 +3,10 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.WebApi.DatabaseContentGenerator.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator;
+namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.Controllers;
 
 // [Obsolete("This Method is Deprecated", false)]
 [Produces("application/json")]

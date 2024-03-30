@@ -1,12 +1,11 @@
 using System;
 
-namespace IOBootstrap.NET.Common.Attributes
+namespace IOBootstrap.NET.Common.Attributes;
+
+[AttributeUsage(AttributeTargets.Class)]
+public class IOBackofficeAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class IOBackofficeAttribute : Attribute
+    public IOBackofficeAttribute()
     {
-        public IOBackofficeAttribute()
-        {
-        }
     }
 }

@@ -2,33 +2,32 @@ using System;
 using System.Text.Json;
 using IOBootstrap.NET.Common.Models.Base;
 
-namespace IOBootstrap.NET.Common.Models.Configuration
+namespace IOBootstrap.NET.Common.Models.Configuration;
+
+public class IOConfigurationModel : IOModel
 {
-    public class IOConfigurationModel : IOModel
+    public int ID { get; set; }
+    public string? ConfigKey { get; set; }
+    public int? ConfigIntValue { get; set; }
+    public string? ConfigStringValue { get; set; }
+
+    public int IntValue()
     {
-        public int ID { get; set; }
-        public string? ConfigKey { get; set; }
-        public int? ConfigIntValue { get; set; }
-        public string? ConfigStringValue { get; set; }
+        return this.ConfigIntValue ?? 0;
+    }
 
-        public int IntValue()
+    public string StringValue()
+    {
+        return this.ConfigStringValue ?? "";
+    }
+
+    public TModel? ObjectValue<TModel>() where TModel : IOModel, new()
+    {
+        if (String.IsNullOrEmpty(this.ConfigStringValue))
         {
-            return this.ConfigIntValue ?? 0;
+            return new TModel();
         }
 
-        public string StringValue()
-        {
-            return this.ConfigStringValue ?? "";
-        }
-
-        public TModel? ObjectValue<TModel>() where TModel : IOModel, new()
-        {
-            if (String.IsNullOrEmpty(this.ConfigStringValue))
-            {
-                return new TModel();
-            }
-                
-            return JsonSerializer.Deserialize<TModel>(this.ConfigStringValue);
-        }
+        return JsonSerializer.Deserialize<TModel>(this.ConfigStringValue);
     }
 }

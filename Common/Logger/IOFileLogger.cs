@@ -1,44 +1,44 @@
 using System;
 
-namespace IOBootstrap.NET.Common.Logger
+namespace IOBootstrap.NET.Common.Logger;
+
+public class IOFileLogger : ILogger
 {
-    public class IOFileLogger: ILogger
+    protected readonly IOFileLoggerProvider FileLoggerProvider;
+
+    public IOFileLogger(IOFileLoggerProvider fileLoggerProvider)
     {
-        protected readonly IOFileLoggerProvider FileLoggerProvider;
- 
-        public IOFileLogger(IOFileLoggerProvider fileLoggerProvider)
+        this.FileLoggerProvider = fileLoggerProvider;
+    }
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    {
+        return null;
+    }
+
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return FileLoggerProvider.Options.Enabled;
+    }
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        if (!IsEnabled(logLevel))
         {
-            this.FileLoggerProvider = fileLoggerProvider;
+            return;
         }
- 
-        public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+
+        string fileLoggerFilePath = FileLoggerProvider.Options.FilePath ?? "{date}";
+        string fullFilePath = FileLoggerProvider.Options.FolderPath + "/" + fileLoggerFilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
+        string logRecord = string.Format("{0} [{1}] {2} {3}", "[" + DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00") + "]", logLevel.ToString(), formatter(state, exception), exception != null ? exception.StackTrace : "");
+
+        try
         {
-            return null;
+            using var streamWriter = new StreamWriter(fullFilePath, true);
+            streamWriter.WriteLine(logRecord);
         }
- 
-        public bool IsEnabled(LogLevel logLevel)
+        catch (Exception)
         {
-            return FileLoggerProvider.Options.Enabled;
-        }
- 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-        {
-            if (!IsEnabled(logLevel))
-            {
-                return;
-            }
- 
-            string fileLoggerFilePath = FileLoggerProvider.Options.FilePath ?? "{date}";
-            string fullFilePath = FileLoggerProvider.Options.FolderPath + "/" + fileLoggerFilePath.Replace("{date}", DateTimeOffset.UtcNow.ToString("yyyyMMdd"));
-            string logRecord = string.Format("{0} [{1}] {2} {3}", "[" + DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss+00:00") + "]", logLevel.ToString(), formatter(state, exception), exception != null ? exception.StackTrace : "");
- 
-            try {
-                using var streamWriter = new StreamWriter(fullFilePath, true);
-                streamWriter.WriteLine(logRecord);
-            } 
-            catch (Exception) 
-            {
-            }
         }
     }
 }

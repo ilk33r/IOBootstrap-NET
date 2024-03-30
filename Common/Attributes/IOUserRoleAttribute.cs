@@ -1,22 +1,20 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Enumerations;
 
-namespace IOBootstrap.NET.Common.Attributes
+namespace IOBootstrap.NET.Common.Attributes;
+
+[AttributeUsage(AttributeTargets.Method)]
+public class IOUserRoleAttribute : Attribute
 {
+    public int requiredRole;
 
-    [AttributeUsage(AttributeTargets.Method)]
-    public class IOUserRoleAttribute : Attribute
+    public IOUserRoleAttribute(UserRoles requiredRole)
     {
-        public int requiredRole;
+        this.requiredRole = (int)requiredRole;
+    }
 
-        public IOUserRoleAttribute(UserRoles requiredRole)
-        {
-            this.requiredRole = (int)requiredRole;
-        }
-
-        public IOUserRoleAttribute(int requiredRole)
-        {
-            this.requiredRole = requiredRole;
-        }
+    public IOUserRoleAttribute(int requiredRole)
+    {
+        this.requiredRole = requiredRole;
     }
 }

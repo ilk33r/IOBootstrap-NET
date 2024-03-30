@@ -11,201 +11,202 @@ using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 
-namespace IOBootstrap.NET.Core.ViewModels
+namespace IOBootstrap.NET.Core.ViewModels;
+
+public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
 {
-    public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+
+    #region Publics
+
+    public string? ClientId;
+    public string? ClientDescription;
+
+    #endregion
+
+    #region Properties
+
+    public IConfiguration Configuration { get; set; }
+    public IWebHostEnvironment Environment { get; set; }
+    public ILogger<IOLoggerType> Logger { get; set; }
+    public HttpRequest Request { get; set; }
+    public TDBContext DatabaseContext { get; set; }
+
+    #endregion
+
+    #region Initialization Methods
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public IOViewModel()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
+    }
 
-        #region Publics
+    #endregion
 
-        public string? ClientId;
-        public string? ClientDescription;
+    #region Helper Methods
 
-        #endregion
-
-        #region Properties
-
-        public IConfiguration Configuration { get; set; }
-        public IWebHostEnvironment Environment { get; set; }
-        public ILogger<IOLoggerType> Logger { get; set; }
-        public HttpRequest Request { get; set; }
-        public TDBContext DatabaseContext { get; set; }
-
-        #endregion
-
-        #region Initialization Methods
-
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public IOViewModel()
-        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public virtual void CheckAuthorizationHeader()
+    {
+        // Check authorization header key exists
+        if (Request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
         {
-        }
+            // Obtain request authorization value
+            string? requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
 
-		#endregion
-
-		#region Helper Methods
-
-        public virtual void CheckAuthorizationHeader()
-		{
-			// Check authorization header key exists
-			if (Request.Headers.ContainsKey(IORequestHeaderConstants.Authorization))
-			{
-				// Obtain request authorization value
-				string? requestAuthorization = Request.Headers[IORequestHeaderConstants.Authorization];
-
-				// Check authorization code is equal to configuration value
-				if (requestAuthorization?.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)!) ?? false)
-				{
-					// Then authorization success
-					return;
-				}
-			}
-
-			throw new IOUnAuthorizeException();
-		}
-
-        public virtual void CheckClient()
-		{
-            // Obtain client info
-            bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
-            if (!checkClientInfo)
+            // Check authorization code is equal to configuration value
+            if (requestAuthorization?.Equals(Configuration.GetValue<string>(IOConfigurationConstants.AuthorizationKey)!) ?? false)
             {
+                // Then authorization success
                 return;
             }
-
-            // Obtain client ID and Secret
-            string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientId]!) : "";
-            string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientSecret]!) : "";
-
-            // Find client
-            var clientsEntity = DatabaseContext.Clients.Where(arg1 => arg1.ClientId!.Equals(clientId));
-
-			// Check finded client counts is greater than zero
-			if (clientsEntity.Count() == 0)
-			{
-                // Then return invalid clients
-			    throw new IOInvalidClientException();
-			}
-
-            // Obtain client
-			IOClientsEntity client = clientsEntity.First();
-
-			// Check client secret
-            if (client.IsEnabled == 1 && (client.ClientSecret?.Equals(clientSecret) ?? false))
-			{
-                // Obtain request counts
-                long requestCount = client.RequestCount + 1;
-                long maxRequestCount = client.MaxRequestCount;
-
-                // Check request counts
-                if (requestCount <= maxRequestCount)
-                {
-                    // Update request count
-                    client.RequestCount = requestCount;
-
-                    // Update properties
-                    ClientId = clientId;
-                    ClientDescription = client.ClientDescription;
-
-                    // Update client 
-                    DatabaseContext.Update(client);
-                    DatabaseContext.SaveChanges();
-                }
-			}
-		}
-
-        public virtual int GetUserRole()
-        {
-            return (int)UserRoles.SuperAdmin;
         }
 
-        #endregion
-
-        #region Encryption Decryption
-
-        public virtual string DecryptString(string encryptedString)
-        {
-            if (encryptedString == null) {
-                return "";
-            }
-
-            IOAESUtilities aesUtility = GetAesUtility();
-            return aesUtility.Decrypt(Convert.FromBase64String(encryptedString));
-        }
-
-        public virtual string EncryptString(string plainString)
-        {
-            IOAESUtilities aesUtility = GetAesUtility();
-            return Convert.ToBase64String(aesUtility.Encrypt(plainString));
-        }
-
-        public virtual IOAESUtilities GetAesUtility()
-        {
-            string? symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
-            string? symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
-            
-            if (String.IsNullOrEmpty(symmetricIVString) || String.IsNullOrEmpty(symmetricKeyString))
-            {
-                throw new IOInvalidKeyIDException();
-            }
-
-            try {
-                byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
-                byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
-            
-                byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
-                byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
-
-                if (symmetricIV == null || symmetricKey == null)
-                {
-                    throw new IOInvalidKeyIDException();
-                }
-
-                return new IOAESUtilities(symmetricKey, symmetricIV);
-            } 
-            catch (Exception e)
-            {
-                Logger.LogDebug("{0}", e.StackTrace);
-                throw new IOInvalidKeyIDException();
-            }
-        }
-
-        #endregion
-
-        #region Configuration
-
-        public virtual IOConfigurationModel? GetDBConfig(string configKey)
-        {
-            string cacheKey = IOCacheKeys.ConfigurationCacheKey + configKey;
-            IOCacheObject? cachedObject = IOCache.GetCachedObject(cacheKey);
-            if (cachedObject != null)
-            {
-                IOConfigurationModel configurationModel = (IOConfigurationModel)cachedObject.Value;
-                return configurationModel;
-            }
-
-            IOConfigurationModel? configuration = DatabaseContext.Configurations
-                                                                            .Select(c => new IOConfigurationModel()
-                                                                            {
-                                                                                ConfigKey = c.ConfigKey,
-                                                                                ConfigIntValue = c.ConfigIntValue,
-                                                                                ConfigStringValue = c.ConfigStringValue
-                                                                            })
-                                                                            .Where(config => config.ConfigKey!.Equals(configKey))
-                                                                            .FirstOrDefault();
-
-            
-            if (configuration != null)
-            {
-                cachedObject = new IOCacheObject(cacheKey, configuration, 0);
-                IOCache.CacheObject(cachedObject);
-
-                return configuration;
-            }
-
-            return null;
-        }
-
-        #endregion
+        throw new IOUnAuthorizeException();
     }
+
+    public virtual void CheckClient()
+    {
+        // Obtain client info
+        bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
+        if (!checkClientInfo)
+        {
+            return;
+        }
+
+        // Obtain client ID and Secret
+        string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientId]!) : "";
+        string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientSecret]!) : "";
+
+        // Find client
+        var clientsEntity = DatabaseContext.Clients.Where(arg1 => arg1.ClientId!.Equals(clientId));
+
+        // Check finded client counts is greater than zero
+        if (clientsEntity.Count() == 0)
+        {
+            // Then return invalid clients
+            throw new IOInvalidClientException();
+        }
+
+        // Obtain client
+        IOClientsEntity client = clientsEntity.First();
+
+        // Check client secret
+        if (client.IsEnabled == 1 && (client.ClientSecret?.Equals(clientSecret) ?? false))
+        {
+            // Obtain request counts
+            long requestCount = client.RequestCount + 1;
+            long maxRequestCount = client.MaxRequestCount;
+
+            // Check request counts
+            if (requestCount <= maxRequestCount)
+            {
+                // Update request count
+                client.RequestCount = requestCount;
+
+                // Update properties
+                ClientId = clientId;
+                ClientDescription = client.ClientDescription;
+
+                // Update client 
+                DatabaseContext.Update(client);
+                DatabaseContext.SaveChanges();
+            }
+        }
+    }
+
+    public virtual int GetUserRole()
+    {
+        return (int)UserRoles.SuperAdmin;
+    }
+
+    #endregion
+
+    #region Encryption Decryption
+
+    public virtual string DecryptString(string encryptedString)
+    {
+        if (encryptedString == null)
+        {
+            return "";
+        }
+
+        IOAESUtilities aesUtility = GetAesUtility();
+        return aesUtility.Decrypt(Convert.FromBase64String(encryptedString));
+    }
+
+    public virtual string EncryptString(string plainString)
+    {
+        IOAESUtilities aesUtility = GetAesUtility();
+        return Convert.ToBase64String(aesUtility.Encrypt(plainString));
+    }
+
+    public virtual IOAESUtilities GetAesUtility()
+    {
+        string? symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
+        string? symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
+
+        if (String.IsNullOrEmpty(symmetricIVString) || String.IsNullOrEmpty(symmetricKeyString))
+        {
+            throw new IOInvalidKeyIDException();
+        }
+
+        try
+        {
+            byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
+            byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
+
+            byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
+            byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
+
+            if (symmetricIV == null || symmetricKey == null)
+            {
+                throw new IOInvalidKeyIDException();
+            }
+
+            return new IOAESUtilities(symmetricKey, symmetricIV);
+        }
+        catch (Exception e)
+        {
+            Logger.LogDebug("{0}", e.StackTrace);
+            throw new IOInvalidKeyIDException();
+        }
+    }
+
+    #endregion
+
+    #region Configuration
+
+    public virtual IOConfigurationModel? GetDBConfig(string configKey)
+    {
+        string cacheKey = IOCacheKeys.ConfigurationCacheKey + configKey;
+        IOCacheObject? cachedObject = IOCache.GetCachedObject(cacheKey);
+        if (cachedObject != null)
+        {
+            IOConfigurationModel configurationModel = (IOConfigurationModel)cachedObject.Value;
+            return configurationModel;
+        }
+
+        IOConfigurationModel? configuration = DatabaseContext.Configurations
+                                                                        .Select(c => new IOConfigurationModel()
+                                                                        {
+                                                                            ConfigKey = c.ConfigKey,
+                                                                            ConfigIntValue = c.ConfigIntValue,
+                                                                            ConfigStringValue = c.ConfigStringValue
+                                                                        })
+                                                                        .Where(config => config.ConfigKey!.Equals(configKey))
+                                                                        .FirstOrDefault();
+
+
+        if (configuration != null)
+        {
+            cachedObject = new IOCacheObject(cacheKey, configuration, 0);
+            IOCache.CacheObject(cachedObject);
+
+            return configuration;
+        }
+
+        return null;
+    }
+
+    #endregion
 }

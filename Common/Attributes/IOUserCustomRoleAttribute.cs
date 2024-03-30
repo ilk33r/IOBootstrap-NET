@@ -1,16 +1,14 @@
 ﻿using System;
 
-namespace IOBootstrap.NET.Common.Attributes
+namespace IOBootstrap.NET.Common.Attributes;
+
+[AttributeUsage(AttributeTargets.Method)]
+public class IOUserCustomRoleAttribute : Attribute
 {
+    public int requiredRawRole;
 
-    [AttributeUsage(AttributeTargets.Method)]
-    public class IOUserCustomRoleAttribute : Attribute
+    public IOUserCustomRoleAttribute(int requiredRole)
     {
-        public int requiredRawRole;
-
-        public IOUserCustomRoleAttribute(int requiredRole)
-        {
-            this.requiredRawRole = requiredRole;
-        }
+        this.requiredRawRole = requiredRole;
     }
 }

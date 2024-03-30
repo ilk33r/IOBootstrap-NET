@@ -10,7 +10,7 @@ public class IODefaultHeaderFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        IOCacheObject authorizationCache = IOCache.GetCachedObject(IOCacheKeys.SwaggerAuthorization);
+        IOCacheObject? authorizationCache = IOCache.GetCachedObject(IOCacheKeys.SwaggerAuthorization);
         string authorization = "";
         if (authorizationCache != null)
         {
@@ -30,7 +30,7 @@ public class IODefaultHeaderFilter : IOperationFilter
         });
 
         string keyID = "";
-        IOCacheObject keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+        IOCacheObject? keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
         if (keyIDCacheObject != null) 
         {
             keyID = (string)keyIDCacheObject.Value;

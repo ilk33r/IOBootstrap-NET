@@ -2,16 +2,15 @@
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Models.Base;
 
-namespace IOBootstrap.NET.Common.Messages.Base
+namespace IOBootstrap.NET.Common.Messages.Base;
+
+public class IORequestModel : IOModel
 {
-    public class IORequestModel : IOModel
-    {
 
-        #region Properties
+    #region Properties
 
-        public CultureTypes Culture;
-        public string? Version;
+    public CultureTypes Culture;
+    public string? Version;
 
-        #endregion
-    }
+    #endregion
 }

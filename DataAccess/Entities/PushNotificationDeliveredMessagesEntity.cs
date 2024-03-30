@@ -3,22 +3,21 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace IOBootstrap.NET.DataAccess.Entities
+namespace IOBootstrap.NET.DataAccess.Entities;
+
+public class PushNotificationDeliveredMessagesEntity
 {
-    public class PushNotificationDeliveredMessagesEntity
-    {
 
-        #region Properties
+    #region Properties
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int ID { get; set; }
 
-        public virtual PushNotificationEntity? PushNotification { get; set; }
-        
-        public virtual PushNotificationMessageEntity? PushNotificationMessage { get; set; }
+    public virtual PushNotificationEntity? PushNotification { get; set; }
 
-        #endregion
+    public virtual PushNotificationMessageEntity? PushNotificationMessage { get; set; }
 
-    }
+    #endregion
+
 }

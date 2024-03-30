@@ -3,54 +3,53 @@ using System.Net;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace IOBootstrap.NET.Common.EMail
+namespace IOBootstrap.NET.Common.EMail;
+
+public class IOEMailUtilities
 {
-    public class IOEMailUtilities
+
+    private string ApiKey;
+    private string FromName;
+    private string FromEmail;
+
+    private SendGridMessage? GeneratedMessage;
+
+    public IOEMailUtilities(string apiKey, string fromName, string fromEmail)
     {
+        this.ApiKey = apiKey;
+        this.FromName = fromName;
+        this.FromEmail = fromEmail;
+    }
 
-        private string ApiKey;
-        private string FromName;
-        private string FromEmail;
+    public void CreateEMailMessage(string toEmail, string toName, string subject, string htmlBody, string textBody)
+    {
+        // Create email message
+        SendGridMessage msg = new SendGridMessage();
 
-        private SendGridMessage? GeneratedMessage;
+        // Set from
+        msg.SetFrom(new EmailAddress(FromEmail, FromName));
 
-        public IOEMailUtilities(string apiKey, string fromName, string fromEmail) 
-        {
-            this.ApiKey = apiKey;
-            this.FromName = fromName;
-            this.FromEmail = fromEmail;
-        }
-
-        public void CreateEMailMessage(string toEmail, string toName, string subject, string htmlBody, string textBody)
-        {
-            // Create email message
-            SendGridMessage msg = new SendGridMessage();
-
-            // Set from
-            msg.SetFrom(new EmailAddress(FromEmail, FromName));
-
-            // Set recipients
-            var recipients = new List<EmailAddress>
+        // Set recipients
+        var recipients = new List<EmailAddress>
             {
                 new EmailAddress(toEmail, toName)
             };
-            msg.AddTos(recipients);
+        msg.AddTos(recipients);
 
-            // Set subject and content
-            msg.SetSubject(subject);
-            msg.AddContent(MimeType.Text, textBody);
-            msg.AddContent(MimeType.Html, htmlBody);
+        // Set subject and content
+        msg.SetSubject(subject);
+        msg.AddContent(MimeType.Text, textBody);
+        msg.AddContent(MimeType.Html, htmlBody);
 
-            GeneratedMessage = msg;
-        }
+        GeneratedMessage = msg;
+    }
 
-        public HttpStatusCode SendEmail()
-        {
-            SendGridClient client = new SendGridClient(ApiKey);
-            Task<Response> response = client.SendEmailAsync(GeneratedMessage);
-            response.Wait();
+    public HttpStatusCode SendEmail()
+    {
+        SendGridClient client = new SendGridClient(ApiKey);
+        Task<Response> response = client.SendEmailAsync(GeneratedMessage);
+        response.Wait();
 
-            return response.Result.StatusCode;
-        }
+        return response.Result.StatusCode;
     }
 }

@@ -25,9 +25,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public IOGenerateBOPageResponseModel CreateModel(string entityName)
     {
-        string dataAccessAssemblyName = Configuration.GetValue<string>(IOConfigurationConstants.DataAccessAssembly);
+        string dataAccessAssemblyName = Configuration.GetValue<string>(IOConfigurationConstants.DataAccessAssembly)!;
         Assembly dataAccessAssembly = Assembly.Load(dataAccessAssemblyName);
-        Type entityClass = dataAccessAssembly.GetType(dataAccessAssemblyName + ".Entities." + entityName);
+        Type entityClass = dataAccessAssembly.GetType(dataAccessAssemblyName + ".Entities." + entityName)!;
         var entityClassInstance = Activator.CreateInstance(entityClass);
         var entityNameParts = entityName.Split('.');
         var cleanEntityName = entityNameParts.Last();
@@ -38,11 +38,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
 
-        Dictionary<string, object> jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(serializedBody);
+        Dictionary<string, object> jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(serializedBody)!;
         List<IOBOPageEntityModel> properties = new List<IOBOPageEntityModel>();
         foreach (MemberInfo member in entityClass.GetMembers())
         {
-            IOBOPageEntityModel propertyEntity = PageEntity(member, jsonObject);
+            IOBOPageEntityModel? propertyEntity = PageEntity(member, jsonObject);
             if (propertyEntity != null)
             {
                 properties.Add(propertyEntity);
@@ -74,7 +74,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region Helper Methods
 
-    private IOBOPageEntityModel PageEntity(MemberInfo member, Dictionary<string, object> jsonObject)
+    private IOBOPageEntityModel? PageEntity(MemberInfo member, Dictionary<string, object> jsonObject)
     {
         var jsonObjectPair = jsonObject.Where(o => o.Key.ToLower().Equals(member.Name.ToLower()))
                                         .FirstOrDefault();
@@ -89,12 +89,13 @@ where TDBContext : IODatabaseContext<TDBContext>
         entityModel.Nullable = true;
 
         Type underlayingType = GetMemberUnderlyingType(member);
-        if (underlayingType.FullName.Contains("Collections"))
+        string underlayingTypeName = underlayingType.FullName ?? "";
+        if (underlayingTypeName.Contains("Collections"))
         {
             return null;
         }
 
-        entityModel.Type = PropertyTypeFromName(underlayingType.FullName);
+        entityModel.Type = PropertyTypeFromName(underlayingTypeName);
 
         IEnumerable<CustomAttributeData> propertyAttributes = member.CustomAttributes;
         foreach (CustomAttributeData propertyAttribute in propertyAttributes)
@@ -106,7 +107,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
             if (propertyAttribute.AttributeType.Name.Contains("StringLength"))
             {
-                StringLengthAttribute attribute = (StringLengthAttribute)member.GetCustomAttribute(propertyAttribute.AttributeType);
+                StringLengthAttribute attribute = (StringLengthAttribute)member.GetCustomAttribute(propertyAttribute.AttributeType)!;
                 entityModel.StringLength = attribute.MaximumLength;
             }
         }
@@ -117,8 +118,8 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
         else if (underlayingType.IsEnum)
         {
-            entityModel.EnumTypeName = underlayingType.FullName.Split(".").Last();
-            entityModel.EnumType = CustomEnumTypeFromName(underlayingType.FullName);
+            entityModel.EnumTypeName = underlayingTypeName.Split(".").Last();
+            entityModel.EnumType = CustomEnumTypeFromName(underlayingTypeName);
         }
         
         return entityModel;
@@ -128,10 +129,10 @@ where TDBContext : IODatabaseContext<TDBContext>
     {
         return member.MemberType switch
         {
-            MemberTypes.Event => ((EventInfo)member).EventHandlerType,
-            MemberTypes.Field => ((FieldInfo)member).FieldType,
-            MemberTypes.Method => ((MethodInfo)member).ReturnType,
-            MemberTypes.Property => ((PropertyInfo)member).PropertyType,
+            MemberTypes.Event => ((EventInfo)member).EventHandlerType!,
+            MemberTypes.Field => ((FieldInfo)member).FieldType!,
+            MemberTypes.Method => ((MethodInfo)member).ReturnType!,
+            MemberTypes.Property => ((PropertyInfo)member).PropertyType!,
             _ => throw new ArgumentException("Input MemberInfo must be if type EventInfo, FieldInfo, MethodInfo, or PropertyInfo"),
         };
     }
@@ -162,7 +163,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         return IOBOPagePropertyType.Enum;
     }
 
-    private IList<IOBOPageEntityCustomEnumTypeModel> CustomEnumTypeFromName(string typeName)
+    private IList<IOBOPageEntityCustomEnumTypeModel>? CustomEnumTypeFromName(string typeName)
     {
         string[] typeNameParts = typeName.Split(".");
         int assemblyNamePartCount = typeNameParts.Length - 2;
@@ -179,7 +180,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         string assemblyName = String.Join(".", assemblyNames);
         Assembly assembly = Assembly.Load(assemblyName);
-        Type enumType = assembly.GetType(typeName);
+        Type enumType = assembly.GetType(typeName)!;
         var values = Enum.GetValues(enumType);
 
         List<IOBOPageEntityCustomEnumTypeModel> enumTypes = new List<IOBOPageEntityCustomEnumTypeModel>();

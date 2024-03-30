@@ -133,7 +133,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     private Dictionary<string, string> CreateVariables(IOGenerateBOPageFilesRequestModel requestModel)
     {
-        string dataAccessAssemblyName = Configuration.GetValue<string>(IOConfigurationConstants.DataAccessAssembly);
+        string dataAccessAssemblyName = Configuration.GetValue<string>(IOConfigurationConstants.DataAccessAssembly)!;
         string projectName = dataAccessAssemblyName.Split(".").First();
         
         Dictionary<string, string> variables = new Dictionary<string, string>();

@@ -82,7 +82,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
 
         public void DeleteMessage(int messageId)
         {
-            IOBackOfficeMessageEntity messageEntity = DatabaseContext.Messages.Find(messageId);
+            IOBackOfficeMessageEntity? messageEntity = DatabaseContext.Messages.Find(messageId);
 
             if (messageEntity != null) 
             {
@@ -93,7 +93,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.ViewModels
 
         public void UpdateMessage(IOMessageUpdateRequestModel request)
         {
-            IOBackOfficeMessageEntity messageEntity = DatabaseContext.Messages.Find(request.MessageId);
+            IOBackOfficeMessageEntity? messageEntity = DatabaseContext.Messages.Find(request.MessageId);
 
             if (messageEntity != null)
             {

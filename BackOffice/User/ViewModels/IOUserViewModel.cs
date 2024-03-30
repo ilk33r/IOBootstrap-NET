@@ -29,7 +29,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
         public virtual IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel)
         {
             // Obtain users entity
-            IOUserEntity user = DatabaseContext.Users
+            IOUserEntity? user = DatabaseContext.Users
                                                 .Where(u => u.UserName.Equals(requestModel.UserName))
                                                 .FirstOrDefault();
 
@@ -60,7 +60,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
         public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
         {
-            IOUserEntity currentUser = DatabaseContext.Users
+            IOUserEntity? currentUser = DatabaseContext.Users
                                                         .Where(u => u.UserName.Equals(userName))
                                                         .FirstOrDefault();
 
@@ -117,7 +117,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
                 throw new IOInvalidPermissionException();
             }
 
-            IOUserEntity user = DatabaseContext.Users.Find(request.UserId);
+            IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
             string userName = request.UserName.ToLower();
 
             if (user == null)
@@ -148,7 +148,7 @@ namespace IOBootstrap.NET.BackOffice.User.ViewModels
 
         public virtual void DeleteUser(IODeleteUserRequestModel request)
         {
-            IOUserEntity user = DatabaseContext.Users.Find(request.UserId);
+            IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
 
             if (user == null)
             {

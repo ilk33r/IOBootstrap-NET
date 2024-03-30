@@ -49,7 +49,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
         public void DeleteMenuItem(int menuId)
         {
             // Obtain menu item entity
-            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(menuId);
+            IOMenuEntity? menuEntity = DatabaseContext.Find<IOMenuEntity>(menuId);
 
             // Check menu is not exists
             if (menuEntity == null)
@@ -104,7 +104,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.ViewModels
         public void UpdateMenuItem(IOMenuUpdateRequestModel requestModel)
         {
             // Obtain menu item entity
-            IOMenuEntity menuEntity = DatabaseContext.Find<IOMenuEntity>(requestModel.ID);
+            IOMenuEntity? menuEntity = DatabaseContext.Find<IOMenuEntity>(requestModel.ID);
 
             // Check menu is not exists
             if (menuEntity == null)

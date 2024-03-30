@@ -45,7 +45,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
 
         public virtual void DeleteConfigItem(int configurationId)
         {
-            IOConfigurationEntity configuration = DatabaseContext.Configurations.Find(configurationId);
+            IOConfigurationEntity? configuration = DatabaseContext.Configurations.Find(configurationId);
             if (configuration != null)
             {
                 DatabaseContext.Remove(configuration);
@@ -85,7 +85,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels
         public virtual void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel)
         {
             // Obtain configuration item entity
-            IOConfigurationEntity configurationEntity = DatabaseContext.Configurations.Find(requestModel.ConfigId);
+            IOConfigurationEntity? configurationEntity = DatabaseContext.Configurations.Find(requestModel.ConfigId);
 
             // Check config is not exists
             if (configurationEntity == null)

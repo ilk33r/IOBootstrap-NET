@@ -88,7 +88,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
         public void DeleteImage(IODeleteImagesRequestModel requestModel)
         {
-            IOImagesEntity imagesEntity = DatabaseContext.Images.Find(requestModel.ImageId);
+            IOImagesEntity? imagesEntity = DatabaseContext.Images.Find(requestModel.ImageId);
             if (imagesEntity == null)
             {
                 throw new IOImageNotFoundException();
@@ -106,7 +106,7 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
         public async Task<bool> DeleteFromBlob(string filename)
         {
             BlobServiceClient blobServiceClient = GetBlobServiceClient();
-            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
+            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey)!;
             try
             {
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -131,14 +131,14 @@ namespace IOBootstrap.NET.BackOffice.Images.ViewModels
 
         private BlobServiceClient GetBlobServiceClient() 
         {
-            string storageConnectionString = Configuration.GetConnectionString(IOConfigurationConstants.AzureStorageConnectionStringKey);
+            string storageConnectionString = Configuration.GetConnectionString(IOConfigurationConstants.AzureStorageConnectionStringKey)!;
             return new BlobServiceClient(storageConnectionString);
         }
 
         private async Task<bool> UploadToBlob(string filename, string contentType, byte[] imageBuffer)
         {
             BlobServiceClient blobServiceClient = GetBlobServiceClient();
-            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey);
+            string containerName = Configuration.GetValue<string>(IOConfigurationConstants.AzureStorageBlobNameKey)!;
             try
             {
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);

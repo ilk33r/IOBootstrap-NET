@@ -26,7 +26,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 
         public virtual Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password) 
         {
-            IOUserEntity findedUser = DatabaseContext.Users
+            IOUserEntity? findedUser = DatabaseContext.Users
                                                         .Where(u => u.UserName.Equals(userName))
                                                         .FirstOrDefault();
 
@@ -50,8 +50,8 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
 			string decryptedUserToken = String.Format("{0},{1}", findedUser.ID, userTokenString);
 
 			// Convert key and iv to byte array
-			byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey));
-			byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV));
+			byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+			byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
 
 			// Base 64 encode user token data
             IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
@@ -79,7 +79,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels
             // Parse token data
             Tuple<string, int> tokenData = ParseToken(token);
 
-            IOUserInfoModel findedUser = DatabaseContext.Users
+            IOUserInfoModel? findedUser = DatabaseContext.Users
                                                         .Select(u => new IOUserInfoModel()
                                                         {
                                                             ID = u.ID,

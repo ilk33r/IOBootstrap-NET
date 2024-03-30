@@ -59,7 +59,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
         public void SendNotifications(SendPushNotificationRequestModel requestModel)
         {
             // Obtain client
-            IOClientsEntity clientsEntity = null;
+            IOClientsEntity? clientsEntity = null;
             
             if (requestModel.ClientId != null)
             {
@@ -87,7 +87,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels
         public void DeleteMessage(int messageId)
         {
             // Obtain message 
-            PushNotificationMessageEntity messageEntity = DatabaseContext.PushNotificationMessages.Find(messageId);
+            PushNotificationMessageEntity? messageEntity = DatabaseContext.PushNotificationMessages.Find(messageId);
 
             // Check message entity
             if (messageEntity == null)

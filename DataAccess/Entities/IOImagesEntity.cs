@@ -16,12 +16,17 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public string FileName { get; set; }
 
         [StringLength(32)]
-        public string FileType { get; set; }
+        public string? FileType { get; set; }
 
         public int? Width { get; set; }
 
         public int? Height { get; set; }
 
         public int? Scale { get; set; }
+
+        public IOImagesEntity(string fileName) 
+        {
+            FileName = fileName;
+        }
     }
 }

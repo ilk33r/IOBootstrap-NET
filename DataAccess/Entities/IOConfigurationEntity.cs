@@ -14,11 +14,11 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public int ID { get; set; }
 
         [StringLength(128)]
-        public string ConfigKey { get; set; }
+        public string? ConfigKey { get; set; }
 
         public int? ConfigIntValue { get; set; }
 
-        public string ConfigStringValue { get; set; }
+        public string? ConfigStringValue { get; set; }
 
         #endregion
     }

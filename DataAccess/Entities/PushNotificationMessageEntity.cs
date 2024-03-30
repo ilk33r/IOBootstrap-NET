@@ -13,27 +13,27 @@ namespace IOBootstrap.NET.DataAccess.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public IOClientsEntity Client { get; set; }
+        public IOClientsEntity? Client { get; set; }
 
         public int DeviceType { get; set; }
 
         [StringLength(64)]
-        public string NotificationCategory { get; set; }
+        public string? NotificationCategory { get; set; }
 
         [StringLength(256)]
-        public string NotificationData { get; set; }
+        public string? NotificationData { get; set; }
 
         public DateTimeOffset NotificationDate { get; set; }
 
         [StringLength(256)]
-        public string NotificationMessage { get; set; }
+        public string? NotificationMessage { get; set; }
 
         [StringLength(32)]
-        public string NotificationTitle { get; set; }
+        public string? NotificationTitle { get; set; }
 
         public int IsCompleted { get; set; }
 
-        public PushNotificationEntity PushNotificationDeviceID { get; set; }
+        public PushNotificationEntity? PushNotificationDeviceID { get; set; }
 
         #endregion
     }

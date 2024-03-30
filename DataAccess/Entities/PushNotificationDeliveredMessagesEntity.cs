@@ -14,9 +14,9 @@ namespace IOBootstrap.NET.DataAccess.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public virtual PushNotificationEntity PushNotification { get; set; }
+        public virtual PushNotificationEntity? PushNotification { get; set; }
         
-        public virtual PushNotificationMessageEntity PushNotificationMessage { get; set; }
+        public virtual PushNotificationMessageEntity? PushNotificationMessage { get; set; }
 
         #endregion
 

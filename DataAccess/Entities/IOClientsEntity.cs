@@ -15,15 +15,18 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public int ID { get; set; }
 
 		[StringLength(48)]
-        public string ClientId { get; set; }
+        public string? ClientId { get; set; }
 
 
 		[StringLength(48)]
-        public string ClientSecret { get; set; }
-        public string ClientDescription { get; set; }
+        public string? ClientSecret { get; set; }
+
+        public string? ClientDescription { get; set; }
 
         public int IsEnabled { get; set; }
+
         public long RequestCount { get; set;  }
+        
         public long MaxRequestCount { get; set; }
 
         #endregion

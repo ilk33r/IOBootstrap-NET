@@ -17,7 +17,7 @@ namespace IOBootstrap.NET.DataAccess.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         public DateTimeOffset MessageCreateDate { get; set; }
         public DateTimeOffset MessageStartDate { get; set; }

@@ -14,13 +14,13 @@ namespace IOBootstrap.NET.DataAccess.Entities
         public int ID { get; set; }
 
         [StringLength(255)]
-        public string Action { get; set; }
+        public string? Action { get; set; }
 
         [StringLength(255)]
-        public string CssClass { get; set; }
+        public string? CssClass { get; set; }
 
         [StringLength(255)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public int MenuOrder { get; set; }
         

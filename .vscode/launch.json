@@ -80,6 +80,15 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:azureFunctions.pickProcess}"
+        },
+        {
+            "type": "rdbg",
+            "name": "Debug dotnet fastlane",
+            "rdbgPath": "bundle exec rdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/IOBootstrap-NET/fastlane/plugins/fastlane-plugin-dotnet",
+            "command": "fastlane",
+            "script": "dotnet_publish"
         }
     ]
 }

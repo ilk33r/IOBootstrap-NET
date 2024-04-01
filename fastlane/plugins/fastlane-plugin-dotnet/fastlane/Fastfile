@@ -1,0 +1,7 @@
+lane :dotnet_publish do
+  dotnet(
+    solution_directory: Dir.pwd + "/../../../../",
+    environment: "Staging",
+    output_directory: Dir.pwd + "/../../../../API-Files/Staging"
+  )
+end

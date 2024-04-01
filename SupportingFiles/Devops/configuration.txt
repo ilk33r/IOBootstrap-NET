@@ -3,3 +3,5 @@ ASPNETCORE_ENVIRONMENT Staging
 
 export ASPNETCORE_ENVIRONMENT=Staging
 startup dotnet exec X.Application.dll
+
+dotnet new sln --name mysolution

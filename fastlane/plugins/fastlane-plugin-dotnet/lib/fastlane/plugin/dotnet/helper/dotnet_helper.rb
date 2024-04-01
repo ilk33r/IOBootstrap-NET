@@ -15,6 +15,7 @@ module Fastlane
           environment: environment,
           output_directory: output_directory
         )
+        self.create_www(output_directory: output_directory)
       end
       def self.prepare_output(output_directory:)
         UI.message("Preparing output directory")
@@ -64,6 +65,12 @@ module Fastlane
                                                   end)
           UI.success("Application was published")
         end
+      end
+      def self.create_www(output_directory:)
+        UI.message("Creating wwwroot directory if exists")
+        wwwroot_directory = "#{output_directory}/wwwroot"
+        Dir.mkdir(wwwroot_directory) unless Dir.exist?(wwwroot_directory)
+        UI.success("wwwroot directory is ready")
       end
     end
   end

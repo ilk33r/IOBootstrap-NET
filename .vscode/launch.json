@@ -89,6 +89,15 @@
             "cwd": "${workspaceFolder}/IOBootstrap-NET/fastlane/plugins/fastlane-plugin-dotnet",
             "command": "fastlane",
             "script": "dotnet_publish"
+        },
+        {
+            "type": "rdbg",
+            "name": "Debug react modules fastlane",
+            "rdbgPath": "bundle exec rdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/IOBootstrap-NET/fastlane/plugins/fastlane-plugin-react",
+            "command": "fastlane",
+            "script": "build_all_staging"
         }
     ]
 }

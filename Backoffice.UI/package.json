@@ -34,11 +34,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
-    "build:release": "sh -ac '. .env.${REACT_APP_ENV}; node ./build.js'",
-    "build:development": "REACT_APP_ENV=development npm run build",
-    "build:staging": "REACT_APP_ENV=staging npm run build:release",
-    "build:production": "REACT_APP_ENV=production npm run build:release",
+    "build:development": "react-scripts -r dotenv/config build dotenv_config_path=.env.development",
+    "build:staging": "node -r dotenv/config ./build.js dotenv_config_path=.env.staging",
+    "build:production": "node -r dotenv/config ./build.js dotenv_config_path=.env.production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

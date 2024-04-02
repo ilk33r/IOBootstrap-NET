@@ -12,6 +12,8 @@
         "prepack": "npm run build",
         "prebuild": "npm run clean",
         "build:development": "rollup -c -m --bundleConfigAsCjs",
+        "build:staging": "rollup -c -m --bundleConfigAsCjs",
+        "build:production": "rollup -c --bundleConfigAsCjs",
         "build": "rollup -c --bundleConfigAsCjs",
         "clean": "rimraf lib base-ui-*.tgz",
         "watch": "rollup -cw"

@@ -6,7 +6,9 @@
         "modules/*"
     ],
     "scripts": {
-        "build:development": "lerna run build:development --include-dependencies",
+        "build:development": "lerna run build:development --include-dependencies --stream --no-progress",
+        "build:staging": "lerna run build:staging --include-dependencies --stream --no-progress",
+        "build:production": "lerna run build:production --include-dependencies --stream --no-progress",
         "build": "lerna run build --include-dependencies",
         "clean": "lerna run clean",
         "watch": "lerna run watch",

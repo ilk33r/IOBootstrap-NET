@@ -41,11 +41,11 @@ module Fastlane
                                 description: "Build environment",
                                    optional: false,
                                        type: String),
-            FastlaneCore::ConfigItem.new(key: :output_directory,
-                                       env_name: "DOTNET_OUTPUT",
-                                     description: "Output directory",
-                                        optional: false,
-                                            type: String)
+          FastlaneCore::ConfigItem.new(key: :output_directory,
+                                  env_name: "DOTNET_OUTPUT",
+                                description: "Output directory",
+                                  optional: false,
+                                      type: String)
         ]
       end
 

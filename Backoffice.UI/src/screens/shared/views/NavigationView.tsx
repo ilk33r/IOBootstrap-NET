@@ -36,7 +36,7 @@ class NavigationView extends View<NavigationProps, NavigationState> {
             return <ClientDeleteController />
         }
 
-        if (this.props.pageHash === "clientsSelect") {
+        if (this.props.pageHash === "selection/clientsSelect") {
             return <ClientSelectController />
         }
 
@@ -68,7 +68,7 @@ class NavigationView extends View<NavigationProps, NavigationState> {
             return <MenuEditorAddController />
         }
 
-        if (this.props.pageHash === "menuEditorSelect") {
+        if (this.props.pageHash === "selection/menuEditorSelect") {
             return <MenuEditorSelectionController />
         }
 

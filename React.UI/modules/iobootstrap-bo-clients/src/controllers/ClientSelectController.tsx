@@ -2,7 +2,7 @@ import ClientListProps from "../props/ClientListProps";
 import ClientListState from "../props/ClientListState";
 import ListClientsResponseModel from "../models/ListClientsResponseModel";
 import React from "react";
-import { Controller, WindowMessageModel } from "iobootstrap-ui-base";
+import { Controller } from "iobootstrap-ui-base";
 import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class ClientSelectController extends Controller<ClientListProps, ClientListState> {
@@ -35,8 +35,7 @@ class ClientSelectController extends Controller<ClientListProps, ClientListState
 
     selectDataHandler(index: number) {
         const client = this.state.clientList[index];
-        const selectedClient: WindowMessageModel = { itemID: client.id, itemValue: client.clientDescription };
-        this.postMessage(selectedClient);
+        this.postMessage("itemSelected", client.id, client.clientDescription);
     }
 
     render() {

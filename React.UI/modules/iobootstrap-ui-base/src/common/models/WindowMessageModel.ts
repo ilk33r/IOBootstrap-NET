@@ -1,5 +1,6 @@
 export interface WindowMessageModel {
 
-    itemID: number;
-    itemValue: string;
+    name: string;
+    itemID: number | null;
+    itemValue: string | null;
 }

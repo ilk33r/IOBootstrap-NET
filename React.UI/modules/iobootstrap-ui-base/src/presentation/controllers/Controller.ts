@@ -64,10 +64,13 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
         }, 350);
     }
 
-    public postMessage(message: WindowMessageModel) {
-        if (window.opener != null) {
-            window.opener.postMessage(message, '*');
-        }
+    public postMessage(name: string, itemID: number | null, itemValue: string | null) {
+        const windowMessage: WindowMessageModel = {
+            name: name,
+            itemID: itemID, 
+            itemValue: itemValue
+        };
+        window.postMessage(windowMessage, '*');
     }
 
     public downloadFile(blob: Blob, fileName: string) {

@@ -8,9 +8,7 @@ type MessageEvent = { data: WindowMessageModel; };
 
 class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormViewState> implements FormElement, Validatable {
 
-    // private _formValue: string;
     private _formSelectedItemId: number;
-    private _openedWindow: WindowProxy | null;
 
     constructor(props: FormTypePopupSelectionProps) {
         super(props);
@@ -20,28 +18,38 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
 
         this.state = newState;
 
-        // this._formValue = this.props.value;
         this._formSelectedItemId = this.props.selectedItemId;
-        this._openedWindow = null;
         this.handleValueChange = this.handleValueChange.bind(this);
         this.handleInputClick = this.handleInputClick.bind(this);
     }
 
-    componentDidMount?() {
+    public componentDidMount?() {
         const weakSelf = this;
         $(window).on("message", function (e) {            
             if (e.originalEvent !== undefined) {
                 const originalEvent = e.originalEvent as unknown as MessageEvent;
-                if (originalEvent.data.itemID !== undefined) {
-                    weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                
+                if (originalEvent === undefined || originalEvent.data.name === undefined) {
+                    return;
+                }
 
-                    if (weakSelf._openedWindow !== null) {
-                        weakSelf._openedWindow.close();
-                    }
+                if (originalEvent.data.name !== undefined && originalEvent.data.name !== "itemSelected") {
+                    return;
+                }
+
+                if (originalEvent.data.itemID !== undefined && originalEvent.data.itemID !== null) {
+                    weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                    
+                    const closeSelection: WindowMessageModel = {
+                        name: "closeSelection",
+                        itemID: null, 
+                        itemValue: null 
+                    };
+                    window.postMessage(closeSelection, '*');
                 }
 
                 const newState = new FormViewState();
-                newState.inputValue = originalEvent.data.itemValue;
+                newState.inputValue = originalEvent.data.itemValue ?? "";
                 
                 weakSelf.setState(newState);
             }
@@ -56,14 +64,12 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
         return null;
     }
 
-    handleValueChange(event: { target: { value: string; }; }) {
-        // this._formValue = event.target.value;
+    private handleValueChange(event: { target: { value: string; }; }) {
     }
 
-    handleInputClick(event: { preventDefault: () => void; }) {
-        const pageURL = `${process.env.REACT_APP_BACKOFFICE_PAGE_URL}#!${this.props.selectionURL}`;
-        const pageHash = `#!${this.props.selectionURL}`;
-        this._openedWindow = window.open(pageURL, pageHash, 'width=1224,height=640,top=60,left=60,menubar=0,status=0,titlebar=0');
+    private handleInputClick(event: { preventDefault: () => void; }) {
+        const pageHash = `#!selection/${this.props.selectionURL}`;
+        window.location.hash = pageHash;
     }
 
     validate(): boolean {

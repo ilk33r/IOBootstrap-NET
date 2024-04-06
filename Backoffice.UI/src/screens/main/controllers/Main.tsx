@@ -3,6 +3,7 @@ import CheckTokenResponseModel from '../models/CheckTokenResponseModel';
 import MainProps from '../props/MainProps';
 import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
+import SelectionWrapperView from '../../shared/views/SelectionWrapperView';
 import React from 'react';
 import { CalloutPresenter, CalloutViewPresenter, Controller, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
 import { BOCommonConstants, FooterView, HeaderView } from 'iobootstrap-bo-base';
@@ -46,8 +47,15 @@ class Main extends Controller<MainProps, MainState> {
 
             const newState = new MainState();
             newState.isLoggedIn = this.state.isLoggedIn;
-            newState.isSelection = false;
-            newState.pageHash = hashName;
+            
+            if (hashName.startsWith("selection/")) {
+                newState.pageHash = this.state.pageHash;
+                newState.selectionHash = hashName;
+            } else {
+                newState.pageHash = hashName;
+                newState.selectionHash = null;
+            }
+
             this.setState(newState);
         }
     }
@@ -65,7 +73,6 @@ class Main extends Controller<MainProps, MainState> {
         const userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
         const newState = new MainState();
         newState.isLoggedIn = false;
-        newState.isSelection = false;
 
         if (userToken != null) {
             this.indicatorPresenter.present();
@@ -107,7 +114,6 @@ class Main extends Controller<MainProps, MainState> {
     handleLoginSuccess() {
         const newState = new MainState();
         newState.isLoggedIn = true;
-        newState.isSelection = false;
 
         this.setState(newState);
     }
@@ -122,6 +128,8 @@ class Main extends Controller<MainProps, MainState> {
                     <MenuController userName={userName}
                     controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} />
                     <NavigationView pageHash={this.state.pageHash ?? "dashboard"} />
+                    <SelectionWrapperView pageHash={this.state.pageHash ?? "dashboard"}
+                    selectionHash={this.state.selectionHash} />
                     <FooterView />
                 </React.StrictMode>
             );

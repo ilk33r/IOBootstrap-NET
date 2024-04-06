@@ -42,7 +42,7 @@ class MenuEditorSelectionController extends Controller<MenuEditorListProps, Menu
 
     selectDataHandler(index: number) {
         const selectedMenu = this._menuItems[index];
-        this.postMessage(selectedMenu);
+        this.postMessage(selectedMenu.name, selectedMenu.itemID, selectedMenu.itemValue);
     }
 
     render() {
@@ -84,7 +84,7 @@ class MenuEditorSelectionController extends Controller<MenuEditorListProps, Menu
             ];
 
             items.push(itemModel);
-            this._menuItems.push({itemID: menu.id, itemValue: menu.name});
+            this._menuItems.push({name: "itemSelected", itemID: menu.id, itemValue: menu.name});
 
             if (menu.childItems.length > 0) {
                 menu.childItems.forEach(childMenu => {
@@ -109,7 +109,7 @@ class MenuEditorSelectionController extends Controller<MenuEditorListProps, Menu
         
                     childItemModel.isEven = true;
                     items.push(childItemModel);
-                    this._menuItems.push({itemID: childMenu.id, itemValue: childMenu.name});
+                    this._menuItems.push({name: "itemSelected", itemID: childMenu.id, itemValue: childMenu.name});
                 });
             }
         });

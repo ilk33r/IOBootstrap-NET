@@ -48,7 +48,7 @@ class __DeleteEntityDisplayName__Controller extends Controller<{}, {}> {
     
         const navigation: BreadcrumbNavigationModel[] = [
             BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__"),
-            BreadcrumbNavigationModel.initialize("__deleteEntityName__", "Delete __EntityDisplayName__")
+            BreadcrumbNavigationModel.initialize("__DeleteEntityName__", "Delete __EntityDisplayName__")
         ];
 
         return (

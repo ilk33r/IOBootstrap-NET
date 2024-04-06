@@ -39,14 +39,33 @@ class Main extends Controller<MainProps, MainState> {
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
     }
 
+    private updateLocation(hash: string) {
+        let hashName = hash;
+        if (hash.startsWith('#!')) {
+            hashName = hash.substr(2, hash.length);;
+
+            const newState = new MainState();
+            newState.isLoggedIn = this.state.isLoggedIn;
+            newState.isSelection = false;
+            newState.pageHash = hashName;
+            this.setState(newState);
+        }
+    }
+
     public componentDidMount?(): void {
         if (window.location.hash === "#!usersLogout") {
             window.location.hash = "#!dashboard";
         }
+
+        const weakSelf = this;
+        $(window).on("hashchange", function(e) {
+            weakSelf.updateLocation(e.target.location.hash);
+        });
         
         const userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
         const newState = new MainState();
         newState.isLoggedIn = false;
+        newState.isSelection = false;
 
         if (userToken != null) {
             this.indicatorPresenter.present();
@@ -88,6 +107,7 @@ class Main extends Controller<MainProps, MainState> {
     handleLoginSuccess() {
         const newState = new MainState();
         newState.isLoggedIn = true;
+        newState.isSelection = false;
 
         this.setState(newState);
     }
@@ -101,7 +121,7 @@ class Main extends Controller<MainProps, MainState> {
                     <HeaderView userName={userName} />
                     <MenuController userName={userName}
                     controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} />
-                    <NavigationView />
+                    <NavigationView pageHash={this.state.pageHash ?? "dashboard"} />
                     <FooterView />
                 </React.StrictMode>
             );

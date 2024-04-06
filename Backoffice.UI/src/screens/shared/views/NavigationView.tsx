@@ -19,158 +19,132 @@ class NavigationView extends View<NavigationProps, NavigationState> {
         this.state = new NavigationState();
     }
 
-    private updateLocation(hash: string) {
-        let hashName = hash;
-        if (hash.startsWith('#!')) {
-            hashName = hash.substr(2, hash.length);;
-
-            const newState = new NavigationState();
-            newState.pageHash = hashName;
-            this.setState(newState);
-        }
-    }
-
-    public componentDidMount?(): void {
-        this.updateLocation(window.location.hash);
-
-        const weakSelf = this;
-        $(window).on("hashchange", function(e) {
-            weakSelf.updateLocation(e.target.location.hash);
-        });
-
-        if (window.opener != null) {
-            setTimeout(() => {
-                $('.sidebar-toggle').click();
-            }, 1500);
-        }
-    }
-
     render() {
-        if (this.state.pageHash === "clientsList") {
+        if (this.props.pageHash === "clientsList") {
             return <ClientListController />
         }
 
-        if (this.state.pageHash === "clientsAdd") {
+        if (this.props.pageHash === "clientsAdd") {
             return <ClientsAddController />
         }
 
-        if (this.state.pageHash === "clientsUpdate") {
+        if (this.props.pageHash === "clientsUpdate") {
             return <ClientUpdateController />
         }
 
-        if (this.state.pageHash === "clientsDelete") {
+        if (this.props.pageHash === "clientsDelete") {
             return <ClientDeleteController />
         }
 
-        if (this.state.pageHash === "clientsSelect") {
+        if (this.props.pageHash === "clientsSelect") {
             return <ClientSelectController />
         }
 
-        if (this.state.pageHash === "configurationsList") {
+        if (this.props.pageHash === "configurationsList") {
             return <ConfigurationsListController />
         }
 
-        if (this.state.pageHash === "configurationsAdd") {
+        if (this.props.pageHash === "configurationsAdd") {
             return <ConfigurationsAddController />
         }
 
-        if (this.state.pageHash === "configurationsUpdate") {
+        if (this.props.pageHash === "configurationsUpdate") {
             return <ConfigurationsUpdateController />
         }
 
-        if (this.state.pageHash === "configurationsDelete") {
+        if (this.props.pageHash === "configurationsDelete") {
             return <ConfigurationsDeleteController />
         }
 
-        if (this.state.pageHash === "resetCache") {
+        if (this.props.pageHash === "resetCache") {
             return <ConfigurationsResetCacheController />
         }
 
-        if (this.state.pageHash === "menuEditorList") {
+        if (this.props.pageHash === "menuEditorList") {
             return <MenuEditorListController />
         }
 
-        if (this.state.pageHash === "menuEditorAdd") {
+        if (this.props.pageHash === "menuEditorAdd") {
             return <MenuEditorAddController />
         }
 
-        if (this.state.pageHash === "menuEditorSelect") {
+        if (this.props.pageHash === "menuEditorSelect") {
             return <MenuEditorSelectionController />
         }
 
-        if (this.state.pageHash === "menuEditorUpdate") {
+        if (this.props.pageHash === "menuEditorUpdate") {
             return <MenuEditorUpdateController />
         }
 
-        if (this.state.pageHash === "menuEditorDelete") {
+        if (this.props.pageHash === "menuEditorDelete") {
             return <MenuEditorDeleteController />
         }
 
-        if (this.state.pageHash === "messagesList") {
+        if (this.props.pageHash === "messagesList") {
             return <MessageListController />
         }
 
-        if (this.state.pageHash === "messagesAdd") {
+        if (this.props.pageHash === "messagesAdd") {
             return <MessagesAddController />
         }
 
-        if (this.state.pageHash === "messagesUpdate") {
+        if (this.props.pageHash === "messagesUpdate") {
             return <MessagesUpdateController />
         }
 
-        if (this.state.pageHash === "messagesDelete") {
+        if (this.props.pageHash === "messagesDelete") {
             return <MessagesDeleteController />
         }
 
-        if (this.state.pageHash === "usersList") {
+        if (this.props.pageHash === "usersList") {
             return <UsersListController />
         }
 
-        if (this.state.pageHash === "usersAdd") {
+        if (this.props.pageHash === "usersAdd") {
             return <UsersAddController />
         }
 
-        if (this.state.pageHash === "usersUpdate") {
+        if (this.props.pageHash === "usersUpdate") {
             return <UsersUpdateController />
         }
 
-        if (this.state.pageHash === "usersDelete") {
+        if (this.props.pageHash === "usersDelete") {
             return <UsersDeleteController />
         }
 
-        if (this.state.pageHash === "userChangePassword") {
+        if (this.props.pageHash === "userChangePassword") {
             return <UserChangePasswordController />
         }
 
-        if (this.state.pageHash === "usersLogout") {
+        if (this.props.pageHash === "usersLogout") {
             return <UsersLogoutController />
         }
 
-        if (this.state.pageHash === "pushNotificationList") {
+        if (this.props.pageHash === "pushNotificationList") {
             return <PushNotificationListController />
         }
 
-        if (this.state.pageHash === "pushNotificationSend") {
+        if (this.props.pageHash === "pushNotificationSend") {
             return <PushNotificationSendController />
         }
 
-        if (this.state.pageHash === "pushNotificationDelete") {
+        if (this.props.pageHash === "pushNotificationDelete") {
             return <PushNotificationDeleteController />
         }
 
-        if (this.state.pageHash === "imagesEdit") {
+        if (this.props.pageHash === "imagesEdit") {
             return <ImagesEditController />
         }
 
-        if (this.state.pageHash === "imageAdd") {
+        if (this.props.pageHash === "imageAdd") {
             return <ImagesAddController />
         }
 
-        if (this.state.pageHash === "imageModify") {
+        if (this.props.pageHash === "imageModify") {
             return <ImagesModifyController />
         }
 
-        if (this.state.pageHash === "actionGenerateBOPage") {
+        if (this.props.pageHash === "actionGenerateBOPage") {
             return <GenerateBOPageController />
         }
         

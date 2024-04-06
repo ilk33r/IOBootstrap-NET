@@ -119,10 +119,10 @@ class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateB
             "import " + this.state.boPageDataResponse.updateEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.updateEntityDisplayName + "Controller\";",
             "import " + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller\";",
             "import " + this.state.boPageDataResponse.createEntityDisplayName + "Controller from \"../../" + this.state.boPageDataResponse.entityDisplayName.toLowerCase() + "/controllers/" + this.state.boPageDataResponse.createEntityDisplayName + "Controller\";",
-            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.listEntityName + "\") { return <" + this.state.boPageDataResponse.listEntityDisplayName + "Controller /> }",
-            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.updateEntityName + "\") { return <" + this.state.boPageDataResponse.updateEntityDisplayName + "Controller /> }",
-            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.deleteEntityName + "\") { return <" + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller /> }",
-            "if (this.state.pageHash === \"" + this.state.boPageDataResponse.createEntityName + "\") { return <" + this.state.boPageDataResponse.createEntityDisplayName + "Controller /> }"
+            "if (this.props.pageHash === \"" + this.state.boPageDataResponse.listEntityName + "\") { return <" + this.state.boPageDataResponse.listEntityDisplayName + "Controller /> }",
+            "if (this.props.pageHash === \"" + this.state.boPageDataResponse.updateEntityName + "\") { return <" + this.state.boPageDataResponse.updateEntityDisplayName + "Controller /> }",
+            "if (this.props.pageHash === \"" + this.state.boPageDataResponse.deleteEntityName + "\") { return <" + this.state.boPageDataResponse.deleteEntityDisplayName + "Controller /> }",
+            "if (this.props.pageHash === \"" + this.state.boPageDataResponse.createEntityName + "\") { return <" + this.state.boPageDataResponse.createEntityDisplayName + "Controller /> }"
         ];
         
         return (

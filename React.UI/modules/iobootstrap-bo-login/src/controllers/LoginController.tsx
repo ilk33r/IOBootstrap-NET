@@ -1,12 +1,12 @@
-import { Controller, UICommonConstants } from 'iobootstrap-ui-base';
+import { BaseResponseModel, UICommonConstants } from 'iobootstrap-ui-base';
 import AuthenticationRequestModel from '../models/AuthenticationRequestModel';
 import AuthenticationResponseModel from '../models/AuthenticationResponseModel';
 import LoginProps from '../props/LoginProps';
 import LoginState from '../props/LoginState';
 import React from 'react';
-import { BOCommonConstants } from 'iobootstrap-bo-base';
+import { BOCommonConstants, BOController } from 'iobootstrap-bo-base';
 
-class LoginController extends Controller<LoginProps, LoginState> {
+class LoginController extends BOController<LoginProps, LoginState> {
 
     constructor(props: LoginProps) {
         super(props);
@@ -48,6 +48,10 @@ class LoginController extends Controller<LoginProps, LoginState> {
         newState.password = this.state.password;
         newState.errorMessage = message;
         this.setState(newState);
+    }
+
+    public handleInvalidCredential(response: BaseResponseModel) {
+        this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
     }
 
     public handleLogin(event: React.FormEvent<HTMLFormElement>) {

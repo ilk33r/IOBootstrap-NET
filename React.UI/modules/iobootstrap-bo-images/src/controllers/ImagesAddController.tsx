@@ -1,9 +1,9 @@
 import React from "react";
 import SaveImageResponseModel from "../models/SaveImageResponseModel";
-import { CalloutTypes, Controller, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
+import { CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
 
-class ImagesAddController extends Controller<{}, {}> {
+class ImagesAddController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

@@ -4,9 +4,9 @@ import MenuResponseModel from '../models/MenuResponseModel';
 import MenuState from '../props/MenuState';
 import React from 'react';
 import MenuModel from '../models/MenuModel';
-import { Controller } from 'iobootstrap-ui-base';
+import { BOController } from 'iobootstrap-bo-base';
 
-class MenuController extends Controller<MenuProps, MenuState> {
+class MenuController extends BOController<MenuProps, MenuState> {
 
     constructor(props: MenuProps) {
         super(props);

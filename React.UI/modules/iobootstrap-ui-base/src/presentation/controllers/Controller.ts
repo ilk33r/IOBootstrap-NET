@@ -42,12 +42,16 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
         }
 
         if (response.status?.code === 401 || response.status?.code === 403) {
-            window.location.reload();
+            this.handleInvalidCredential(response);
             return false;
         }
 
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
         return false;
+    }
+
+    public handleInvalidCredential(response: BaseResponseModel) {
+        this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
     }
 
     public showCalloutAndRedirectToHash(successMessage: string, hash: string) {

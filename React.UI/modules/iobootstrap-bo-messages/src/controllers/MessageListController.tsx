@@ -4,10 +4,9 @@ import MessageListResponseModel from "../models/MessageListResponseModel";
 import MessageListState from "../props/MessageListState";
 import MessageUpdateRequestModel from "../models/MessageUpdateRequestModel";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class MessageListController extends Controller<MessageListProps, MessageListState> {
+class MessageListController extends BOController<MessageListProps, MessageListState> {
 
     constructor(props: MessageListProps) {
         super(props);

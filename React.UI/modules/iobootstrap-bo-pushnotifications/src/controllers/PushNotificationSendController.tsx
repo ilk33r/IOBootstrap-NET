@@ -1,9 +1,9 @@
 import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
-import { BaseResponseModel, CalloutTypes, Controller, DeviceTypes, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, DeviceTypes, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class PushNotificationSendController extends Controller<{}, {}> {
+class PushNotificationSendController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

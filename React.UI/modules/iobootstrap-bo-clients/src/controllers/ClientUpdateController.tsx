@@ -1,9 +1,9 @@
 import ClientUpdateRequestModel from "../models/ClientUpdateRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class ClientUpdateController extends Controller<{}, {}> {
+class ClientUpdateController extends BOController<{}, {}> {
 
     private _updateRequest: ClientUpdateRequestModel;
 

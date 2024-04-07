@@ -1,9 +1,9 @@
 import MessageAddRequestModel from "../models/MessageAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
 
-class MessagesAddController extends Controller<{}, {}> {
+class MessagesAddController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

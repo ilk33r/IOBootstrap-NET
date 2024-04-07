@@ -47,3 +47,4 @@ export { default as QuestionView } from "./screens/shared/views/QuestionView";
 export { default as UploadModalViewProps } from "./screens/shared/props/UploadModalViewProps";
 export { default as UploadModalViewState } from "./screens/shared/props/UploadModalViewState";
 export { default as UploadModalView } from "./screens/shared/views/UploadModalView";
+export { default as BOController } from "./presentation/controllers/BOController";

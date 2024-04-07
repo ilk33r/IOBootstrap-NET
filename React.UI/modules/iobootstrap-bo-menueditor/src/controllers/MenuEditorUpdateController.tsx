@@ -1,9 +1,9 @@
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, DIHooks, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class MenuEditorUpdateController extends Controller<{}, {}> {
+class MenuEditorUpdateController extends BOController<{}, {}> {
 
     private _updateRequest: MenuUpdateRequestModel;
 

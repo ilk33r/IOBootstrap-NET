@@ -1,8 +1,8 @@
-import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
+import { BaseResponseModel } from "iobootstrap-ui-base";
 import React from "react";
-import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
-class ConfigurationsResetCacheController extends Controller<{}, {}> {
+class ConfigurationsResetCacheController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

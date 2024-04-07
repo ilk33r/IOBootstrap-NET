@@ -1,9 +1,9 @@
 import ClientAddRequestModel from "../models/ClientAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class ClientsAddController extends Controller<{}, {}> {
+class ClientsAddController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

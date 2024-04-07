@@ -4,10 +4,9 @@ import ConfigurationListResponseModel from "../models/ConfigurationListResponseM
 import ConfigurationListState from "../props/ConfigurationListState";
 import ConfigurationUpdateRequestModel from "../models/ConfigurationUpdateRequestModel";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class ConfigurationsListController extends Controller<ConfigurationListProps, ConfigurationListState> {
+class ConfigurationsListController extends BOController<ConfigurationListProps, ConfigurationListState> {
 
     constructor(props: ConfigurationListProps) {
         super(props);

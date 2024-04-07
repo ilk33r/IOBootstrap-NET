@@ -3,10 +3,9 @@ import PushNotificationMessageDeleteRequestModel from "../models/PushNotificatio
 import PushNotificationListProops from "../props/PushNotificationListProops";
 import PushNotificationListState from "../props/PushNotificationListState";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class PushNotificationListController extends Controller<PushNotificationListProops, PushNotificationListState> {
+class PushNotificationListController extends BOController<PushNotificationListProops, PushNotificationListState> {
 
     constructor(props: PushNotificationListProops) {
         super(props);

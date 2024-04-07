@@ -1,9 +1,9 @@
 import PushNotificationMessageDeleteRequestModel from "../models/PushNotificationMessageDeleteRequestModel";
 import React from "react";
-import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
+import { BaseResponseModel } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
-class PushNotificationDeleteController extends Controller<{}, {}> {
+class PushNotificationDeleteController extends BOController<{}, {}> {
 
     private _deleteRequest: PushNotificationMessageDeleteRequestModel;
 

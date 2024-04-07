@@ -1,9 +1,9 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class UsersAddController extends Controller<{}, {}> {
+class UsersAddController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

@@ -1,9 +1,9 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import { BaseResponseModel, CalloutTypes, Controller, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class UsersUpdateController extends Controller<{}, {}> {
+class UsersUpdateController extends BOController<{}, {}> {
 
     private _updateRequest: UpdateUserRequestModel;
 

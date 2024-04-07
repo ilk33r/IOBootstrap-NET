@@ -1,9 +1,9 @@
 import ConfigurationAddRequestModel from "../models/ConfigurationAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class ConfigurationsAddController extends Controller<{}, {}> {
+class ConfigurationsAddController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

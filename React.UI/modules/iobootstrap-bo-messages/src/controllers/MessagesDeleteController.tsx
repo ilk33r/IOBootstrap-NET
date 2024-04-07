@@ -1,9 +1,9 @@
 import MessageDeleteRequestModel from "../models/MessageDeleteRequestModel";
 import React from "react";
-import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
+import { BaseResponseModel } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
-class MessagesDeleteController extends Controller<{}, {}> {
+class MessagesDeleteController extends BOController<{}, {}> {
 
     private _deleteRequest: MessageDeleteRequestModel;
 

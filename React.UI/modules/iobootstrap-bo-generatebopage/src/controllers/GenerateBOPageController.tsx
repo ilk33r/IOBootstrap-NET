@@ -5,10 +5,10 @@ import GenerateBOPageRequestModel from "../models/GenerateBOPageRequestModel";
 import GenerateBOPageResponseModel from "../models/GenerateBOPageResponseModel";
 import CodeBlockView from "../views/CodeBlockView";
 import GenerateBOPageFilesRequestModel from "../models/GenerateBOPageFilesRequestModel";
-import { CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
-class GenerateBOPageController extends Controller<GenerateBOPageProps, GenerateBOPageState> {
+class GenerateBOPageController extends BOController<GenerateBOPageProps, GenerateBOPageState> {
 
     constructor(props: GenerateBOPageProps) {
         super(props);

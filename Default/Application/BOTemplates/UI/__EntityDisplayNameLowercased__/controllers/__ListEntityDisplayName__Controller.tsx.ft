@@ -5,11 +5,10 @@ import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDis
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
-class __ListEntityDisplayName__Controller extends Controller<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
+class __ListEntityDisplayName__Controller extends BOController<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
 
     private requestModel: BO__ListEntityDisplayName__RequestModel;
 

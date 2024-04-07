@@ -1,10 +1,10 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserChangePasswordRequestModel from "../models/UserChangePasswordRequestModel";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BOCommonConstants, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView, UserRoles } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView, UserRoles } from "iobootstrap-bo-base";
 
-class UserChangePasswordController extends Controller<{}, {}> {
+class UserChangePasswordController extends BOController<{}, {}> {
 
     private _updateRequest: UpdateUserRequestModel;
 

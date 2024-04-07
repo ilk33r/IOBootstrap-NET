@@ -4,10 +4,10 @@ import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
-import { Controller, DIHooks } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
+import { DIHooks } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
 
-class UsersListController extends Controller<UsersListProps, UsersListState> {
+class UsersListController extends BOController<UsersListProps, UsersListState> {
 
     constructor(props: UsersListProps) {
         super(props);

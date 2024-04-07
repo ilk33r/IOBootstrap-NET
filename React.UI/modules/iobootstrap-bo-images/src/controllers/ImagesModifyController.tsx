@@ -1,10 +1,10 @@
 import DeleteImagesRequestModel from "../models/DeleteImagesRequestModel";
 import ImageVariationsModel from "../models/ImageVariationsModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeImageProps, FormTypeNumberProps, FormTypeSelectProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeImageProps, FormTypeNumberProps, FormTypeSelectProps, FormView } from "iobootstrap-bo-base";
 
-class ImagesModifyController extends Controller<{}, {}> {
+class ImagesModifyController extends BOController<{}, {}> {
 
     private _selectedImage: ImageVariationsModel | null;
 

@@ -1,8 +1,8 @@
-import { Controller, UICommonConstants } from "iobootstrap-ui-base";
+import { UICommonConstants } from "iobootstrap-ui-base";
 import React from "react";
-import { BOCommonConstants, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
-class UsersLogoutController extends Controller<{}, {}> {
+class UsersLogoutController extends BOController<{}, {}> {
 
     constructor(props: {}) {
         super(props);

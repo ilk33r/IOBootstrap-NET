@@ -5,10 +5,10 @@ import MenuListModel from "../models/MenuListModel";
 import MenuListResponseModel from "../models/MenuListResponseModel";
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
-import { Controller, DIHooks } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { DIHooks } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class MenuEditorListController extends Controller<MenuEditorListProps, MenuEditorListState> {
+class MenuEditorListController extends BOController<MenuEditorListProps, MenuEditorListState> {
 
     private _menuItems: MenuListModel[];
 

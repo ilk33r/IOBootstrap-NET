@@ -2,10 +2,9 @@ import ClientListProps from "../props/ClientListProps";
 import ClientListState from "../props/ClientListState";
 import ListClientsResponseModel from "../models/ListClientsResponseModel";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class ClientSelectController extends Controller<ClientListProps, ClientListState> {
+class ClientSelectController extends BOController<ClientListProps, ClientListState> {
 
     constructor(props: ClientListProps) {
         super(props);

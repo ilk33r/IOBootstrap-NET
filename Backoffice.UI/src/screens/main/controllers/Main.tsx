@@ -6,11 +6,11 @@ import NavigationView from '../../shared/views/NavigationView';
 import SelectionWrapperView from '../../shared/views/SelectionWrapperView';
 import React from 'react';
 import { CalloutPresenter, CalloutViewPresenter, Controller, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
-import { BOCommonConstants, FooterView, HeaderView } from 'iobootstrap-bo-base';
+import { BOCommonConstants, BOController, FooterView, HeaderView } from 'iobootstrap-bo-base';
 import { MenuController } from 'iobootstrap-bo-menu';
 import { LoginController } from 'iobootstrap-bo-login';
 
-class Main extends Controller<MainProps, MainState> {
+class Main extends BOController<MainProps, MainState> {
 
     constructor(props: MainProps) {
         super(props);

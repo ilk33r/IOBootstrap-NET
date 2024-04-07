@@ -2,10 +2,10 @@ import MenuEditorListProps from "../props/MenuEditorListProps";
 import MenuEditorListState from "../props/MenuEditorListState";
 import MenuListResponseModel from "../models/MenuListResponseModel";
 import React from "react";
-import { Controller, DIHooks, WindowMessageModel } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { DIHooks, WindowMessageModel } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
-class MenuEditorSelectionController extends Controller<MenuEditorListProps, MenuEditorListState> {
+class MenuEditorSelectionController extends BOController<MenuEditorListProps, MenuEditorListState> {
 
     private _menuItems: WindowMessageModel[];
 

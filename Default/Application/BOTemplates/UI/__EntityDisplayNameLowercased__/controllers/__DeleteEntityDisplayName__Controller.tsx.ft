@@ -1,9 +1,9 @@
-import { BaseResponseModel, Controller } from "iobootstrap-ui-base";
+import { BaseResponseModel } from "iobootstrap-ui-base";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import React from "react";
-import { BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
-class __DeleteEntityDisplayName__Controller extends Controller<{}, {}> {
+class __DeleteEntityDisplayName__Controller extends BOController<{}, {}> {
 
     private _deleteRequest: BO__DeleteEntityDisplayName__RequestModel;
 

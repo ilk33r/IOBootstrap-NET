@@ -3,10 +3,9 @@ import GetImagesResponseModel from "../models/GetImagesResponseModel";
 import ImagesListProps from "../props/ImagesListProps";
 import ImagesListState from "../props/ImagesListState";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 
-class ImagesEditController extends Controller<ImagesListProps, ImagesListState> {
+class ImagesEditController extends BOController<ImagesListProps, ImagesListState> {
 
     private requestModel: GetImagesRequestModel;
 

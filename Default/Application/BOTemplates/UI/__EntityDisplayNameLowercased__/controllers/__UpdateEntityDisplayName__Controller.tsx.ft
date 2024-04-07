@@ -1,10 +1,10 @@
 import React from "react";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormTypeDateProps, FormTypeNumberProps, FormTypeTextProps, FormTypeSelectProps, FormDataOptionModel, FormType, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormTypeDateProps, FormTypeNumberProps, FormTypeTextProps, FormTypeSelectProps, FormDataOptionModel, FormType, FormView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
-class __UpdateEntityDisplayName__Controller extends Controller<{}, {}> {
+class __UpdateEntityDisplayName__Controller extends BOController<{}, {}> {
 
     private _updateRequest: BO__UpdateEntityDisplayName__RequestModel;
 

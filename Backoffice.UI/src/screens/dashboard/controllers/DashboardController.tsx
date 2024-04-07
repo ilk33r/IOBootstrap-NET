@@ -4,9 +4,9 @@ import DashboardState from "../props/DashboardState";
 import MessageView from "../views/MessageView";
 import MessagesResponseModel from "../models/MessagesResponseModel";
 import React from "react";
-import { Controller } from "iobootstrap-ui-base";
+import { BOController } from "iobootstrap-bo-base";
 
-class DashboardController extends Controller<DashboardProps, DashboardState> {
+class DashboardController extends BOController<DashboardProps, DashboardState> {
 
     private _isMounted: boolean = false;
 

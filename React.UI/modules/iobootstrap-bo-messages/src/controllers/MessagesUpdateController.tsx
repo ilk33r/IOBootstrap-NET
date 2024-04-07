@@ -1,9 +1,9 @@
 import MessageUpdateRequestModel from "../models/MessageUpdateRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, Controller, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
 
-class MessagesUpdateController extends Controller<{}, {}> {
+class MessagesUpdateController extends BOController<{}, {}> {
 
     private _updateRequest: MessageUpdateRequestModel;
 

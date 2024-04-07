@@ -85,7 +85,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         };
     }
 
-    public void DeleteImage(IODeleteImagesRequestModel requestModel)
+    public virtual void DeleteImage(IODeleteImagesRequestModel requestModel)
     {
         IOImagesEntity? imagesEntity = DatabaseContext.Images.Find(requestModel.ImageId);
         if (imagesEntity == null)

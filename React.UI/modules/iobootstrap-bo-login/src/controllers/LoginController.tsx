@@ -22,7 +22,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
         const newState = new LoginState();
         newState.userName = event.target.value;
         newState.password = this.state.password;
-        newState.errorMessage = "";
+        newState.errorMessage = this.state.errorMessage;
 
         this.setState(newState);
     }
@@ -31,7 +31,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
         const newState = new LoginState();
         newState.userName = this.state.userName;
         newState.password = event.target.value;
-        newState.errorMessage = "";
+        newState.errorMessage = this.state.errorMessage;
 
         this.setState(newState);
     }

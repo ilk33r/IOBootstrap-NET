@@ -2,6 +2,7 @@
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Utilities;
+using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
@@ -77,7 +78,7 @@ where TDBContext : IODatabaseContext<TDBContext>
     public virtual Tuple<DateTimeOffset, string, int> CheckToken(string token)
     {
         // Parse token data
-        Tuple<string, int> tokenData = ParseToken(token);
+        Tuple<string, int> tokenData = this.ParseUserToken(token);
 
         IOUserInfoModel? findedUser = DatabaseContext.Users
                                                     .Select(u => new IOUserInfoModel()

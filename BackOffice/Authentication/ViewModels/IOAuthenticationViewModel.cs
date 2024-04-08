@@ -8,6 +8,7 @@ using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Common.Cache;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
@@ -70,6 +71,10 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         DatabaseContext.Update(findedUser);
         DatabaseContext.SaveChanges();
+
+        // Invalidate user cache
+        string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, findedUser.ID);
+        IOCache.InvalidateCache(cacheKey);
 
         // Return response
         return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUser.UserName ?? "", findedUser.UserRole);

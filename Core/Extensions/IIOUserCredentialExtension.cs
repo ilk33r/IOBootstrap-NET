@@ -87,6 +87,10 @@ public static class IIOUserCredentialExtension
                 }
                 return true;
             }
+            else
+            {
+                return false;
+            }
         }
 
         // Return is not back office

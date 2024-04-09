@@ -1,4 +1,4 @@
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, DIHooks, UICommonConstants } from 'iobootstrap-ui-base';
+import { AppCryptography, BaseResponseModel, UICommonConstants } from 'iobootstrap-ui-base';
 import AuthenticationRequestModel from '../models/AuthenticationRequestModel';
 import AuthenticationResponseModel from '../models/AuthenticationResponseModel';
 import LoginProps from '../props/LoginProps';
@@ -7,14 +7,11 @@ import React from 'react';
 import { BOCommonConstants, BOController } from 'iobootstrap-bo-base';
 
 class LoginController extends BOController<LoginProps, LoginState> {
-
-    private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
     
     constructor(props: LoginProps) {
         super(props);
 
         this.state = new LoginState();
-        this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         this.handleUserNameChange = this.handleUserNameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -65,11 +62,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
         const weakSelf = this;
         AppCryptography.Instance.encrypt(this.state.password)
           .then((encryptedData) => {
-            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(
-              encryptedData.symmetricKey,
-              encryptedData.symmetricIV
-            );
-            weakSelf.authenticate(encryptedData.encrypted);
+            weakSelf.authenticate(encryptedData);
           })
           .catch(() => {
             weakSelf.indicatorPresenter.dismiss();

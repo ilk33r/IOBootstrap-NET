@@ -1,16 +1,18 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserChangePasswordRequestModel from "../models/UserChangePasswordRequestModel";
-import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOCommonConstants, BOController, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView, UserRoles } from "iobootstrap-bo-base";
 
 class UserChangePasswordController extends BOController<{}, {}> {
 
+    private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
     private _updateRequest: UpdateUserRequestModel;
 
     constructor(props: {}) {
         super(props);
 
+        this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
         this._updateRequest = this.appContext.objectForKey("usersChangePasswordRequest") as UpdateUserRequestModel;
         if (this._updateRequest == null) {
             this._updateRequest = new UpdateUserRequestModel();
@@ -46,7 +48,52 @@ class UserChangePasswordController extends BOController<{}, {}> {
         }
 
         this.indicatorPresenter.present();
+        this.updateSymmetricKeys(currentPassword, password);
+    }
 
+    private updateSymmetricKeys(currentPassword: string | null, password: string) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.getSymmetricKeys()
+        .then((symmetricKeys) => {
+            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
+            weakSelf.encryptPasswords(currentPassword, password);
+        })
+        .catch(() => {
+            weakSelf.handleServiceError("", "Cryptography error.");
+        });
+    }
+
+    private encryptPasswords(currentPassword: string | null, password: string) {
+        if (currentPassword == null) {
+            this.encryptNewPassword(currentPassword, password);
+            return;
+        }
+
+        const weakSelf = this;
+
+        AppCryptography.Instance.encrypt(currentPassword)
+        .then((encryptedData) => {
+            weakSelf.encryptNewPassword(encryptedData, password);
+        })
+        .catch(() => {
+            weakSelf.handleServiceError("", "Cryptography error.");
+        });
+    }
+
+    private encryptNewPassword(currentPassword: string | null, password: string) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.encrypt(password)
+        .then((encryptedData) => {
+            weakSelf.changePassword(currentPassword, encryptedData);
+        })
+        .catch(() => {
+            weakSelf.handleServiceError("", "Cryptography error.");
+        });
+    }
+
+    private changePassword(currentPassword: string | null, password: string) {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ChangePassword`;
         const request = new UserChangePasswordRequestModel();
         request.userName = this._updateRequest.userName;

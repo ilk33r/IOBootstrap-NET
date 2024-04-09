@@ -10,6 +10,7 @@ public static class IOExceptionMessages
     public const int InvalidCredentialsCode = 403;
     public const int HttpsRequiredCode = 405;
     public const int InvalidClientCode = 406;
+    public const int InvalidPasswordsCode = 407;
     public const int MaintenanceCode = 503;
     public const int MWConnectionCode = 505;
     public const int UnauthorizedCode = 600;
@@ -27,6 +28,7 @@ public static class IOExceptionMessages
     public const string InvalidCredentialsMessage = "Invalid credientals.";
     public const string HttpsRequiredMessage = "Https required.";
     public const string InvalidClientMessage = "Invalid client ID.";
+    public const string InvalidPasswordsMessage = "Invalid password.";
     public const string MaintenanceMessage = "The application is in maintenance.";
     public const string MWConnectionMessage = "MW connection error.";
     public const string UnauthorizedMessage = "Authorization failed.";

@@ -124,11 +124,11 @@ class Main extends BOController<MainProps, MainState> {
         newState.isLoggedIn = false;
         const weakSelf = this;
 
-        AppCryptography.Instance.encrypt("-")
-        .then((encryptedData) => {
+        AppCryptography.Instance.getSymmetricKeys()
+        .then((symmetricKeys) => {
           weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(
-            encryptedData.symmetricKey,
-            encryptedData.symmetricIV
+            symmetricKeys.symmetricKey,
+            symmetricKeys.symmetricIV
           );
           weakSelf.checkToken();
         })

@@ -1,7 +1,6 @@
-export interface AppEncryptedData {
+export interface AppSymmetricKey {
     symmetricKey: string;
     symmetricIV: string;
-    encrypted: string;
 }
 
 class AppCryptography {
@@ -60,15 +59,25 @@ class AppCryptography {
         this.symmetricKey = this.base64Encode(new Uint8Array(symmetricKey));
     }
 
-    public async encrypt(plainText: string): Promise<AppEncryptedData> {
+    public async getSymmetricKeys(): Promise<AppSymmetricKey> {
         if (this.cryptoKey == null || this.aesKey == null) {
-            throw new Error("Cryptography does not initialized.")
+            throw new Error("Cryptography does not initialized.");
         }
 
         this.aesIV = window.crypto.getRandomValues(new Uint8Array(16));
-
         const symmetricIV = await window.crypto.subtle.encrypt("RSA-OAEP", this.cryptoKey, this.aesIV);
         const symmetricIVBase64 = this.base64Encode(new Uint8Array(symmetricIV));
+
+        return {
+            symmetricKey: this.symmetricKey ?? "",
+            symmetricIV: symmetricIVBase64
+        };
+    }
+
+    public async encrypt(plainText: string): Promise<string> {
+        if (this.aesIV == null || this.aesKey == null) {
+            throw new Error("Cryptography does not initialized.");
+        }
 
         const encodedMessage = this.getAESMessageEncoding(plainText);
         const encryptedData = await window.crypto.subtle.encrypt(
@@ -81,17 +90,12 @@ class AppCryptography {
         );
         
         const encryptedString = this.base64Encode(new Uint8Array(encryptedData));
-        
-        return {
-            symmetricKey: this.symmetricKey ?? "",
-            symmetricIV: symmetricIVBase64,
-            encrypted: encryptedString
-        };
+        return encryptedString;
     }
 
     public async decrypt(encryptedText: string): Promise<string> {
         if (this.aesKey == null || this.aesIV == null) {
-            throw new Error("Cryptography does not initialized.")
+            throw new Error("Cryptography does not initialized.");
         }
 
         const encodedMessage = this.base64Decode(encryptedText);

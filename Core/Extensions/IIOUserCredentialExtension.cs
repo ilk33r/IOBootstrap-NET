@@ -1,9 +1,12 @@
 ﻿using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.Core.Extensions;
 
@@ -123,5 +126,47 @@ public static class IIOUserCredentialExtension
             input.Logger.LogDebug(e.StackTrace);
             return new Tuple<string, int>("", 0);
         }
+    }
+
+    public static void ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        if (input.UserModel == null)
+        {
+            // Return user exists response
+            throw new IOUserNotFoundException();
+        }
+
+        // Obtain decrypted passwords
+        string decryptedOldPassword = input.DecryptString(oldPassword);
+        string decryptedNewPassword = input.DecryptString(newPassword);
+
+        // Obtain current user
+        IOUserEntity? currentUser = input.DatabaseContext.Users
+                                                    .Where(u => u.ID == input.UserModel.ID)
+                                                    .FirstOrDefault();
+
+        if (currentUser == null)
+        {
+            // Return user exists response
+            throw new IOUserNotFoundException();
+        }
+
+        // Check user old password is valid
+        if (IOPasswordUtilities.VerifyPassword(decryptedOldPassword, currentUser.Password ?? ""))
+        {
+            // Update user password properties
+            currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
+            currentUser.UserToken = null;
+
+            // Update user password
+            input.DatabaseContext.Update(currentUser);
+            input.DatabaseContext.SaveChanges();
+
+            return;
+        }
+
+        // Return response
+        throw new IOInvalidPasswordException();
     }
 }

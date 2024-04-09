@@ -212,21 +212,16 @@ where TViewModel : IIOViewModel<TDBContext>, new()
 
     private void CheckKeyID(ActionExecutingContext context)
     {
-        bool keyRequired = false;
-        if (HasControllerAttribute<IOEncryptionRequiredAttribute>(context))
+        if (!HasControllerAttribute<IOEncryptionRequiredAttribute>(context))
         {
-            keyRequired = true;
+            return;
         }
 
         // Obtain key id
         string? keyID = Request.Headers[IORequestHeaderConstants.KeyID];
         if (String.IsNullOrEmpty(keyID))
         {
-            if (keyRequired)
-            {
-                throw new IOEncryptionRequiredException();
-            }
-            return;
+            throw new IOEncryptionRequiredException();
         }
 
         string currentKeyID = "";

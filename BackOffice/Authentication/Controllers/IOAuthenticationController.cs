@@ -28,6 +28,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     #region Authentication Api
 
     [IOValidateRequestModel]
+    [IOEncryptionRequired]
     [HttpPost("[action]")]
     public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
@@ -36,6 +37,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     }
 
     [IOValidateRequestModel]
+    [IOEncryptionRequired]
     [HttpPost("[action]")]
     public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {

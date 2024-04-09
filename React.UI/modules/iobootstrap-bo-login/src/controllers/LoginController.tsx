@@ -92,17 +92,29 @@ class LoginController extends BOController<LoginProps, LoginState> {
         this.service.post(requestURL, request, function (response: AuthenticationResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 const token = (response.token == null) ? "" : response.token;
-                weakSelf.storage.setStringForKey(UICommonConstants.userTokenStorageKey, token);
 
                 if (response.userRole != null) {
                     weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.decryptResponseAndUpdateState(response.userName ?? "");
+                weakSelf.decryptTokenAndUserName(token, response.userName ?? "");
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
+    }
+
+    private decryptTokenAndUserName(encryptedToken: string, encryptedUserName: string) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.decrypt(encryptedToken)
+          .then((decrypted) => {
+            weakSelf.storage.setStringForKey(UICommonConstants.userTokenStorageKey, decrypted);
+            weakSelf.decryptResponseAndUpdateState(encryptedUserName);
+          })
+          .catch(() => {
+            weakSelf.decryptResponseAndUpdateState(encryptedUserName);
+          });
     }
 
     private decryptResponseAndUpdateState(encryptedUserName: string) {

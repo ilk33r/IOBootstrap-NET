@@ -212,10 +212,20 @@ where TViewModel : IIOViewModel<TDBContext>, new()
 
     private void CheckKeyID(ActionExecutingContext context)
     {
+        bool keyRequired = false;
+        if (HasControllerAttribute<IOEncryptionRequiredAttribute>(context))
+        {
+            keyRequired = true;
+        }
+
         // Obtain key id
         string? keyID = Request.Headers[IORequestHeaderConstants.KeyID];
         if (String.IsNullOrEmpty(keyID))
         {
+            if (keyRequired)
+            {
+                throw new IOEncryptionRequiredException();
+            }
             return;
         }
 
@@ -247,7 +257,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
             // Loop throught descriptors
             foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
             {
-                if (descriptor.AttributeType == typeof(IOUserRoleAttribute) || descriptor.AttributeType == typeof(IOUserCustomRoleAttribute))
+                if (descriptor.AttributeType == typeof(IOUserRoleAttribute))
                 {
                     object? requiredRole = descriptor.ConstructorArguments[0].Value;
                     int userRole = ViewModel.GetUserRole();

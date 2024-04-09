@@ -9,10 +9,12 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Core.Extensions;
+using IOBootstrap.NET.Core.Interfaces;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels;
 
-public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOUserViewModel<TDBContext>
+public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOUserViewModel<TDBContext>, IIOUserCredential<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
 {
 
@@ -60,6 +62,12 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
     {
+        if (UserModel != null && UserModel.UserRole != (int)UserRoles.SuperAdmin)
+        {
+            this.ChangeUserPassword(oldPassword, newPassword);
+            return;
+        }
+
         IOUserEntity? currentUser = DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
                                                     .FirstOrDefault();
@@ -70,23 +78,14 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserNotFoundException();
         }
 
-        // Check user old password is valid
-        UserRoles currentUserRole = ((UserRoles?)UserModel?.UserRole) ?? UserRoles.AnonmyMouse;
-        if ((currentUserRole == UserRoles.SuperAdmin) || IOPasswordUtilities.VerifyPassword(oldPassword, currentUser.Password ?? ""))
-        {
-            // Update user password properties
-            currentUser.Password = IOPasswordUtilities.HashPassword(newPassword);
-            currentUser.UserToken = null;
+        // Update user password properties
+        string decryptedNewPassword = DecryptString(newPassword);
+        currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
+        currentUser.UserToken = null;
 
-            // Update user password
-            DatabaseContext.Update(currentUser);
-            DatabaseContext.SaveChanges();
-
-            return;
-        }
-
-        // Return response
-        throw new IOInvalidPermissionException();
+        // Update user password
+        DatabaseContext.Update(currentUser);
+        DatabaseContext.SaveChanges();
     }
 
     public virtual IList<IOUserInfoModel> ListUsers()

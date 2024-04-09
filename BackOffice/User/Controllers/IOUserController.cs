@@ -40,7 +40,8 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     }
 
     [IOValidateRequestModel]
-    [IOUserRole(UserRoles.User)]
+    [IOEncryptionRequired]
+    [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPost("[action]")]
     public virtual IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel)
     {

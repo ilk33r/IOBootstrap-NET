@@ -21,6 +21,12 @@ public interface IIOViewModel<TDBContext> : IIOViewModelBase where TDBContext : 
 
     #endregion
 
+    #region Encryption Decryption
+
+    public string DecryptString(string encryptedString);
+
+    #endregion
+
     #region Configuration
 
     public IOConfigurationModel? GetDBConfig(string configKey);

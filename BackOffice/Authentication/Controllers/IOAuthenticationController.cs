@@ -31,11 +31,8 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
-        // Authenticate user
-        Tuple<string, DateTimeOffset, string, int> authenticationResult = ViewModel.AuthenticateUser(requestModel.UserName ?? "", requestModel.Password ?? "");
-
         // Check if authentication result is true
-        return new IOAuthenticationResponseModel(authenticationResult.Item1, authenticationResult.Item2, authenticationResult.Item3, authenticationResult.Item4);
+        return ViewModel.AuthenticateUser(requestModel.UserName ?? "", requestModel.Password ?? "");
     }
 
     [IOValidateRequestModel]

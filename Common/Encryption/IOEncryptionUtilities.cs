@@ -4,6 +4,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
@@ -45,7 +46,7 @@ public static class IOEncryptionUtilities
     {
         RsaPrivateCrtKeyParameters privateKey = GenerateRSAKeyPair();
 
-        IAsymmetricBlockCipher rsaEngine = new Pkcs1Encoding(new RsaEngine());
+        IAsymmetricBlockCipher rsaEngine = new OaepEncoding(new RsaEngine(), new Sha256Digest());
         rsaEngine.Init(false, privateKey);
         byte[] decryptedData = rsaEngine.ProcessBlock(encryptedData, 0, encryptedData.Length);
         return decryptedData;

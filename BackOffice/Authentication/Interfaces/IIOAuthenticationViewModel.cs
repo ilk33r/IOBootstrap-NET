@@ -1,3 +1,4 @@
+using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 
@@ -8,7 +9,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
     #region View Model Methods
 
-    public Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password);
+    public IOAuthenticationResponseModel AuthenticateUser(string userName, string password);
 
     public Tuple<DateTimeOffset, string, int> CheckToken(string token);
 

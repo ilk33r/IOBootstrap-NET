@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -38,7 +39,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         byte[] modulus = Convert.FromHexString(requestModel.PublicKeyModulus ?? "");
 
         RsaKeyParameters publicKey = new RsaKeyParameters(false, new BigInteger(modulus), new BigInteger(exponent));
-        IAsymmetricBlockCipher rsaEngine = new Pkcs1Encoding(new RsaEngine());
+        IAsymmetricBlockCipher rsaEngine = new OaepEncoding(new RsaEngine(), new Sha256Digest());
         rsaEngine.Init(true, publicKey);
         byte[] encryptedSymmetricKey = rsaEngine.ProcessBlock(aesKeyBytes, 0, aesKeyBytes.Length);
         byte[] encryptedSymmetricIV = rsaEngine.ProcessBlock(aesIVBytes, 0, aesIVBytes.Length);
@@ -50,6 +51,19 @@ where TDBContext : IODatabaseContext<TDBContext>
             SymmetricKey = Convert.ToBase64String(encryptedSymmetricKey),
             SymmetricIV = Convert.ToBase64String(encryptedSymmetricIV),
             EncryptedValue = encryptedString
+        };
+
+        return responseModel;
+    }
+
+    public IOEncryptResponseModel Decrypt(IOEncryptRequestModel requestModel)
+    {
+        string decryptedString = DecryptString(requestModel.PlainText ?? "");
+        IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
+        {
+            SymmetricKey = "",
+            SymmetricIV = "",
+            EncryptedValue = decryptedString
         };
 
         return responseModel;

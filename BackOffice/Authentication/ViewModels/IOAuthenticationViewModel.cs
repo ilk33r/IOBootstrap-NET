@@ -9,6 +9,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Common.Cache;
+using IOBootstrap.NET.Common.Messages.Authentication;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
@@ -26,8 +27,11 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region View Model Methods
 
-    public virtual Tuple<string, DateTimeOffset, string, int> AuthenticateUser(string userName, string password)
+    public virtual IOAuthenticationResponseModel AuthenticateUser(string userName, string password)
     {
+        // Decrypt password
+        string decryptedPassword = DecryptString(password);
+        
         IOUserEntity? findedUser = DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
                                                     .FirstOrDefault();
@@ -39,7 +43,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
 
         // Check user password is wrong
-        if (!IOPasswordUtilities.VerifyPassword(password, findedUser.Password ?? ""))
+        if (!IOPasswordUtilities.VerifyPassword(decryptedPassword, findedUser.Password ?? ""))
         {
             // Return response
             throw new IOInvalidCredentialsException();
@@ -76,8 +80,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, findedUser.ID);
         IOCache.InvalidateCache(cacheKey);
 
+        // Encrypt sensitive data
+        string encryptedUserName = EncryptString(findedUser.UserName ?? "");
+
         // Return response
-        return new Tuple<string, DateTimeOffset, string, int>(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), findedUser.UserName ?? "", findedUser.UserRole);
+        return new IOAuthenticationResponseModel(userNewToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), encryptedUserName, findedUser.UserRole);
     }
 
     public virtual Tuple<DateTimeOffset, string, int> CheckToken(string token)
@@ -113,8 +120,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         // Compare user token
         if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
         {
+            // Encrypt sensitive data
+            string encryptedUserName = EncryptString(findedUser.UserName ?? "");
+
             // Return status
-            return new Tuple<DateTimeOffset, string, int>(findedUser.TokenDate.DateTime, findedUser.UserName ?? "", findedUser.UserRole);
+            return new Tuple<DateTimeOffset, string, int>(findedUser.TokenDate.DateTime, encryptedUserName, findedUser.UserRole);
         }
 
         // Return status

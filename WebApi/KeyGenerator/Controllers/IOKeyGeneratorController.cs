@@ -59,5 +59,12 @@ where TDBContext : IODatabaseContext<TDBContext>
         return ViewModel.Encrypt(requestModel);
     }
 
+    [IOValidateRequestModel]
+    [HttpPost("[action]")]
+    public IOEncryptResponseModel Decrypt([FromBody] IOEncryptRequestModel requestModel)
+    {
+        return ViewModel.Decrypt(requestModel);
+    }
+
 }
 #endif

@@ -1,4 +1,4 @@
-import { BaseResponseModel, UICommonConstants } from 'iobootstrap-ui-base';
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, DIHooks, UICommonConstants } from 'iobootstrap-ui-base';
 import AuthenticationRequestModel from '../models/AuthenticationRequestModel';
 import AuthenticationResponseModel from '../models/AuthenticationResponseModel';
 import LoginProps from '../props/LoginProps';
@@ -8,10 +8,13 @@ import { BOCommonConstants, BOController } from 'iobootstrap-bo-base';
 
 class LoginController extends BOController<LoginProps, LoginState> {
 
+    private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
+    
     constructor(props: LoginProps) {
         super(props);
 
         this.state = new LoginState();
+        this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         this.handleUserNameChange = this.handleUserNameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -59,28 +62,63 @@ class LoginController extends BOController<LoginProps, LoginState> {
 
         this.indicatorPresenter.present();
 
+        const weakSelf = this;
+        AppCryptography.Instance.encrypt(this.state.password)
+          .then((encryptedData) => {
+            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(
+              encryptedData.symmetricKey,
+              encryptedData.symmetricIV
+            );
+            weakSelf.authenticate(encryptedData.encrypted);
+          })
+          .catch(() => {
+            weakSelf.indicatorPresenter.dismiss();
+
+            const newState = new LoginState();
+            newState.userName = weakSelf.state.userName;
+            newState.password = weakSelf.state.password;
+            newState.errorMessage = "Encryption error.";
+            weakSelf.setState(newState);
+          });
+    }
+
+    private authenticate(encryptedPassword: string) {
         const request = new AuthenticationRequestModel();
         request.UserName = this.state.userName;
-        request.Password = this.state.password;
+        request.Password = encryptedPassword;
 
         const requestURL = `${this.props.controllerName}/Authenticate`;
         const weakSelf = this;
         this.service.post(requestURL, request, function (response: AuthenticationResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 const token = (response.token == null) ? "" : response.token;
-                const userName = (response.userName == null) ? "" : response.userName;
                 weakSelf.storage.setStringForKey(UICommonConstants.userTokenStorageKey, token);
-                weakSelf.storage.setStringForKey(BOCommonConstants.userNameStorageKey, userName);
 
                 if (response.userRole != null) {
                     weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.loginSuccessHandler();
+                weakSelf.decryptResponseAndUpdateState(response.userName ?? "");
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
+    }
+
+    private decryptResponseAndUpdateState(encryptedUserName: string) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.decrypt(encryptedUserName)
+          .then((decrypted) => {
+            weakSelf.storage.setStringForKey(
+              BOCommonConstants.userNameStorageKey,
+              decrypted
+            );
+            weakSelf.loginSuccessHandler();
+          })
+          .catch(() => {
+            weakSelf.loginSuccessHandler();
+          });
     }
 
     public render() {

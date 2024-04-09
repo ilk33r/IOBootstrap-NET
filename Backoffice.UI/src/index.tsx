@@ -12,8 +12,10 @@ import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
 import { CalloutView, IndicatorView, UploadModalView } from 'iobootstrap-bo-base';
 import DIUserRoleHooks from './di/DIUserRoleHooks';
+import DICryptographyHooks from './di/DICryptographyHooks';
 
 DIUserRoleHooks.setup();
+DICryptographyHooks.setup();
 
 let calloutViewRef = React.createRef<CalloutView>();
 const calloutView = (<CalloutView ref={calloutViewRef} />);
@@ -39,11 +41,7 @@ const uploadModalView = (<UploadModalView ref={uploadModalViewRef}
 
 ReactDOM.render(uploadModalView, document.getElementById('uploadModalWrapper'));
 
-const mainView = (<Main apiURL={process.env.REACT_APP_API_URL}
-  authorization={process.env.REACT_APP_AUTHORIZATION}
-  clientID={process.env.REACT_APP_BACKOFFICE_CLIENI_ID}
-  clientSecret={process.env.REACT_APP_BACKOFFICE_CLIENI_SECRET} 
-  calloutView={calloutViewRef}
+const mainView = (<Main calloutView={calloutViewRef}
   indicatorView={indicatorViewRef}
   uploadModalView={uploadModalViewRef} />);
 

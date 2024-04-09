@@ -46,12 +46,21 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             return false;
         }
 
+        if (response.status?.code === 630) {
+            this.handleInvalidKeyID(response);
+            return false;
+        }
+
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
         return false;
     }
 
     public handleInvalidCredential(response: BaseResponseModel) {
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
+    }
+
+    public handleInvalidKeyID(response: BaseResponseModel) {
+        window.location.reload();
     }
 
     public showCalloutAndRedirectToHash(successMessage: string, hash: string) {

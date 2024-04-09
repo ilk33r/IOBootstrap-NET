@@ -4,6 +4,7 @@ class DIHooks {
 
     private static _instance: DIHooks;
     
+    private singletons: { [key: string]: any } = {};
     private values: { [key: string]: DIHooksFunction } = {};
 
     private constructor() {
@@ -20,6 +21,15 @@ class DIHooks {
 
     public setHookForKey(key: string, value: DIHooksFunction) {
         this.values[key] = value;
+    }
+
+    public singletonForKey(key: string) : any | null {
+        const item = this.singletons[key];
+        return (item === undefined) ? null : item;
+    }
+
+    public setSingletonForKey(key: string, value: any) {
+        this.singletons[key] = value;
     }
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Validatable, View } from "iobootstrap-ui-base";
+import { AppCryptography, Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeImageProps from "../props/FormTypeImageProps";
 import FormViewState from "../props/FormViewState";
@@ -69,15 +69,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
             const castedBuffer = arrayBuffer as ArrayBuffer;
             const fileData = new Uint8Array(castedBuffer);
-            
-            let binary = "";
-            const byteLength = fileData.byteLength;
-
-            for (let i = 0; i < byteLength; i++) {
-                binary += String.fromCharCode(fileData[i]);
-            }
-
-            const b64EncodedImage = btoa(binary);
+            const b64EncodedImage = AppCryptography.Instance.base64Encode(fileData);
 
             const newState = new FormViewState();
             newState.imagePreviewURL = "data:" + fileType + ";base64," + b64EncodedImage;

@@ -5,7 +5,11 @@ export { default as BaseResponseModel } from "./common/models/BaseResponseModel"
 export { default as BaseResponseStatusModel }from "./common/models/BaseResponseStatusModel";
 export type { WindowMessageModel } from "./common/models/WindowMessageModel";
 export { default as AppContext } from "./core/context/AppContext";
+export type { AppEncryptedData } from "./core/cryptography/AppCryptography";
+export { default as AppCryptography } from "./core/cryptography/AppCryptography";
 export { default as AppService } from "./core/service/AppService";
+export type { IAppServiceHeaderInterceptor } from "./core/service/IAppServiceHeaderInterceptor";
+export { default as AppServiceHeaderAuthenticationInterceptor } from "./core/service/AppServiceHeaderAuthenticationInterceptor";
 export { default as AppStorage } from "./core/storage/AppStorage";
 export type { DI } from "./di/DI";
 export { default as DIHooks } from "./di/DIHooks";

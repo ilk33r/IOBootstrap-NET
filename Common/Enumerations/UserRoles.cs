@@ -7,6 +7,7 @@ public enum UserRoles
     SuperAdmin = 0,
     Admin = 1,
     User = 2,
+    BackOfficeUser = 300,
     CustomUser = 600,
     AnonmyMouse = 999
 }

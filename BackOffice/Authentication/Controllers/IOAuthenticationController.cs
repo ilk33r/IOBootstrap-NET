@@ -32,18 +32,15 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
         // Check if authentication result is true
-        return ViewModel.AuthenticateUser(requestModel.UserName ?? "", requestModel.Password ?? "");
+        return ViewModel.Authenticate(requestModel.UserName ?? "", requestModel.Password ?? "");
     }
 
     [IOValidateRequestModel]
     [HttpPost("[action]")]
     public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {
-        // Check token
-        Tuple<DateTimeOffset, string, int> checkTokenResult = ViewModel.CheckToken(requestModel.Token ?? "");
-
         // Check if authentication result is true
-        return new IOCheckTokenResponseModel(checkTokenResult.Item1, checkTokenResult.Item2, checkTokenResult.Item3);
+        return ViewModel.CheckToken(requestModel.Token ?? "");
     }
 
     #endregion

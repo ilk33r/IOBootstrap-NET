@@ -25,6 +25,8 @@ public interface IIOViewModel<TDBContext> : IIOViewModelBase where TDBContext : 
 
     public string DecryptString(string encryptedString);
 
+    public string EncryptString(string plainString);
+
     #endregion
 
     #region Configuration

@@ -9,9 +9,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
     #region View Model Methods
 
-    public IOAuthenticationResponseModel AuthenticateUser(string userName, string password);
+    public IOAuthenticationResponseModel Authenticate(string userName, string password);
 
-    public Tuple<DateTimeOffset, string, int> CheckToken(string token);
+    public IOCheckTokenResponseModel CheckToken(string token);
 
     #endregion
 }

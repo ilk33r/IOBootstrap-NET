@@ -13,5 +13,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public IOCheckTokenResponseModel CheckToken(string token);
 
+    public void Logout(string userName);
+
     #endregion
 }

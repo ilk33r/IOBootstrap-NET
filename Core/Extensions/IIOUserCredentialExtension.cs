@@ -168,4 +168,37 @@ public static class IIOUserCredentialExtension
         // Return response
         throw new IOInvalidPasswordException();
     }
+
+    public static void LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        // Decrypt user name
+        string decryptedUserName = input.DecryptString(userName);
+
+        // Validate user name
+        if (!(input.UserModel?.UserName?.Equals(decryptedUserName) ?? false))
+        {
+            throw new IOInvalidCredentialsException();
+        }
+
+        IOUserEntity? findedUser = input.DatabaseContext.Users
+                                                    .Where(u => u.ID == input.UserModel.ID)
+                                                    .FirstOrDefault();
+
+        if (findedUser == null)
+        {
+            // Return response
+            throw new IOInvalidCredentialsException();
+        }
+
+        // Update entity properties
+        findedUser.UserToken = null;
+
+        input.DatabaseContext.Update(findedUser);
+        input.DatabaseContext.SaveChanges();
+
+        // Invalidate user cache
+        string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, findedUser.ID);
+        IOCache.InvalidateCache(cacheKey);
+    }
 }

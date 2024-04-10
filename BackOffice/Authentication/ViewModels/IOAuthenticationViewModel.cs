@@ -48,6 +48,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         return response;
     }
 
+    public virtual void Logout(string userName)
+    {
+        this.LogoutUser(userName);
+    }
+
     #endregion
 
 }

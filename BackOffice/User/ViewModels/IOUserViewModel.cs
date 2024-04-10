@@ -165,5 +165,10 @@ where TDBContext : IODatabaseContext<TDBContext>
         throw new IOInvalidPermissionException();
     }
 
+    public virtual void Logout(string userName)
+    {
+        this.LogoutUser(userName);
+    }
+
     #endregion
 }

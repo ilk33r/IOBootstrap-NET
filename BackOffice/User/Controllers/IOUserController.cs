@@ -3,6 +3,7 @@ using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
 using IOBootstrap.NET.Common.Models.Users;
@@ -82,6 +83,17 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
         return new IOResponseModel();
     }
 
+    [IOValidateRequestModel]
+    [IOEncryptionRequired]
+    [IOUserRole(UserRoles.BackOfficeUser)]
+    [HttpPost("[action]")]
+    public virtual IOResponseModel Logout([FromBody] IOLogoutRequestModel requestModel)
+    {
+        // Check if authentication result is true
+        ViewModel.Logout(requestModel.UserName ?? "");
+        return new IOResponseModel();
+    }
+    
     #endregion
 
 }

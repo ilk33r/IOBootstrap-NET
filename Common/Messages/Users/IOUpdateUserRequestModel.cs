@@ -14,6 +14,4 @@ public class IOUpdateUserRequestModel : IORequestModel
 
     [Required]
     public int UserRole { get; set; }
-
-    public string? UserPassword { get; set; }
 }

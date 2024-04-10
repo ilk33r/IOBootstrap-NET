@@ -1,13 +1,17 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class UsersAddController extends BOController<{}, {}> {
 
+    private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
+
     constructor(props: {}) {
         super(props);
 
+        this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
+        
         this.handleFormError = this.handleFormError.bind(this);
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
     }
@@ -23,12 +27,40 @@ class UsersAddController extends BOController<{}, {}> {
         }
 
         this.indicatorPresenter.present();
-        
+        this.updateSymmetricKeys(values[0], values[1], Number(values[3]));
+    }
+
+    private updateSymmetricKeys(userName: string, password: string, userRole: number) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.getSymmetricKeys()
+        .then((symmetricKeys) => {
+            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
+            weakSelf.encryptPasswords(userName, password, userRole);
+        })
+        .catch(() => {
+            weakSelf.handleServiceError("", "Cryptography error.");
+        });
+    }
+
+    private encryptPasswords(userName: string, password: string, userRole: number) {
+        const weakSelf = this;
+
+        AppCryptography.Instance.encrypt(password)
+        .then((encryptedData) => {
+            weakSelf.addUser(userName, encryptedData, userRole);
+        })
+        .catch(() => {
+            weakSelf.handleServiceError("", "Cryptography error.");
+        });
+    }
+
+    private addUser(userName: string, password: string, userRole: number) {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/AddUser`;
         const request = new AddUserRequestModel();
-        request.userName = values[0];
-        request.password = values[1];
-        request.userRole = Number(values[3]);
+        request.userName = userName;
+        request.password = password;
+        request.userRole = userRole;
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {

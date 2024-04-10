@@ -31,6 +31,7 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     #region User Methods
 
     [IOValidateRequestModel]
+    [IOEncryptionRequired]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
     public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel)

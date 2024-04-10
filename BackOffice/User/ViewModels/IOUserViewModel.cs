@@ -42,11 +42,13 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserExistsException();
         }
 
+        string decryptedPassword = DecryptString(requestModel.Password ?? "");
+
         // Create a users entity 
         IOUserEntity newUserEntity = new IOUserEntity()
         {
             UserName = requestModel.UserName!.ToLower(),
-            Password = IOPasswordUtilities.HashPassword(requestModel.Password!),
+            Password = IOPasswordUtilities.HashPassword(decryptedPassword),
             UserRole = requestModel.UserRole,
             UserToken = null,
             TokenDate = DateTime.UtcNow
@@ -135,12 +137,6 @@ where TDBContext : IODatabaseContext<TDBContext>
         // Update user properties
         user.UserName = userName;
         user.UserRole = request.UserRole;
-
-        if (!String.IsNullOrEmpty(request.UserPassword))
-        {
-            user.Password = IOPasswordUtilities.HashPassword(request.UserPassword);
-            user.UserToken = null;
-        }
 
         // Update user password
         DatabaseContext.Update(user);

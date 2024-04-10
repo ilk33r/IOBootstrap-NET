@@ -31,7 +31,8 @@ class AppService {
 
         fetch(requestUrl, {
             method: 'GET',
-            headers: headers
+            headers: headers,
+            credentials: 'include'
         })
         .then(response => response.json())
         .then(data => {
@@ -52,6 +53,7 @@ class AppService {
         fetch(requestUrl, {
             method: 'POST',
             headers: headers,
+            credentials: 'include',
             body: JSON.stringify(request)
         })
         .then(response => response.json())
@@ -72,6 +74,7 @@ class AppService {
 
         fetch(requestUrl, {
             method: 'GET',
+            credentials: 'include',
             headers: headers
         })
         .then(response => response.blob())
@@ -91,6 +94,7 @@ class AppService {
 
         fetch(requestUrl, {
             method: 'POST',
+            credentials: 'include',
             headers: headers,
             body: JSON.stringify(request)
         })
@@ -113,6 +117,7 @@ class AppService {
 
         fetch(requestUrl, {
             method: 'PUT',
+            credentials: 'include',
             headers: headers,
             body: form
         })

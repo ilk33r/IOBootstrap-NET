@@ -69,9 +69,17 @@ where TDBContext : IODatabaseContext<TDBContext>
                 Configuration.GetSection("Logging").GetSection("IOFileLogger").GetSection("Options").Bind(options);
             });
         });
+
+        int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife)!;
+
+        services.AddDistributedMemoryCache();
         services.AddSession(options =>
         {
             options.Cookie.Name = ".IO.Session";
+            options.Cookie.IsEssential = true;
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.IdleTimeout = TimeSpan.FromSeconds(tokenLife);
         });
 
         string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>()!;
@@ -81,8 +89,13 @@ where TDBContext : IODatabaseContext<TDBContext>
             {
                 foreach (string allowedOrigin in allowedOrigins)
                 {
-                    builder.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins(allowedOrigin);
                 }
+
+                builder.AllowAnyMethod();
+                builder.AllowAnyHeader();
+                builder.AllowCredentials();
+                builder.Build();
             });
         });
         services.AddSingleton<IConfiguration>(Configuration);
@@ -115,6 +128,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "IOBootstrapt");
                 options.RoutePrefix = "swagger-ui";
+                options.ConfigObject.TryItOutEnabled = true;
             });
         }
 

@@ -48,57 +48,30 @@ class UserChangePasswordController extends BOController<{}, {}> {
         }
 
         this.indicatorPresenter.present();
-        this.updateSymmetricKeys(currentPassword, password);
-    }
 
-    private updateSymmetricKeys(currentPassword: string | null, password: string) {
         const weakSelf = this;
-
-        AppCryptography.Instance.getSymmetricKeys()
-        .then((symmetricKeys) => {
-            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
-            weakSelf.encryptPasswords(currentPassword, password);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
+        this.changePassword(currentPassword, password)
+            .catch(() => {
+                weakSelf.handleServiceError("", "Cryptography error.");
+            });
     }
 
-    private encryptPasswords(currentPassword: string | null, password: string) {
-        if (currentPassword == null) {
-            this.encryptNewPassword(currentPassword, password);
-            return;
+    private async changePassword(currentPassword: string | null, password: string): Promise<any> {
+        const symmetricKeys = await AppCryptography.Instance.getSymmetricKeys();
+        this.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
+
+        let encryptedCurrentPassword: string | null = null;
+        if (currentPassword !== null) {
+            encryptedCurrentPassword = await AppCryptography.Instance.encrypt(currentPassword)
         }
 
-        const weakSelf = this;
+        const encryptedNewPassword = await AppCryptography.Instance.encrypt(password);
 
-        AppCryptography.Instance.encrypt(currentPassword)
-        .then((encryptedData) => {
-            weakSelf.encryptNewPassword(encryptedData, password);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
-    }
-
-    private encryptNewPassword(currentPassword: string | null, password: string) {
-        const weakSelf = this;
-
-        AppCryptography.Instance.encrypt(password)
-        .then((encryptedData) => {
-            weakSelf.changePassword(currentPassword, encryptedData);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
-    }
-
-    private changePassword(currentPassword: string | null, password: string) {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ChangePassword`;
         const request = new UserChangePasswordRequestModel();
         request.userName = this._updateRequest.userName;
-        request.oldPassword = currentPassword;
-        request.newPassword = password;
+        request.oldPassword = encryptedCurrentPassword;
+        request.newPassword = encryptedNewPassword;
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {

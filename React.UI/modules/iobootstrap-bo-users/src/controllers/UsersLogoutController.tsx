@@ -24,38 +24,23 @@ class UsersLogoutController extends BOController<{}, {}> {
         this.indicatorPresenter.present();
         
         const userName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
-        this.updateSymmetricKeys(userName);
-    }
 
-    private updateSymmetricKeys(userName: string) {
         const weakSelf = this;
-
-        AppCryptography.Instance.getSymmetricKeys()
-        .then((symmetricKeys) => {
-            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
-            weakSelf.encryptUserName(userName);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
+        this.logout(userName)
+            .catch(() => {
+                weakSelf.handleServiceError("", "Cryptography error.");
+            });
     }
 
-    private encryptUserName(userName: string) {
-        const weakSelf = this;
+    private async logout(userName: string): Promise<any> {
+        const symmetricKeys = await AppCryptography.Instance.getSymmetricKeys();
+        this.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
 
-        AppCryptography.Instance.encrypt(userName)
-        .then((encryptedData) => {
-            weakSelf.logout(encryptedData);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
-    }
+        const encryptUserName = await AppCryptography.Instance.encrypt(userName);
 
-    private logout(userName: string) {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/Logout`;
         const request = new IOLogoutRequestModel();
-        request.userName = userName;
+        request.userName = encryptUserName;
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {

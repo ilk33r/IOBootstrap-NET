@@ -27,39 +27,24 @@ class UsersAddController extends BOController<{}, {}> {
         }
 
         this.indicatorPresenter.present();
-        this.updateSymmetricKeys(values[0], values[1], Number(values[3]));
-    }
 
-    private updateSymmetricKeys(userName: string, password: string, userRole: number) {
         const weakSelf = this;
-
-        AppCryptography.Instance.getSymmetricKeys()
-        .then((symmetricKeys) => {
-            weakSelf.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
-            weakSelf.encryptPasswords(userName, password, userRole);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
+        this.addUser(values[0], values[1], Number(values[3]))
+            .catch(() => {
+                weakSelf.handleServiceError("", "Cryptography error.");
+            });
     }
 
-    private encryptPasswords(userName: string, password: string, userRole: number) {
-        const weakSelf = this;
+    private async addUser(userName: string, password: string, userRole: number): Promise<any> {
+        const symmetricKeys = await AppCryptography.Instance.getSymmetricKeys();
+        this.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
 
-        AppCryptography.Instance.encrypt(password)
-        .then((encryptedData) => {
-            weakSelf.addUser(userName, encryptedData, userRole);
-        })
-        .catch(() => {
-            weakSelf.handleServiceError("", "Cryptography error.");
-        });
-    }
+        const encryptPasswords = await AppCryptography.Instance.encrypt(password);
 
-    private addUser(userName: string, password: string, userRole: number) {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/AddUser`;
         const request = new AddUserRequestModel();
         request.userName = userName;
-        request.password = password;
+        request.password = encryptPasswords;
         request.userRole = userRole;
 
         const weakSelf = this;

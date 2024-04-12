@@ -90,40 +90,25 @@ class LoginController extends BOController<LoginProps, LoginState> {
                     weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.decryptTokenAndUserName(token, response.userName ?? "");
+                weakSelf.decryptTokenAndUserName(token, response.userName ?? "")
+                            .then(() => {
+                                weakSelf.loginSuccessHandler();
+                            })
+                            .catch(() => {
+                                weakSelf.loginSuccessHandler();
+                            });
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
     }
 
-    private decryptTokenAndUserName(encryptedToken: string, encryptedUserName: string) {
-        const weakSelf = this;
+    private async decryptTokenAndUserName(encryptedToken: string, encryptedUserName: string): Promise<any> {
+        const descryptedToken = await AppCryptography.Instance.decrypt(encryptedToken);
+        this.storage.setStringForKey(UICommonConstants.userTokenStorageKey, descryptedToken);
 
-        AppCryptography.Instance.decrypt(encryptedToken)
-          .then((decrypted) => {
-            weakSelf.storage.setStringForKey(UICommonConstants.userTokenStorageKey, decrypted);
-            weakSelf.decryptResponseAndUpdateState(encryptedUserName);
-          })
-          .catch(() => {
-            weakSelf.decryptResponseAndUpdateState(encryptedUserName);
-          });
-    }
-
-    private decryptResponseAndUpdateState(encryptedUserName: string) {
-        const weakSelf = this;
-
-        AppCryptography.Instance.decrypt(encryptedUserName)
-          .then((decrypted) => {
-            weakSelf.storage.setStringForKey(
-              BOCommonConstants.userNameStorageKey,
-              decrypted
-            );
-            weakSelf.loginSuccessHandler();
-          })
-          .catch(() => {
-            weakSelf.loginSuccessHandler();
-          });
+        const decryptedUserName = await AppCryptography.Instance.decrypt(encryptedUserName);
+        this.storage.setStringForKey(BOCommonConstants.userNameStorageKey, decryptedUserName);
     }
 
     public render() {

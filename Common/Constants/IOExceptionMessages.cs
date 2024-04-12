@@ -16,6 +16,7 @@ public static class IOExceptionMessages
     public const int UnauthorizedCode = 600;
     public const int InvalidKeyIDCode = 630;
     public const int EncryptionRequiredCode = 631;
+    public const int InvalidNonceCode = 632;
     public const int UserExistsCode = 700;
     public const int UserNotFoundCode = 701;
     public const int ImageNotFoundCode = 702;
@@ -34,6 +35,7 @@ public static class IOExceptionMessages
     public const string UnauthorizedMessage = "Authorization failed.";
     public const string InvalidKeyIDMessage = "Invalid key ID or key expired.";
     public const string EncryptionRequiredMessage = "Encryption required.";
+    public const string InvalidNonceMessage = "Invalid nonce.";
     public const string UserExistsMessage = "User exists.";
     public const string UserNotFoundMessage = "User not found.";
     public const string ImageNotFoundMessage = "Image not found.";

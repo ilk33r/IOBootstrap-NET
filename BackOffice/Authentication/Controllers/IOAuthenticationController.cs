@@ -29,6 +29,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
 
     [IOValidateRequestModel]
     [IOEncryptionRequired]
+    [IONonceRequired]
     [HttpPost("[action]")]
     public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
@@ -38,6 +39,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
 
     [IOValidateRequestModel]
     [IOEncryptionRequired]
+    [IONonceRequired]
     [HttpPost("[action]")]
     public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {

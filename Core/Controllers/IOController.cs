@@ -14,12 +14,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Controllers;
 
-public abstract class IOController<TViewModel, TDBContext> : Controller
+public abstract class IOController<TViewModel, TDBContext> : Controller, IIOController<TViewModel, TDBContext>, IIONonce<TViewModel, TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
 where TViewModel : IIOViewModel<TDBContext>, new()
 {
@@ -66,6 +67,13 @@ where TViewModel : IIOViewModel<TDBContext>, new()
 
         // Update view model request value
         ViewModel.Request = Request;
+
+        // Check Nonce
+        if (HasControllerAttribute<IONonceRequiredAttribute>(context))
+        {
+            string? headerNonce = Request.Headers[IORequestHeaderConstants.Nonce];
+            this.CheckNonce(HttpContext.Session, headerNonce);
+        }
 
         // Check user role
         CheckRole(context);
@@ -129,6 +137,10 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     public override void OnActionExecuted(ActionExecutedContext context)
     {
         base.OnActionExecuted(context);
+        
+        // Update nonce
+        string nonce = this.UpdateNonce(HttpContext.Session);
+        HttpContext.Response.Headers.Add(IORequestHeaderConstants.Nonce, nonce);
 
         // Check result type
         string? jsonString = null;

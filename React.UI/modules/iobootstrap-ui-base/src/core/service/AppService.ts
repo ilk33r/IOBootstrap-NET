@@ -26,79 +26,91 @@ class AppService {
 
     public get<TResponse extends BaseResponseModel>(path: string, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const headers = this.appServiceHeaderInterceptor.interceptHeaders();
+        this.getAsync(requestUrl)
+            .then(data => {
+                const response = data as TResponse;
+                successHandler(response);
+            })
+            .catch(errorData => {
+                const response = errorData as { message: string }
+                errorHandler(response.message);
+            });
+    }
+
+    public async getAsync(requestUrl: string): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
-        fetch(requestUrl, {
+        return fetch(requestUrl, {
             method: 'GET',
             headers: headers,
             credentials: 'include'
         })
-        .then(response => response.json())
-        .then(data => {
-            const response = data as TResponse;
-            successHandler(response);
-        })
-        .catch(errorData => {
-            const response = errorData as { message: string }
-            errorHandler(response.message);
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.json()
         });
     }
 
     public post<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const headers = this.appServiceHeaderInterceptor.interceptHeaders();
+        this.postAsync(requestUrl, request)
+            .then(data => {
+                const response = data as TResponse;
+                successHandler(response);
+            })
+            .catch(errorData => {
+                const response = errorData as { message: string }
+                errorHandler(response.message);
+            });
+    }
+
+    public async postAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
-        fetch(requestUrl, {
+        return fetch(requestUrl, {
             method: 'POST',
             headers: headers,
             credentials: 'include',
             body: JSON.stringify(request)
         })
-        .then(response => response.json())
-        .then(data => {
-            const response = data as TResponse;
-            successHandler(response);
-        })
-        .catch(errorData => {
-            const response = errorData as { message: string }
-            errorHandler(response.message);
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.json()
         });
     }
 
     public downloadFile(path: string, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const headers = this.appServiceHeaderInterceptor.interceptHeaders();
-        headers['Content-Type'] = 'application/json';
-
-        fetch(requestUrl, {
-            method: 'GET',
-            credentials: 'include',
-            headers: headers
-        })
-        .then(response => response.blob())
+        this.downloadFileAsync(requestUrl)
         .then(blob => {
             successHandler(blob);
         })
         .catch(errorData => {
             const response = errorData as { message: string }
             errorHandler(response.message);
+        });
+    }
+
+    public async downloadFileAsync(requestUrl: string): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
+        headers['Content-Type'] = 'application/json';
+
+        return fetch(requestUrl, {
+            method: 'GET',
+            headers: headers,
+            credentials: 'include'
+        })
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.blob()
         });
     }
 
     public postDownloadFile(path: string, request: BaseRequestModel, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const headers = this.appServiceHeaderInterceptor.interceptHeaders();
-        headers['Content-Type'] = 'application/json';
-
-        fetch(requestUrl, {
-            method: 'POST',
-            credentials: 'include',
-            headers: headers,
-            body: JSON.stringify(request)
-        })
-        .then(response => response.blob())
+        this.postDownloadFileAsync(requestUrl, request)
         .then(blob => {
             successHandler(blob);
         })
@@ -108,20 +120,25 @@ class AppService {
         });
     }
 
+    public async postDownloadFileAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
+        headers['Content-Type'] = 'application/json';
+
+        return fetch(requestUrl, {
+            method: 'POST',
+            headers: headers,
+            credentials: 'include',
+            body: JSON.stringify(request)
+        })
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.blob()
+        });
+    }
+
     public upload<TResponse extends BaseResponseModel>(path: string, blob: Blob, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        const headers = this.appServiceHeaderInterceptor.interceptHeaders();
-
-        const form = new FormData();
-        form.append("file", blob);
-
-        fetch(requestUrl, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: headers,
-            body: form
-        })
-        .then(response => response.json())
+        this.uploadAsync(requestUrl, blob)
         .then(data => {
             const response = data as TResponse;
             successHandler(response);
@@ -129,6 +146,24 @@ class AppService {
         .catch(errorData => {
             const response = errorData as { message: string }
             errorHandler(response.message);
+        });
+    }
+
+    public async uploadAsync(requestUrl: string, blob: Blob): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
+
+        const form = new FormData();
+        form.append("file", blob);
+
+        return fetch(requestUrl, {
+            method: 'PUT',
+            headers: headers,
+            credentials: 'include',
+            body: form
+        })
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.json()
         });
     }
 }

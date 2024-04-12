@@ -92,6 +92,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                     builder.WithOrigins(allowedOrigin);
                 }
 
+                builder.WithExposedHeaders(IORequestHeaderConstants.Nonce);
                 builder.AllowAnyMethod();
                 builder.AllowAnyHeader();
                 builder.AllowCredentials();

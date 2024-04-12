@@ -1,4 +1,5 @@
 export interface IAppServiceHeaderInterceptor {
 
-    interceptHeaders(): Record<string, string>
+    interceptRequestHeaders(): Promise<Record<string, string>>
+    interceptResponseHeaders(headers: Headers): void
 }

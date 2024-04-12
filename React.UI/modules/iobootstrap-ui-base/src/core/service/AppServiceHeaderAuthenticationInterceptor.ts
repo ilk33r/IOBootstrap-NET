@@ -11,11 +11,16 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
     private keyID: string | null;
     private symmetricKey: string | null;
     private symmetricIV: string | null;
+    private nonce: string | null;
 
     constructor() {
         this.authorization = "";
         this.clientID = "";
         this.clientSecret = "";
+        this.keyID = null;
+        this.symmetricKey = null;
+        this.symmetricIV = null;
+        this.nonce = null;
     }
 
     public initialize(authorization: string, clientID: string, clientSecret: string) {
@@ -33,7 +38,19 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
         this.symmetricIV = symmetricIV;
     }
 
-    public interceptHeaders(): Record<string, string> {
+    public interceptRequestHeaders(): Promise<Record<string, string>> {
+        return this.getRequestHeaders();
+    }
+
+    public interceptResponseHeaders(headers: Headers): void {
+        headers.forEach((value: string, key: string) => {
+            if (key.toLowerCase() === "x-nonce") {
+                this.nonce = value;
+            }
+        });
+    }
+
+    private async getRequestHeaders(): Promise<Record<string, string>> {
         let headers: Record<string, string> = {
             'X-IO-AUTHORIZATION': this.authorization,
             'X-IO-CLIENT-ID': this.clientID,
@@ -54,6 +71,10 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
 
         if (!AppCryptography.Instance.initilized) {
             return headers;
+        }
+
+        if (this.nonce != null) {
+            headers["X-NONCE"] = await AppCryptography.Instance.encrypt(this.nonce)
         }
 
         const userToken = AppStorage.Instance.stringForKey(UICommonConstants.userTokenStorageKey);

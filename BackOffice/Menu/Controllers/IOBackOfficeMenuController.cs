@@ -53,7 +53,7 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
         return new IOMenuUpdateResponseModel();
     }
 
-    [IOUserRole(UserRoles.CustomUser)]
+    [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpGet("[action]")]
     public virtual IOMenuListResponseModel ListMenuItems()
     {

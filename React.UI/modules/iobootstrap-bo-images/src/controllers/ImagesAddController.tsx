@@ -1,6 +1,6 @@
 import React from "react";
 import SaveImageResponseModel from "../models/SaveImageResponseModel";
-import { CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesAddController extends BOController<{}, {}> {
@@ -21,12 +21,31 @@ class ImagesAddController extends BOController<{}, {}> {
     }
 
     handleFormSuccess(values: string[], blobs: Blob[]) {
+        this.generateNonce(blobs[0]);
+    }
+
+    private generateNonce(blob: Blob) {
+        this.indicatorPresenter.present();
+
+        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
+        const weakSelf = this;
+
+        this.service.get(requestPath, function (response: BaseResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                weakSelf.uploadImage(blob);
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
+    private uploadImage(blob: Blob) {
         this.indicatorPresenter.present();
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/SaveImage`;
         const weakSelf = this;
         
-        this.service.upload(requestPath, blobs[0], function (response: SaveImageResponseModel) {
+        this.service.upload(requestPath, blob, function (response: SaveImageResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 weakSelf.showCalloutAndRedirectToHash("Image has been uploaded successfully.", "imagesEdit");
             }

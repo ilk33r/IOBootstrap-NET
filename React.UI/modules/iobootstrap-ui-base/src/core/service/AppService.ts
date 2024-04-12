@@ -81,6 +81,35 @@ class AppService {
         });
     }
 
+    public delete<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
+        const requestUrl = `${this.baseUrl}/${path}`;
+        this.deleteAsync(requestUrl, request)
+            .then(data => {
+                const response = data as TResponse;
+                successHandler(response);
+            })
+            .catch(errorData => {
+                const response = errorData as { message: string }
+                errorHandler(response.message);
+            });
+    }
+
+    public async deleteAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+        let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
+        headers['Content-Type'] = 'application/json';
+
+        return fetch(requestUrl, {
+            method: 'DELETE',
+            headers: headers,
+            credentials: 'include',
+            body: JSON.stringify(request)
+        })
+        .then(response => {
+            this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
+            return response.json()
+        });
+    }
+
     public downloadFile(path: string, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
         this.downloadFileAsync(requestUrl)

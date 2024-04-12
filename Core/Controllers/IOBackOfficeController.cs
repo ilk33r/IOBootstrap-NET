@@ -96,5 +96,12 @@ where TViewModel : IIOBackOfficeViewModel<TDBContext>, new()
         return new IOResponseModel();
     }
 
+    [IOUserRole(UserRoles.BackOfficeUser)]
+    [HttpGet("[action]")]
+    public IOResponseModel GenerateNonce()
+    {
+        return new IOResponseModel();
+    }
+
     #endregion
 }

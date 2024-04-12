@@ -32,7 +32,7 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     #region API Methods
 
     [IOValidateRequestModel]
-    [IOUserRole(UserRoles.CustomUser)]
+    [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPost("[action]")]
     public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
     {
@@ -40,7 +40,8 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     }
 
     [IORequireHTTPS]
-    [IOUserRole(UserRoles.CustomUser)]
+    [IONonceRequired]
+    [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPut("[action]")]
     public IOSaveImageResponseModel SaveImage(IFormFile file)
     {
@@ -50,8 +51,9 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     }
 
     [IOValidateRequestModel]
-    [IOUserRole(UserRoles.CustomUser)]
-    [HttpPost("[action]")]
+    [IONonceRequired]
+    [IOUserRole(UserRoles.BackOfficeUser)]
+    [HttpDelete("[action]")]
     public IOResponseModel DeleteImage([FromBody] IODeleteImagesRequestModel requestModel)
     {
         ViewModel.DeleteImage(requestModel);

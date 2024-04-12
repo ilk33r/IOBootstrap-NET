@@ -28,7 +28,7 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
 
     #endregion
 
-    [IOUserRole(UserRoles.CustomUser)]
+    [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpGet("[action]")]
     public virtual IOListMessagesResponseModel ListMessages()
     {

@@ -20,6 +20,34 @@ class ImagesModifyController extends BOController<{}, {}> {
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
     }
 
+    handleFormError(errorTitle: string, errorMessage: string) {
+        if (errorTitle == "deleteImage" && errorMessage == "deleteImage") {
+            this.generateNonce();
+            return;
+        }
+
+        this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
+    }
+
+    handleFormSuccess(values: string[], blobs: Blob[]) {
+
+    }
+
+    private generateNonce() {
+        this.indicatorPresenter.present();
+
+        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
+        const weakSelf = this;
+
+        this.service.get(requestPath, function (response: BaseResponseModel) {
+            if (weakSelf.handleServiceSuccess(response)) {
+                weakSelf.deleteImage();
+            }
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        });
+    }
+
     private deleteImage() {
         this.indicatorPresenter.present();
 
@@ -30,26 +58,13 @@ class ImagesModifyController extends BOController<{}, {}> {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/DeleteImage`;
         const weakSelf = this;
 
-        this.service.post(requestPath, request, function (response: BaseResponseModel) {
+        this.service.delete(requestPath, request, function (response: BaseResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 weakSelf.navigateToPage("imagesEdit");
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
-    }
-
-    handleFormError(errorTitle: string, errorMessage: string) {
-        if (errorTitle == "deleteImage" && errorMessage == "deleteImage") {
-            this.deleteImage();
-            return;
-        }
-
-        this.calloutPresenter.show(CalloutTypes.danger, errorTitle, errorMessage);
-    }
-
-    handleFormSuccess(values: string[], blobs: Blob[]) {
-
     }
 
     render() {

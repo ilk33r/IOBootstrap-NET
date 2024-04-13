@@ -5,3 +5,6 @@ export ASPNETCORE_ENVIRONMENT=Staging
 dotnet exec X.Application.dll
 
 dotnet new sln --name mysolution
+
+dotnet dev-certs https
+dotnet dev-certs https --trust

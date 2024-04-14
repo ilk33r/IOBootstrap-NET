@@ -77,6 +77,19 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
         }, 350);
     }
 
+    public navigateToPageWithState(url: string) {
+        var pushChangeEvent = new CustomEvent("onpushstate", {
+            detail: {
+                url
+            }
+        });
+        history.pushState({}, "", url);
+
+        setTimeout(function () {
+            window.dispatchEvent(pushChangeEvent);
+        }, 350);
+    }
+
     public postMessage(name: string, itemID: number | null, itemValue: string | null) {
         const windowMessage: WindowMessageModel = {
             name: name,

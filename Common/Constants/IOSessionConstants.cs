@@ -3,5 +3,5 @@
 public static class IOSessionConstants
 {
 
-    public static string Nonce = "_Nonce";
+    public static string Nonce = "Nonce";
 }

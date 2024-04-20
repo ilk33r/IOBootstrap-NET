@@ -10,6 +10,7 @@ using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Common.Session;
 
 namespace IOBootstrap.NET.Core.ViewModels;
 
@@ -29,6 +30,7 @@ public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where T
     public IWebHostEnvironment Environment { get; set; }
     public ILogger<IOLoggerType> Logger { get; set; }
     public HttpRequest Request { get; set; }
+    public IIOSession Session { get; set; }
     public TDBContext DatabaseContext { get; set; }
 
     #endregion

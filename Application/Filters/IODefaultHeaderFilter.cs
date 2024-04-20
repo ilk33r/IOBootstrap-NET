@@ -19,7 +19,7 @@ public class IODefaultHeaderFilter : IOperationFilter
 
         operation.Parameters.Add(new OpenApiParameter
         {
-            Name = "X-IO-AUTHORIZATION",
+            Name = IORequestHeaderConstants.Authorization,
             In = ParameterLocation.Header,
             Required = true,
             Schema = new OpenApiSchema
@@ -37,7 +37,7 @@ public class IODefaultHeaderFilter : IOperationFilter
         }
         operation.Parameters.Add(new OpenApiParameter
         {
-            Name = "X-KEY-ID",
+            Name = IORequestHeaderConstants.KeyID,
             In = ParameterLocation.Header,
             Required = false,
             Schema = new OpenApiSchema
@@ -49,7 +49,7 @@ public class IODefaultHeaderFilter : IOperationFilter
 
         operation.Parameters.Add(new OpenApiParameter
         {
-            Name = "X-SYMMETRIC-KEY",
+            Name = IORequestHeaderConstants.SessionID,
             In = ParameterLocation.Header,
             Required = false,
             Schema = new OpenApiSchema
@@ -61,7 +61,19 @@ public class IODefaultHeaderFilter : IOperationFilter
 
         operation.Parameters.Add(new OpenApiParameter
         {
-            Name = "X-SYMMETRIC-IV",
+            Name = IORequestHeaderConstants.SymmetricKey,
+            In = ParameterLocation.Header,
+            Required = false,
+            Schema = new OpenApiSchema
+            {
+                Type = "string",
+                Default = new OpenApiString("")
+            }
+        });
+
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            Name = IORequestHeaderConstants.SymmetricIV,
             In = ParameterLocation.Header,
             Required = false,
             Schema = new OpenApiSchema

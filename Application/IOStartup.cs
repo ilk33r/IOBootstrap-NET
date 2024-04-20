@@ -37,7 +37,6 @@ where TDBContext : IODatabaseContext<TDBContext>
     public virtual void ConfigureServices(IServiceCollection services)
     {
         services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
-        services.AddDistributedMemoryCache();
         services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -70,18 +69,6 @@ where TDBContext : IODatabaseContext<TDBContext>
             });
         });
 
-        int tokenLife = Configuration.GetValue<int>(IOConfigurationConstants.TokenLife)!;
-
-        services.AddDistributedMemoryCache();
-        services.AddSession(options =>
-        {
-            options.Cookie.Name = ".IO.Session";
-            options.Cookie.IsEssential = true;
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            options.IdleTimeout = TimeSpan.FromSeconds(tokenLife);
-        });
-
         string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>()!;
         services.AddCors(options =>
         {
@@ -93,6 +80,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                 }
 
                 builder.WithExposedHeaders(IORequestHeaderConstants.Nonce);
+                builder.WithExposedHeaders(IORequestHeaderConstants.SessionID);
                 builder.AllowAnyMethod();
                 builder.AllowAnyHeader();
                 builder.AllowCredentials();
@@ -113,9 +101,6 @@ where TDBContext : IODatabaseContext<TDBContext>
                 ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=640800");
             }
         });
-
-        // Use session
-        app.UseSession();
 
         // Swagger
         if (env.IsDevelopment() || env.IsStaging())

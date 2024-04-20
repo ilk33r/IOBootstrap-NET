@@ -9,7 +9,7 @@ namespace IOBootstrap.NET.Core.Extensions;
 public static class IIONonceExtension
 {
 
-    public static void CheckNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, ISession session, string? headerNonce)
+    public static void CheckNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, string? headerNonce)
     where TDBContext : IODatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
@@ -17,13 +17,8 @@ public static class IIONonceExtension
         {
             throw new IOInvalidNonceException();
         }
-        
-        if (!session.IsAvailable)
-        {
-            throw new IOInvalidNonceException();
-        }
 
-        string? nonce = session.GetString(IOSessionConstants.Nonce);
+        string? nonce = input.Session?.Get(IOSessionConstants.Nonce);
         if (nonce == null)
         {
             throw new IOInvalidNonceException();
@@ -36,15 +31,12 @@ public static class IIONonceExtension
         }
     }
 
-    public static string UpdateNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, ISession session)
+    public static string UpdateNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input)
     where TDBContext : IODatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         string nonce = IORandomUtilities.GenerateRandomAlphaNumericString(8);
-        if (session.IsAvailable)
-        {
-            session.SetString(IOSessionConstants.Nonce, nonce);
-        }
+        input.Session?.Set(IOSessionConstants.Nonce, nonce);
 
         return nonce;
     }

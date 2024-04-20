@@ -13,6 +13,7 @@ public static class IORequestHeaderConstants
     public static string Nonce = "X-NONCE";
     public static string IsEncrypted = "X-IO-IS-ENCRYPTED";
     public static string KeyID = "X-KEY-ID";
+    public static string SessionID = "X-SESSION-ID";
     public static string SymmetricIV = "X-SYMMETRIC-IV";
     public static string SymmetricKey = "X-SYMMETRIC-KEY";
 

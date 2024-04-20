@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.Common.Session;
 
 namespace IOBootstrap.NET.Core.Controllers;
 
@@ -31,6 +32,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     public IWebHostEnvironment Environment { get; }
     public ILogger<IOLoggerType> Logger { get; }
     public TViewModel ViewModel { get; }
+    public IIOSession? Session { get; set; }
     public bool IsBackofficePage;
 
     #endregion
@@ -66,13 +68,15 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         CheckHttpsRequired(context);
 
         // Update view model request value
+        Session = new IOSessionManager(Request, Configuration);
         ViewModel.Request = Request;
+        ViewModel.Session = Session;
 
         // Check Nonce
         if (HasControllerAttribute<IONonceRequiredAttribute>(context))
         {
             string? headerNonce = Request.Headers[IORequestHeaderConstants.Nonce];
-            this.CheckNonce(HttpContext.Session, headerNonce);
+            this.CheckNonce(headerNonce);
         }
 
         // Check user role
@@ -139,7 +143,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         base.OnActionExecuted(context);
         
         // Update nonce
-        string nonce = this.UpdateNonce(HttpContext.Session);
+        string nonce = this.UpdateNonce();
         HttpContext.Response.Headers.Add(IORequestHeaderConstants.Nonce, nonce);
 
         // Check result type
@@ -161,6 +165,14 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         {
             // Log call
             Logger.LogInformation(String.Format("{0} - {1}", Request.Path, jsonString));
+        }
+
+        // Flush session
+        Session?.Flush();
+
+        if (Session?.SessionID != null)
+        {
+            Response.Headers.Add(IORequestHeaderConstants.SessionID, Session?.SessionID);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Session;
 using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Interfaces;
@@ -12,4 +13,5 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     public IWebHostEnvironment Environment { get; }
     public ILogger<IOLoggerType> Logger { get; }
     public TViewModel ViewModel { get; }
+    public IIOSession? Session { get; set; }
 }

@@ -15,6 +15,7 @@ namespace IOBootstrap.NET.BackOffice.BackOffice.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
+[IOSessionAttribute]
 public class IOBackOfficeDefaultController : IOBackOfficeController<IOBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOBackOfficeDefaultController(IConfiguration configuration,

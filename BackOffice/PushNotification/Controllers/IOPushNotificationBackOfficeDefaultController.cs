@@ -14,6 +14,7 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
+[IOSessionAttribute]
 public class IOPushNotificationBackOfficeDefaultController : IOPushNotificationBackOfficeController<IOPushNotificationBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOPushNotificationBackOfficeDefaultController(IConfiguration configuration,

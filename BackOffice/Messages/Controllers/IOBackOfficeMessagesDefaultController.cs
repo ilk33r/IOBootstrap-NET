@@ -14,6 +14,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
+[IOSessionAttribute]
 public class IOBackOfficeMessagesDefaultController : IOBackOfficeMessagesController<IOBackOfficeMessagesDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOBackOfficeMessagesDefaultController(IConfiguration configuration,

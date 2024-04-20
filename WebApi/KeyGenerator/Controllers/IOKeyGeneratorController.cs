@@ -8,11 +8,13 @@ using IOBootstrap.NET.Common.Logger;
 using Microsoft.AspNetCore.Mvc;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.DataAccess.Context;
+using Microsoft.AspNetCore.Cors;
 
 #if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers;
 
 // [Obsolete("This Method is Deprecated", false)]
+[EnableCors]
 [Produces("application/json")]
 [ApiController]
 [Route("[controller]")]

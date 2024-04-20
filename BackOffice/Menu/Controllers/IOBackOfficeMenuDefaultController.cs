@@ -14,6 +14,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
+[IOSessionAttribute]
 public class IOBackOfficeMenuDefaultController : IOBackOfficeMenuController<IOBackOfficeMenuDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOBackOfficeMenuDefaultController(IConfiguration configuration,

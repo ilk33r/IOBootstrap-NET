@@ -68,9 +68,13 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         CheckHttpsRequired(context);
 
         // Update view model request value
-        Session = new IOSessionManager(Request, Configuration);
         ViewModel.Request = Request;
-        ViewModel.Session = Session;
+
+        if (HasControllerAttribute<IOSessionAttribute>(context))
+        {
+            Session = new IOSessionManager(Request, Configuration);
+            ViewModel.Session = Session;
+        }
 
         // Check Nonce
         if (HasControllerAttribute<IONonceRequiredAttribute>(context))
@@ -143,8 +147,11 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         base.OnActionExecuted(context);
         
         // Update nonce
-        string nonce = this.UpdateNonce();
-        HttpContext.Response.Headers.Add(IORequestHeaderConstants.Nonce, nonce);
+        if (Session != null)
+        {
+            string nonce = this.UpdateNonce();
+            HttpContext.Response.Headers.Add(IORequestHeaderConstants.Nonce, nonce);
+        }
 
         // Check result type
         string? jsonString = null;
@@ -358,6 +365,15 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         {
             // Loop throught descriptors
             foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
+            {
+                if (descriptor.AttributeType == typeof(T))
+                {
+                    return true;
+                }
+            }
+
+            // Loop throught descriptors
+            foreach (CustomAttributeData descriptor in actionDescriptor.ControllerTypeInfo.CustomAttributes)
             {
                 if (descriptor.AttributeType == typeof(T))
                 {

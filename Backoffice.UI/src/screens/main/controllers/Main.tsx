@@ -22,6 +22,7 @@ class Main extends BOController<MainProps, MainState> {
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         this.service.baseUrl = (process.env.REACT_APP_API_URL === undefined) ? "" : process.env.REACT_APP_API_URL;
+        this.service.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         const authorization = (process.env.REACT_APP_AUTHORIZATION === undefined) ? "" : process.env.REACT_APP_AUTHORIZATION;
         const clientID = (process.env.REACT_APP_BACKOFFICE_CLIENI_ID === undefined) ? "" : process.env.REACT_APP_BACKOFFICE_CLIENI_ID;

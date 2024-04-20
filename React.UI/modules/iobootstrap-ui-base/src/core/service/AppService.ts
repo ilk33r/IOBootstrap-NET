@@ -3,17 +3,16 @@ import BaseResponseModel from "../../common/models/BaseResponseModel";
 import { IAppServiceHeaderInterceptor } from "./IAppServiceHeaderInterceptor";
 import DIHooks from "../../di/DIHooks";
 
-type AppServiceBlobHandler = (blob: Blob) => void;
+type AppServiceBlobHandler = (blob: Blob | null, response: BaseResponseModel | null) => void;
 type AppServiceSuccessHandler<T extends BaseResponseModel> = (response: T) => void;
 type AppServiceErrorHandler = (error: string) => void;
 
 class AppService {
 
+    public appServiceHeaderInterceptor: IAppServiceHeaderInterceptor;
     public baseUrl: string;
 
     private static _instance: AppService;
-
-    private appServiceHeaderInterceptor: IAppServiceHeaderInterceptor;
 
     private constructor() {
         this.baseUrl = "";
@@ -48,7 +47,7 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.json()
+            return response.json();
         });
     }
 
@@ -77,7 +76,7 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.json()
+            return response.json();
         });
     }
 
@@ -106,15 +105,19 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.json()
+            return response.json();
         });
     }
 
     public downloadFile(path: string, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
         this.downloadFileAsync(requestUrl)
-        .then(blob => {
-            successHandler(blob);
+        .then(data => {
+            if (data instanceof Blob) {
+                successHandler(data, null);
+            } else {
+                successHandler(null, data);
+            }
         })
         .catch(errorData => {
             const response = errorData as { message: string }
@@ -133,15 +136,24 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.blob()
+            const responseContentType = this.getResponseContentType(response.headers);
+            if (responseContentType != null && responseContentType.includes("application/json")) {
+                return response.json();
+            }
+
+            return response.blob();
         });
     }
 
     public postDownloadFile(path: string, request: BaseRequestModel, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
         this.postDownloadFileAsync(requestUrl, request)
-        .then(blob => {
-            successHandler(blob);
+        .then(data => {
+            if (data instanceof Blob) {
+                successHandler(data, null);
+            } else {
+                successHandler(null, data);
+            }
         })
         .catch(errorData => {
             const response = errorData as { message: string }
@@ -161,7 +173,12 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.blob()
+            const responseContentType = this.getResponseContentType(response.headers);
+            if (responseContentType != null && responseContentType.includes("application/json")) {
+                return response.json();
+            }
+
+            return response.blob();
         });
     }
 
@@ -192,8 +209,20 @@ class AppService {
         })
         .then(response => {
             this.appServiceHeaderInterceptor.interceptResponseHeaders(response.headers);
-            return response.json()
+            return response.json();
         });
+    }
+
+    private getResponseContentType(headers: Headers): string | null {
+        let contentType: string | null = null;
+
+        headers.forEach((value: string, key: string) => {
+            if (key.toLowerCase() === "content-type") {
+                contentType = value;
+            }
+        });
+
+        return contentType;
     }
 }
 

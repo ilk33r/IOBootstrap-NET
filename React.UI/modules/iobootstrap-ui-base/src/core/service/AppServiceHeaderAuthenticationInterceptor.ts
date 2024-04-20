@@ -9,6 +9,7 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
     private clientID: string;
     private clientSecret: string;
     private keyID: string | null;
+    private sessionID: string | null;
     private symmetricKey: string | null;
     private symmetricIV: string | null;
     private nonce: string | null;
@@ -18,6 +19,7 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
         this.clientID = "";
         this.clientSecret = "";
         this.keyID = null;
+        this.sessionID = null;
         this.symmetricKey = null;
         this.symmetricIV = null;
         this.nonce = null;
@@ -47,6 +49,10 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
             if (key.toLowerCase() === "x-nonce") {
                 this.nonce = value;
             }
+
+            if (key.toLowerCase() === "x-session-id") {
+                this.sessionID = value;
+            }
         });
     }
 
@@ -67,6 +73,10 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
 
         if (this.symmetricIV != null) {
             headers['X-SYMMETRIC-IV'] = this.symmetricIV;
+        }
+
+        if (this.sessionID != null) {
+            headers['X-SESSION-ID'] = this.sessionID;
         }
 
         if (!AppCryptography.Instance.initilized) {

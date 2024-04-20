@@ -12,10 +12,10 @@ import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
 import { CalloutView, IndicatorView, UploadModalView } from 'iobootstrap-bo-base';
 import DIUserRoleHooks from './di/DIUserRoleHooks';
-import DICryptographyHooks from './di/DICryptographyHooks';
+import DIControllerHooks from './di/DIControllerHooks';
 
 DIUserRoleHooks.setup();
-DICryptographyHooks.setup();
+DIControllerHooks.setup();
 
 let calloutViewRef = React.createRef<CalloutView>();
 const calloutView = (<CalloutView ref={calloutViewRef} />);

@@ -5,7 +5,7 @@ import GenerateBOPageRequestModel from "../models/GenerateBOPageRequestModel";
 import GenerateBOPageResponseModel from "../models/GenerateBOPageResponseModel";
 import CodeBlockView from "../views/CodeBlockView";
 import GenerateBOPageFilesRequestModel from "../models/GenerateBOPageFilesRequestModel";
-import { CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class GenerateBOPageController extends BOController<GenerateBOPageProps, GenerateBOPageState> {
@@ -50,9 +50,13 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
         const request = this.createRequest();
         
         const weakSelf = this;
-        this.service.postDownloadFile(requestPath, request, function (blob: Blob) {
+        this.service.postDownloadFile(requestPath, request, function (blob: Blob | null, response: BaseResponseModel | null) {
             weakSelf.indicatorPresenter.dismiss();
-            weakSelf.downloadFile(blob, "APIFiles.zip");
+            if (response != null) {
+                weakSelf.handleServiceSuccess(response)
+            } else if (blob != null) {
+                weakSelf.downloadFile(blob, "APIFiles.zip");
+            }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
@@ -65,9 +69,13 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
         const request = this.createRequest();
         
         const weakSelf = this;
-        this.service.postDownloadFile(requestPath, request, function (blob: Blob) {
+        this.service.postDownloadFile(requestPath, request, function (blob: Blob | null, response: BaseResponseModel | null) {
             weakSelf.indicatorPresenter.dismiss();
-            weakSelf.downloadFile(blob, "UIFiles.zip");
+            if (response != null) {
+                weakSelf.handleServiceSuccess(response)
+            } else if (blob != null) {
+                weakSelf.downloadFile(blob, "UIFiles.zip");
+            }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });

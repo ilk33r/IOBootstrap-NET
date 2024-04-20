@@ -12,16 +12,25 @@ import React from 'react';
 import type { WindowMessageModel } from '../../common/models/WindowMessageModel';
 import { UploadModalViewPresenter } from '../inerfaces/UploadModalViewPresenter';
 import UploadModalPresenter from '../presenters/UploadModalPresenter';
+import DIHooks from '../../di/DIHooks';
 
 class Controller<TProps, TState> extends React.Component<TProps, TState> implements DI {
 
-    public appContext: AppContext = AppContext.Instance;
-    public service: AppService = AppService.Instance;
-    public storage: AppStorage = AppStorage.Instance;
+    public appContext: AppContext;
+    public service: AppService;
+    public storage: AppStorage;
 
     public calloutPresenter: CalloutViewPresenter = CalloutPresenter.Instance;
     public indicatorPresenter: IndicatorViewPresenter = IndicatorPresenter.Instance;
     public uploadModalPresenter: UploadModalViewPresenter = UploadModalPresenter.Instance;
+
+    public constructor(props: TProps) {
+        super(props);
+
+        this.appContext = DIHooks.Instance.singletonForKey("appContext");
+        this.service = DIHooks.Instance.singletonForKey("service");
+        this.storage = DIHooks.Instance.singletonForKey("storage");
+    }
 
     public componentDidMount?(): void {
     }

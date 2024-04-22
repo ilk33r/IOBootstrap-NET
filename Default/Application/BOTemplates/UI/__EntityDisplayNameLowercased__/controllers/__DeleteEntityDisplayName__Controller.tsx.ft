@@ -32,7 +32,7 @@ class __DeleteEntityDisplayName__Controller extends BOController<{}, {}> {
         request.__EntityIDJsonProperty__ = this._deleteRequest.__EntityIDJsonProperty__;
 
         const weakSelf = this;
-        this.service.post(requestPath, request, function (response: BaseResponseModel) {
+        this.service.delete(requestPath, request, function (response: BaseResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 weakSelf.showCalloutAndRedirectToHash("__EntityDisplayName__ has been deleted successfully.", "__ListEntityName__");
             }

@@ -46,7 +46,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     [IORequireHTTPS]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
-    [HttpPost("[action]")]
+    [HttpDelete("[action]")]
     public ResponseModel Delete__EntityItemName__([FromBody] BO__DeleteEntityDisplayName__RequestModel requestModel)
     {
         // Delete item

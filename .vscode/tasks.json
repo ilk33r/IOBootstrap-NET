@@ -125,6 +125,22 @@
             "command": "host start",
             "isBackground": true,
             "problemMatcher": "$func-dotnet-watch"
-        }
+        },
+        {
+            "label": "buildIOBootstraptCLI",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "build",
+                "-gcflags=all=-N -l",
+                "-tags",
+                "COMPILE_DEV",
+                "-o",
+                "${workspaceFolder}/CLI/shared/__debug_bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/CLI/shared"
+            }
+        },
     ]
 }

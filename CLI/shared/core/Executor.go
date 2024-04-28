@@ -33,11 +33,11 @@ func NewExecutor(logger *Logger, name string, args ...string) Executor {
 	}
 }
 
-func (executor Executor) WorkingDirectory(dir string) {
+func (executor *Executor) WorkingDirectory(dir string) {
 	executor.command.Dir = dir
 }
 
-func (executor Executor) Run() {
+func (executor *Executor) Run() {
 	stdout, err := executor.command.StdoutPipe()
 	if err != nil {
 		executor.logger.LogErrorf("%v", err)

@@ -38,12 +38,13 @@ func main() {
 	plugin := loader.LoadPlugin(SharedLibraryPath)
 	logger := loader.InitializeLogger(plugin)
 	cliStep := loader.InitializeCLIStep(plugin)
+	executorInitializer := loader.InitializeExecutorInitializer(plugin)
 
 	if outputPath == "" {
 		logger.LogErrorf("Invalid output path %q", outputPath)
 	}
 
-	fmt.Fprintf(os.Stdout, "%v", cliStep)
+	fmt.Fprintf(os.Stdout, "%v %v", cliStep, executorInitializer)
 	/*
 		cliStep := core.NewCliStep()
 

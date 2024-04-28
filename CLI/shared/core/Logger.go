@@ -51,6 +51,16 @@ func LogInfof(format string, v ...any) {
 	fmt.Fprint(os.Stdout, logString)
 }
 
+func LogInfoSeparator(len int) {
+	var separatorString = "\t"
+	for i := 0; i < len; i++ {
+		separatorString += "-"
+	}
+
+	coloredFormat := "\n" + Cyan + separatorString + Reset + "\n"
+	fmt.Fprint(os.Stdout, coloredFormat)
+}
+
 func LogSuccess(message string) {
 	coloredFormat := "\t" + Green + message + Reset + "\n"
 	fmt.Fprint(os.Stdout, coloredFormat)
@@ -88,4 +98,9 @@ func LogVerbosef(format string, v ...any) {
 		logString := fmt.Sprintf(coloredFormat, v...)
 		fmt.Fprint(os.Stdout, logString)
 	}
+}
+
+func LogMessage(message string) {
+	coloredFormat := message
+	fmt.Fprint(os.Stdout, coloredFormat)
 }

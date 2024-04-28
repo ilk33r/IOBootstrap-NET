@@ -14,10 +14,10 @@ func usage() {
 }
 
 var (
-	uploadToken   = flag.String("t", "", "Upload token")
-	applicationID = flag.Int("a", 0, "Application ID")
-	groupID       = flag.Int("g", 0, "Group ID")
-	releaseNotes  = flag.String("r", "", "Release notes")
+	workingDirectory = flag.String("w", "", "Working directory")
+	applicationID    = flag.Int("a", 0, "Application ID")
+	groupID          = flag.Int("g", 0, "Group ID")
+	releaseNotes     = flag.String("r", "", "Release notes")
 )
 
 func main() {
@@ -43,6 +43,7 @@ func main() {
 		core.LogErrorf("Invalid output path %q", outputPath)
 	}
 
-	command := "dotnet publish --configuration Staging --output " + outputPath
-	core.LogInfo(command)
+	executor := core.NewExecutor("dotnet", "publish", "--configuration", "Staging", "--output", outputPath)
+	executor.WorkingDirectory(*workingDirectory)
+	executor.Run()
 }

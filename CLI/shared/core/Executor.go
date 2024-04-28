@@ -6,7 +6,8 @@ import (
 )
 
 type Executor struct {
-	command *exec.Cmd
+	command     *exec.Cmd
+	commandName *string
 }
 
 func NewExecutor(name string, args ...string) Executor {
@@ -21,7 +22,8 @@ func NewExecutor(name string, args ...string) Executor {
 	LogInfoSeparator(len(commandString))
 
 	return Executor{
-		command: exec.Command(name, args...),
+		command:     exec.Command(name, args...),
+		commandName: &name,
 	}
 }
 
@@ -65,4 +67,7 @@ func (shellExecuter Executor) Run() {
 			break
 		}
 	}
+
+	LogInfof("Command %s", *shellExecuter.commandName)
+	LogSuccess("Success")
 }

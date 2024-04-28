@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"iobootstrap-cli-shared/core"
 	"os"
+	"time"
 )
 
 func usage() {
@@ -43,7 +44,26 @@ func main() {
 		core.LogErrorf("Invalid output path %q", outputPath)
 	}
 
-	executor := core.NewExecutor("dotnet", "publish", "--configuration", "Staging", "--output", outputPath)
-	executor.WorkingDirectory(*workingDirectory)
-	executor.Run()
+	cliStep := core.NewCliStep()
+
+	cliStep.StartStep("dotnet publish")
+	// executor := core.NewExecutor("dotnet", "publish", "--configuration", "Staging", "--output", outputPath)
+	// executor.WorkingDirectory(*workingDirectory)
+	// executor.Run()
+	time.Sleep(1 * time.Second)
+	cliStep.EndStep()
+
+	cliStep.StartStep("dotnet restore")
+	time.Sleep(2 * time.Second)
+	cliStep.EndStep()
+
+	cliStep.StartStep("dotnet clean")
+	time.Sleep(1 * time.Second)
+	cliStep.EndStep()
+
+	cliStep.StartStep("dotnet build")
+	time.Sleep(1 * time.Second)
+	cliStep.EndStep()
+
+	cliStep.Summary()
 }

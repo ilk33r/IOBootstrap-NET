@@ -104,3 +104,8 @@ func LogMessage(message string) {
 	coloredFormat := message
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
+
+func LogMessagef(message string, v ...any) {
+	logString := fmt.Sprintf(message, v...)
+	fmt.Fprint(os.Stdout, logString)
+}

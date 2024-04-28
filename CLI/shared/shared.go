@@ -2,4 +2,5 @@ package main
 
 import "iobootstrap-cli-shared/core"
 
-var CLIStep = core.NewCliStep()
+var Logger = core.InitializeLogger()
+var CLIStep = core.NewCliStep(&Logger)

@@ -5,7 +5,14 @@ import (
 	"time"
 )
 
+type ICLIStep interface {
+	StartStep(name string)
+	EndStep()
+	Summary()
+}
+
 type CLIStep struct {
+	logger           *Logger
 	startTime        int64
 	steps            *[]string
 	stepStartTimes   *[]int64
@@ -13,13 +20,14 @@ type CLIStep struct {
 	currentStepIndex *int
 }
 
-func NewCliStep() CLIStep {
+func NewCliStep(logger *Logger) CLIStep {
 	steps := []string{}
 	stepStartTimes := []int64{}
 	stepEndTimes := []int64{}
 	currentStepIndex := 0
 
 	return CLIStep{
+		logger:           logger,
 		startTime:        time.Now().Unix(),
 		steps:            &steps,
 		stepStartTimes:   &stepStartTimes,
@@ -94,10 +102,10 @@ func (step *CLIStep) Summary() {
 	var headerTitle = " Summary"
 	headerTitle = step.appendSpace(&headerTitle, len(header)-2)
 
-	LogMessagef("\n+%s+\n|%s %s %s|", header, Green, headerTitle, Reset)
-	LogMessagef("\n+%s+", tableHeader)
-	LogMessagef("\n|%s|%s|", stepNameHeader, stepTimeHeader)
-	LogMessagef("\n+%s+", tableHeader)
+	step.logger.LogMessagef("\n+%s+\n|%s %s %s|", header, LogGreen, headerTitle, LogReset)
+	step.logger.LogMessagef("\n+%s+", tableHeader)
+	step.logger.LogMessagef("\n|%s|%s|", stepNameHeader, stepTimeHeader)
+	step.logger.LogMessagef("\n+%s+", tableHeader)
 
 	for i := 0; i < totalStep; i++ {
 		var currentFormattedName = formattedNames[i]
@@ -106,8 +114,8 @@ func (step *CLIStep) Summary() {
 		var currentFormattedTime = formattedTimes[i]
 		currentFormattedTime = step.appendSpace(&currentFormattedTime, maxTimeLength)
 
-		LogMessagef("\n|%s|%s|", currentFormattedName, currentFormattedTime)
-		LogMessagef("\n+%s+", tableHeader)
+		step.logger.LogMessagef("\n|%s|%s|", currentFormattedName, currentFormattedTime)
+		step.logger.LogMessagef("\n+%s+", tableHeader)
 	}
 
 	var stepNameFooter = " Total"
@@ -116,17 +124,17 @@ func (step *CLIStep) Summary() {
 	var stepTimeFooter = fmt.Sprintf(" %d (s)", totalTime)
 	stepTimeFooter = step.appendSpace(&stepTimeFooter, maxTimeLength)
 
-	LogMessagef("\n|%s%s%s|%s|", Magenta, stepNameFooter, Reset, stepTimeFooter)
-	LogMessagef("\n+%s+\n", tableHeader)
+	step.logger.LogMessagef("\n|%s%s%s|%s|", LogMagenta, stepNameFooter, LogReset, stepTimeFooter)
+	step.logger.LogMessagef("\n+%s+\n", tableHeader)
 }
 
 func (step *CLIStep) logStartStep(name string) {
 	formattedStepName := fmt.Sprintf("--- %s ---", name)
 	separatorString := step.separatorString(len(formattedStepName))
-	LogMessage("\nStep\n")
-	LogSuccess(separatorString)
-	LogSuccess(formattedStepName)
-	LogSuccess(separatorString)
+	step.logger.LogMessage("\nStep\n")
+	step.logger.LogSuccess(separatorString)
+	step.logger.LogSuccess(formattedStepName)
+	step.logger.LogSuccess(separatorString)
 }
 
 func (step *CLIStep) logEndStep(name string, stepEndTime int64, stepStartTime int64) {
@@ -146,12 +154,12 @@ func (step *CLIStep) logEndStep(name string, stepEndTime int64, stepStartTime in
 	var headerTitle = " Step Summary"
 	headerTitle = step.appendSpace(&headerTitle, len(header)-2)
 
-	LogMessagef("\n+%s+\n|%s %s %s|", header, Green, headerTitle, Reset)
-	LogMessagef("\n+%s+", tableHeader)
-	LogMessagef("\n|%s|%s|", stepNameHeader, stepTimeHeader)
-	LogMessagef("\n+%s+", tableHeader)
-	LogMessagef("\n|%s|%s|", formattedName, formattedTime)
-	LogMessagef("\n+%s+\n", tableHeader)
+	step.logger.LogMessagef("\n+%s+\n|%s %s %s|", header, LogGreen, headerTitle, LogReset)
+	step.logger.LogMessagef("\n+%s+", tableHeader)
+	step.logger.LogMessagef("\n|%s|%s|", stepNameHeader, stepTimeHeader)
+	step.logger.LogMessagef("\n+%s+", tableHeader)
+	step.logger.LogMessagef("\n|%s|%s|", formattedName, formattedTime)
+	step.logger.LogMessagef("\n+%s+\n", tableHeader)
 }
 
 func (step *CLIStep) separatorString(len int) string {

@@ -11,101 +11,122 @@ import (
 type Attribute int
 
 // Foreground text colors
-const Reset = "\033[0m"
-const Red = "\033[31m"
-const Green = "\033[32m"
-const Yellow = "\033[33m"
-const Blue = "\033[34m"
-const Magenta = "\033[35m"
-const Cyan = "\033[36m"
-const Gray = "\033[37m"
-const White = "\033[97m"
+const LogReset = "\033[0m"
+const LogRed = "\033[31m"
+const LogGreen = "\033[32m"
+const LogYellow = "\033[33m"
+const LogBlue = "\033[34m"
+const LogMagenta = "\033[35m"
+const LogCyan = "\033[36m"
+const LogGray = "\033[37m"
+const LogWhite = "\033[97m"
 
-func InitializeLogger() {
+type ILogger interface {
+	LogError(message string)
+	LogErrorf(format string, v ...any)
+	LogInfo(message string)
+	LogInfof(format string, v ...any)
+	LogInfoSeparator(len int)
+	LogSuccess(message string)
+	LogSuccessf(format string, v ...any)
+	LogWarning(message string)
+	LogWarningf(format string, v ...any)
+	LogVerbose(message string)
+	LogVerbosef(format string, v ...any)
+	LogMessage(message string)
+	LogMessagef(message string, v ...any)
+}
+
+type Logger struct {
+}
+
+func InitializeLogger() Logger {
 	// Configure logging for a command-line program.
 	log.SetFlags(0)
 	log.SetPrefix("iobootstrap-cli: ")
+
+	return Logger{}
 }
 
-func LogError(message string) {
-	coloredFormat := "\n" + Red + message + Reset + "\n"
+func (logger Logger) LogError(message string) {
+	coloredFormat := "\n" + LogRed + message + LogReset + "\n"
 	fmt.Fprint(os.Stderr, coloredFormat)
 	os.Exit(1)
 }
 
-func LogErrorf(format string, v ...any) {
-	coloredFormat := "\n" + Red + format + Reset + "\n"
+func (logger Logger) LogErrorf(format string, v ...any) {
+	coloredFormat := "\n" + LogRed + format + LogReset + "\n"
 	logString := fmt.Sprintf(coloredFormat, v...)
 	fmt.Fprint(os.Stderr, logString)
 	os.Exit(1)
 }
 
-func LogInfo(message string) {
-	coloredFormat := Magenta + message + Reset
+func (logger Logger) LogInfo(message string) {
+	coloredFormat := LogMagenta + message + LogReset
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
 
-func LogInfof(format string, v ...any) {
-	coloredFormat := Magenta + format + Reset
+func (logger Logger) LogInfof(format string, v ...any) {
+	coloredFormat := LogMagenta + format + LogReset
 	logString := fmt.Sprintf(coloredFormat, v...)
 	fmt.Fprint(os.Stdout, logString)
 }
 
-func LogInfoSeparator(len int) {
+func (logger Logger) LogInfoSeparator(len int) {
 	var separatorString = "\t"
 	for i := 0; i < len; i++ {
 		separatorString += "-"
 	}
 
-	coloredFormat := "\n" + Cyan + separatorString + Reset + "\n"
+	coloredFormat := "\n" + LogCyan + separatorString + LogReset + "\n"
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
 
-func LogSuccess(message string) {
-	coloredFormat := "\t" + Green + message + Reset + "\n"
+func (logger Logger) LogSuccess(message string) {
+	coloredFormat := "\t" + LogGreen + message + LogReset + "\n"
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
 
-func LogSuccessf(format string, v ...any) {
-	coloredFormat := "\t" + Green + format + Reset + "\n"
+func (logger Logger) LogSuccessf(format string, v ...any) {
+	coloredFormat := "\t" + LogGreen + format + LogReset + "\n"
 	logString := fmt.Sprintf(coloredFormat, v...)
 	fmt.Fprint(os.Stdout, logString)
 }
 
-func LogWarning(message string) {
-	coloredFormat := Yellow + message + Reset + "\n"
+func (logger Logger) LogWarning(message string) {
+	coloredFormat := LogYellow + message + LogReset + "\n"
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
 
-func LogWarningf(format string, v ...any) {
-	coloredFormat := Yellow + format + Reset + "\n"
+func (logger Logger) LogWarningf(format string, v ...any) {
+	coloredFormat := LogYellow + format + LogReset + "\n"
 	logString := fmt.Sprintf(coloredFormat, v...)
 	fmt.Fprint(os.Stdout, logString)
 }
 
-func LogVerbose(message string) {
+func (logger Logger) LogVerbose(message string) {
 	configuration := common.GetConfiguration()
 	if configuration.Verbose() {
-		coloredFormat := "\n" + Gray + message + Reset + "\n"
+		coloredFormat := "\n" + LogGray + message + LogReset + "\n"
 		fmt.Fprint(os.Stdout, coloredFormat)
 	}
 }
 
-func LogVerbosef(format string, v ...any) {
+func (logger Logger) LogVerbosef(format string, v ...any) {
 	configuration := common.GetConfiguration()
 	if configuration.Verbose() {
-		coloredFormat := "\n" + Gray + format + Reset + "\n"
+		coloredFormat := "\n" + LogGray + format + LogReset + "\n"
 		logString := fmt.Sprintf(coloredFormat, v...)
 		fmt.Fprint(os.Stdout, logString)
 	}
 }
 
-func LogMessage(message string) {
+func (logger Logger) LogMessage(message string) {
 	coloredFormat := message
 	fmt.Fprint(os.Stdout, coloredFormat)
 }
 
-func LogMessagef(message string, v ...any) {
+func (logger Logger) LogMessagef(message string, v ...any) {
 	logString := fmt.Sprintf(message, v...)
 	fmt.Fprint(os.Stdout, logString)
 }

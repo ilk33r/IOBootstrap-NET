@@ -16,6 +16,23 @@ func LoadPlugin(path string) *plugin.Plugin {
 	return sharedPlugin
 }
 
+func InitializeLogger(plugin *plugin.Plugin) Logger {
+	logger, err := plugin.Lookup("Logger")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
+		os.Exit(1)
+	}
+
+	var loggerInstance Logger
+	loggerInstance, ok := logger.(Logger)
+	if !ok {
+		fmt.Fprint(os.Stderr, "Unexpected type from module symbol")
+		os.Exit(1)
+	}
+
+	return loggerInstance
+}
+
 func InitializeCLIStep(plugin *plugin.Plugin) CLIStep {
 	cliStep, err := plugin.Lookup("CLIStep")
 	if err != nil {

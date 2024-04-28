@@ -5,21 +5,27 @@ import (
 	"os/exec"
 )
 
+type IExecutor interface {
+	WorkingDirectory(dir string)
+	Run()
+}
+
 type Executor struct {
+	logger      *Logger
 	command     *exec.Cmd
 	commandName *string
 }
 
-func NewExecutor(name string, args ...string) Executor {
+func NewExecutor(logger *Logger, name string, args ...string) Executor {
 	var commandString = name
 
 	for argIndex := range args {
 		commandString += fmt.Sprintf(" %v", args[argIndex])
 	}
 
-	LogInfo("Starting command:\n")
-	LogSuccess(commandString)
-	LogInfoSeparator(len(commandString))
+	logger.LogInfo("Starting command:\n")
+	logger.LogSuccess(commandString)
+	logger.LogInfoSeparator(len(commandString))
 
 	return Executor{
 		command:     exec.Command(name, args...),
@@ -27,23 +33,23 @@ func NewExecutor(name string, args ...string) Executor {
 	}
 }
 
-func (shellExecuter Executor) WorkingDirectory(dir string) {
-	shellExecuter.command.Dir = dir
+func (executor Executor) WorkingDirectory(dir string) {
+	executor.command.Dir = dir
 }
 
-func (shellExecuter Executor) Run() {
-	stdout, err := shellExecuter.command.StdoutPipe()
+func (executor Executor) Run() {
+	stdout, err := executor.command.StdoutPipe()
 	if err != nil {
-		LogErrorf("%v", err)
+		executor.logger.LogErrorf("%v", err)
 	}
 
-	stderr, err := shellExecuter.command.StderrPipe()
+	stderr, err := executor.command.StderrPipe()
 	if err != nil {
-		LogErrorf("%v", err)
+		executor.logger.LogErrorf("%v", err)
 	}
 
-	if err = shellExecuter.command.Start(); err != nil {
-		LogErrorf("%v", err)
+	if err = executor.command.Start(); err != nil {
+		executor.logger.LogErrorf("%v", err)
 	}
 
 	for {
@@ -52,7 +58,7 @@ func (shellExecuter Executor) Run() {
 
 		if stdOutSize > 0 {
 			stdOutString := string(stdOutBuffer)
-			LogMessage(stdOutString)
+			executor.logger.LogMessage(stdOutString)
 		}
 
 		stdErrBuffer := make([]byte, 1024)
@@ -60,7 +66,7 @@ func (shellExecuter Executor) Run() {
 
 		if stdErrSize > 0 {
 			stdErrString := string(stdErrBuffer)
-			LogError(stdErrString)
+			executor.logger.LogError(stdErrString)
 		}
 
 		if stdOutErr != nil && stdErrErr != nil {
@@ -68,6 +74,6 @@ func (shellExecuter Executor) Run() {
 		}
 	}
 
-	LogInfof("Command %s", *shellExecuter.commandName)
-	LogSuccess("Success")
+	executor.logger.LogInfof("Command %s", *executor.commandName)
+	executor.logger.LogSuccess("Success")
 }

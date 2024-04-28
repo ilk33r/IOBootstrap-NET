@@ -20,9 +20,6 @@ var (
 )
 
 func main() {
-	// Configure logging for a command-line program.
-	// core.InitializeLogger()
-
 	// Parse flags.
 	flag.Usage = usage
 	flag.Parse()
@@ -38,12 +35,14 @@ func main() {
 		outputPath = args[0]
 	}
 
+	plugin := loader.LoadPlugin(SharedLibraryPath)
+	logger := loader.InitializeLogger(plugin)
+	cliStep := loader.InitializeCLIStep(plugin)
+
 	if outputPath == "" {
-		// core.LogErrorf("Invalid output path %q", outputPath)
+		logger.LogErrorf("Invalid output path %q", outputPath)
 	}
 
-	plugin := loader.LoadPlugin(SharedLibraryPath)
-	cliStep := loader.InitializeCLIStep(plugin)
 	fmt.Fprintf(os.Stdout, "%v", cliStep)
 	/*
 		cliStep := core.NewCliStep()

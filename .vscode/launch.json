@@ -104,11 +104,13 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "${workspaceFolder}/CLI/shared/__debug_bin",
-            "cwd": "${workspaceFolder}/CLI/shared",
+            "program": "${workspaceFolder}/CLI/dotnet/__debug_bin",
+            "cwd": "${workspaceFolder}/CLI/dotnet",
             "console": "integratedTerminal",
-            "preLaunchTask": "buildIOBootstraptCLI",
+            "preLaunchTask": "buildIOBootstraptCLIDotnet",
             "args": [
+                "-w",
+                "${workspaceFolder}",
                 "${workspaceFolder}/API-Files/Staging"
             ]
         },

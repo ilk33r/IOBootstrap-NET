@@ -127,12 +127,13 @@
             "problemMatcher": "$func-dotnet-watch"
         },
         {
-            "label": "buildIOBootstraptCLI",
+            "label": "buildIOBootstraptCLIShared",
             "type": "shell",
             "command": "go",
             "args": [
                 "build",
                 "-gcflags=all=-N -l",
+                "-buildmode=plugin",
                 "-tags",
                 "COMPILE_DEV",
                 "-o",
@@ -141,6 +142,27 @@
             "options": {
                 "cwd": "${workspaceFolder}/CLI/shared"
             }
+        },
+        {
+            "label": "buildIOBootstraptCLIDotnet",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "build",
+                "-gcflags=all=-N -l",
+                "-tags",
+                "COMPILE_DEV",
+                "-ldflags=\"-X 'main.SharedLibraryPath=${workspaceFolder}/CLI/shared/__debug_bin'\"",
+                "-o",
+                "${workspaceFolder}/CLI/dotnet/__debug_bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/CLI/dotnet"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "buildIOBootstraptCLIShared"
+            ]
         },
     ]
 }

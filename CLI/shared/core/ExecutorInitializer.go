@@ -1,7 +1,7 @@
 package core
 
 type IExecutorInitializer interface {
-	CreateExecutor(name string, args ...string) any
+	CreateExecutor(name string, args ...string) Executor
 }
 
 type ExecutorInitializer struct {
@@ -14,6 +14,6 @@ func NewExecutorInitializer(logger *Logger) ExecutorInitializer {
 	}
 }
 
-func (initializer *ExecutorInitializer) CreateExecutor(name string, args ...string) any {
+func (initializer *ExecutorInitializer) CreateExecutor(name string, args ...string) Executor {
 	return NewExecutor(initializer.logger, name, args...)
 }

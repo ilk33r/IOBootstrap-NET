@@ -68,7 +68,7 @@ func (step *CLIStep) Summary() {
 	var maxNameLength = 0
 	var maxTimeLength = 0
 
-	totalStep := (*step.currentStepIndex) - 1
+	totalStep := (*step.currentStepIndex)
 	for i := 0; i < totalStep; i++ {
 		currentStepName := (*step.steps)[i]
 		currentStepTime := (*step.stepStartTimes)[i]

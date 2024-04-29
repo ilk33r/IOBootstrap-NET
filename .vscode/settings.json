@@ -3,10 +3,6 @@
     "editor.rename.enablePreview": false,
     "workbench.editor.enablePreview": false,
     "csharp.maxProjectFileCountForDiagnosticAnalysis": 10000,
-    "azureFunctions.deploySubpath": "Functions/bin/Release/net6.0/publish",
-    "azureFunctions.projectLanguage": "C#",
-    "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.projectSubpath": "Functions",
-    "azureFunctions.preDeployTask": "publish (functions)"
+    "dotnet.defaultSolution": "IOBootstrap-NET.sln"
 }

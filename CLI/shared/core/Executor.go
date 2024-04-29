@@ -28,6 +28,7 @@ func NewExecutor(logger *Logger, name string, args ...string) Executor {
 	logger.LogInfoSeparator(len(commandString))
 
 	return Executor{
+		logger:      logger,
 		command:     exec.Command(name, args...),
 		commandName: &name,
 	}

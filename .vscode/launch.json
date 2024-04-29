@@ -109,6 +109,8 @@
             "console": "integratedTerminal",
             "preLaunchTask": "buildIOBootstraptCLIDotnet",
             "args": [
+                "-e",
+                "Staging",
                 "-w",
                 "${workspaceFolder}",
                 "${workspaceFolder}/API-Files/Staging"

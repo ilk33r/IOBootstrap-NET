@@ -1,25 +1,29 @@
 package main
 
 import (
-	"dotnet/loader"
 	"flag"
 	"fmt"
+	"iobootstrap-cli-dotnet/helper"
+	"iobootstrap-cli-shared/core"
 	"os"
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: iobootstrap-cli [options] [output]")
+	fmt.Fprintf(os.Stderr, "usage: iobootstrap-dotnet [options] [output]")
 	flag.PrintDefaults()
 	os.Exit(2)
 }
 
 var (
-	SharedLibraryPath = ""
-	workingDirectory  = flag.String("w", "", "Working directory")
-	environment       = flag.String("e", "", "Environment")
+	Version          = "dev"
+	workingDirectory = flag.String("w", "", "Working directory")
+	environment      = flag.String("e", "", "Environment")
+	checkVersion     = flag.String("v", "set", "Version")
 )
 
 func main() {
+	logger := core.InitializeLogger()
+
 	// Parse flags.
 	flag.Usage = usage
 	flag.Parse()
@@ -35,38 +39,25 @@ func main() {
 		outputPath = args[0]
 	}
 
-	plugin := loader.LoadPlugin(SharedLibraryPath)
-	logger := loader.InitializeLogger(plugin)
-	cliStep := loader.InitializeCLIStep(plugin)
-	executorInitializer := loader.InitializeExecutorInitializer(plugin)
+	if *checkVersion == "" {
+		fmt.Fprintf(os.Stderr, "Version: %s", Version)
+		flag.PrintDefaults()
+		os.Exit(2)
+	}
 
 	if outputPath == "" {
 		logger.LogErrorf("Invalid output path %q", outputPath)
 	}
 
-	fmt.Fprintf(os.Stdout, "%v %v", cliStep, executorInitializer)
-	/*
-		cliStep := core.NewCliStep()
+	cliStep := core.NewCliStep(&logger)
+	executorInitializer := core.NewExecutorInitializer(&logger)
+	dotnetHeler := helper.NewDotnetHelper(&logger, &cliStep, &executorInitializer, workingDirectory, environment, &outputPath)
 
-		cliStep.StartStep("dotnet publish")
-		// executor := core.NewExecutor("dotnet", "publish", "--configuration", "Staging", "--output", outputPath)
-		// executor.WorkingDirectory(*workingDirectory)
-		// executor.Run()
-		time.Sleep(1 * time.Second)
-		cliStep.EndStep()
+	dotnetHeler.PrepareOutput()
+	dotnetHeler.Restore()
+	dotnetHeler.Clean()
+	dotnetHeler.Publish(*environment, outputPath)
+	dotnetHeler.CreateWWW(outputPath)
 
-		cliStep.StartStep("dotnet restore")
-		time.Sleep(2 * time.Second)
-		cliStep.EndStep()
-
-		cliStep.StartStep("dotnet clean")
-		time.Sleep(1 * time.Second)
-		cliStep.EndStep()
-
-		cliStep.StartStep("dotnet build")
-		time.Sleep(1 * time.Second)
-		cliStep.EndStep()
-
-		cliStep.Summary()
-	*/
+	cliStep.Summary()
 }

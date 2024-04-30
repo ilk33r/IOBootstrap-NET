@@ -37,9 +37,10 @@ func (helper *ReactHelper) InstallDependencies() {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *ReactHelper) Clean(output string) {
+func (helper *ReactHelper) Clean() {
 	(*helper.cliStep).StartStep("Clean build")
 
+	output := *helper.outputPath
 	buildDirectory := filepath.Join(*helper.workingDirectory, "build")
 	if _, err := os.Stat(buildDirectory); !os.IsExist(err) {
 		removeError := os.RemoveAll(buildDirectory)
@@ -58,9 +59,10 @@ func (helper *ReactHelper) Clean(output string) {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *ReactHelper) Build(environment string) {
+func (helper *ReactHelper) Build() {
 	(*helper.cliStep).StartStep("Build application")
 
+	environment := *helper.environment
 	executor := (*helper.executorInitializer).CreateExecutor("npm", "run", "build:"+environment)
 	executor.WorkingDirectory(*helper.workingDirectory)
 	executor.Run()
@@ -68,9 +70,10 @@ func (helper *ReactHelper) Build(environment string) {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *ReactHelper) PrepareOutput(output string) {
+func (helper *ReactHelper) PrepareOutput() {
 	(*helper.cliStep).StartStep("Prepare output")
 
+	output := *helper.outputPath
 	if _, err := os.Stat(output); !os.IsExist(err) {
 		dirError := os.Mkdir(output, 0755)
 		if dirError != nil {
@@ -81,9 +84,10 @@ func (helper *ReactHelper) PrepareOutput(output string) {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *ReactHelper) CopyOutput(output string) {
+func (helper *ReactHelper) CopyOutput() {
 	(*helper.cliStep).StartStep("Copy output")
 
+	output := *helper.outputPath
 	buildDirectory := filepath.Join(*helper.workingDirectory, "build")
 	utilities.CopyDirectory(buildDirectory, output)
 

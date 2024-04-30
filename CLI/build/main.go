@@ -7,6 +7,7 @@ import (
 	"iobootstrap-cli-react/reacthelper"
 	"iobootstrap-cli-shared/core"
 	"os"
+	"path/filepath"
 )
 
 func usage() {
@@ -21,6 +22,8 @@ var (
 	reactEnvironment = flag.String("reactenv", "", "React environment")
 	workingDirectory = flag.String("sln", "", "Net.Core solution directory")
 	reactUIDirectory = flag.String("reactui", "", "React.UI directory")
+	boDirectory      = flag.String("backoffice", "", "BackOffice directory")
+	boOutputDirName  = flag.String("www-bo-output-dir-name", "", "BackOffice output directory name")
 	checkVersion     = flag.String("v", "set", "Version")
 )
 
@@ -67,12 +70,13 @@ func main() {
 	reactUIHelper.Clean()
 	reactUIHelper.Build()
 
-	// reactHelper := reacthelper.NewReactHelper(&logger, &cliStep, &executorInitializer, workingDirectory, reactEnvironment, &outputPath)
-	// reactHelper.InstallDependencies()
-	// reactHelper.Clean(outputPath)
-	// reactHelper.Build(*environment)
-	// reactHelper.PrepareOutput(outputPath)
-	// reactHelper.CopyOutput(outputPath)
+	boOutputPath := filepath.Join(outputPath, "wwwroot/"+*boOutputDirName)
+	reactHelper := reacthelper.NewReactHelper(&logger, &cliStep, &executorInitializer, boDirectory, reactEnvironment, &boOutputPath)
+	reactHelper.InstallDependencies()
+	reactHelper.Clean()
+	reactHelper.Build()
+	reactHelper.PrepareOutput()
+	reactHelper.CopyOutput()
 
 	cliStep.Summary()
 }

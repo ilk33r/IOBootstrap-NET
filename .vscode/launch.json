@@ -117,6 +117,10 @@
                 "${workspaceFolder}",
                 "-reactui",
                 "${workspaceFolder}/React.UI",
+                "-backoffice",
+                "${workspaceFolder}/Backoffice.UI",
+                "-www-bo-output-dir-name",
+                "backoffice",
                 "${workspaceFolder}/API-Files/Staging"
             ]
         },

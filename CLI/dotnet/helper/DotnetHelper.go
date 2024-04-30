@@ -6,9 +6,6 @@ import (
 	"path/filepath"
 )
 
-type IDotnetHelper interface {
-}
-
 type DotnetHelper struct {
 	logger              *core.Logger
 	cliStep             *core.CLIStep
@@ -32,7 +29,7 @@ func NewDotnetHelper(logger *core.Logger, cliStep *core.CLIStep, executorInitial
 func (helper *DotnetHelper) PrepareOutput() {
 	(*helper.cliStep).StartStep("Prepare output")
 
-	if _, err := os.Stat(*helper.outputPath); os.IsExist(err) {
+	if _, err := os.Stat(*helper.outputPath); !os.IsExist(err) {
 		removeError := os.RemoveAll(*helper.outputPath)
 		if removeError != nil {
 			(*helper.logger).LogErrorf("%v", removeError)
@@ -76,8 +73,8 @@ func (helper *DotnetHelper) CreateWWW(output string) {
 	(*helper.cliStep).StartStep("Create www dir")
 
 	wwwPath := filepath.Join(output, "wwwroot")
-	if _, err := os.Stat(wwwPath); os.IsNotExist(err) {
-		dirError := os.Mkdir(wwwPath, os.ModeDir)
+	if _, err := os.Stat(wwwPath); !os.IsNotExist(err) {
+		dirError := os.Mkdir(wwwPath, 0755)
 		if dirError != nil {
 			(*helper.logger).LogErrorf("%v", dirError)
 		}

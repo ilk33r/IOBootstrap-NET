@@ -104,16 +104,16 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "${workspaceFolder}/CLI/dotnet/__debug_bin",
-            "cwd": "${workspaceFolder}/CLI/dotnet",
+            "program": "${workspaceFolder}/CLI/react/__debug_bin",
+            "cwd": "${workspaceFolder}/CLI/react",
             "console": "integratedTerminal",
-            "preLaunchTask": "buildIOBootstraptCLIDotnet",
+            "preLaunchTask": "buildIOBootstraptCLIReact",
             "args": [
                 "-e",
-                "Staging",
+                "staging",
                 "-w",
-                "${workspaceFolder}",
-                "${workspaceFolder}/API-Files/Staging"
+                "${workspaceFolder}/Backoffice.UI",
+                "${workspaceFolder}/API-Files/Staging/wwwroot"
             ]
         },
     ]

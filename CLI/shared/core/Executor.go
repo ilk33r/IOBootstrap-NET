@@ -11,12 +11,13 @@ type IExecutor interface {
 }
 
 type Executor struct {
-	logger      *Logger
-	command     *exec.Cmd
-	commandName *string
+	logger        *Logger
+	command       *exec.Cmd
+	commandName   *string
+	disableSTDErr bool
 }
 
-func NewExecutor(logger *Logger, name string, args ...string) Executor {
+func NewExecutor(logger *Logger, disableSTDErr bool, name string, args ...string) Executor {
 	var commandString = name
 
 	for argIndex := range args {
@@ -28,9 +29,10 @@ func NewExecutor(logger *Logger, name string, args ...string) Executor {
 	logger.LogInfoSeparator(len(commandString))
 
 	return Executor{
-		logger:      logger,
-		command:     exec.Command(name, args...),
-		commandName: &name,
+		logger:        logger,
+		command:       exec.Command(name, args...),
+		commandName:   &name,
+		disableSTDErr: disableSTDErr,
 	}
 }
 
@@ -67,7 +69,11 @@ func (executor *Executor) Run() {
 
 		if stdErrSize > 0 {
 			stdErrString := string(stdErrBuffer)
-			executor.logger.LogError(stdErrString)
+			if executor.disableSTDErr {
+				executor.logger.LogMessage(stdErrString)
+			} else {
+				executor.logger.LogError(stdErrString)
+			}
 		}
 
 		if stdOutErr != nil && stdErrErr != nil {

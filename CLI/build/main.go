@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"iobootstrap-cli-dotnet/dotnethelper"
+	"iobootstrap-cli-react/reacthelper"
 	"iobootstrap-cli-shared/core"
 	"os"
 )
@@ -19,6 +20,7 @@ var (
 	netEnvironment   = flag.String("netenv", "", "Net.Core environment")
 	reactEnvironment = flag.String("reactenv", "", "React environment")
 	workingDirectory = flag.String("sln", "", "Net.Core solution directory")
+	reactUIDirectory = flag.String("reactui", "", "React.UI directory")
 	checkVersion     = flag.String("v", "set", "Version")
 )
 
@@ -59,6 +61,11 @@ func main() {
 	dotnetHeler.Clean()
 	dotnetHeler.Publish()
 	dotnetHeler.CreateWWW()
+
+	reactUIHelper := reacthelper.NewReactUIHelper(&logger, &cliStep, &executorInitializer, reactUIDirectory, reactEnvironment)
+	reactUIHelper.InstallDependencies()
+	reactUIHelper.Clean()
+	reactUIHelper.Build()
 
 	// reactHelper := reacthelper.NewReactHelper(&logger, &cliStep, &executorInitializer, workingDirectory, reactEnvironment, &outputPath)
 	// reactHelper.InstallDependencies()

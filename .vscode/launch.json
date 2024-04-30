@@ -115,6 +115,8 @@
                 "staging",
                 "-sln",
                 "${workspaceFolder}",
+                "-reactui",
+                "${workspaceFolder}/React.UI",
                 "${workspaceFolder}/API-Files/Staging"
             ]
         },

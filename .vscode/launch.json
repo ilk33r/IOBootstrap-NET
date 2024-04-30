@@ -104,16 +104,18 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "${workspaceFolder}/CLI/react/__debug_bin",
-            "cwd": "${workspaceFolder}/CLI/react",
+            "program": "${workspaceFolder}/CLI/build/__debug_bin",
+            "cwd": "${workspaceFolder}/CLI/build",
             "console": "integratedTerminal",
-            "preLaunchTask": "buildIOBootstraptCLIReact",
+            "preLaunchTask": "buildIOBootstraptCLIBuild",
             "args": [
-                "-e",
+                "-netenv",
+                "Staging",
+                "-reactenv",
                 "staging",
-                "-w",
-                "${workspaceFolder}/Backoffice.UI",
-                "${workspaceFolder}/API-Files/Staging/wwwroot"
+                "-sln",
+                "${workspaceFolder}",
+                "${workspaceFolder}/API-Files/Staging"
             ]
         },
     ]

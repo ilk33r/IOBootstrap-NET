@@ -1,4 +1,4 @@
-package helper
+package reacthelper
 
 import (
 	"iobootstrap-cli-shared/core"

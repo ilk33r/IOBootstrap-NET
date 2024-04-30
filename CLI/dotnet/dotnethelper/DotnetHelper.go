@@ -1,4 +1,4 @@
-package helper
+package dotnethelper
 
 import (
 	"iobootstrap-cli-shared/core"
@@ -59,9 +59,11 @@ func (helper *DotnetHelper) Clean() {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *DotnetHelper) Publish(environment string, output string) {
+func (helper *DotnetHelper) Publish() {
 	(*helper.cliStep).StartStep("Publish solution")
 
+	environment := *helper.environment
+	output := *helper.outputPath
 	executor := (*helper.executorInitializer).CreateExecutor("dotnet", "publish", "--configuration", environment, "--output", output)
 	executor.WorkingDirectory(*helper.workingDirectory)
 	executor.Run()
@@ -69,11 +71,12 @@ func (helper *DotnetHelper) Publish(environment string, output string) {
 	(*helper.cliStep).EndStep()
 }
 
-func (helper *DotnetHelper) CreateWWW(output string) {
+func (helper *DotnetHelper) CreateWWW() {
 	(*helper.cliStep).StartStep("Create www dir")
 
+	output := *helper.outputPath
 	wwwPath := filepath.Join(output, "wwwroot")
-	if _, err := os.Stat(wwwPath); !os.IsNotExist(err) {
+	if _, err := os.Stat(wwwPath); !os.IsExist(err) {
 		dirError := os.Mkdir(wwwPath, 0755)
 		if dirError != nil {
 			(*helper.logger).LogErrorf("%v", dirError)

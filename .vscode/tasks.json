@@ -127,7 +127,7 @@
             "problemMatcher": "$func-dotnet-watch"
         },
         {
-            "label": "buildIOBootstraptCLIReact",
+            "label": "buildIOBootstraptCLIBuild",
             "type": "shell",
             "command": "go",
             "args": [
@@ -137,10 +137,10 @@
                 "COMPILE_DEV",
                 "-ldflags=\"-X 'main.Version=1.0.0'\"",
                 "-o",
-                "${workspaceFolder}/CLI/react/__debug_bin"
+                "${workspaceFolder}/CLI/build/__debug_bin"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/CLI/react"
+                "cwd": "${workspaceFolder}/CLI/build"
             }
         },
     ]

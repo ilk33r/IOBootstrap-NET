@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"iobootstrap-cli-dotnet/helper"
+	"iobootstrap-cli-dotnet/dotnethelper"
 	"iobootstrap-cli-shared/core"
 	"os"
 )
@@ -16,8 +16,9 @@ func usage() {
 
 var (
 	Version          = "dev"
-	workingDirectory = flag.String("w", "", "Working directory")
-	environment      = flag.String("e", "", "Environment")
+	netEnvironment   = flag.String("netenv", "", "Net.Core environment")
+	reactEnvironment = flag.String("reactenv", "", "React environment")
+	workingDirectory = flag.String("sln", "", "Net.Core solution directory")
 	checkVersion     = flag.String("v", "set", "Version")
 )
 
@@ -51,13 +52,20 @@ func main() {
 
 	cliStep := core.NewCliStep(&logger)
 	executorInitializer := core.NewExecutorInitializer(&logger)
-	dotnetHeler := helper.NewDotnetHelper(&logger, &cliStep, &executorInitializer, workingDirectory, environment, &outputPath)
 
+	dotnetHeler := dotnethelper.NewDotnetHelper(&logger, &cliStep, &executorInitializer, workingDirectory, netEnvironment, &outputPath)
 	dotnetHeler.PrepareOutput()
 	dotnetHeler.Restore()
 	dotnetHeler.Clean()
-	dotnetHeler.Publish(*environment, outputPath)
-	dotnetHeler.CreateWWW(outputPath)
+	dotnetHeler.Publish()
+	dotnetHeler.CreateWWW()
+
+	// reactHelper := reacthelper.NewReactHelper(&logger, &cliStep, &executorInitializer, workingDirectory, reactEnvironment, &outputPath)
+	// reactHelper.InstallDependencies()
+	// reactHelper.Clean(outputPath)
+	// reactHelper.Build(*environment)
+	// reactHelper.PrepareOutput(outputPath)
+	// reactHelper.CopyOutput(outputPath)
 
 	cliStep.Summary()
 }

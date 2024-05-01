@@ -11,7 +11,7 @@ import (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: iobootstrap-dotnet [options] [output]")
+	fmt.Fprintf(os.Stderr, "usage: iobootstrap-cli-build [options] [output]")
 	flag.PrintDefaults()
 	os.Exit(2)
 }

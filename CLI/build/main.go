@@ -24,7 +24,7 @@ var (
 	reactUIDirectory = flag.String("reactui", "", "React.UI directory")
 	boDirectory      = flag.String("backoffice", "", "BackOffice directory")
 	boOutputDirName  = flag.String("www-bo-output-dir-name", "", "BackOffice output directory name")
-	checkVersion     = flag.String("v", "set", "Version")
+	checkVersion     = flag.Bool("v", false, "Version")
 )
 
 func main() {
@@ -33,6 +33,11 @@ func main() {
 	// Parse flags.
 	flag.Usage = usage
 	flag.Parse()
+
+	if *checkVersion {
+		fmt.Fprintf(os.Stderr, "Version: %s", Version)
+		os.Exit(2)
+	}
 
 	// Parse and validate arguments.
 	outputPath := ""
@@ -43,12 +48,6 @@ func main() {
 
 	if len(args) >= 1 {
 		outputPath = args[0]
-	}
-
-	if *checkVersion == "" {
-		fmt.Fprintf(os.Stderr, "Version: %s", Version)
-		flag.PrintDefaults()
-		os.Exit(2)
 	}
 
 	if outputPath == "" {

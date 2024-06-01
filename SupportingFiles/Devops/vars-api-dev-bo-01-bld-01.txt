@@ -2,7 +2,7 @@ IO.BO.Environment.Name
 staging
 
 IO.BO.NodeVersion
-==16.16.0
+==20.12.2
 
 IO.BO.WorkingFolder
-SevenK/Application/Backoffice.UI
+IOBootstrap-NET/Application/Backoffice.UI

@@ -1,9 +1,13 @@
 Configuration -> Application Settings
 ASPNETCORE_ENVIRONMENT Staging
 
+For docker azure app
+WEBSITES_PORT 5003
+
 export ASPNETCORE_ENVIRONMENT=Staging
 dotnet exec X.Application.dll
 
+Solutions
 dotnet new sln --name mysolution
 
 dotnet dev-certs https

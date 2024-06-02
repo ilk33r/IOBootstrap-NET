@@ -48,3 +48,8 @@ export { default as UploadModalViewProps } from "./screens/shared/props/UploadMo
 export { default as UploadModalViewState } from "./screens/shared/props/UploadModalViewState";
 export { default as UploadModalView } from "./screens/shared/views/UploadModalView";
 export { default as BOController } from "./presentation/controllers/BOController";
+export type { ModalInputViewHandler } from "./presentation/interfaces/ModalInputViewHandler";
+export { default as ModalInputViewPresenter } from "./presentation/interfaces/ModalInputViewPresenter";
+export { default as ModalInputPresenter } from "./presentation/presenters/ModalInputPresenter";
+export { default as ModalInputState } from "./screens/shared/props/ModalInputState";
+export { default as ModalInputView } from "./screens/shared/views/ModalInputView";

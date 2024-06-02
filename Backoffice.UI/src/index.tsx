@@ -25,6 +25,10 @@ let indicatorViewRef = React.createRef<IndicatorView>();
 const indicatorView = (<IndicatorView ref={indicatorViewRef} />);
 ReactDOM.render(indicatorView, document.getElementById('indicatorWrapper'));
 
+let modalInputViewRef = React.createRef<ModalInputView>();
+const modalInputView = (<ModalInputView ref={modalInputViewRef} />);
+ReactDOM.render(modalInputView, document.getElementById('modalInputWrapper'));
+
 let uploadModalViewRef = React.createRef<UploadModalView>();
 let uploadModalViewPresentHandler = function() {
   $('#uploadModal').modal({
@@ -43,6 +47,7 @@ ReactDOM.render(uploadModalView, document.getElementById('uploadModalWrapper'));
 
 const mainView = (<Main calloutView={calloutViewRef}
   indicatorView={indicatorViewRef}
+  modalInputView={modalInputViewRef}
   uploadModalView={uploadModalViewRef} />);
 
 ReactDOM.render(mainView, document.getElementById('pagecontent'));

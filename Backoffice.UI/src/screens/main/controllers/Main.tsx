@@ -6,7 +6,7 @@ import NavigationView from '../../shared/views/NavigationView';
 import SelectionWrapperView from '../../shared/views/SelectionWrapperView';
 import React from 'react';
 import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, CalloutPresenter, CalloutViewPresenter, DIHooks, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
-import { BOCommonConstants, BOController, FooterView, HeaderView } from 'iobootstrap-bo-base';
+import { BOCommonConstants, BOController, FooterView, HeaderView, ModalInputPresenter, ModalInputViewPresenter } from 'iobootstrap-bo-base';
 import { MenuController } from 'iobootstrap-bo-menu';
 import { LoginController } from 'iobootstrap-bo-login';
 import HandshakeResponseModel from '../models/HandshakeResponseModel';
@@ -37,6 +37,11 @@ class Main extends BOController<MainProps, MainState> {
         if (props.indicatorView !== undefined) {
             const indicatorPresenter = this.indicatorPresenter as IndicatorPresenter;
             indicatorPresenter.indicatorView = props.indicatorView.current as IndicatorViewPresenter;
+        }
+
+        if (props.modalInputView !== undefined) {
+            const modalInputPresenter = this.modalInputPresenter as ModalInputPresenter;
+            modalInputPresenter.modalInputView = props.modalInputView.current as ModalInputViewPresenter;
         }
 
         if (props.uploadModalView !== undefined) {

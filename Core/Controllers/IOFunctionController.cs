@@ -55,7 +55,7 @@ where TViewModel : IIOFunctionsViewModel<TDBContext>, new()
             ContentResult contentResult = Content(encryptedResult, "text/plain");
             contentResult.StatusCode = 200;
 
-            context.HttpContext.Response.Headers.Add(IORequestHeaderConstants.IsEncrypted, "true");
+            context.HttpContext.Response.Headers.Append(IORequestHeaderConstants.IsEncrypted, "true");
             context.Result = contentResult;
         }
 

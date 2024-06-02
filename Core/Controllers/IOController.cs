@@ -117,7 +117,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
                 // Obtain response model
                 IOResponseModel responseModel = new IOResponseModel();
                 JsonResult result = new JsonResult(responseModel);
-                Response.Headers.Add("Location", "https://" + Request.Host.Host);
+                Response.Headers.Append("Location", "https://" + Request.Host.Host);
                 result.StatusCode = 301;
                 context.Result = result;
                 IsBackofficePage = true;
@@ -150,7 +150,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         if (Session != null)
         {
             string nonce = this.UpdateNonce();
-            HttpContext.Response.Headers.Add(IORequestHeaderConstants.Nonce, nonce);
+            HttpContext.Response.Headers.Append(IORequestHeaderConstants.Nonce, nonce);
         }
 
         // Check result type
@@ -179,7 +179,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
 
         if (Session?.SessionID != null)
         {
-            Response.Headers.Add(IORequestHeaderConstants.SessionID, Session?.SessionID);
+            Response.Headers.Append(IORequestHeaderConstants.SessionID, Session?.SessionID);
         }
     }
 

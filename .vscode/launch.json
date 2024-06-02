@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetDefaultApplication",
-            "program": "${workspaceFolder}/Default/Application/bin/Debug/net6.0/IOBootstrap.NET.Default.Application.dll",
+            "program": "${workspaceFolder}/Default/Application/bin/Debug/net8.0/IOBootstrap.NET.Default.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,

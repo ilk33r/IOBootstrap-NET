@@ -98,7 +98,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         {
             OnPrepareResponse = ctx =>
             {
-                ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=640800");
+                ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=640800");
             }
         });
 

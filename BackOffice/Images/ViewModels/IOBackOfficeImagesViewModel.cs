@@ -10,6 +10,7 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Interfaces;
+using SixLabors.ImageSharp;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels;
 

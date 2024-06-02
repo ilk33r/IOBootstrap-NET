@@ -4,6 +4,8 @@ using IOBootstrap.NET.Common.Exceptions.Images;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace IOBootstrap.NET.Core.Extensions;
 

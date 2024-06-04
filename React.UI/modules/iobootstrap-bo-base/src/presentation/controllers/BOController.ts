@@ -5,16 +5,16 @@ class BOController<TProps, TState> extends Controller<TProps, TState> {
 
     public modalInputPresenter: ModalInputViewPresenter;
     
+    public constructor(props: TProps) {
+        super(props);
+
+        this.modalInputPresenter = DIHooks.Instance.singletonForKey("modalInputPresenter");
+    }
+    
     public handleInvalidCredential(response: BaseResponseModel) {
         super.handleInvalidCredential(response);
         this.storage.removeObject(UICommonConstants.userTokenStorageKey)
         window.location.reload();
-    }
-
-    public constructor(props: TProps) {
-        super(props);
-
-        this.storage = DIHooks.Instance.singletonForKey("modalInputPresenter");
     }
 }
 

@@ -39,8 +39,8 @@ Thumbs.db
 # dotCover
 *.dotCover
 
-# Fastlane
-report.xml
+# Resources
+API-Files/
 
 # CLI
 __debug_bin

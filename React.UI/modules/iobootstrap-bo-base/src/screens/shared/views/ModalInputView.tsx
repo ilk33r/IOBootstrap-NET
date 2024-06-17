@@ -2,15 +2,17 @@
 import React from "react";
 import ModalInputState from "../props/ModalInputState";
 import { View } from "iobootstrap-ui-base";
-import { ModalInputViewHandler, ModalInputViewPresenter } from "iobootstrap-bo-base";
+import { ModalInputViewHandler } from "../../../presentation/interfaces/ModalInputViewHandler";
+import ModalInputViewPresenter from "../../../presentation/interfaces/ModalInputViewPresenter";
+import ModalInputViewProps from "../props/ModalInputViewProps";
 
-class ModalInputView extends View<{}, ModalInputState> implements ModalInputViewPresenter {
+class ModalInputView extends View<ModalInputViewProps, ModalInputState> implements ModalInputViewPresenter {
 
     private inputViewHandler: ModalInputViewHandler | undefined;
 
     private _formValue: string;
 
-    constructor(props: {}) {
+    constructor(props: ModalInputViewProps) {
         super(props);
 
         this._formValue = "";
@@ -22,7 +24,10 @@ class ModalInputView extends View<{}, ModalInputState> implements ModalInputView
 
     public show(handler: ModalInputViewHandler): void {
         this.inputViewHandler = handler;
-        eval('$(\'#inputModal\').modal(\'show\')');
+        
+        if (this.props.presentHandler != null) {
+            this.props.presentHandler();
+        }
     }
 
     handleValueChange(event: { target: { value: string; }; }) {
@@ -30,7 +35,9 @@ class ModalInputView extends View<{}, ModalInputState> implements ModalInputView
     }
 
     handleCancel() {
-        eval('$(\'#inputModal\').modal(\'hide\')');
+        if (this.props.dismissHandler != null) {
+            this.props.dismissHandler();
+        }
 
         if (this.inputViewHandler) {
             this.inputViewHandler(null);
@@ -42,7 +49,9 @@ class ModalInputView extends View<{}, ModalInputState> implements ModalInputView
             return;
         }
 
-        eval('$(\'#inputModal\').modal(\'hide\')');
+        if (this.props.dismissHandler != null) {
+            this.props.dismissHandler();
+        }
 
         if (this.inputViewHandler) {
             this.inputViewHandler(this._formValue);

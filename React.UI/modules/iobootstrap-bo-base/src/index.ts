@@ -52,4 +52,5 @@ export type { ModalInputViewHandler } from "./presentation/interfaces/ModalInput
 export { default as ModalInputViewPresenter } from "./presentation/interfaces/ModalInputViewPresenter";
 export { default as ModalInputPresenter } from "./presentation/presenters/ModalInputPresenter";
 export { default as ModalInputState } from "./screens/shared/props/ModalInputState";
+export { default as ModalInputViewProps } from "./screens/shared/props/ModalInputViewProps";
 export { default as ModalInputView } from "./screens/shared/views/ModalInputView";

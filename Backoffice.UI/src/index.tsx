@@ -10,7 +10,7 @@ import './presentation/styles/AdminLTE.css';
 import './presentation/styles/AdminSkins.css';
 import './presentation/styles/App.css';
 import 'bootstrap/dist/js/bootstrap.js'
-import { CalloutView, IndicatorView, UploadModalView } from 'iobootstrap-bo-base';
+import { CalloutView, IndicatorView, ModalInputView, UploadModalView } from 'iobootstrap-bo-base';
 import DIUserRoleHooks from './di/DIUserRoleHooks';
 import DIControllerHooks from './di/DIControllerHooks';
 
@@ -26,7 +26,18 @@ const indicatorView = (<IndicatorView ref={indicatorViewRef} />);
 ReactDOM.render(indicatorView, document.getElementById('indicatorWrapper'));
 
 let modalInputViewRef = React.createRef<ModalInputView>();
-const modalInputView = (<ModalInputView ref={modalInputViewRef} />);
+let modalInputViewPresentHandler = function() {
+  $('#inputModal').modal({
+    backdrop: 'static',
+    keyboard: false
+  });
+};
+let modalInputViewDismissHandler = function() {
+  $('#inputModal').modal('hide');
+};
+const modalInputView = (<ModalInputView ref={modalInputViewRef}
+  presentHandler={modalInputViewPresentHandler}
+  dismissHandler={modalInputViewDismissHandler} />);
 ReactDOM.render(modalInputView, document.getElementById('modalInputWrapper'));
 
 let uploadModalViewRef = React.createRef<UploadModalView>();

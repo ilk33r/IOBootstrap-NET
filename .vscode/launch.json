@@ -121,6 +121,17 @@
                 "${workspaceFolder}/Backoffice.UI",
                 "-www-bo-output-dir-name",
                 "backoffice",
+                "-docker-working-dir",
+                "${workspaceFolder}/API-Files/Docker",
+                "-docker-build-dir-name",
+                "Staging",
+                "-docker-port",
+                "5003",
+                "-docker-image-name",
+                "iobootstrap-net",
+                "-docker-template-file",
+                "${workspaceFolder}/Docker/Dockerfile.arm64.ft",
+                "-docker",
                 "${workspaceFolder}/API-Files/Staging"
             ]
         },

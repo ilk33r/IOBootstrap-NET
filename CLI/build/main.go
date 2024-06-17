@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"iobootstrap-cli-docker/dockerhelper"
 	"iobootstrap-cli-dotnet/dotnethelper"
 	"iobootstrap-cli-react/reacthelper"
 	"iobootstrap-cli-shared/core"
@@ -17,14 +18,20 @@ func usage() {
 }
 
 var (
-	Version          = "dev"
-	netEnvironment   = flag.String("netenv", "", "Net.Core environment")
-	reactEnvironment = flag.String("reactenv", "", "React environment")
-	workingDirectory = flag.String("sln", "", "Net.Core solution directory")
-	reactUIDirectory = flag.String("reactui", "", "React.UI directory")
-	boDirectory      = flag.String("backoffice", "", "BackOffice directory")
-	boOutputDirName  = flag.String("www-bo-output-dir-name", "", "BackOffice output directory name")
-	checkVersion     = flag.Bool("v", false, "Version")
+	Version                = "dev"
+	netEnvironment         = flag.String("netenv", "", "Net.Core environment")
+	reactEnvironment       = flag.String("reactenv", "", "React environment")
+	workingDirectory       = flag.String("sln", "", "Net.Core solution directory")
+	reactUIDirectory       = flag.String("reactui", "", "React.UI directory")
+	boDirectory            = flag.String("backoffice", "", "BackOffice directory")
+	boOutputDirName        = flag.String("www-bo-output-dir-name", "", "BackOffice output directory name")
+	dockerWorkingDirectory = flag.String("docker-working-dir", "", "Docker working directory")
+	dockerBuildDirName     = flag.String("docker-build-dir-name", "", "Docker build directory name")
+	dockerPort             = flag.String("docker-port", "", "Docker port")
+	dockerImageName        = flag.String("docker-image-name", "", "Docker image name")
+	dockerTemplateFile     = flag.String("docker-template-file", "", "Docker template file")
+	createDocker           = flag.Bool("docker", false, "Create docker image")
+	checkVersion           = flag.Bool("v", false, "Version")
 )
 
 func main() {
@@ -76,6 +83,22 @@ func main() {
 	reactHelper.Build()
 	reactHelper.PrepareOutput()
 	reactHelper.CopyOutput()
+
+	if *createDocker {
+		dockerHelper := dockerhelper.NewDockerHelper(
+			&logger,
+			&cliStep,
+			&executorInitializer,
+			dockerWorkingDirectory,
+			dockerBuildDirName,
+			dockerPort,
+			dockerImageName,
+			dockerTemplateFile,
+		)
+
+		dockerHelper.CreateDockerFile()
+		dockerHelper.BuildDockerFile()
+	}
 
 	cliStep.Summary()
 }

@@ -5,6 +5,8 @@ go 1.22.2
 replace iobootstrap-cli-shared => ../shared
 replace iobootstrap-cli-dotnet => ../dotnet
 replace iobootstrap-cli-react => ../react
+replace iobootstrap-cli-docker => ../docker
 require iobootstrap-cli-shared v1.0.0
 require iobootstrap-cli-dotnet v1.0.0
 require iobootstrap-cli-react v1.0.0
+require iobootstrap-cli-docker v1.0.0

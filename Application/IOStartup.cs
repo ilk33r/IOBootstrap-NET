@@ -43,7 +43,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                     options.SuppressModelStateInvalidFilter = true;
                 });
 
-        if (Environment.IsDevelopment() || Environment.IsStaging())
+        if (UseSwagger())
         {
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             // builder.Services.AddEndpointsApiExplorer();
@@ -103,7 +103,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         });
 
         // Swagger
-        if (env.IsDevelopment() || env.IsStaging())
+        if (UseSwagger())
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger(options =>
@@ -162,6 +162,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             }
         }
     }
+
+    public virtual bool UseSwagger() 
+    {
+        return Environment.IsDevelopment() || Environment.IsStaging();
+    } 
 
     public virtual void ConfigureSwagger(SwaggerGenOptions options)
     {

@@ -25,7 +25,7 @@ func NewReactUIHelper(logger *core.Logger, cliStep *core.CLIStep, executorInitia
 func (helper *ReactUIHelper) InstallDependencies() {
 	(*helper.cliStep).StartStep("npm install")
 
-	executor := (*helper.executorInitializer).CreateExecutor("npm", "install")
+	executor := (*helper.executorInitializer).CreateExecutorWithoutSTDErr("npm", "install")
 	executor.WorkingDirectory(*helper.workingDirectory)
 	executor.Run()
 

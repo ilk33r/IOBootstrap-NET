@@ -30,7 +30,7 @@ func NewReactHelper(logger *core.Logger, cliStep *core.CLIStep, executorInitiali
 func (helper *ReactHelper) InstallDependencies() {
 	(*helper.cliStep).StartStep("npm install")
 
-	executor := (*helper.executorInitializer).CreateExecutor("npm", "install")
+	executor := (*helper.executorInitializer).CreateExecutorWithoutSTDErr("npm", "install")
 	executor.WorkingDirectory(*helper.workingDirectory)
 	executor.Run()
 

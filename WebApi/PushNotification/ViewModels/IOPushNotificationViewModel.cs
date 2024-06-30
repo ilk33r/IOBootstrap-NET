@@ -1,7 +1,6 @@
 using System;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Messages.PushNotification;
-using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
@@ -13,12 +12,6 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
 	public void AddTokenV2(AddPushNotificationRequestModel requestModel)
 	{
-		IOAESUtilities aesUtility = GetAesUtility();
-		AddPushNotificationRequestModel request = requestModel;
-		request.DeviceId = aesUtility.Decrypt(Convert.FromBase64String(requestModel.DeviceId!));
-		request.DeviceToken = aesUtility.Decrypt(Convert.FromBase64String(requestModel.DeviceToken!));
-		request.ClientId = ClientId;
-
 		// Obtain client
 		IOClientsEntity? client = null;
 		if (!String.IsNullOrEmpty(requestModel.ClientId))

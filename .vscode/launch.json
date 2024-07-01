@@ -32,25 +32,6 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "IOBootstrap.Net.Default.Functions",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "buildIOBootstrapNetDefaultFunctions",
-            "program": "${workspaceFolder}/Default/Functions/bin/Debug/net6.0/IOBootstrap.NET.Default.Functions.dll",
-            "args": [
-                "dev"
-            ],
-            "cwd": "${workspaceFolder}/Default/Functions",
-            "stopAtEntry": false,
-            "requireExactSource": false,
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
             "name": "Backoffice.UI",
             "request": "launch",
             "cwd": "${workspaceFolder}/Application/Backoffice.UI",
@@ -80,24 +61,6 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:azureFunctions.pickProcess}"
-        },
-        {
-            "type": "rdbg",
-            "name": "Debug dotnet fastlane",
-            "rdbgPath": "bundle exec rdbg",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/IOBootstrap-NET/fastlane/plugins/fastlane-plugin-dotnet",
-            "command": "fastlane",
-            "script": "dotnet_publish"
-        },
-        {
-            "type": "rdbg",
-            "name": "Debug react modules fastlane",
-            "rdbgPath": "bundle exec rdbg",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/IOBootstrap-NET/fastlane/plugins/fastlane-plugin-react",
-            "command": "fastlane",
-            "script": "build_all_staging"
         },
         {
             "name": "Build IOBootstrapt CLI Tool",
@@ -134,6 +97,19 @@
                 "-docker",
                 "${workspaceFolder}/API-Files/Staging"
             ]
+        },
+        {
+            "name": "IOBootstrap.Net.Default.Batch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildIOBootstrapNetBatch",
+            "program": "${workspaceFolder}/Default/Batch/bin/Debug/net8.0/IOBootstrap.Net.Default.Batch.dll",
+            "args": ["Development"],
+            "cwd": "${workspaceFolder}/Default/Batch",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+            }
         },
     ]
 }

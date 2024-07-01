@@ -1,8 +1,8 @@
 using System;
 
-namespace IOBootstrap.NET.PushNotificationFunctionHelper.Common.Models;
+namespace IOBootstrap.NET.Batch.Base.Common.Models;
 
-public class ConfigurationModel
+public class BatchConfigurationModel
 {
 
     public required string IOAPNSApiURL { get; set; }

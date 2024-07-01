@@ -14,18 +14,6 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildIOBootstrapNetDefaultFunctions",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/Default/Functions/IOBootstrap.NET.Default.Functions.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
             "label": "publishIOBootstrapNetApplication",
             "command": "dotnet",
             "type": "process",
@@ -142,6 +130,18 @@
             "options": {
                 "cwd": "${workspaceFolder}/CLI/build"
             }
+        },
+        {
+            "label": "buildIOBootstrapNetBatch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Default/Batch/IOBootstrap.NET.Default.Batch.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
         },
     ]
 }

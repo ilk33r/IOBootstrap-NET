@@ -5,6 +5,7 @@ namespace IOBootstrap.NET.Batch.Base.Common.Models;
 public class BatchConfigurationModel
 {
 
+    public required string IOConnectionStrings { get; set; }
     public required string IOAPNSApiURL { get; set; }
     public required string IOAPNSAuthKeyID { get; set; }
     public required string IOAPNSBundleID { get; set; }

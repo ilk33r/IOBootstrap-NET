@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\IOBootstrap.NET.Common.csproj" />
+    <ProjectReference Include="..\..\DataAccess\IOBootstrap.NET.DataAccess.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

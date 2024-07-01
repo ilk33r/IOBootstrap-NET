@@ -1,16 +1,19 @@
 ﻿using System.Text.Json;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 
-namespace IOBootstrap.NET.Batch.Base.Program;
+namespace IOBootstrap.NET.Batch.Base.Core.Program;
 
-public class BatchProgram<TConfig>
+public abstract class BatchStartup<TConfig, TDBContext>
+where TDBContext : IODatabaseContext<TDBContext>
 {
+    public string? Environment { get; set; }
+    public ILogger<IOLoggerType>? Logger { get; set; }
+    public TConfig? Configuration { get; set; }
+    public TDBContext? DatabaseContext { get; set; }
 
-    public static string? Environment { get; set; }
-    public static ILogger<IOLoggerType>? Logger { get; set; }
-    public static TConfig? Configuration { get; set; }
-
-    public static void Initialize(string[] args)
+    public BatchStartup(string[] args)
     {
         // Check argument count is correct
         if (args.Length < 1)
@@ -38,13 +41,28 @@ public class BatchProgram<TConfig>
         {
             throw new Exception("Invalid configuration json");
         }
+
+        // Log call
+        Logger?.LogDebug("Batch initialized");
+
+        // Initialize database
+        DbContextOptionsBuilder<TDBContext> options = new DbContextOptionsBuilder<TDBContext>();
+        DatabaseContextOptions(options);
+
+        // Log call
+        Logger?.LogDebug("Database initialized");
     }
 
-    public static string CurrentDirectory()
+    public virtual string CurrentDirectory()
     {
         return Directory.GetCurrentDirectory();
 
         // Microsoft.Azure.WebJobs.ExecutionContext context = new Microsoft.Azure.WebJobs.ExecutionContext();
         // context.FunctionDirectory = Directory.GetCurrentDirectory() + "/bin";
+    }
+
+    public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
+    {
+        options.UseInMemoryDatabase("IOMemory");
     }
 }

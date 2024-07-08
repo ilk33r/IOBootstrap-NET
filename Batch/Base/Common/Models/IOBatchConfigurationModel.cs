@@ -2,7 +2,7 @@ using System;
 
 namespace IOBootstrap.NET.Batch.Base.Common.Models;
 
-public class BatchConfigurationModel
+public class IOBatchConfigurationModel
 {
 
     public required string IOConnectionStrings { get; set; }

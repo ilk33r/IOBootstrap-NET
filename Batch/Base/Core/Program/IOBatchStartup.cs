@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
+using IOBootstrap.NET.Batch.Base.Core.Interface;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.Batch.Base.Core.Program;
 
-public abstract class BatchStartup<TConfig, TDBContext>
+public abstract class IOBatchStartup<TConfig, TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
 {
     public string? Environment { get; set; }
@@ -13,7 +14,9 @@ where TDBContext : IODatabaseContext<TDBContext>
     public TConfig? Configuration { get; set; }
     public TDBContext? DatabaseContext { get; set; }
 
-    public BatchStartup(string[] args)
+    private List<IIOBatchProcess<TConfig, TDBContext>> RegisteredProcesses { get; set; }
+
+    public IOBatchStartup(string[] args)
     {
         // Check argument count is correct
         if (args.Length < 1)
@@ -51,6 +54,10 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         // Log call
         Logger?.LogDebug("Database initialized");
+
+        // Process Register
+        RegisteredProcesses = new List<IIOBatchProcess<TConfig, TDBContext>>();
+        Logger?.LogDebug("Process register initialized");
     }
 
     public virtual string CurrentDirectory()
@@ -64,5 +71,48 @@ where TDBContext : IODatabaseContext<TDBContext>
     public virtual void DatabaseContextOptions(DbContextOptionsBuilder<TDBContext> options)
     {
         options.UseInMemoryDatabase("IOMemory");
+    }
+
+    public virtual void RegisterProcess(Type processType)
+    {
+        var processInstance = Activator.CreateInstance(processType);
+        if (processInstance == null)
+        {
+            Logger?.LogError("Could not initialize process name: {0}", processType.Name);
+            return;
+        }
+
+        IIOBatchProcess<TConfig, TDBContext>? process = (IIOBatchProcess<TConfig, TDBContext>)processInstance;
+
+        if (process == null)
+        {
+            Logger?.LogError("Could not initialize process name: {0}", processType.Name);
+            return;
+        }
+
+        process.Environment = Environment;
+        process.Logger = Logger;
+        process.Configuration = Configuration;
+        process.DatabaseContext = DatabaseContext;
+        RegisteredProcesses.Add(process);
+
+        Logger?.LogDebug("Process registered: {0}", processType.Name);
+    }
+
+    public virtual void Run()
+    {
+        while (true)
+        {
+            RunSubProcesses();
+            Thread.Sleep(2000);
+        }
+    }
+
+    private void RunSubProcesses()
+    {
+        foreach (IIOBatchProcess<TConfig, TDBContext> process in RegisteredProcesses)
+        {
+            process.Run();
+        }
     }
 }

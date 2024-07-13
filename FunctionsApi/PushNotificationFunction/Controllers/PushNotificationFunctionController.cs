@@ -23,26 +23,6 @@ where TViewModel : PushNotificationFunctionViewModel<TDBContext>, new() where TD
     [HttpPost("[action]")]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.AnonmyMouse)]
-    public IOFNListResponseModel<PushNotificationMessageModel> PendingMessages([FromBody] IOFNFindRequestModel requestModel)
-    {
-        IList<PushNotificationMessageModel> response = ViewModel.GetPendingPushNotificationMessages();
-        return new IOFNListResponseModel<PushNotificationMessageModel>(response);
-    }
-
-    [IORequireHTTPS]
-    [HttpPost("[action]")]
-    [IOValidateRequestModel]
-    [IOUserRole(UserRoles.AnonmyMouse)]
-    public IOFNListResponseModel<PushNotificationDevicesModel> GetDevices([FromBody] IOFNPushNotificationDevicesRequestModel requestModel)
-    {
-        IList<PushNotificationDevicesModel> response = ViewModel.GetDevices(requestModel);
-        return new IOFNListResponseModel<PushNotificationDevicesModel>(response);
-    }
-
-    [IORequireHTTPS]
-    [HttpPost("[action]")]
-    [IOValidateRequestModel]
-    [IOUserRole(UserRoles.AnonmyMouse)]
     public IOResponseModel UpdateDeliveredMessages([FromBody] IOFNUpdatePushNotificationDeliveredMessages requestModel)
     {
         ViewModel.UpdateDeliveredMessages(requestModel);

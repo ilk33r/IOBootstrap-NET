@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using IOBootstrap.NET.Batch.Base.Common.Models;
 using IOBootstrap.NET.Batch.Base.Core.Interface;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace IOBootstrap.NET.Batch.Base.Core.Program;
 
 public abstract class IOBatchStartup<TConfig, TDBContext>
+where TConfig : IOBatchConfigurationModel
 where TDBContext : IODatabaseContext<TDBContext>
 {
     public string? Environment { get; set; }
@@ -96,6 +98,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         process.DatabaseContext = DatabaseContext;
         RegisteredProcesses.Add(process);
 
+        process.OnLoad();
         Logger?.LogDebug("Process registered: {0}", processType.Name);
     }
 

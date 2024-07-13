@@ -11,6 +11,5 @@ public class IOBatchConfigurationModel
     public required string IOAPNSBundleID { get; set; }
     public required string IOAPNSKeyFilePath { get; set; }
     public required string IOAPNSTeamID { get; set; }
-    public required string IOFirebaseApiUrl { get; set; }
-    public required string IOFirebaseToken { get; set; }
+    public required string IOFirebasePrivateKeyFile { get; set; }
 }

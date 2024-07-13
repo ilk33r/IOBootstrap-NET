@@ -46,7 +46,8 @@ class PushNotificationSendController extends BOController<{}, {}> {
 
         const formElements: FormType[] = [
             FormTypeSelectProps.initialize("Device Type", "", true, [
-                FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.Android), DeviceTypes.Android.toString()),
+                FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.AndroidGoogle), DeviceTypes.AndroidGoogle.toString()),
+                FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.AndroidHuawei), DeviceTypes.AndroidHuawei.toString()),
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.iOS), DeviceTypes.iOS.toString()),
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.Generic), DeviceTypes.Generic.toString())
             ]),

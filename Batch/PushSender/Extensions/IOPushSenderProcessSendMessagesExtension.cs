@@ -30,11 +30,11 @@ public static class IOPushSenderProcessSendMessagesExtension
                 input.DeleteInvalidDevices(invalidDevices);
 
                 // Obtain apns devices
-                IList<PushNotificationEntity> appleDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
-                // SendNotificationToAllAPNSDevices(message, apnsDevices, log, apnsUtils, connector, controllerName);
+                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
+                IList<PushNotificationEntity> invalidAPNSDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
+                input.DeleteInvalidDevices(invalidAPNSDevices);
 
-                // if (firebaseDevices.Count == 0 && apnsDevices.Count == 0)
-                if (googleDevices.Count == 0)
+                if (googleDevices.Count == 0 && apnsDevices.Count == 0)
                 {
                     input.SetMessageSended(message);
                 }
@@ -51,28 +51,17 @@ public static class IOPushSenderProcessSendMessagesExtension
                     input.SetMessageSended(message);
                 }
             }
-            else
+            else if (message.DeviceType == (int)DeviceTypes.iOS)
             {
-                // IList<PushNotificationEntity> devices = new List<PushNotificationEntity>();
-                // devices.Add(new PushNotificationDevicesModel()
-                // {
-                //     ID = message.PushNotificationDeviceID.ID,
-                //     BadgeCount = message.PushNotificationDeviceID.BadgeCount,
-                //     DeviceId = message.PushNotificationDeviceID.DeviceId,
-                //     DeviceToken = message.PushNotificationDeviceID.DeviceToken,
-                //     DeviceType = message.PushNotificationDeviceID.DeviceType,
-                // });
+                // Send firebase message// Obtain firebase devices
+                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
+                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
+                input.DeleteInvalidDevices(invalidDevices);
 
-
-                // else if (message.PushNotificationDeviceID.DeviceType == DeviceTypes.iOS)
-                // {
-                //     // Send apns message
-                //     SendNotificationToAllAPNSDevices(message, devices, log, apnsUtils, connector, controllerName);
-                // }
-
-                // // Log call 
-                // log.LogDebug("Single device found.");
-                // SetMessageToSended(message, connector, controllerName);
+                if (apnsDevices.Count == 0)
+                {
+                    input.SetMessageSended(message);
+                }
             }
         }
     }

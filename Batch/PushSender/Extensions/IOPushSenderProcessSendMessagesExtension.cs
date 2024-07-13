@@ -26,22 +26,30 @@ public static class IOPushSenderProcessSendMessagesExtension
             {
                 // Obtain firebase devices
                 IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID, clientId);
-                input.SendNotificationToAllFirebaseDevices(message, googleDevices);
+                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
+                input.DeleteInvalidDevices(invalidDevices);
 
                 // Obtain apns devices
                 IList<PushNotificationEntity> appleDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
                 // SendNotificationToAllAPNSDevices(message, apnsDevices, log, apnsUtils, connector, controllerName);
 
                 // if (firebaseDevices.Count == 0 && apnsDevices.Count == 0)
-                // {
-                //     SetMessageToSended(message, connector, controllerName);
-                // }
+                if (googleDevices.Count == 0)
+                {
+                    input.SetMessageSended(message);
+                }
             }
             else if (message.DeviceType == (int)DeviceTypes.AndroidGoogle)
             {
                 // Send firebase message// Obtain firebase devices
                 IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID, clientId);
-                input.SendNotificationToAllFirebaseDevices(message, googleDevices);
+                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
+                input.DeleteInvalidDevices(invalidDevices);
+
+                if (googleDevices.Count == 0)
+                {
+                    input.SetMessageSended(message);
+                }
             }
             else
             {

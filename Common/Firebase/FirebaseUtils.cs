@@ -66,15 +66,15 @@ public class FirebaseUtils
         string? result = SendMessage(message);
 
         // Check result
-        if (!string.IsNullOrEmpty(result))
-        {
-            Logger.LogInformation("Firebase api called successfully.");
-            return FirebaseUtilsMessageTypes.Success;
-        }
-        else
+        if (string.IsNullOrEmpty(result))
         {
             Logger.LogError("Firebase api call failed. Device not found.");
             return FirebaseUtilsMessageTypes.DeviceNotFound;
+        }
+        else
+        {
+            Logger.LogInformation("Firebase api called successfully.");
+            return FirebaseUtilsMessageTypes.Success;
         }
     }
 

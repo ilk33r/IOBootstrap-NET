@@ -11,7 +11,12 @@ public static class IOPushSenderProcessSendDeviceExtension
 {
     private const int MaxLimit = 250;
 
-    public static IList<PushNotificationEntity> GetDevices<TConfig, TDBContext>(this IOPushSenderProcess<TConfig, TDBContext> input, DeviceTypes deviceType, int messageId, int? clientId)
+    public static IList<PushNotificationEntity> GetDevices<TConfig, TDBContext>(
+        this IOPushSenderProcess<TConfig, TDBContext> input, 
+        DeviceTypes deviceType, 
+        int messageId, 
+        int? clientId
+    )
     where TConfig : IOBatchConfigurationModel
     where TDBContext : IODatabaseContext<TDBContext>
     {
@@ -33,5 +38,29 @@ public static class IOPushSenderProcessSendDeviceExtension
         }
 
         return devices ?? [];
+    }
+
+    public static void DeleteInvalidDevices<TConfig, TDBContext>(
+        this IOPushSenderProcess<TConfig, TDBContext> input, 
+        IList<PushNotificationEntity> invalidDevices
+    )
+    where TConfig : IOBatchConfigurationModel
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        if (invalidDevices == null || invalidDevices.Count == 0)
+        {
+            return;
+        }
+
+        foreach (PushNotificationEntity device in invalidDevices)
+        {
+            if (device.DeliveredMessages != null && device.DeliveredMessages.Count > 0)
+            {
+                input.DatabaseContext?.Remove(device.DeliveredMessages);
+            }
+            input.DatabaseContext?.Remove(device);
+        }
+
+        input.DatabaseContext?.SaveChanges();
     }
 }

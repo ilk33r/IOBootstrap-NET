@@ -10,7 +10,7 @@ namespace IOBootstrap.NET.Batch.PushSender.Extensions;
 public static class IOPushSenderProcessFirebaseExtension
 {
 
-    public static void SendNotificationToAllFirebaseDevices<TConfig, TDBContext>(
+    public static IList<PushNotificationEntity> SendNotificationToAllFirebaseDevices<TConfig, TDBContext>(
         this IOPushSenderProcess<TConfig, TDBContext> input,
         PushNotificationMessageEntity message,
         IList<PushNotificationEntity> googleDevices
@@ -20,7 +20,7 @@ public static class IOPushSenderProcessFirebaseExtension
     {
         input.Logger?.LogDebug("Firebase devices found size of {0}", googleDevices.Count);
         IList<PushNotificationEntity> invalidDevices = new List<PushNotificationEntity>();
-        IList<PushNotificationMessageEntity> deliveredMessages = new List<PushNotificationMessageEntity>();
+        IList<PushNotificationEntity> deliveredMessages = new List<PushNotificationEntity>();
 
         // Loop throught devices
         foreach (PushNotificationEntity pushNotification in googleDevices)
@@ -37,7 +37,7 @@ public static class IOPushSenderProcessFirebaseExtension
 
             if (response == FirebaseUtils.FirebaseUtilsMessageTypes.Success)
             {
-                deliveredMessages.Add(message);
+                deliveredMessages.Add(pushNotification);
             }
             else
             {
@@ -45,6 +45,11 @@ public static class IOPushSenderProcessFirebaseExtension
             }
         }
 
-        // UpdateDeliveredMessages(invalidDevices, deliveredMessages, connector, controllerName);
+        if (deliveredMessages.Count > 0)
+        {
+            input.UpdateDeliveredMessages(message, deliveredMessages);
+        }
+        
+        return invalidDevices;
     }
 }

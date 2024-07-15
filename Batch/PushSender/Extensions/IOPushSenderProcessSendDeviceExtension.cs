@@ -54,10 +54,6 @@ public static class IOPushSenderProcessSendDeviceExtension
 
         foreach (PushNotificationEntity device in invalidDevices)
         {
-            if (device.DeliveredMessages != null && device.DeliveredMessages.Count > 0)
-            {
-                input.DatabaseContext?.Remove(device.DeliveredMessages);
-            }
             input.DatabaseContext?.Remove(device);
         }
 

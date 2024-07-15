@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IOBootstrap.NET.Common.Enumerations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IOBootstrap.NET.DataAccess.Entities;
@@ -41,6 +42,7 @@ public class PushNotificationEntity
     public DateTimeOffset LastUpdateTime { get; set; }
 
     [ForeignKey("PushNotificationID")]
+    [DeleteBehavior(DeleteBehavior.Cascade)]
     public ICollection<PushNotificationDeliveredMessagesEntity>? DeliveredMessages { get; set; }
 
     #endregion

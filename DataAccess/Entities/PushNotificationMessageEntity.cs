@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -31,6 +32,7 @@ public class PushNotificationMessageEntity
     [StringLength(32)]
     public string? NotificationTitle { get; set; }
 
+    [DefaultValue(0)]
     public int IsCompleted { get; set; }
 
     public PushNotificationEntity? PushNotificationDeviceID { get; set; }

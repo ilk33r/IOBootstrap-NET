@@ -15,10 +15,10 @@ public class PushNotificationDeliveredMessagesEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ID { get; set; }
 
-    [DeleteBehavior(DeleteBehavior.Restrict)]
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     public virtual PushNotificationEntity? PushNotification { get; set; }
 
-    [DeleteBehavior(DeleteBehavior.Restrict)]
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     public virtual PushNotificationMessageEntity? PushNotificationMessage { get; set; }
 
     #endregion

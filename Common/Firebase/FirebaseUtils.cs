@@ -31,10 +31,17 @@ public class FirebaseUtils
         string currentDirectory = Directory.GetCurrentDirectory();
         string privateKeyFile = Path.Combine(currentDirectory,privateKeyFileName);
 
-        FirebaseApp.Create(new AppOptions()
+        try
         {
-            Credential = GoogleCredential.FromFile(privateKeyFile),
-        });
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(privateKeyFile),
+            });
+        } 
+        catch (Exception e)
+        {
+            Logger.LogWarning(e.Message);
+        }
     }
 
     #endregion

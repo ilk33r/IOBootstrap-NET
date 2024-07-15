@@ -9,7 +9,7 @@ GOLANG = go
 MODULE_NAME = iobootstrap-cli-build
 
 GCFLAG.release =
-GCFLAG.debug = -gcflags=all=-N -l
+GCFLAG.debug = '-gcflags=all=-N -l'
 GCFLAG := $(GCFLAG.$(BUILD))
 
 LD_FLAGS := -ldflags="-X 'main.Version=$(VERSION)'"

@@ -87,7 +87,7 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
         ];
 
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("Entity Name", "", true, [ ValidationMinLengthRule.initialize("Entity name is too short.", "Invalid entity name.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Entity Name (X.DataAccess.Entities.{Y.Z})", "", true, [ ValidationMinLengthRule.initialize("Entity name is too short.", "Invalid entity name.", 3) ]),
         ];
 
         if (this.state.boPageDataResponse == null) {

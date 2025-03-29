@@ -44,8 +44,8 @@ class LoginController extends BOController<LoginProps, LoginState> {
         super.handleServiceError(title, message);
 
         const newState = new LoginState();
-        newState.userName = this.state.userName;
-        newState.password = this.state.password;
+        newState.userName = "";
+        newState.password = "";
         newState.errorMessage = message;
         this.setState(newState);
     }

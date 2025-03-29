@@ -14,4 +14,10 @@ public class IOUpdateUserRequestModel : IORequestModel
 
     [Required]
     public int UserRole { get; set; }
+
+    [Required]
+    public bool IsActive { get; set; }
+
+    [Required]
+    public DateTimeOffset ActivationEndDate { get; set; }
 }

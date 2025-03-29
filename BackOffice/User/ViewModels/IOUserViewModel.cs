@@ -51,7 +51,14 @@ where TDBContext : IODatabaseContext<TDBContext>
             Password = IOPasswordUtilities.HashPassword(decryptedPassword),
             UserRole = requestModel.UserRole,
             UserToken = null,
-            TokenDate = DateTime.UtcNow
+            TokenDate = DateTimeOffset.UtcNow,
+            IsActive = requestModel.IsActive,
+            ActivationEndDate = requestModel.ActivationEndDate,
+            CreatedBy = UserModel?.UserName ?? string.Empty,
+            CreatedDate = DateTimeOffset.UtcNow,
+            UpdateDate = DateTimeOffset.UtcNow,
+            WrongPasswordAttemptCount = 0,
+            LastWrongPasswordAttemptDate = new DateTimeOffset()
         };
 
         // Write user to database
@@ -84,6 +91,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         string decryptedNewPassword = DecryptString(newPassword);
         currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
         currentUser.UserToken = null;
+        currentUser.UpdateDate = DateTimeOffset.UtcNow;
+        currentUser.WrongPasswordAttemptCount = 0;
+        currentUser.LastWrongPasswordAttemptDate = new DateTimeOffset();
 
         // Update user password
         DatabaseContext.Update(currentUser);
@@ -99,7 +109,12 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                 UserName = u.UserName,
                                                                 UserRole = u.UserRole,
                                                                 UserToken = u.UserToken,
-                                                                TokenDate = u.TokenDate
+                                                                TokenDate = u.TokenDate,
+                                                                IsActive = u.IsActive,
+                                                                ActivationEndDate = u.ActivationEndDate,
+                                                                CreatedBy = u.CreatedBy,
+                                                                CreatedDate = u.CreatedDate,
+                                                                UpdateDate = u.UpdateDate
                                                             })
                                                             .OrderBy(u => u.ID)
                                                             .ToList();
@@ -137,6 +152,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         // Update user properties
         user.UserName = userName;
         user.UserRole = request.UserRole;
+        user.IsActive = request.IsActive;
+        user.ActivationEndDate = request.ActivationEndDate;
+        user.UpdateDate = DateTimeOffset.UtcNow;
 
         // Update user password
         DatabaseContext.Update(user);

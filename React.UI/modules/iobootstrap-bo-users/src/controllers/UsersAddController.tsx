@@ -1,7 +1,7 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
 import React from "react";
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeDateProps, FormTypePasswordProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class UsersAddController extends BOController<{}, {}> {
 
@@ -29,13 +29,13 @@ class UsersAddController extends BOController<{}, {}> {
         this.indicatorPresenter.present();
 
         const weakSelf = this;
-        this.addUser(values[0], values[1], Number(values[3]))
+        this.addUser(values[0], values[1], Number(values[3]), Boolean(values[4]), values[5])
             .catch(() => {
                 weakSelf.handleServiceError("", "Cryptography error.");
             });
     }
 
-    private async addUser(userName: string, password: string, userRole: number): Promise<any> {
+    private async addUser(userName: string, password: string, userRole: number, isActive: boolean, activationEndDate: string): Promise<any> {
         const symmetricKeys = await AppCryptography.Instance.getSymmetricKeys();
         this.appServiceHeaderInterceptor.setSymmetricKeys(symmetricKeys.symmetricKey, symmetricKeys.symmetricIV);
 
@@ -46,6 +46,8 @@ class UsersAddController extends BOController<{}, {}> {
         request.userName = userName;
         request.password = encryptPasswords;
         request.userRole = userRole;
+        request.isActive = isActive;
+        request.activationEndDate = activationEndDate;
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
@@ -83,7 +85,12 @@ class UsersAddController extends BOController<{}, {}> {
             FormTypeTextProps.initializeWithValidations("User Name", "", true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ]),
             FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
             FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-            FormTypeSelectProps.initialize("Role", "", true, userRoleFormDataOptions)
+            FormTypeSelectProps.initialize("Role", "", true, userRoleFormDataOptions),
+            FormTypeSelectProps.initialize("Active", "", true, [ 
+                FormDataOptionModel.initialize("NO", "0"),
+                FormDataOptionModel.initialize("YES", "1")
+            ]),
+            FormTypeDateProps.initializeWithValidations("End Date", "", true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
         ];
 
         return (

@@ -67,6 +67,8 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         updateRequestModel.userId = currentUser.id;
         updateRequestModel.userName = currentUser.userName;
         updateRequestModel.userRole = currentUser.userRole;
+        updateRequestModel.isActive = currentUser.isActive;
+        updateRequestModel.activationEndDate = currentUser.activationEndDate;
 
         this.appContext.setObjectForKey("usersUpdateRequest", updateRequestModel);
         this.navigateToPage("usersUpdate");
@@ -81,7 +83,12 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
             'ID',
             'Name',
             'Role',
-            'Last Login Date'
+            'Last Login Date',
+            'Active',
+            'End Date',
+            'Created By',
+            'Created Date',
+            'Update Date',
         ];
 
         const items = this.state.userList.map(user => {
@@ -96,11 +103,22 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
                 }
             }
 
+            const tokenDate = (user.tokenDate === undefined || user.tokenDate === null) ? "-" : new Date(user.tokenDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
+            const userIsActive = (user.isActive) ? "YES" : "NO";
+            const activationEndDate = (user.activationEndDate === undefined || user.activationEndDate === null) ? "-" : new Date(user.activationEndDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
+            const createdDate = (user.createdDate === undefined || user.createdDate === null) ? "-" : new Date(user.createdDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
+            const updateDate = (user.updateDate === undefined || user.updateDate === null) ? "-" : new Date(user.updateDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
+
             itemModel.itemList = [
                 user.id.toString(),
                 user.userName,
                 roleName,
-                user.tokenDate ?? ""
+                tokenDate,
+                userIsActive,
+                activationEndDate,
+                user.createdBy ?? "-",
+                createdDate,
+                updateDate
             ];
 
             return itemModel;

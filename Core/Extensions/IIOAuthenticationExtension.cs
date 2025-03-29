@@ -29,9 +29,21 @@ public static class IIOAuthenticationExtension
             throw new IOInvalidCredentialsException();
         }
 
+        // Check user is active
+        input.CheckUserActivationStatus(findedUser);
+
+        // Check user is locked
+        input.CheckUserIsLocked(findedUser);
+
         // Check user password is wrong
         if (!IOPasswordUtilities.VerifyPassword(decryptedPassword, findedUser.Password ?? ""))
         {
+            // Update User
+            findedUser.WrongPasswordAttemptCount += 1;
+            findedUser.LastWrongPasswordAttemptDate = DateTimeOffset.UtcNow;
+            input.DatabaseContext.Update(findedUser);
+            input.DatabaseContext.SaveChanges();
+
             // Return response
             throw new IOInvalidCredentialsException();
         }
@@ -89,7 +101,9 @@ public static class IIOAuthenticationExtension
                                                         UserName = u.UserName,
                                                         UserRole = u.UserRole,
                                                         UserToken = u.UserToken,
-                                                        TokenDate = u.TokenDate
+                                                        TokenDate = u.TokenDate,
+                                                        IsActive = u.IsActive,
+                                                        ActivationEndDate = u.ActivationEndDate
                                                     })
                                                     .Where(u => u.ID == tokenData.Item2)
                                                     .FirstOrDefault();
@@ -97,6 +111,26 @@ public static class IIOAuthenticationExtension
         if (findedUser == null)
         {
             throw new IOInvalidCredentialsException();
+        }
+
+        // Check user is active
+        if (findedUser.IsActive)
+        {
+            // Obtain current unix time
+            long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long activationEndUnixTime = findedUser.ActivationEndDate.ToUnixTimeSeconds();
+
+            // Check activation is ended
+            if (currentUnixTime > activationEndUnixTime)
+            {
+                // Throw an exception
+                throw new IOUserDeactivatedException();
+            }
+        }
+        else
+        {
+            // Throw an exception
+            throw new IOUserDeactivatedException();
         }
 
         // Obtain token life from configuration
@@ -118,5 +152,67 @@ public static class IIOAuthenticationExtension
 
         // Return status
         throw new IOInvalidCredentialsException();
+    }
+
+    private static void CheckUserActivationStatus<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        // Check user is active
+        if (user.IsActive)
+        {
+            // Obtain current unix time
+            long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long activationEndUnixTime = user.ActivationEndDate.ToUnixTimeSeconds();
+
+            // Check activation is ended
+            if (currentUnixTime > activationEndUnixTime)
+            {
+                // Update User
+                user.IsActive = false;
+                input.DatabaseContext.Update(user);
+                input.DatabaseContext.SaveChanges();
+
+                // Throw an exception
+                throw new IOUserDeactivatedException();
+            }
+        }
+        else
+        {
+            // Throw an exception
+            throw new IOUserDeactivatedException();
+        }
+    }
+
+    private static void CheckUserIsLocked<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        // Check password attempt count
+        if (user.WrongPasswordAttemptCount < 3)
+        {
+            // Then do nothing
+            return;
+        }
+
+        // Obtain current unix time
+        long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        long lastWrongPasswordAttemptUnixTime = user.LastWrongPasswordAttemptDate.ToUnixTimeSeconds();
+
+        // Obtain token life from configuration
+        int tokenLife = input.Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+
+        // Check last password attempt unix time
+        if (currentUnixTime > lastWrongPasswordAttemptUnixTime + tokenLife)
+        {
+            // Then update wrong password attempt count
+            user.WrongPasswordAttemptCount = 0;
+            input.DatabaseContext.Update(user);
+            input.DatabaseContext.SaveChanges();
+
+            // Then do nothing
+            return;
+        }
+
+        // Throw an exception
+        throw new IOUserDeactivatedException();
     }
 }

@@ -32,8 +32,7 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
         modelBuilder.Entity<IOMenuEntity>().HasIndex(
             menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);
 
-        modelBuilder.Entity<IOUserEntity>().HasIndex(
-            userEntity => new { userEntity.UserName }).IsUnique(true);
+        CreateUserModel(modelBuilder);
 
         modelBuilder.Entity<PushNotificationEntity>().HasIndex(
             pushNotificationEntity => new
@@ -58,5 +57,13 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
                 messagesEntity.MessageEndDate,
                 messagesEntity.MessageStartDate
             });
+    }
+
+    private void CreateUserModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IOUserEntity>().HasIndex(
+            userEntity => new { userEntity.UserName }).IsUnique(true);
+        
+        modelBuilder.Entity<IOUserEntity>().HasIndex(u => u.IsActive);
     }
 }

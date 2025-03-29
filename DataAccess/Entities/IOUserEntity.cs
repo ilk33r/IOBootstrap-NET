@@ -18,11 +18,28 @@ public class IOUserEntity
     public string? UserName { get; set; }
 
     public string? Password { get; set; }
+
     public int UserRole { get; set; }
 
     [StringLength(36)]
     public string? UserToken { get; set; }
+
     public DateTimeOffset TokenDate { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public DateTimeOffset ActivationEndDate { get; set; }
+
+    [StringLength(255)]
+    public string? CreatedBy { get; set; }
+
+    public DateTimeOffset CreatedDate { get; set; }
+
+    public DateTimeOffset UpdateDate { get; set; }
+
+    public int WrongPasswordAttemptCount { get; set; }
+
+    public DateTimeOffset LastWrongPasswordAttemptDate { get; set; }
 
     #endregion
 }

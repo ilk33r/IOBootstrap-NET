@@ -1,7 +1,7 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeDateProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class UsersUpdateController extends BOController<{}, {}> {
 
@@ -32,6 +32,8 @@ class UsersUpdateController extends BOController<{}, {}> {
         request.userId = this._updateRequest.userId;
         request.userName = values[0];
         request.userRole = Number(values[1]);
+        request.isActive = Boolean(values[2]);
+        request.activationEndDate = values[3];
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
@@ -69,9 +71,15 @@ class UsersUpdateController extends BOController<{}, {}> {
             }
         }
         
+        const activationEndDate = (this._updateRequest.activationEndDate === null) ? "" : this.formatDate(new Date(this._updateRequest.activationEndDate));
         const formElements: FormType[] = [
             FormTypeTextProps.initializeWithValidations("User Name", this._updateRequest.userName, true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ]),
-            FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, userRoleFormDataOptions)
+            FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, userRoleFormDataOptions),
+            FormTypeSelectProps.initialize("Active", this._updateRequest.isActive ? "1" : "0", true, [ 
+                FormDataOptionModel.initialize("NO", "0"),
+                FormDataOptionModel.initialize("YES", "1")
+            ]),
+            FormTypeDateProps.initializeWithValidations("End Date", activationEndDate, true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
         ];
 
         return (
@@ -85,6 +93,16 @@ class UsersUpdateController extends BOController<{}, {}> {
                     formElements={formElements} />
             </React.StrictMode>
         );
+    }
+
+    private formatDate(date: Date): string {
+        const dateMonthValue = date.getMonth() + 1;
+        const dateMonth = (dateMonthValue < 10) ? '0' + dateMonthValue.toString() : dateMonthValue.toString();
+
+        const dateDayValue = date.getDate();
+        const dateDay = (dateDayValue < 10) ? '0' + dateDayValue.toString() : dateDayValue.toString();
+
+        return date.getFullYear() + '-' + dateMonth + '-' + dateDay;        
     }
 }
 

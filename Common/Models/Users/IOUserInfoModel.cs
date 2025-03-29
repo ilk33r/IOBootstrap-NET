@@ -14,6 +14,11 @@ public class IOUserInfoModel : IOModel
 	public int UserRole { get; set; }
 	public string? UserToken { get; set; }
 	public DateTimeOffset TokenDate { get; set; }
+	public bool IsActive { get; set; }
+    public DateTimeOffset ActivationEndDate { get; set; }
+	public string? CreatedBy { get; set; }
+	public DateTimeOffset CreatedDate { get; set; }
+	public DateTimeOffset UpdateDate { get; set; }
 
 	#endregion
 

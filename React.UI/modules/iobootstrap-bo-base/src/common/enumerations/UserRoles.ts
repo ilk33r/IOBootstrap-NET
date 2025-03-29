@@ -9,7 +9,7 @@ namespace UserRoles {
 
     export function getRoleName(role: UserRoles): string {
         if (role === UserRoles.SuperAdmin) {
-            return "Super Admin";
+            return "Owner";
         }
 
         if (role === UserRoles.Admin) {

@@ -104,7 +104,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
             requestPath = ((string)HttpContext.Items["OriginalPath"]!);
         }
 
-        bool isBackofficePath = (String.IsNullOrEmpty(requestPath) || requestPath.Contains(backofficePagePath));
+        bool isBackofficePath = !String.IsNullOrEmpty(requestPath) && requestPath.StartsWith(backofficePagePath);
 
         // Check hostname is back office page
         if (backofficePageHostName.Equals(Request.Host.Host) && isBackofficePath)

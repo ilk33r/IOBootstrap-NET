@@ -69,7 +69,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
             itemModel.itemList = [
                 message.id.toString(),
                 clientDescription,
-                notificationDate.toLocaleDateString(),
+                notificationDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' }),
                 message.notificationCategory ?? "",
                 message.notificationData ?? "",
                 message.notificationMessage,

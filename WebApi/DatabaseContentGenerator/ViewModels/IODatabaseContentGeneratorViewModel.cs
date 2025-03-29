@@ -29,7 +29,14 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Password = IOPasswordUtilities.HashPassword("admin"),
             UserRole = 999,
             UserToken = "",
-            TokenDate = new DateTimeOffset()
+            TokenDate = new DateTimeOffset(),
+            IsActive = false,
+            ActivationEndDate = DateTimeOffset.UtcNow,
+            CreatedBy = "swagger-ui",
+            CreatedDate = DateTimeOffset.UtcNow,
+            UpdateDate = DateTimeOffset.UtcNow,
+            WrongPasswordAttemptCount = 0,
+            LastWrongPasswordAttemptDate = new DateTimeOffset()
         };
 
         DatabaseContext.Add(userEntity);

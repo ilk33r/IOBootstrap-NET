@@ -83,3 +83,16 @@ body {
   right: 9%;
   color: #fff;
 }
+
+.form-wrapper > .content-wrapper {
+  min-height: 300px;
+}
+
+.editor-wrapper > .content-wrapper {
+  min-height: 300px;
+}
+
+.editor {
+  border: 1px solid #000; 
+  padding: 10px;
+}

@@ -139,7 +139,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                 menu.action,
                 menu.cssClass,
                 roleName,
-                menu.menuOrder.toString()
+                `<strong>${menu.menuOrder.toString()}</strong>`
             ];
 
             items.push(itemModel);
@@ -163,7 +163,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                         childMenu.action,
                         childMenu.cssClass,
                         childMenuRoleName,
-                        childMenu.menuOrder.toString()
+                        `<strong>${childMenu.menuOrder.toString()}</strong>`
                     ];
         
                     childItemModel.isEven = true;

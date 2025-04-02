@@ -7,6 +7,7 @@ export { default as UpdateUserRequestModel } from "./models/UpdateUserRequestMod
 export { default as UserChangePasswordRequestModel } from "./models/UserChangePasswordRequestModel";
 export { default as UserInfoModel } from "./models/UserInfoModel";
 export { default as UserChangePasswordController } from "./controllers/UserChangePasswordController";
+export { default as UserResetPasswordController } from "./controllers/UserResetPasswordController";
 export { default as UsersAddController } from "./controllers/UsersAddController";
 export { default as UsersDeleteController } from "./controllers/UsersDeleteController";
 export { default as UsersListController } from "./controllers/UsersListController";

@@ -1,6 +1,16 @@
 {
   "recommendations": [
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "ms-dotnettools.vscode-dotnet-pack",
     "ms-dotnettools.csharp",
-    "ms-dotnettools.csdevkit"
+    "ms-dotnettools.csdevkit",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "golang.go",
+    "visualstudioexptteam.vscodeintellicode",
+    "k--kato.intellij-idea-keybindings",
+    "ms-vscode.makefile-tools",
+    "davidanson.vscode-markdownlint",
+    "esbenp.prettier-vscode"
   ]
 }

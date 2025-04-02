@@ -1,8 +1,8 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserChangePasswordRequestModel from "../models/UserChangePasswordRequestModel";
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BOCommonConstants, BOController, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView, UserRoles } from "iobootstrap-bo-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, UICommonConstants, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView } from "iobootstrap-bo-base";
 
 class UserChangePasswordController extends BOController<{}, {}> {
 
@@ -28,19 +28,9 @@ class UserChangePasswordController extends BOController<{}, {}> {
     }
 
     handleFormSuccess(values: string[], blobs: Blob[]) {
-        let currentPassword: string | null;
-        let password: string;
-        let passwordRepeat: string;
-
-        if (this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
-            currentPassword = null;
-            password = values[0];
-            passwordRepeat = values[1];
-        } else {
-            currentPassword = values[0];
-            password = values[1];
-            passwordRepeat = values[2];
-        }
+        const currentPassword: string = values[0];
+        const password: string = values[1];
+        const passwordRepeat: string = values[2];
 
         if (password !== passwordRepeat) {
             this.handleFormError("Passwords did not match.", "Invalid password.");
@@ -69,7 +59,6 @@ class UserChangePasswordController extends BOController<{}, {}> {
 
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ChangePassword`;
         const request = new UserChangePasswordRequestModel();
-        request.userName = this._updateRequest.userName;
         request.oldPassword = encryptedCurrentPassword;
         request.newPassword = encryptedNewPassword;
 
@@ -77,6 +66,13 @@ class UserChangePasswordController extends BOController<{}, {}> {
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 weakSelf.showCalloutAndRedirectToHash("User password has been changed successfully.", "usersList");
+
+                setTimeout(function () {
+                    weakSelf.storage.removeObject(BOCommonConstants.userNameStorageKey);
+                    weakSelf.storage.removeObject(UICommonConstants.userTokenStorageKey);
+                    weakSelf.appContext.removeObject(BOCommonConstants.userRoleStorageKey);
+                    window.location.reload();
+                }, 3000);
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
@@ -93,20 +89,11 @@ class UserChangePasswordController extends BOController<{}, {}> {
             BreadcrumbNavigationModel.initialize("userChangePassword", "Change Password")
         ];
 
-        let formElements: FormType[];
-
-        if (this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) === UserRoles.SuperAdmin) {
-            formElements = [
-                FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-                FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ])
-            ];
-        } else {
-            formElements = [
-                FormTypePasswordProps.initializeWithValidations("Current Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-                FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-                FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ])
-            ];
-        }
+        let formElements: FormType[] = [
+            FormTypePasswordProps.initializeWithValidations("Current Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
+            FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
+            FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ])
+        ];
 
         return (
             <React.StrictMode>

@@ -1,5 +1,5 @@
+import { createRoot } from 'react-dom/client';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Main from './screens/main/controllers/Main';
 import reportWebVitals from './reportWebVitals';
 import 'jquery/src/jquery'
@@ -19,11 +19,15 @@ DIControllerHooks.setup();
 
 let calloutViewRef = React.createRef<CalloutView>();
 const calloutView = (<CalloutView ref={calloutViewRef} />);
-ReactDOM.render(calloutView, document.getElementById('calloutWrapper'));
+const calloutWrapperContainer = document.getElementById('calloutWrapper');
+const calloutWrapperRoot = createRoot(calloutWrapperContainer!);
+calloutWrapperRoot.render(calloutView);
 
 let indicatorViewRef = React.createRef<IndicatorView>();
 const indicatorView = (<IndicatorView ref={indicatorViewRef} />);
-ReactDOM.render(indicatorView, document.getElementById('indicatorWrapper'));
+const indicatorViewContainer = document.getElementById('indicatorWrapper');
+const indicatorViewRoot = createRoot(indicatorViewContainer!);
+indicatorViewRoot.render(indicatorView);
 
 let modalInputViewRef = React.createRef<ModalInputView>();
 let modalInputViewPresentHandler = function() {
@@ -53,15 +57,17 @@ let uploadModalViewDismissHandler = function() {
 const uploadModalView = (<UploadModalView ref={uploadModalViewRef}
   presentHandler={uploadModalViewPresentHandler}
   dismissHandler={uploadModalViewDismissHandler} />);
-
-ReactDOM.render(uploadModalView, document.getElementById('uploadModalWrapper'));
+const uploadModalViewContainer = document.getElementById('uploadModalWrapper');
+const uploadModalViewRoot = createRoot(uploadModalViewContainer!);
+uploadModalViewRoot.render(uploadModalView);
 
 const mainView = (<Main calloutView={calloutViewRef}
   indicatorView={indicatorViewRef}
   modalInputView={modalInputViewRef}
   uploadModalView={uploadModalViewRef} />);
-
-ReactDOM.render(mainView, document.getElementById('pagecontent'));
+const mainViewContainer = document.getElementById('pagecontent');
+const mainViewRoot = createRoot(mainViewContainer!);
+mainViewRoot.render(mainView);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

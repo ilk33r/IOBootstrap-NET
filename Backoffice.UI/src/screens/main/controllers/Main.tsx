@@ -195,7 +195,11 @@ class Main extends BOController<MainProps, MainState> {
               decrypted
             );
             newState.isLoggedIn = true;
-            weakSelf.setState(newState);
+            weakSelf.setState(newState, () => {
+                if (window.location.hash === "#!userChangePassword") {
+                    weakSelf.updateLocation("#!userChangePassword");
+                }
+            });
           })
           .catch(() => {
             weakSelf.indicatorPresenter.dismiss();

@@ -112,6 +112,19 @@ class AppCryptography {
         return decoder.decode(decryptedData);
     }
 
+    public base64Encode(buffer: Uint8Array): string {
+        return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''));
+    }
+
+    public base64Decode(string: string): Uint8Array {
+        return Uint8Array.from(atob(string), c => c.charCodeAt(0));
+    }
+
+    public random(count: number): string {
+        const randomBytes = window.crypto.getRandomValues(new Uint8Array(count));
+        return this.base64Encode(randomBytes).replace("=", "&");
+    }
+
     private async generateAESKeys(): Promise<CryptoKey> {
         const key = await window.crypto.subtle.generateKey(
             {
@@ -132,14 +145,6 @@ class AppCryptography {
         }
 
         return bytes;
-    }
-
-    public base64Encode(buffer: Uint8Array): string {
-        return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''));
-    }
-
-    public base64Decode(string: string): Uint8Array {
-        return Uint8Array.from(atob(string), c => c.charCodeAt(0));
     }
 
     private base64UrlEncode(buffer: Uint8Array): string {

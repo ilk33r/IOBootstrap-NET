@@ -32,7 +32,7 @@ class UsersUpdateController extends BOController<{}, {}> {
         request.userId = this._updateRequest.userId;
         request.userName = values[0];
         request.userRole = Number(values[1]);
-        request.isActive = Boolean(values[2]);
+        request.isActive = (values[2] == "yes") ? true : false;
         request.activationEndDate = values[3];
 
         const weakSelf = this;
@@ -75,9 +75,9 @@ class UsersUpdateController extends BOController<{}, {}> {
         const formElements: FormType[] = [
             FormTypeTextProps.initializeWithValidations("User Name", this._updateRequest.userName, true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ]),
             FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, userRoleFormDataOptions),
-            FormTypeSelectProps.initialize("Active", this._updateRequest.isActive ? "1" : "0", true, [ 
-                FormDataOptionModel.initialize("NO", "0"),
-                FormDataOptionModel.initialize("YES", "1")
+            FormTypeSelectProps.initialize("Active", this._updateRequest.isActive ? "yes" : "no", true, [ 
+                FormDataOptionModel.initialize("NO", "no"),
+                FormDataOptionModel.initialize("YES", "yes")
             ]),
             FormTypeDateProps.initializeWithValidations("End Date", activationEndDate, true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
         ];

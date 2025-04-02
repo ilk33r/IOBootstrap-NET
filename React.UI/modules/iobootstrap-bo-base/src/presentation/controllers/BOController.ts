@@ -11,6 +11,16 @@ class BOController<TProps, TState> extends Controller<TProps, TState> {
         this.modalInputPresenter = DIHooks.Instance.singletonForKey("modalInputPresenter");
     }
     
+    public handleServiceSuccess<T extends BaseResponseModel>(response: T): boolean {
+        if (response.status?.code === 409) {
+            this.indicatorPresenter.dismiss();
+            window.location.hash = "#!userChangePassword";
+            return false;
+        }
+
+        return super.handleServiceSuccess(response);
+    }
+
     public handleInvalidCredential(response: BaseResponseModel) {
         super.handleInvalidCredential(response);
         this.storage.removeObject(UICommonConstants.userTokenStorageKey)

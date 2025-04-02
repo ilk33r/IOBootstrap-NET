@@ -5,7 +5,7 @@ import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
 import { DIHooks } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
 
 class UsersListController extends BOController<UsersListProps, UsersListState> {
 
@@ -43,13 +43,19 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
 
     changePasswordHandler(index: number) {
         const currentUser = this.state.userList[index];
+
+        if (currentUser.userName == this.storage.stringForKey(BOCommonConstants.userNameStorageKey)) {
+            this.navigateToPage("userChangePassword");
+            return;
+        }
+
         const updateRequestModel = new UpdateUserRequestModel();
         updateRequestModel.userId = currentUser.id;
         updateRequestModel.userName = currentUser.userName;
         updateRequestModel.userRole = currentUser.userRole;
 
-        this.appContext.setObjectForKey("usersChangePasswordRequest", updateRequestModel);
-        this.navigateToPage("userChangePassword");
+        this.appContext.setObjectForKey("usersResetPasswordRequest", updateRequestModel);
+        this.navigateToPage("userResetPassword");
     }
 
     deleteDataHandler(index: number) {
@@ -83,12 +89,12 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
             'ID',
             'Name',
             'Role',
-            'Last Login Date',
             'Active',
             'End Date',
-            'Created By',
             'Created Date',
+            'Created By',
             'Update Date',
+            'Last Login Date',
         ];
 
         const items = this.state.userList.map(user => {
@@ -104,28 +110,28 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
             }
 
             const tokenDate = (user.tokenDate === undefined || user.tokenDate === null) ? "-" : new Date(user.tokenDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
-            const userIsActive = (user.isActive) ? "YES" : "NO";
+            const userIsActive = (user.isActive) ? "<strong><span class=\"text-success\">YES</span></strong>" : "<strong><span class=\"text-danger\">NO</span></strong>";
             const activationEndDate = (user.activationEndDate === undefined || user.activationEndDate === null) ? "-" : new Date(user.activationEndDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
             const createdDate = (user.createdDate === undefined || user.createdDate === null) ? "-" : new Date(user.createdDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
             const updateDate = (user.updateDate === undefined || user.updateDate === null) ? "-" : new Date(user.updateDate).toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' });
 
             itemModel.itemList = [
                 user.id.toString(),
-                user.userName,
-                roleName,
-                tokenDate,
+                `<em>${user.userName}</em>`,
+                `<strong>${roleName}</strong>`,
                 userIsActive,
-                activationEndDate,
-                user.createdBy ?? "-",
+                `<u>${activationEndDate}</u>`,
                 createdDate,
-                updateDate
+                `<em>${user.createdBy ?? "-"}</em>`,
+                updateDate,
+                tokenDate,
             ];
 
             return itemModel;
         });
 
         const extras = [
-            new ListExtrasModel("Change Password", "fa-key", this.changePasswordHandler)
+            new ListExtrasModel("Reset Password", "fa-key", this.changePasswordHandler)
         ];
 
         return (

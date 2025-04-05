@@ -2,7 +2,7 @@ import MainProps from '../props/MainProps';
 import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
 import React from 'react';
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, Controller, DIHooks, UICommonConstants } from 'iobootstrap-ui-base';
+import { AppServiceHeaderAuthenticationInterceptor, Controller, DIHooks } from 'iobootstrap-ui-base';
 
 class Main extends Controller<MainProps, MainState> {
 

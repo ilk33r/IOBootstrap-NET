@@ -23,9 +23,10 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^5.3.5",
     "jquery": "^3.7.1",
     "react": "^18.3.1",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
     "rewire": "^7.0.0",
@@ -59,7 +60,7 @@
     ]
   },
   "devDependencies": {
-    "@types/bootstrap": "^3.4.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/jquery": "^3.5.29",
     "@types/node": "^16.9.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"

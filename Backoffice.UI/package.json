@@ -59,8 +59,14 @@
     ]
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.29",
     "@types/bootstrap": "^3.4.0",
-    "@types/node": "^16.9.1"
+    "@types/jquery": "^3.5.29",
+    "@types/node": "^16.9.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "overrides": {
+    "nth-check": "2.1.1",
+    "serialize-javascript": "6.0.2",
+    "postcss": "8.4"
   }
 }

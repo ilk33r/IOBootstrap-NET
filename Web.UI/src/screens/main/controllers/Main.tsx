@@ -34,6 +34,8 @@ class Main extends Controller<MainProps, MainState> {
         window.addEventListener("onpushstate", function () {
             weakSelf.updateLocation(window.location.pathname);
         });
+
+        this.updateLocation(window.location.pathname);
     }
 
     private updateLocation(path: string) {

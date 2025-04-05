@@ -3,6 +3,7 @@ import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
 import React from 'react';
 import { AppServiceHeaderAuthenticationInterceptor, Controller, DIHooks } from 'iobootstrap-ui-base';
+import { Container } from 'react-bootstrap';
 
 class Main extends Controller<MainProps, MainState> {
 
@@ -55,10 +56,12 @@ class Main extends Controller<MainProps, MainState> {
     render() {
         return (
           <React.StrictMode>
-            <NavigationView
-              pagePath={this.state.pagePath ?? "dashboard"}
-              pathComponents={this.state.pathComponents}
-            />
+            <Container fluid="md">
+                <NavigationView
+                    pagePath={this.state.pagePath ?? "dashboard"}
+                    pathComponents={this.state.pathComponents}
+                />
+            </Container>
           </React.StrictMode>
         );
     }

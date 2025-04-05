@@ -42,7 +42,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "IOBootstrapNetApplicationPublish",

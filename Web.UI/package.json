@@ -1,21 +1,10 @@
 {
-  "name": "backoffice.ui",
+  "name": "web.ui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/backoffice/",
+  "homepage": "/ui/",
   "dependencies": {
     "iobootstrap-ui-base": "file:../React.UI/modules/iobootstrap-ui-base",
-    "iobootstrap-bo-base": "file:../React.UI/modules/iobootstrap-bo-base",
-    "iobootstrap-bo-menu": "file:../React.UI/modules/iobootstrap-bo-menu",
-    "iobootstrap-bo-users": "file:../React.UI/modules/iobootstrap-bo-users",
-    "iobootstrap-bo-configurations": "file:../React.UI/modules/iobootstrap-bo-configurations",
-    "iobootstrap-bo-login": "file:../React.UI/modules/iobootstrap-bo-login",
-    "iobootstrap-bo-messages": "file:../React.UI/modules/iobootstrap-bo-messages",
-    "iobootstrap-bo-menueditor": "file:../React.UI/modules/iobootstrap-bo-menueditor",
-    "iobootstrap-bo-clients": "file:../React.UI/modules/iobootstrap-bo-clients",
-    "iobootstrap-bo-pushnotifications": "file:../React.UI/modules/iobootstrap-bo-pushnotifications",
-    "iobootstrap-bo-generatebopage": "file:../React.UI/modules/iobootstrap-bo-generatebopage",
-    "iobootstrap-bo-images": "file:../React.UI/modules/iobootstrap-bo-images",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -33,7 +22,7 @@
     "web-vitals": "^3.5.2"
   },
   "scripts": {
-    "start": "PORT=3000 react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build:development": "react-scripts -r dotenv/config build dotenv_config_path=.env.development",
     "build:staging": "node -r dotenv/config ./build.js dotenv_config_path=.env.staging",
     "build:production": "node -r dotenv/config ./build.js dotenv_config_path=.env.production",

@@ -27,9 +27,12 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
 
     #region Authentication Api
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 10)]
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IONonceRequired]
+    [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
     public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
@@ -37,9 +40,12 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
         return ViewModel.Authenticate(requestModel.UserName ?? "", requestModel.Password ?? "");
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 20)]
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IONonceRequired]
+    [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
     public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {

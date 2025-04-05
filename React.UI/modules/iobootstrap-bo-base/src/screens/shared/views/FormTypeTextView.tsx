@@ -27,6 +27,10 @@ class FormTypeTextView extends View<FormTypeTextProps, FormViewState> implements
 
     handleValueChange(event: { target: { value: string; }; }) {
         this._formValue = event.target.value;
+        
+        if (this.props.changeHandler != null) {
+            this.props.changeHandler(this.props.index, this._formValue);
+        }
     }
 
     validate(): boolean {

@@ -58,6 +58,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             CreatedDate = DateTimeOffset.UtcNow,
             UpdateDate = DateTimeOffset.UtcNow,
             WrongPasswordAttemptCount = 0,
+            PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
             LastWrongPasswordAttemptDate = new DateTimeOffset()
         };
 
@@ -69,14 +70,13 @@ where TDBContext : IODatabaseContext<TDBContext>
         return new IOAddUserResponseModel(newUserEntity.ID, requestModel.UserName);
     }
 
-    public virtual void ChangePassword(string userName, string oldPassword, string newPassword)
+    public virtual void ChangePassword(string oldPassword, string newPassword)
     {
-        if (UserModel != null && UserModel.UserRole != (int)UserRoles.SuperAdmin)
-        {
-            this.ChangeUserPassword(oldPassword, newPassword);
-            return;
-        }
+        this.ChangeUserPassword(oldPassword, newPassword);
+    }
 
+    public virtual void ResetPassword(string userName, string newPassword)
+    {
         IOUserEntity? currentUser = DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
                                                     .FirstOrDefault();
@@ -87,6 +87,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserNotFoundException();
         }
 
+        if (currentUser.UserRole == (int)UserRoles.SuperAdmin && GetUserRole() > (int)UserRoles.SuperAdmin)
+        {
+            throw new IOInvalidCredentialsException("You can not reset this user password.");
+        }
+
         // Update user password properties
         string decryptedNewPassword = DecryptString(newPassword);
         currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
@@ -94,6 +99,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         currentUser.UpdateDate = DateTimeOffset.UtcNow;
         currentUser.WrongPasswordAttemptCount = 0;
         currentUser.LastWrongPasswordAttemptDate = new DateTimeOffset();
+        currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1);
 
         // Update user password
         DatabaseContext.Update(currentUser);

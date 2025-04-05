@@ -10,18 +10,21 @@ using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Models.Shared;
 using IOBootstrap.NET.Common.Utilities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Session;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IOBootstrap.NET.Core.Controllers;
 
-public abstract class IOController<TViewModel, TDBContext> : Controller, IIOController<TViewModel, TDBContext>, IIONonce<TViewModel, TDBContext>
+public abstract class IOController<TViewModel, TDBContext> : Controller, 
+IIOController<TViewModel, TDBContext>, 
+IIONonce<TViewModel, TDBContext>,
+IIORateLimit<TViewModel, TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
 where TViewModel : IIOViewModel<TDBContext>, new()
 {
@@ -63,6 +66,9 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         base.OnActionExecuting(context);
+
+        // Check rate limit
+        CheckRateLimit(context);
 
         // Check https is required
         CheckHttpsRequired(context);
@@ -411,6 +417,30 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         }
 
         throw new IOInvalidRequestException(detailedMessage);
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public virtual void CheckRateLimit(ActionExecutingContext context)
+    {
+        // Obtain action desctriptor
+        ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+        if (actionDescriptor != null)
+        {
+            // Loop throught descriptors
+            foreach (CustomAttributeData descriptor in actionDescriptor.MethodInfo.CustomAttributes)
+            {
+                if (descriptor.AttributeType == typeof(IORateLimitAttribute))
+                {
+                    string apiName = actionDescriptor.ControllerName + "_" + actionDescriptor.ActionName;
+
+                    object? seconds = descriptor.ConstructorArguments[0].Value;
+                    object? requestCount = descriptor.ConstructorArguments[1].Value;
+
+                    this.CheckAndUpdateRateLimit(apiName, (int?)seconds ?? 60, (int?)requestCount ?? 5);
+                }
+            }
+        }
     }
 
     #endregion

@@ -1,5 +1,6 @@
 import { ValidationRule } from "iobootstrap-ui-base";
 import FormType from "../interfaces/FormType";
+import { FormTypeChangeHandler } from "../interfaces/FormTypeChangeHandler";
 
 type FormTypePopupSelectionViewErrorHandler = (errorTitle: string, errorMessage: string) => void;
 
@@ -14,6 +15,7 @@ class FormTypePopupSelectionProps implements FormType {
     isEnabled: boolean;
     errorHandler: FormTypePopupSelectionViewErrorHandler | null;
     validations: ValidationRule[];
+    changeHandler: FormTypeChangeHandler | null;
 
     constructor() {
         this.index = 0;
@@ -25,6 +27,7 @@ class FormTypePopupSelectionProps implements FormType {
         this.isEnabled = true;
         this.errorHandler = null;
         this.validations = [];
+        this.changeHandler = null;
     }
 
     static initialize(name: string, value: string, selectedItemId: number, selectionURL: string, isEnabled: boolean): FormType {

@@ -1,5 +1,6 @@
 import { ValidationRule } from "iobootstrap-ui-base";
 import FormType from "../interfaces/FormType";
+import { FormTypeChangeHandler } from "../interfaces/FormTypeChangeHandler";
 
 type FormTypeDateViewErrorHandler = (errorTitle: string, errorMessage: string) => void;
 
@@ -12,6 +13,7 @@ class FormTypeDateProps implements FormType {
     isEnabled: boolean;
     errorHandler: FormTypeDateViewErrorHandler | null;
     validations: ValidationRule[];
+    changeHandler: FormTypeChangeHandler | null;
 
     constructor() {
         this.index = 0;
@@ -21,6 +23,7 @@ class FormTypeDateProps implements FormType {
         this.isEnabled = true;
         this.errorHandler = null;
         this.validations = [];
+        this.changeHandler = null;
     }
 
     static initialize(name: string, value: string, isEnabled: boolean): FormType {
@@ -38,6 +41,17 @@ class FormTypeDateProps implements FormType {
         response.value = value;
         response.isEnabled = isEnabled;
         response.validations = validations;
+
+        return response;
+    }
+
+    static initializeWithChangeListener(name: string, value: string, isEnabled: boolean, validations: ValidationRule[], changeHandler: FormTypeChangeHandler): FormType {
+        let response = new FormTypeDateProps();
+        response.name = name;
+        response.value = value;
+        response.isEnabled = isEnabled;
+        response.validations = validations;
+        response.changeHandler = changeHandler;
 
         return response;
     }

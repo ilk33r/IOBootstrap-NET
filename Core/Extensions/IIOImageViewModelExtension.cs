@@ -53,6 +53,31 @@ public static class IIOImageViewModelExtension
         }
     }
 
+    public static string SaveRawFile(this IIOImageViewModel input, IFormFile file)
+    {
+        if (file.Length < 16)
+        {
+            throw new IOImageCorruptException();
+        }
+
+        string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;
+        string newFileName = String.Format("{0}-{1}", IORandomUtilities.GenerateGUIDString(), file.FileName.RemoveNonASCII());
+        string filePath = Path.Combine(imagesFolder, newFileName);
+        
+        try
+        {
+            FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
+            file.CopyTo(fileStream);
+            fileStream.Flush();
+            fileStream.Close();
+            return filePath;
+        }
+        catch
+        {
+            throw new IOImageSaveException();
+        }
+    }
+
     public static void RemoveFile(this IIOImageViewModel input, string fileName)
     {
         string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;

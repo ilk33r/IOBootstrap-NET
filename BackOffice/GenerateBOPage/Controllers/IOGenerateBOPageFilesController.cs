@@ -24,6 +24,8 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
 
     #region Controller Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -48,6 +50,8 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
         return fileResult;
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]

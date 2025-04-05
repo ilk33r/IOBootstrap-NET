@@ -19,6 +19,7 @@ public class IOUserInfoModel : IOModel
 	public string? CreatedBy { get; set; }
 	public DateTimeOffset CreatedDate { get; set; }
 	public DateTimeOffset UpdateDate { get; set; }
+	public DateTimeOffset? PasswordExpireDate { get; set; }
 
 	#endregion
 

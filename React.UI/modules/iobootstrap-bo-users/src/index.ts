@@ -1,5 +1,7 @@
+export { default as UserAddState } from "./props/UserAddState";
 export { default as UsersListProps } from "./props/UsersListProps";
 export { default as UsersListState } from "./props/UsersListState";
+export { default as UserLoginInformationProps } from "./props/UserLoginInformationProps";
 export { default as AddUserRequestModel } from "./models/AddUserRequestModel";
 export { default as DeleteUserRequestModel } from "./models/DeleteUserRequestModel";
 export { default as ListUserResponseModel } from "./models/ListUserResponseModel";
@@ -13,3 +15,4 @@ export { default as UsersDeleteController } from "./controllers/UsersDeleteContr
 export { default as UsersListController } from "./controllers/UsersListController";
 export { default as UsersLogoutController } from "./controllers/UsersLogoutController";
 export { default as UsersUpdateController } from "./controllers/UsersUpdateController";
+export { default as UserLoginInformationView } from "./views/UserLoginInformationView";

@@ -36,6 +36,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             CreatedDate = DateTimeOffset.UtcNow,
             UpdateDate = DateTimeOffset.UtcNow,
             WrongPasswordAttemptCount = 0,
+            PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
             LastWrongPasswordAttemptDate = new DateTimeOffset()
         };
 

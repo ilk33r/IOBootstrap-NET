@@ -3,6 +3,7 @@ import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseRespons
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserResetPasswordRequestModel from "../models/UserResetPasswordRequestModel";
+import UserLoginInformationView from "../views/UserLoginInformationView";
 
 class UserResetPasswordController extends BOController<{}, {}> {
 
@@ -76,13 +77,22 @@ class UserResetPasswordController extends BOController<{}, {}> {
 
         return (
             <React.StrictMode>
-                <FormView navigation={navigation} 
-                    resourceHome="Home"
-                    title="Reset password"
-                    submitButtonName="Save"
-                    errorHandler={this.handleFormError}
-                    successHandler={this.handleFormSuccess}
-                    formElements={formElements} />
+                <div className="form-wrapper">
+                    <FormView navigation={navigation} 
+                        resourceHome="Home"
+                        title="Reset password"
+                        submitButtonName="Save"
+                        errorHandler={this.handleFormError}
+                        successHandler={this.handleFormSuccess}
+                        formElements={formElements} />
+                </div>
+
+                <div className="editor-wrapper">
+                    <div className="content-wrapper">
+                        <UserLoginInformationView userName={this._updateRequest.userName}
+                            randomPassword={randomPassword} />
+                    </div>
+                </div>
             </React.StrictMode>
         );
     }

@@ -1,4 +1,5 @@
 import { ValidationRule } from "iobootstrap-ui-base";
+import { FormTypeChangeHandler } from "./FormTypeChangeHandler";
 
 interface FormType {
 
@@ -7,6 +8,7 @@ interface FormType {
     value: string;
     isEnabled: boolean;
     validations: ValidationRule[];
+    changeHandler: FormTypeChangeHandler | null;
 }
 
 export default FormType;

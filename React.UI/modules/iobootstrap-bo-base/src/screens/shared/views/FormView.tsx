@@ -81,6 +81,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -93,6 +94,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -105,6 +107,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -117,6 +120,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -129,6 +133,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             options={formElement.options}
                             key={index}
                             ref={this._formElementsRef[index]} />);
@@ -140,6 +145,7 @@ class FormView extends View<FormViewProps, {}> {
                             name={formElement.name}
                             value={formElement.value}
                             isEnabled={formElement.isEnabled}
+                            changeHandler={formElement.changeHandler}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
                             key={index}
@@ -156,6 +162,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -169,6 +176,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }
@@ -182,6 +190,7 @@ class FormView extends View<FormViewProps, {}> {
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
                             key={index}
                             ref={this._formElementsRef[index]} />);
             }

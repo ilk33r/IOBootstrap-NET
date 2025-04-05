@@ -39,6 +39,8 @@ public class IOUserEntity
 
     public int WrongPasswordAttemptCount { get; set; }
 
+    public DateTimeOffset PasswordExpireDate { get; set; }
+
     public DateTimeOffset LastWrongPasswordAttemptDate { get; set; }
 
     #endregion

@@ -24,6 +24,8 @@ where TViewModel : IOGenerateBOPageViewModel<TDBContext>, new()
 
     #region Controller Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]

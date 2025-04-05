@@ -26,6 +26,8 @@ where TViewModel : IOPushNotificationViewModel<TDBContext>, new()
 
     #region Push Notification Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 5)]
     [IOValidateRequestModel]
     [HttpPost("[action]")]
     public virtual AddPushNotificationResponseModel AddPushNotificationTokenV2([FromBody] AddPushNotificationRequestModel requestModel)

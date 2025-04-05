@@ -29,6 +29,8 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
 
     #region Menu Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -41,6 +43,8 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
         return new IOMenuAddResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -53,6 +57,8 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
         return new IOMenuUpdateResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpGet("[action]")]
     public virtual IOMenuListResponseModel ListMenuItems()
@@ -64,6 +70,8 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
         return new IOMenuListResponseModel(menuItems);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]

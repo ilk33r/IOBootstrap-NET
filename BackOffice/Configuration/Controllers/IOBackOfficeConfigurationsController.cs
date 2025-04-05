@@ -31,6 +31,8 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
 
     #region Configuration Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -43,6 +45,8 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
         return new IOConfigurationAddResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -55,6 +59,8 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
         return new IOConfigurationDeleteResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.User)]
     [HttpGet("[action]")]
     public IOConfigurationListResponseModel ListConfigurationItems()
@@ -66,6 +72,8 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
         return new IOConfigurationListResponseModel(configurationItems);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -78,6 +86,8 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
         return new IOConfigurationUpdateResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpGet("[action]")]
     public virtual IOConfigurationUpdateResponseModel ResetCache()

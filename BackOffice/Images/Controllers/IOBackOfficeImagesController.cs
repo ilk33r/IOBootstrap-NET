@@ -31,6 +31,8 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
 
     #region API Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPost("[action]")]
@@ -40,6 +42,7 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IONonceRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPut("[action]")]
@@ -50,6 +53,8 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
         return new IOSaveImageResponseModel(imageMetadata);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IONonceRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]

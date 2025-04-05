@@ -31,6 +31,8 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
 
     #region User Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.Admin)]
@@ -41,19 +43,39 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
         return ViewModel.AddUser(requestModel);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 1)]
     [IOValidateRequestModel]
     [IOEncryptionRequired]
+    [IOIgnorePasswordExpire]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPost("[action]")]
     public virtual IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel)
     {
         // Check change password is success
-        ViewModel.ChangePassword(requestModel.UserName ?? "", requestModel.OldPassword ?? "", requestModel.NewPassword ?? "");
+        ViewModel.ChangePassword(requestModel.OldPassword ?? String.Empty, requestModel.NewPassword ?? String.Empty);
 
         // Return response
         return new IOResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 2)]
+    [IOValidateRequestModel]
+    [IOEncryptionRequired]
+    [IOUserRole(UserRoles.Admin)]
+    [HttpPost("[action]")]
+    public virtual IOResponseModel ResetPassword([FromBody] IOUserResetPasswordRequestModel requestModel)
+    {
+        // Reset user password
+        ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, requestModel.NewPassword ?? String.Empty);
+
+        // Return response
+        return new IOResponseModel();
+    }
+
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.Admin)]
     [HttpGet("[action]")]
     public virtual IOListUserResponseModel ListUsers()
@@ -65,6 +87,8 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
         return new IOListUserResponseModel(users);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 5)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -74,6 +98,8 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
         return new IOUpdateUserResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 3)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -83,6 +109,8 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
         return new IOResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]

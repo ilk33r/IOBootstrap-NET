@@ -57,7 +57,8 @@ public static class IIOUserCredentialExtension
                                                         UserName = u.UserName,
                                                         UserRole = u.UserRole,
                                                         UserToken = u.UserToken,
-                                                        TokenDate = u.TokenDate
+                                                        TokenDate = u.TokenDate,
+                                                        PasswordExpireDate = u.PasswordExpireDate
                                                     })
                                                     .Where(u => u.ID == userId)
                                                     .FirstOrDefault();
@@ -156,6 +157,7 @@ public static class IIOUserCredentialExtension
         {
             // Update user password properties
             currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
+            currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddMonths(6);
             currentUser.UserToken = null;
 
             // Update user password

@@ -103,7 +103,8 @@ public static class IIOAuthenticationExtension
                                                         UserToken = u.UserToken,
                                                         TokenDate = u.TokenDate,
                                                         IsActive = u.IsActive,
-                                                        ActivationEndDate = u.ActivationEndDate
+                                                        ActivationEndDate = u.ActivationEndDate,
+                                                        PasswordExpireDate = u.PasswordExpireDate
                                                     })
                                                     .Where(u => u.ID == tokenData.Item2)
                                                     .FirstOrDefault();

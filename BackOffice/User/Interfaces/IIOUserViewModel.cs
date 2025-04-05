@@ -9,7 +9,8 @@ public interface IIOUserViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContex
 where TDBContext : IODatabaseContext<TDBContext> 
 {
     public IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel);
-    public void ChangePassword(string userName, string oldPassword, string newPassword);
+    public void ChangePassword(string oldPassword, string newPassword);
+    public void ResetPassword(string userName, string newPassword);
     public IList<IOUserInfoModel> ListUsers();
     public void UpdateUser(IOUpdateUserRequestModel request);
     public void DeleteUser(IODeleteUserRequestModel request);

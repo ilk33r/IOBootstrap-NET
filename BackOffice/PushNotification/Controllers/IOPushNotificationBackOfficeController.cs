@@ -31,6 +31,8 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
 
     #region Back Office Methods
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.User)]
     [HttpGet("[action]")]
     public ListPushNotificationMessageResponseModel ListMessages()
@@ -42,7 +44,8 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
         return new ListPushNotificationMessageResponseModel(messages);
     }
 
-
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.User)]
     [HttpPost("[action]")]
@@ -55,6 +58,8 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
         return new IOResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.User)]
     [HttpPost("[action]")]

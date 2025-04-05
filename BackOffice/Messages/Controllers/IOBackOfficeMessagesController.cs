@@ -28,6 +28,9 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
 
     #endregion
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
+    [IOIgnorePasswordExpire]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpGet("[action]")]
     public virtual IOListMessagesResponseModel ListMessages()
@@ -39,6 +42,8 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
         return new IOListMessagesResponseModel(messages);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpGet("[action]")]
     public IOListMessagesResponseModel ListAllMessages()
@@ -50,6 +55,8 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
         return new IOListMessagesResponseModel(messages);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -62,6 +69,8 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
         return new IOMessageAddResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]
@@ -74,6 +83,8 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
         return new IOMessageDeleteResponseModel();
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.SuperAdmin)]
     [HttpPost("[action]")]

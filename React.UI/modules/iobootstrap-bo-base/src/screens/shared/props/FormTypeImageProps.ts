@@ -1,5 +1,6 @@
 import { ValidationRule } from "iobootstrap-ui-base";
 import FormType from "../interfaces/FormType";
+import { FormTypeChangeHandler } from "../interfaces/FormTypeChangeHandler";
 
 type FormTypeImageViewErrorHandler = (errorTitle: string, errorMessage: string) => void;
 
@@ -13,6 +14,7 @@ class FormTypeImageProps {
     isEnabled: boolean;
     errorHandler: FormTypeImageViewErrorHandler | null;
     validations: ValidationRule[];
+    changeHandler: FormTypeChangeHandler | null;
 
     constructor() {
         this.index = 0;
@@ -23,6 +25,7 @@ class FormTypeImageProps {
         this.isEnabled = true;
         this.errorHandler = null;
         this.validations = [];
+        this.changeHandler = null;
     }
 
     static initialize(name: string, value: string, fileName: string, isEnabled: boolean): FormType {

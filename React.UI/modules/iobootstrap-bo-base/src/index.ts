@@ -20,6 +20,7 @@ export { default as IndicatorView } from "./screens/shared/views/IndicatorView";
 export { default as FooterView } from "./screens/shared/views/FooterView";
 export { default as FormElement } from "./screens/shared/interfaces/FormElement";
 export { default as FormType } from "./screens/shared/interfaces/FormType";
+export type { FormTypeChangeHandler } from "./screens/shared/interfaces/FormTypeChangeHandler";
 export { default as FormDataOptionModel } from "./screens/shared/models/FormDataOptionModel";
 export { default as FormTypeDateProps } from "./screens/shared/props/FormTypeDateProps";
 export { default as FormTypeFileProps } from "./screens/shared/props/FormTypeFileProps";

@@ -30,6 +30,7 @@ where TViewModel : IOHandshakeViewModel<TDBContext>, new()
     #region Handshake Methods
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [HttpGet("[action]")]
     public virtual HandshakeResponseModel Index()
     {
@@ -49,6 +50,7 @@ where TViewModel : IOHandshakeViewModel<TDBContext>, new()
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [HttpGet("[action]")]
     public virtual IOResponseModel CheckSession()
     {

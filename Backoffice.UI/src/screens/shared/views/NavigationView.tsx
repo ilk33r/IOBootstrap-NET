@@ -3,10 +3,11 @@ import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
 import React from "react";
 import { View } from "iobootstrap-ui-base";
-import { UserChangePasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
+import { UserChangePasswordController, UserResetPasswordController, UsersAddController, UsersDeleteController, UsersListController, UsersLogoutController, UsersUpdateController } from "iobootstrap-bo-users";
 import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 import { MessageListController, MessagesAddController, MessagesDeleteController, MessagesUpdateController } from "iobootstrap-bo-messages";
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
+import { ClientDeleteController, ClientListController, ClientSelectController, ClientUpdateController, ClientsAddController } from "iobootstrap-bo-clients";
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
 import { ImagesAddController, ImagesEditController, ImagesModifyController } from "iobootstrap-bo-images";
@@ -114,6 +115,10 @@ class NavigationView extends View<NavigationProps, NavigationState> {
 
         if (this.props.pageHash === "userChangePassword") {
             return <UserChangePasswordController />
+        }
+
+        if (this.props.pageHash === "userResetPassword") {
+            return <UserResetPasswordController />
         }
 
         if (this.props.pageHash === "usersLogout") {

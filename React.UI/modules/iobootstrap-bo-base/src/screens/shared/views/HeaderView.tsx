@@ -27,7 +27,7 @@ class HeaderView extends View<HeaderProps, HeaderState> {
         return (
             <React.StrictMode>
                 <header className="main-header">
-                    <a href="./" className="logo">
+                    <a href={process.env.REACT_APP_BACKOFFICE_PAGE_URL} className="logo">
                         <span className="logo-mini"><b>{process.env.REACT_APP_APP_NAME}</b></span>
                         <span className="logo-lg"><b>{process.env.REACT_APP_APP_NAME}</b></span>
                     </a>

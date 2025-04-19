@@ -29,7 +29,7 @@ class ValidationFileTypeRule implements ValidationRule {
             return false;
         }
 
-        const lastCharacters = value.at(-extensionLength);
+        const lastCharacters = value.slice(-extensionLength);
         if (lastCharacters === this.extension) {
             return true;
         }

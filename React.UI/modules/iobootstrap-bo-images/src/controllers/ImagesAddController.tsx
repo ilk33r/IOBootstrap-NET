@@ -1,6 +1,6 @@
 import React from "react";
 import SaveImageResponseModel from "../models/SaveImageResponseModel";
-import { BaseResponseModel, CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationFileTypeRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesAddController extends BOController<{}, {}> {
@@ -61,7 +61,15 @@ class ImagesAddController extends BOController<{}, {}> {
         ];
 
         const formElements: FormType[] = [
-            FormTypeImageProps.initializeWithValidations("Image", "", "", true, [ ValidationRequiredRule.initialize("Image is required.", "Invalid image.") ])
+            FormTypeImageProps.initializeWithValidations("Image", "", "", true, [ 
+                ValidationRequiredRule.initialize("Image is required.", "Invalid image."),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpe"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpg"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpeg"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "png"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "heic"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "pjpeg"),
+            ])
         ];
 
         return (

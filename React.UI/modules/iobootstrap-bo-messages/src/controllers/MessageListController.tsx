@@ -82,7 +82,7 @@ class MessageListController extends BOController<MessageListProps, MessageListSt
 
             itemModel.itemList = [
                 message.id.toString(),
-                message.message.replace(/\n/g, "<br />"),
+                message.message.RemoveHTML().replace(/\n/g, "<br />"),
                 createDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' }),
                 startDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' }),
                 endDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' })

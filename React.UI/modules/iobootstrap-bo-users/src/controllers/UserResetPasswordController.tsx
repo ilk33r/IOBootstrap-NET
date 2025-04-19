@@ -89,7 +89,7 @@ class UserResetPasswordController extends BOController<{}, {}> {
 
                 <div className="editor-wrapper">
                     <div className="content-wrapper">
-                        <UserLoginInformationView userName={this._updateRequest.userName}
+                        <UserLoginInformationView userName={this._updateRequest.userName.RemoveHTML()}
                             randomPassword={randomPassword} />
                     </div>
                 </div>

@@ -62,7 +62,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
 
         const items = this.state.messages.map(message => {
             const itemModel = new ListDataItemModel();
-            const clientDescription = (message.client != null) ? message.client.clientDescription : "";
+            const clientDescription = (message.client != null) ? message.client.clientDescription.RemoveHTML() : "";
             const notificationDate = new Date(message.notificationDate);
             const status = (message.isCompleted === true) ? "Completed" : "Sending";
 
@@ -70,10 +70,10 @@ class PushNotificationListController extends BOController<PushNotificationListPr
                 message.id.toString(),
                 clientDescription,
                 notificationDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' }),
-                message.notificationCategory ?? "",
-                message.notificationData ?? "",
-                message.notificationMessage,
-                message.notificationTitle,
+                (message.notificationCategory ?? "").RemoveHTML(),
+                (message.notificationData ?? "").RemoveHTML(),
+                (message.notificationMessage).RemoveHTML(),
+                (message.notificationTitle).RemoveHTML(),
                 status
             ];
 

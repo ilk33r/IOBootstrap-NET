@@ -330,7 +330,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string toStringMethod = item.Type switch
         {
             IOBOPagePropertyType.Int => ".toString()",
-            IOBOPagePropertyType.String => "",
+            IOBOPagePropertyType.String => ".RemoveHTML()",
             IOBOPagePropertyType.Double => ".toString()",
             IOBOPagePropertyType.Float => ".toString()",
             IOBOPagePropertyType.DateTimeOffset => "",

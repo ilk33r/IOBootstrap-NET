@@ -1,7 +1,7 @@
 import DeleteImagesRequestModel from "../models/DeleteImagesRequestModel";
 import ImageVariationsModel from "../models/ImageVariationsModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationFileTypeRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeImageProps, FormTypeNumberProps, FormTypeSelectProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesModifyController extends BOController<{}, {}> {
@@ -89,7 +89,15 @@ class ImagesModifyController extends BOController<{}, {}> {
                 FormDataOptionModel.initialize("No", "0"),
                 FormDataOptionModel.initialize("YES", "1")
             ]),
-            FormTypeImageProps.initializeWithValidations("Image", imageUrl, imageFileName, true, [ ValidationRequiredRule.initialize("Image is required.", "Invalid image.") ])
+            FormTypeImageProps.initializeWithValidations("Image", imageUrl, imageFileName, true, [ 
+                ValidationRequiredRule.initialize("Image is required.", "Invalid image."),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpe"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpg"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpeg"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "png"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "heic"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "pjpeg"),
+            ])
         ];
 
         return (

@@ -135,9 +135,9 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
 
             itemModel.itemList = [
                 menu.id.toString(),
-                menu.name,
-                menu.action,
-                menu.cssClass,
+                menu.name.RemoveHTML(),
+                menu.action.RemoveHTML(),
+                menu.cssClass.RemoveHTML(),
                 roleName,
                 `<strong>${menu.menuOrder.toString()}</strong>`
             ];
@@ -159,9 +159,9 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
         
                     childItemModel.itemList = [
                         childMenu.id.toString(),
-                        childMenu.name,
-                        childMenu.action,
-                        childMenu.cssClass,
+                        childMenu.name.RemoveHTML(),
+                        childMenu.action.RemoveHTML(),
+                        childMenu.cssClass.RemoveHTML(),
                         childMenuRoleName,
                         `<strong>${childMenu.menuOrder.toString()}</strong>`
                     ];

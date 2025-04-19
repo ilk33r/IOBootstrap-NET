@@ -117,12 +117,12 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
 
             itemModel.itemList = [
                 user.id.toString(),
-                `<em>${user.userName}</em>`,
+                `<em>${user.userName.RemoveHTML()}</em>`,
                 `<strong>${roleName}</strong>`,
                 userIsActive,
                 `<u>${activationEndDate}</u>`,
                 createdDate,
-                `<em>${user.createdBy ?? "-"}</em>`,
+                `<em>${(user.createdBy ?? "-").RemoveHTML()}</em>`,
                 updateDate,
                 tokenDate,
             ];

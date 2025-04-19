@@ -142,7 +142,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
                 <div className={areaClass}>
                     <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
                     <div className="col-sm-9">
-                        <input type="file" name="file" className="form-control" onChange={this.handleValueChange} disabled={inputDisabled} />
+                        <input type="file" name="file" className="form-control" accept=".jpe,.jpg,.jpeg,.png,.heic,.pjpeg" onChange={this.handleValueChange} disabled={inputDisabled} />
                         <span className={errorMessageClass}>{this.state.errorMessage}</span>
                     </div>
                     <div className="col-sm-2"></div>

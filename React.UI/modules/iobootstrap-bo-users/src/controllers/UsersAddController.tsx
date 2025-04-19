@@ -113,7 +113,7 @@ class UsersAddController extends BOController<{}, UserAddState> {
                     
                 <div className="editor-wrapper">
                     <div className="content-wrapper">
-                        <UserLoginInformationView userName={this.state.userName}
+                        <UserLoginInformationView userName={this.state.userName.RemoveHTML()}
                             randomPassword={this.randomPassword} />
                     </div>
                 </div>

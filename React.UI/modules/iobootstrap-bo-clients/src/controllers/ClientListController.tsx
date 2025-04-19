@@ -81,7 +81,7 @@ class ClientListController extends BOController<ClientListProps, ClientListState
 
             itemModel.itemList = [
                 clientModel.id.toString(),
-                clientModel.clientDescription,
+                clientModel.clientDescription.RemoveHTML(),
                 clientIsEnabled,
                 clientModel.requestCount.toString(),
                 clientModel.maxRequestCount.toString(),

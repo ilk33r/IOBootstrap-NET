@@ -11,6 +11,7 @@ class FormTypeFileProps {
     name: string;
     value: string;
     fileName: string;
+    accept: string;
     isEnabled: boolean;
     errorHandler: FormTypeFileViewErrorHandler | null;
     validations: ValidationRule[];
@@ -22,27 +23,30 @@ class FormTypeFileProps {
         this.name = "";
         this.value = "";
         this.fileName = "";
+        this.accept = "";
         this.isEnabled = true;
         this.errorHandler = null;
         this.validations = [];
         this.changeHandler = null;
     }
 
-    static initialize(name: string, value: string, fileName: string, isEnabled: boolean): FormType {
+    static initialize(name: string, value: string, fileName: string, accept: string, isEnabled: boolean): FormType {
         let response = new FormTypeFileProps();
         response.name = name;
         response.value = value;
         response.fileName = fileName;
+        response.accept = accept;
         response.isEnabled = isEnabled;
 
         return response;
     }
 
-    static initializeWithValidations(name: string, value: string, fileName: string, isEnabled: boolean, validations: ValidationRule[]): FormType {
+    static initializeWithValidations(name: string, value: string, fileName: string, accept: string, isEnabled: boolean, validations: ValidationRule[]): FormType {
         let response = new FormTypeFileProps();
         response.name = name;
         response.value = value;
         response.fileName = fileName;
+        response.accept = accept;
         response.isEnabled = isEnabled;
         response.validations = validations;
 

@@ -65,8 +65,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         FileStream fs = File.OpenRead(filePath);
         Image rawImage = Image.Load(fs);
 
-        IOImagesEntity imageEntity = new IOImagesEntity(fileName)
+        IOImagesEntity imageEntity = new IOImagesEntity()
         {
+            FileName = fileName,
             FileType = "image/jpeg",
             Width = rawImage.Width,
             Height = rawImage.Height,
@@ -94,7 +95,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOImageNotFoundException();
         }
 
-        this.RemoveFile(imagesEntity.FileName);
+        if (imagesEntity.FileName != null)
+        {
+            this.RemoveFile(imagesEntity.FileName);
+        }
+        
         DatabaseContext.Remove(imagesEntity);
         DatabaseContext.SaveChanges();
     }

@@ -13,7 +13,7 @@ public class IOImagesEntity
 
     [Required]
     [StringLength(128)]
-    public string FileName { get; set; }
+    public string? FileName { get; set; }
 
     [StringLength(32)]
     public string? FileType { get; set; }
@@ -23,9 +23,4 @@ public class IOImagesEntity
     public int? Height { get; set; }
 
     public int? Scale { get; set; }
-
-    public IOImagesEntity(string fileName)
-    {
-        FileName = fileName;
-    }
 }

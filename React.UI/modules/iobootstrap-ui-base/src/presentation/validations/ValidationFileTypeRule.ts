@@ -5,36 +5,40 @@ class ValidationFileTypeRule implements ValidationRule {
     public errorTitle: string
     public errorMessage: string
     
-    private extension: string
+    private extensions: string[]
 
     constructor() {
         this.errorTitle = "";
         this.errorMessage = "";
-        this.extension = "";
+        this.extensions = [];
     }
 
-    public static initialize(errorTitle: string, errorMessage: string, extension: string): ValidationRule {
+    public static initialize(errorTitle: string, errorMessage: string, extensions: string[]): ValidationRule {
         const response = new ValidationFileTypeRule();
         response.errorTitle = errorTitle;
         response.errorMessage = errorMessage;
-        response.extension = extension;
+        response.extensions = extensions;
 
         return response;
     }
 
     public validationResult(value: string): boolean {
-        const extensionLength = this.extension.length;
-        
-        if (value.length < extensionLength) {
-            return false;
-        }
+        let isValid = false;
 
-        const lastCharacters = value.slice(-extensionLength);
-        if (lastCharacters === this.extension) {
-            return true;
-        }
+        this.extensions.forEach(it => {
+            const extensionLength = it.length;
 
-        return false;
+            if (value.length < extensionLength) {
+                return;
+            }
+
+            const lastCharacters = value.slice(-extensionLength);
+            if (lastCharacters === it) {
+                isValid = true;
+            }
+        });
+
+        return isValid;
     }
 }
 

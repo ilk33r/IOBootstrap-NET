@@ -91,12 +91,7 @@ class ImagesModifyController extends BOController<{}, {}> {
             ]),
             FormTypeImageProps.initializeWithValidations("Image", imageUrl, imageFileName, true, [ 
                 ValidationRequiredRule.initialize("Image is required.", "Invalid image."),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpe"),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpg"),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "jpeg"),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "png"),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "heic"),
-                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", "pjpeg"),
+                ValidationFileTypeRule.initialize("File is not valid an image.", "Invalid image.", ["jpe", "jpg", "jpeg", "png", "heic", "pjpeg"]),
             ])
         ];
 

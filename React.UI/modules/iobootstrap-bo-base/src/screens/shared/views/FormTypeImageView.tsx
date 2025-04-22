@@ -9,6 +9,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
     private _formValue: string;
     private _fileValue: Blob | null;
+    private _fileName: string | null;
 
     constructor(props: FormTypeImageProps) {
         super(props);
@@ -19,12 +20,13 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
         this._formValue = this.props.value;
         this._fileValue = null;
+        this._fileName = null;
         this.handleDeleteImage = this.handleDeleteImage.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
     public getValue(): string | null {
-        return null;
+        return this._fileName;
     }
 
     public getBlobValue(): Blob | null {
@@ -36,6 +38,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
         if (this._formValue.length > 0) {
             this._formValue = "";
+            this._fileName = "";
             const newState = new FormViewState();
             newState.imagePreviewURL = "";
 
@@ -56,6 +59,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
         const selectedFile = files[0];
         this._fileValue = selectedFile;
+        this._fileName = event.target.value;
         
         const fileReader = new FileReader();
         const fileType = selectedFile.type;
@@ -88,7 +92,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         const weakSelf = this;
 
         this.props.validations.forEach(rule => {
-            if (!rule.validationResult(weakSelf._formValue)) {
+            if (!rule.validationResult(weakSelf._fileName ?? "")) {
                 errorMessage = rule.errorMessage;
                 errorTitle = rule.errorTitle;
                 validated = false;

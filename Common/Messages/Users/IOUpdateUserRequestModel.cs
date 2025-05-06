@@ -7,17 +7,17 @@ namespace IOBootstrap.NET.Common.Messages.Users;
 public class IOUpdateUserRequestModel : IORequestModel
 {
     [Required]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     [Required]
     public string? UserName { get; set; }
 
     [Required]
-    public int UserRole { get; set; }
+    public int? UserRole { get; set; }
 
     [Required]
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
 
     [Required]
-    public DateTimeOffset ActivationEndDate { get; set; }
+    public DateTimeOffset? ActivationEndDate { get; set; }
 }

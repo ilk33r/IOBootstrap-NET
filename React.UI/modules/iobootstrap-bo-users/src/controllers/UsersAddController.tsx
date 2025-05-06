@@ -8,14 +8,14 @@ import UserAddState from "../props/UserAddState";
 class UsersAddController extends BOController<{}, UserAddState> {
 
     private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
-    private randomPassword: string;
+    private temporaryPassword: string;
 
     constructor(props: {}) {
         super(props);
 
         this.state = new UserAddState();
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
-        this.randomPassword = AppCryptography.Instance.random(8);
+        this.temporaryPassword = AppCryptography.Instance.random(8);
         
         this.handleFormError = this.handleFormError.bind(this);
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
@@ -90,7 +90,7 @@ class UsersAddController extends BOController<{}, UserAddState> {
 
                 weakSelf.setState(newState);
             }),
-            FormTypeTextProps.initializeWithValidations("Password", this.randomPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Password", this.temporaryPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
             FormTypeSelectProps.initialize("Role", "", true, userRoleFormDataOptions),
             FormTypeSelectProps.initialize("Active", "", true, [ 
                 FormDataOptionModel.initialize("NO", "no"),
@@ -114,7 +114,7 @@ class UsersAddController extends BOController<{}, UserAddState> {
                 <div className="editor-wrapper">
                     <div className="content-wrapper">
                         <UserLoginInformationView userName={this.state.userName.RemoveHTML()}
-                            randomPassword={this.randomPassword} />
+                            temporaryPassword={this.temporaryPassword} />
                     </div>
                 </div>
             </React.StrictMode>

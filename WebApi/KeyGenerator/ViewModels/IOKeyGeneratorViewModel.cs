@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
@@ -67,5 +68,62 @@ where TDBContext : IODatabaseContext<TDBContext>
         };
 
         return responseModel;
+    }
+
+    public IOEncryptResponseModel EncryptAES(IOEncryptRequestModel requestModel)
+    {
+        // Convert key and iv to byte array
+        byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+        byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+
+        // Base 64 encode user token data
+        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+        string encrypted = Convert.ToBase64String(aesUtilities.Encrypt(requestModel.PlainText ?? ""));
+
+        IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
+        {
+            SymmetricKey = null,
+            SymmetricIV = null,
+            EncryptedValue = encrypted
+        };
+
+        return responseModel;
+    }
+
+    public IOEncryptResponseModel DecryptAES(IOEncryptRequestModel requestModel)
+    {
+        // Convert key and iv to byte array
+        byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+        byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+
+        // Base 64 encode user token data
+        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+        try
+        {
+            // Obtain decrypted token value
+            string decryptedToken = aesUtilities.Decrypt(Convert.FromBase64String(requestModel.PlainText ?? ""));
+
+            IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
+            {
+                SymmetricKey = null,
+                SymmetricIV = null,
+                EncryptedValue = decryptedToken
+            };
+
+            return responseModel;
+        }
+        catch (Exception e)
+        {
+            Logger.LogDebug(e.StackTrace);
+            
+            IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
+            {
+                SymmetricKey = null,
+                SymmetricIV = null,
+                EncryptedValue = null
+            };
+
+            return responseModel;
+        }
     }
 }

@@ -7,6 +7,7 @@ using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
+using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
@@ -24,10 +25,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region View Model Methods
 
-    public virtual IOAuthenticationResponseModel Authenticate(string userName, string password)
+    public virtual async Task<IOAuthenticationResponseModel> Authenticate(string userName, string password)
     {
-        IOAuthenticationResponseModel response = this.AuthenticateUser(userName, password);
-        
+        IOAuthenticationResponseModel response = await this.AuthenticateUser(userName, password);
         if (response.UserRole >= (int)UserRoles.BackOfficeUser)
         {
             throw new IOInvalidPermissionException();

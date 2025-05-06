@@ -45,7 +45,11 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
                         itemID: null, 
                         itemValue: null 
                     };
-                    window.postMessage(closeSelection, '*');
+                    
+                    const baseURL = new URL(process.env.REACT_APP_BACKOFFICE_PAGE_URL ?? "");
+                    if (baseURL !== null && baseURL.host.length > 0) {
+                        window.postMessage(closeSelection, baseURL.origin);
+                    }
                 }
 
                 const newState = new FormViewState();

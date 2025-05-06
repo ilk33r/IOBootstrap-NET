@@ -7,7 +7,6 @@ import { UserChangePasswordController, UserResetPasswordController, UsersAddCont
 import { ConfigurationsAddController, ConfigurationsDeleteController, ConfigurationsListController, ConfigurationsResetCacheController, ConfigurationsUpdateController } from "iobootstrap-bo-configurations";
 import { MessageListController, MessagesAddController, MessagesDeleteController, MessagesUpdateController } from "iobootstrap-bo-messages";
 import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListController, MenuEditorSelectionController, MenuEditorUpdateController } from "iobootstrap-bo-menueditor";
-import { ClientDeleteController, ClientListController, ClientSelectController, ClientUpdateController, ClientsAddController } from "iobootstrap-bo-clients";
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
 import { ImagesAddController, ImagesEditController, ImagesModifyController } from "iobootstrap-bo-images";
@@ -21,26 +20,6 @@ class NavigationView extends View<NavigationProps, NavigationState> {
     }
 
     render() {
-        if (this.props.pageHash === "clientsList") {
-            return <ClientListController />
-        }
-
-        if (this.props.pageHash === "clientsAdd") {
-            return <ClientsAddController />
-        }
-
-        if (this.props.pageHash === "clientsUpdate") {
-            return <ClientUpdateController />
-        }
-
-        if (this.props.pageHash === "clientsDelete") {
-            return <ClientDeleteController />
-        }
-
-        if (this.props.pageHash === "selection/clientsSelect") {
-            return <ClientSelectController />
-        }
-
         if (this.props.pageHash === "configurationsList") {
             return <ConfigurationsListController />
         }

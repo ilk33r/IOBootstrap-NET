@@ -8,9 +8,9 @@ namespace IOBootstrap.NET.BackOffice.User.Interfaces;
 public interface IIOUserViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext> 
 {
-    public IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel);
-    public void ChangePassword(string oldPassword, string newPassword);
-    public void ResetPassword(string userName, string newPassword);
+    public Task<IOAddUserResponseModel> AddUser(IOAddUserRequestModel requestModel);
+    public Task ChangePassword(string oldPassword, string newPassword);
+    public Task ResetPassword(string userName, string newPassword);
     public IList<IOUserInfoModel> ListUsers();
     public void UpdateUser(IOUpdateUserRequestModel request);
     public void DeleteUser(IODeleteUserRequestModel request);

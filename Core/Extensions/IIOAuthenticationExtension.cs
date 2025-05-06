@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Common.Cache;
+﻿using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Authentication;
@@ -13,7 +14,7 @@ namespace IOBootstrap.NET.Core.Extensions;
 public static class IIOAuthenticationExtension
 {
 
-    public static IOAuthenticationResponseModel AuthenticateUser<TDBContext>(this IIOAuthentication<TDBContext> input, string userName, string password)
+    public static async Task<IOAuthenticationResponseModel> AuthenticateUser<TDBContext>(this IIOAuthentication<TDBContext> input, string userName, string password)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Decrypt password
@@ -36,16 +37,23 @@ public static class IIOAuthenticationExtension
         input.CheckUserIsLocked(findedUser);
 
         // Check user password is wrong
-        if (!IOPasswordUtilities.VerifyPassword(decryptedPassword, findedUser.Password ?? ""))
+        using (var passwordUtilities = new IOPasswordUtilities())
         {
-            // Update User
-            findedUser.WrongPasswordAttemptCount += 1;
-            findedUser.LastWrongPasswordAttemptDate = DateTimeOffset.UtcNow;
-            input.DatabaseContext.Update(findedUser);
-            input.DatabaseContext.SaveChanges();
+            await passwordUtilities.VerifyPassword(decryptedPassword, findedUser.Password ?? "", verified =>
+            {
+                // Check password is not verified
+                if (!verified)
+                {
+                    // Update User
+                    findedUser.WrongPasswordAttemptCount += 1;
+                    findedUser.LastWrongPasswordAttemptDate = DateTimeOffset.UtcNow;
+                    input.DatabaseContext.Update(findedUser);
+                    input.DatabaseContext.SaveChanges();
 
-            // Return response
-            throw new IOInvalidCredentialsException();
+                    // Return response
+                    throw new IOInvalidCredentialsException();
+                }
+            });
         }
 
         // Generate token for user

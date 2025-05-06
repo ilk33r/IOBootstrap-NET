@@ -25,9 +25,7 @@ class Main extends BOController<MainProps, MainState> {
         this.service.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         const authorization = (process.env.REACT_APP_AUTHORIZATION === undefined) ? "" : process.env.REACT_APP_AUTHORIZATION;
-        const clientID = (process.env.REACT_APP_BACKOFFICE_CLIENI_ID === undefined) ? "" : process.env.REACT_APP_BACKOFFICE_CLIENI_ID;
-        const clientSecret = (process.env.REACT_APP_BACKOFFICE_CLIENI_SECRET === undefined) ? "" : process.env.REACT_APP_BACKOFFICE_CLIENI_SECRET;
-        this.appServiceHeaderInterceptor.initialize(authorization, clientID, clientSecret);
+        this.appServiceHeaderInterceptor.initialize(authorization);
         
         if (props.calloutView !== undefined) {
             const calloutPresenter = this.calloutPresenter as CalloutPresenter;

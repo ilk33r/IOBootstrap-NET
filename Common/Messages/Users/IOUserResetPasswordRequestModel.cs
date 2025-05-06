@@ -11,5 +11,6 @@ public class IOUserResetPasswordRequestModel : IORequestModel
 
     [Required]
     [MinLength(4)]
+    [DataType(DataType.Password)]
     public string? NewPassword { get; set; }
 }

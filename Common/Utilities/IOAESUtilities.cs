@@ -1,5 +1,7 @@
 using System;
 using System.Security.Cryptography;
+using System.Text;
+using Microsoft.Extensions.Primitives;
 
 namespace IOBootstrap.NET.Common.Utilities;
 
@@ -34,8 +36,14 @@ public class IOAESUtilities
         MemoryStream msDecrypt = new MemoryStream(encryptedBytes);
         CryptoStream csDecrypt = new CryptoStream(msDecrypt, crypto, CryptoStreamMode.Read);
         StreamReader swDecrypt = new StreamReader(csDecrypt);
+        StringBuilder stringBuilder = new StringBuilder();
 
-        string decryptedString = swDecrypt.ReadToEnd();
+        while (swDecrypt.Peek() >= 0)
+        {
+            stringBuilder.Append((char)swDecrypt.Read());
+        }
+        
+        string decryptedString = stringBuilder.ToString();
         swDecrypt.Dispose();
 
         csDecrypt.Flush();

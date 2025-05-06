@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Common.Cache;
+﻿using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Models.Users;
@@ -128,7 +129,7 @@ public static class IIOUserCredentialExtension
         }
     }
 
-    public static void ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
+    public static async Task ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         if (input.UserModel == null)
@@ -153,22 +154,31 @@ public static class IIOUserCredentialExtension
         }
 
         // Check user old password is valid
-        if (IOPasswordUtilities.VerifyPassword(decryptedOldPassword, currentUser.Password ?? ""))
+        using (var passwordUtilities = new IOPasswordUtilities())
         {
+            await passwordUtilities.VerifyPassword(decryptedOldPassword, currentUser.Password ?? "", verified =>
+            {
+                // Check verify status
+                if (!verified)
+                {
+                    // Return response
+                    throw new IOInvalidPasswordException();
+                }
+            });
+
             // Update user password properties
-            currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
-            currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddMonths(6);
-            currentUser.UserToken = null;
-
-            // Update user password
-            input.DatabaseContext.Update(currentUser);
-            input.DatabaseContext.SaveChanges();
-
-            return;
+            await passwordUtilities.HashPassword(decryptedNewPassword, hashed =>
+            {
+                currentUser.Password = hashed;
+            });
         }
 
-        // Return response
-        throw new IOInvalidPasswordException();
+        currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddMonths(6);
+        currentUser.UserToken = null;
+
+        // Update user password
+        input.DatabaseContext.Update(currentUser);
+        input.DatabaseContext.SaveChanges();
     }
 
     public static void LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)

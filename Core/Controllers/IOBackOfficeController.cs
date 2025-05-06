@@ -5,8 +5,6 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
-using IOBootstrap.NET.Common.Messages.Clients;
-using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
@@ -47,58 +45,7 @@ where TViewModel : IIOBackOfficeViewModel<TDBContext>, new()
 
     #endregion
 
-    #region Client Methods
-
-    [IOValidateRequestModel]
-    [IOUserRole(UserRoles.Admin)]
-    [HttpPost("[action]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public IOClientAddResponseModel AddClient([FromBody] IOClientAddRequestModel requestModel)
-    {
-        // Obtain client info from view model
-        IOClientInfoModel clientInfo = ViewModel.CreateClient(requestModel);
-
-        // Create and return response
-        return new IOClientAddResponseModel(clientInfo);
-    }
-
-    [IOValidateRequestModel]
-    [IOUserRole(UserRoles.Admin)]
-    [HttpPost("[action]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public IOResponseModel DeleteClient([FromBody] IOClientDeleteRequestModel requestModel)
-    {
-        // Check delete client is success
-        ViewModel.DeleteClient(requestModel);
-
-        // Then create and return response
-        return new IOResponseModel();
-    }
-
-    [IOUserRole(UserRoles.Admin)]
-    [HttpGet("[action]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public IOClientListResponseModel ListClients()
-    {
-        // Obtain client infos
-        IList<IOClientInfoModel> clientInfos = ViewModel.GetClients();
-
-        // Create and return response
-        return new IOClientListResponseModel(clientInfos);
-    }
-
-    [IOValidateRequestModel]
-    [IOUserRole(UserRoles.Admin)]
-    [HttpPost("[action]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public IOResponseModel UpdateClient([FromBody] IOClientUpdateRequestModel requestModel)
-    {
-        // Check update client is success
-        ViewModel.UpdateClient(requestModel);
-
-        // Then create and return response
-        return new IOResponseModel();
-    }
+    #region Security
 
     [IOIgnorePasswordExpire]
     [IOUserRole(UserRoles.BackOfficeUser)]

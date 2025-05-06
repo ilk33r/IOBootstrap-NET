@@ -1,7 +1,7 @@
 class LoginState {
 
     userName: string = "";
-    password: string = "";
+    password: string | null = null;
     errorMessage: string = "";
 }
 

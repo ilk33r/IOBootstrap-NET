@@ -8,6 +8,6 @@ public class IODeleteUserRequestModel : IORequestModel
 {
 
     [Required]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
 }

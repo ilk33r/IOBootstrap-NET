@@ -7,7 +7,7 @@ namespace IOBootstrap.NET.Common.Messages.Menu;
 public class IOMenuDeleteRequestModel : IORequestModel
 {
     [Required]
-    public int ID { get; set; }
+    public int? ID { get; set; }
 
     public IOMenuDeleteRequestModel() : base()
     {

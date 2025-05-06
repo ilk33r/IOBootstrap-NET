@@ -41,8 +41,8 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                 Scale = i.Scale
                                                             })
                                                             .OrderBy(i => i.ID)
-                                                            .Skip(requestModel.Start)
-                                                            .Take(requestModel.Count)
+                                                            .Skip(requestModel.Start ?? 0)
+                                                            .Take(requestModel.Count ?? 0)
                                                             .ToList();
 
         foreach (IOImageVariationsModel image in paginatedImages)

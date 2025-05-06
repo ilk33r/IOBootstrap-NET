@@ -18,7 +18,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
         this.handleLogin = this.handleLogin.bind(this);
     }
 
-    public handleUserNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleUserNameChange(event: React.ChangeEvent<HTMLInputElement>) {
         const newState = new LoginState();
         newState.userName = event.target.value;
         newState.password = this.state.password;
@@ -27,7 +27,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
         this.setState(newState);
     }
 
-    public handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
         const newState = new LoginState();
         newState.userName = this.state.userName;
         newState.password = event.target.value;

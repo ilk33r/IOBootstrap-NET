@@ -14,8 +14,6 @@ public class PushNotificationMessageEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ID { get; set; }
 
-    public IOClientsEntity? Client { get; set; }
-
     public int DeviceType { get; set; }
 
     [StringLength(64)]

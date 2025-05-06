@@ -9,7 +9,6 @@ public static class IOExceptionMessages
     public const int InvalidPermissionCode = 401;
     public const int InvalidCredentialsCode = 403;
     public const int HttpsRequiredCode = 405;
-    public const int InvalidClientCode = 406;
     public const int InvalidPasswordsCode = 407;
     public const int UserDeactivatedCode = 408;
     public const int PasswordExpiredCode = 409;
@@ -31,7 +30,6 @@ public static class IOExceptionMessages
     public const string InvalidPermissionMessage = "Invalid permission.";
     public const string InvalidCredentialsMessage = "Invalid credientals.";
     public const string HttpsRequiredMessage = "Https required.";
-    public const string InvalidClientMessage = "Invalid client ID.";
     public const string InvalidPasswordsMessage = "Invalid password.";
     public const string UserDeactivatedMessage = "Account deactivated.";
     public const string PasswordExpiredMessage = "Password expired.";

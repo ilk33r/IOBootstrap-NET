@@ -7,7 +7,7 @@ public class IOConfigurationUpdateRequestModel : IOConfigurationAddRequestModel
 {
 
     [Required]
-    public int ConfigId { get; set; }
+    public int? ConfigId { get; set; }
 
     public IOConfigurationUpdateRequestModel() : base()
     {

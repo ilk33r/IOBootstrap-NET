@@ -18,7 +18,6 @@ public static class IOConfigurationConstants
     public static string BackofficePageHostName = "IOBackofficePageHostName";
     public static string BackofficePageIndexLayoutName = "IOBackofficePageIndexLayoutName";
     public static string BackofficePagePath = "IOBackofficePagePath";
-    public static string CheckClientInfo = "IOCheckClientInfo";
     public static string DataAccessAssembly = "IODataAccessAssembly";
     public static string EncryptionKey = "IOEncryptionKey";
     public static string EncryptionIV = "IOEncryptionIV";

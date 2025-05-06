@@ -15,10 +15,10 @@ public class IOMenuAddRequestModel : IORequestModel
     public string? Name { get; set; }
 
     [Required]
-    public int MenuOrder { get; set; }
+    public int? MenuOrder { get; set; }
 
     [Required]
-    public int RequiredRole { get; set; }
+    public int? RequiredRole { get; set; }
 
     public int? ParentEntityID { get; set; }
 }

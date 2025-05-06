@@ -1,4 +1,5 @@
 ﻿#if DEBUG
+using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Utilities;
@@ -21,33 +22,38 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
         #endif
     }
 
-    public void CreateBOUser(string userName)
+    public async Task CreateBOUser(string userName)
     {
-        IOUserEntity userEntity = new IOUserEntity()
+        using (var passwordUtilities = new IOPasswordUtilities())
         {
-            UserName = userName,
-            Password = IOPasswordUtilities.HashPassword("admin"),
-            UserRole = 999,
-            UserToken = "",
-            TokenDate = new DateTimeOffset(),
-            IsActive = false,
-            ActivationEndDate = DateTimeOffset.UtcNow,
-            CreatedBy = "swagger-ui",
-            CreatedDate = DateTimeOffset.UtcNow,
-            UpdateDate = DateTimeOffset.UtcNow,
-            WrongPasswordAttemptCount = 0,
-            PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
-            LastWrongPasswordAttemptDate = new DateTimeOffset()
-        };
+            await passwordUtilities.HashPassword("admin", hashed =>
+            {
+                IOUserEntity userEntity = new IOUserEntity()
+                {
+                    UserName = userName,
+                    Password = hashed,
+                    UserRole = 999,
+                    UserToken = "",
+                    TokenDate = new DateTimeOffset(),
+                    IsActive = false,
+                    ActivationEndDate = DateTimeOffset.UtcNow,
+                    CreatedBy = "swagger-ui",
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    UpdateDate = DateTimeOffset.UtcNow,
+                    WrongPasswordAttemptCount = 0,
+                    PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
+                    LastWrongPasswordAttemptDate = new DateTimeOffset()
+                };
 
-        DatabaseContext.Add(userEntity);
-        DatabaseContext.SaveChanges();
+                DatabaseContext.Add(userEntity);
+                DatabaseContext.SaveChanges();
+            });
+        }
     }
 
     public void CreateBODefaultData()
     {
         AddDefaultConfiguration();
-        GenerateClientMenu();
         GenerateUserMenu();
         GenerateConfigurationMenu();
         GenerateMenuEditorMenu();
@@ -98,43 +104,6 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             ConfigStringValue = "IOBootstrapt Support"
         };
         DatabaseContext.Add(eMailFromName);
-        DatabaseContext.SaveChanges();
-    }
-
-    private void GenerateClientMenu()
-    {
-        IOMenuEntity clientsEntity = new IOMenuEntity()
-        {
-            Action = "actionClients",
-            CssClass = "fa-cloud",
-            Name = "Clients",
-            MenuOrder = 1,
-            RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = null
-        };
-        DatabaseContext.Add(clientsEntity);
-
-        IOMenuEntity clientListEntity = new IOMenuEntity()
-        {
-            Action = "clientsList",
-            CssClass = "fa-circle-o",
-            Name = "List Clients",
-            MenuOrder = 2,
-            RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 1
-        };
-        DatabaseContext.Add(clientListEntity);
-
-        IOMenuEntity clientAddEntity = new IOMenuEntity()
-        {
-            Action = "clientsAdd",
-            CssClass = "fa-circle-o",
-            Name = "Add Client",
-            MenuOrder = 3,
-            RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 1
-        };
-        DatabaseContext.Add(clientAddEntity);
         DatabaseContext.SaveChanges();
     }
 

@@ -1,4 +1,5 @@
 ﻿#if DEBUG
+using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Core.Controllers;
@@ -20,9 +21,9 @@ public class IODatabaseContentGeneratorController<TDBContext> : IOController<IOD
     }
 
     [HttpGet("[action]")]
-    public IOResponseModel CreateBOUser([FromQuery] string userName)
+    public async Task<IOResponseModel> CreateBOUser([FromQuery] string userName)
     {
-        ViewModel.CreateBOUser(userName);
+        await ViewModel.CreateBOUser(userName);
         return new IOResponseModel();
     }
 

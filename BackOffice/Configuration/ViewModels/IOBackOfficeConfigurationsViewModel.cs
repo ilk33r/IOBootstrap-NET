@@ -43,7 +43,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         IOCache.InvalidateCache(cacheKey);
     }
 
-    public virtual void DeleteConfigItem(int configurationId)
+    public virtual void DeleteConfigItem(int? configurationId)
     {
         IOConfigurationEntity? configuration = DatabaseContext.Configurations.Find(configurationId);
         if (configuration != null)

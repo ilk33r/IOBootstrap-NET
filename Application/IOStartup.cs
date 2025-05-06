@@ -69,6 +69,12 @@ where TDBContext : IODatabaseContext<TDBContext>
             });
         });
 
+        services.AddDistributedMemoryCache();
+        services.AddSession(options =>
+        {
+            options.Cookie.Name = ".IO.Session";
+        });
+
         string[] allowedOrigins = Configuration.GetSection(IOConfigurationConstants.AllowedOrigins).Get<string[]>()!;
         services.AddCors(options =>
         {
@@ -118,6 +124,9 @@ where TDBContext : IODatabaseContext<TDBContext>
             });
         }
 
+        // Use session
+        app.UseSession();
+
         // Use middleware
         ConfigureMiddleWare(app, env, logger);
 
@@ -147,6 +156,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute("default", indexRoute.GetRouteString());
+            endpoints.MapControllerRoute("", indexRoute.GetRouteString());
             endpoints.MapControllers();
             endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
         });

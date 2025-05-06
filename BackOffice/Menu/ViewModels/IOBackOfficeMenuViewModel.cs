@@ -5,6 +5,7 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Menu.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels;
 
@@ -30,8 +31,8 @@ where TDBContext : IODatabaseContext<TDBContext>
             Action = requestModel.Action,
             CssClass = requestModel.CssClass,
             Name = requestModel.Name,
-            MenuOrder = requestModel.MenuOrder,
-            RequiredRole = requestModel.RequiredRole,
+            MenuOrder = requestModel.MenuOrder ?? 0,
+            RequiredRole = requestModel.RequiredRole ?? 0,
             ParentEntityID = null
         };
 
@@ -46,15 +47,20 @@ where TDBContext : IODatabaseContext<TDBContext>
         DatabaseContext.SaveChanges();
     }
 
-    public void DeleteMenuItem(int menuId)
+    public void DeleteMenuItem(int? menuId)
     {
+        if (menuId == null)
+        {
+            throw new IOInvalidRequestException();
+        }
+        
         // Obtain menu item entity
         IOMenuEntity? menuEntity = DatabaseContext.Find<IOMenuEntity>(menuId);
 
         // Check menu is not exists
         if (menuEntity == null)
         {
-            return;
+            throw new IOInvalidRequestException();
         }
 
         // Add menu entity to database
@@ -116,8 +122,8 @@ where TDBContext : IODatabaseContext<TDBContext>
         menuEntity.Action = requestModel.Action;
         menuEntity.CssClass = requestModel.CssClass;
         menuEntity.Name = requestModel.Name;
-        menuEntity.MenuOrder = requestModel.MenuOrder;
-        menuEntity.RequiredRole = requestModel.RequiredRole;
+        menuEntity.MenuOrder = requestModel.MenuOrder ?? 0;
+        menuEntity.RequiredRole = requestModel.RequiredRole ?? 0;
         menuEntity.ParentEntityID = null;
 
         // Check parent entity defined

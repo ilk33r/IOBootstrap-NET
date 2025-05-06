@@ -12,6 +12,7 @@ public class IOAuthenticationRequestModel : IORequestModel
 
     [Required]
     [MinLength(4)]
+    [DataType(DataType.Password)]
     public string? Password { get; set; }
 
 }

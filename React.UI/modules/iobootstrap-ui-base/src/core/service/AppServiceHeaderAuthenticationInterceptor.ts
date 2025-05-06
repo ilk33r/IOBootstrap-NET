@@ -6,8 +6,6 @@ import { IAppServiceHeaderInterceptor } from "./IAppServiceHeaderInterceptor";
 class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInterceptor {
 
     private authorization: string;
-    private clientID: string;
-    private clientSecret: string;
     private keyID: string | null;
     private sessionID: string | null;
     private symmetricKey: string | null;
@@ -16,8 +14,6 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
 
     constructor() {
         this.authorization = "";
-        this.clientID = "";
-        this.clientSecret = "";
         this.keyID = null;
         this.sessionID = null;
         this.symmetricKey = null;
@@ -25,10 +21,8 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
         this.nonce = null;
     }
 
-    public initialize(authorization: string, clientID: string, clientSecret: string) {
+    public initialize(authorization: string) {
         this.authorization = authorization;
-        this.clientID = clientID;
-        this.clientSecret = clientSecret;
     }
 
     public setKeyID(keyID: string | null) {
@@ -58,9 +52,7 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
 
     private async getRequestHeaders(): Promise<Record<string, string>> {
         let headers: Record<string, string> = {
-            'X-IO-AUTHORIZATION': this.authorization,
-            'X-IO-CLIENT-ID': this.clientID,
-            'X-IO-CLIENT-SECRET': this.clientSecret
+            'X-IO-AUTHORIZATION': this.authorization
         };
 
         if (this.keyID != null) {

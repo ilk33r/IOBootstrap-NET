@@ -12,13 +12,14 @@ public class IOAddUserRequestModel : IORequestModel
 
     [Required]
     [MinLength(4)]
+    [DataType(DataType.Password)]
     public string? Password { get; set; }
 
     public int UserRole { get; set; }
 
     [Required]
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
 
     [Required]
-    public DateTimeOffset ActivationEndDate { get; set; }
+    public DateTimeOffset? ActivationEndDate { get; set; }
 }

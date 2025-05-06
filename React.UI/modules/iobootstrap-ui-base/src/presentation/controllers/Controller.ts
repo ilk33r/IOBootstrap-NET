@@ -105,7 +105,11 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             itemID: itemID, 
             itemValue: itemValue
         };
-        window.postMessage(windowMessage, '*');
+
+        const baseURL = new URL(process.env.REACT_APP_BACKOFFICE_PAGE_URL ?? "");
+        if (baseURL !== null && baseURL.host.length > 0) {
+            window.postMessage(windowMessage, baseURL.origin);
+        }
     }
 
     public downloadFile(blob: Blob, fileName: string) {

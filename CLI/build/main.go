@@ -12,7 +12,7 @@ import (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: iobootstrap-cli-build [options] [output]")
+	fmt.Fprintf(os.Stderr, "usage: iobootstrap-cli-build [options] [output]\n")
 	flag.PrintDefaults()
 	os.Exit(2)
 }

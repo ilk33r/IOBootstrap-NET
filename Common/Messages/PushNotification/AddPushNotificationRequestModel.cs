@@ -8,7 +8,7 @@ namespace IOBootstrap.NET.Common.Messages.PushNotification;
 public class AddPushNotificationRequestModel : IORequestModel
 {
 	[Required]
-	public int AppBuildNumber { get; set; }
+	public int? AppBuildNumber { get; set; }
 
 	[Required]
 	[StringLength(64)]
@@ -22,8 +22,6 @@ public class AddPushNotificationRequestModel : IORequestModel
 	[StringLength(128)]
 	public String? DeviceId { get; set; }
 
-	public String? ClientId { get; set; }
-
 	[Required]
 	[StringLength(128)]
 	public String? DeviceName { get; set; }
@@ -33,6 +31,6 @@ public class AddPushNotificationRequestModel : IORequestModel
 	public String? DeviceToken { get; set; }
 
 	[Required]
-	public DeviceTypes DeviceType { get; set; }
+	public DeviceTypes? DeviceType { get; set; }
 
 }

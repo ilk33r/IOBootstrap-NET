@@ -7,5 +7,5 @@ namespace IOBootstrap.NET.Common.Messages.Images;
 public class IODeleteImagesRequestModel : IORequestModel
 {
     [Required]
-    public int ImageId { get; set; }
+    public int? ImageId { get; set; }
 }

@@ -9,7 +9,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
     #region View Model Methods
 
-    public IOAuthenticationResponseModel Authenticate(string userName, string password);
+    public Task<IOAuthenticationResponseModel> Authenticate(string userName, string password);
 
     public IOCheckTokenResponseModel CheckToken(string token);
 

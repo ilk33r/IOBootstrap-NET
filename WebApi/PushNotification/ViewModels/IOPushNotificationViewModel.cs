@@ -12,28 +12,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
 	public void AddTokenV2(AddPushNotificationRequestModel requestModel)
 	{
-		// Obtain client
-		IOClientsEntity? client = null;
-		if (!String.IsNullOrEmpty(requestModel.ClientId))
-		{
-			client = DatabaseContext.Clients
-										.Where(client => client.ClientId!.Equals(requestModel.ClientId))
-										.FirstOrDefault();
-		}
-
-
 		// Obtain push notification entity
-		IQueryable<PushNotificationEntity> pushNotificationsEntities;
-		if (client != null)
-		{
-			pushNotificationsEntities = DatabaseContext.PushNotifications
-															.Where(pn => pn.DeviceId!.Equals(requestModel.DeviceId) && pn.Client!.ClientId == client.ClientId);
-		}
-		else
-		{
-			pushNotificationsEntities = DatabaseContext.PushNotifications
+		IQueryable<PushNotificationEntity> pushNotificationsEntities = DatabaseContext.PushNotifications
 															.Where(pn => pn.DeviceId!.Equals(requestModel.DeviceId));
-		}
 
 		// Check push notification entity exists
 		if (pushNotificationsEntities != null && pushNotificationsEntities.Count() > 0)
@@ -49,12 +30,12 @@ where TDBContext : IODatabaseContext<TDBContext>
 			PushNotificationEntity pushNotificationEntity = pushNotificationsEntities.First();
 
 			// Update entity properties
-			pushNotificationEntity.AppBuildNumber = requestModel.AppBuildNumber;
+			pushNotificationEntity.AppBuildNumber = requestModel.AppBuildNumber ?? 0;
 			pushNotificationEntity.AppBundleId = requestModel.AppBundleId;
 			pushNotificationEntity.AppVersion = requestModel.AppVersion;
 			pushNotificationEntity.DeviceName = requestModel.DeviceName;
 			pushNotificationEntity.DeviceToken = requestModel.DeviceToken;
-			pushNotificationEntity.DeviceType = requestModel.DeviceType;
+			pushNotificationEntity.DeviceType = requestModel.DeviceType ?? DeviceTypes.Unkown;
 			pushNotificationEntity.LastUpdateTime = DateTime.UtcNow;
 
 			// Update entity
@@ -68,15 +49,14 @@ where TDBContext : IODatabaseContext<TDBContext>
 		// Create a push notification entity
 		PushNotificationEntity newPushNotificationDeviceEntity = new PushNotificationEntity()
 		{
-			AppBuildNumber = requestModel.AppBuildNumber,
+			AppBuildNumber = requestModel.AppBuildNumber ?? 0,
 			AppBundleId = requestModel.AppBundleId,
 			AppVersion = requestModel.AppVersion,
 			BadgeCount = 0,
-			Client = client,
 			DeviceId = requestModel.DeviceId,
 			DeviceName = requestModel.DeviceName,
 			DeviceToken = requestModel.DeviceToken,
-			DeviceType = requestModel.DeviceType,
+			DeviceType = requestModel.DeviceType ?? DeviceTypes.Unkown,
 			LastUpdateTime = DateTime.UtcNow
 		};
 

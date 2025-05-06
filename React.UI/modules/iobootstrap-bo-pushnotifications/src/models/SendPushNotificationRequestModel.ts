@@ -2,7 +2,6 @@ import { BaseRequestModel, DeviceTypes } from "iobootstrap-ui-base";
 
 class SendPushNotificationRequestModel extends BaseRequestModel {
 
-	clientId: number | null;
 	deviceType: DeviceTypes;
 	notificationCategory: string | null;
 	notificationData: string | null;
@@ -12,7 +11,6 @@ class SendPushNotificationRequestModel extends BaseRequestModel {
 	constructor() {
 		super();
 
-		this.clientId = null;
 		this.deviceType = DeviceTypes.Unkown;
 		this.notificationCategory = null;
 		this.notificationData = null;

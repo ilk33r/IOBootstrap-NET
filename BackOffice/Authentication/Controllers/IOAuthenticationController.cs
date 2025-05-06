@@ -34,10 +34,10 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     [IONonceRequired]
     [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
-    public virtual IOAuthenticationResponseModel Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
+    public virtual async Task<IOAuthenticationResponseModel> Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
         // Check if authentication result is true
-        return ViewModel.Authenticate(requestModel.UserName ?? "", requestModel.Password ?? "");
+        return await ViewModel.Authenticate(requestModel.UserName ?? "", requestModel.Password ?? "");
     }
 
     [IORequireHTTPS]

@@ -18,19 +18,16 @@ public static class IOPushSenderProcessSendMessagesExtension
     {
         foreach (PushNotificationMessageEntity message in pushNotificationMessages)
         {
-            // Obtain client id
-            int? clientId = (message.Client == null) ? new int?() : message.Client?.ID;
-
             // Check notification is not for single device
             if (message.PushNotificationDeviceID?.DeviceType == DeviceTypes.Generic)
             {
                 // Obtain firebase devices
-                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID, clientId);
+                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID);
                 IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
                 input.DeleteInvalidDevices(invalidDevices);
 
                 // Obtain apns devices
-                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
+                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID);
                 IList<PushNotificationEntity> invalidAPNSDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
                 input.DeleteInvalidDevices(invalidAPNSDevices);
 
@@ -42,7 +39,7 @@ public static class IOPushSenderProcessSendMessagesExtension
             else if (message.DeviceType == (int)DeviceTypes.AndroidGoogle)
             {
                 // Send firebase message// Obtain firebase devices
-                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID, clientId);
+                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID);
                 IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
                 input.DeleteInvalidDevices(invalidDevices);
 
@@ -54,7 +51,7 @@ public static class IOPushSenderProcessSendMessagesExtension
             else if (message.DeviceType == (int)DeviceTypes.iOS)
             {
                 // Send firebase message// Obtain firebase devices
-                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID, clientId);
+                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID);
                 IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
                 input.DeleteInvalidDevices(invalidDevices);
 

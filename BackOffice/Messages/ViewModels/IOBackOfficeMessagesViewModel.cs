@@ -72,15 +72,15 @@ where TDBContext : IODatabaseContext<TDBContext>
         {
             Message = request.Message,
             MessageCreateDate = DateTimeOffset.Now,
-            MessageStartDate = request.MessageStartDate,
-            MessageEndDate = request.MessageEndDate
+            MessageStartDate = request.MessageStartDate ?? DateTimeOffset.UtcNow,
+            MessageEndDate = request.MessageEndDate ?? DateTimeOffset.UtcNow
         };
 
         DatabaseContext.Add(messageEntity);
         DatabaseContext.SaveChanges();
     }
 
-    public void DeleteMessage(int messageId)
+    public void DeleteMessage(int? messageId)
     {
         IOBackOfficeMessageEntity? messageEntity = DatabaseContext.Messages.Find(messageId);
 
@@ -98,8 +98,8 @@ where TDBContext : IODatabaseContext<TDBContext>
         if (messageEntity != null)
         {
             messageEntity.Message = request.Message;
-            messageEntity.MessageStartDate = request.MessageStartDate;
-            messageEntity.MessageEndDate = request.MessageEndDate;
+            messageEntity.MessageStartDate = request.MessageStartDate ?? DateTimeOffset.UtcNow;
+            messageEntity.MessageEndDate = request.MessageEndDate ?? DateTimeOffset.UtcNow;
 
             DatabaseContext.Update(messageEntity);
             DatabaseContext.SaveChanges();

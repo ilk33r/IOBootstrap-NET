@@ -98,9 +98,6 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         // Check key id
         CheckKeyID(context);
 
-        // Check client info
-        ViewModel.CheckClient();
-
         // Check back office page host name
         string backofficePageHostName = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePageHostName)!;
         string backofficePagePath = Configuration.GetValue<string>(IOConfigurationConstants.BackofficePagePath)!;

@@ -10,7 +10,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
     public void AddConfigItem(IOConfigurationAddRequestModel requestModel);
 
-    public void DeleteConfigItem(int configurationId);
+    public void DeleteConfigItem(int? configurationId);
 
     public IList<IOConfigurationModel> GetConfigurations();
 

@@ -8,7 +8,7 @@ public class IOMessageDeleteRequestModel : IORequestModel
 {
 
     [Required]
-    public int MessageId { get; set; }
+    public int? MessageId { get; set; }
 
     public IOMessageDeleteRequestModel() : base()
     {

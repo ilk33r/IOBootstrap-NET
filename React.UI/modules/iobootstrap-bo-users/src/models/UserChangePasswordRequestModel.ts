@@ -3,13 +3,13 @@ import { BaseRequestModel } from "iobootstrap-ui-base";
 class UserChangePasswordRequestModel extends BaseRequestModel {
 
     oldPassword: string | null;
-    newPassword: string;
+    newPassword: string | null;
 
     constructor() {
         super();
 
         this.oldPassword = null;
-        this.newPassword = "";
+        this.newPassword = null;
     }
 }
 

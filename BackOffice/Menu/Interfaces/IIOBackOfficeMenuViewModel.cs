@@ -10,7 +10,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 {
     public void AddMenuItem(IOMenuAddRequestModel requestModel);
 
-    public void DeleteMenuItem(int menuId);
+    public void DeleteMenuItem(int? menuId);
 
     public IList<IOMenuListModel> GetMenuTree(int requiredRole);
 

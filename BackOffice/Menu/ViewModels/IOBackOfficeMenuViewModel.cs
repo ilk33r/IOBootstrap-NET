@@ -6,6 +6,7 @@ using IOBootstrap.NET.BackOffice.Menu.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Constants;
 
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels;
 
@@ -22,6 +23,15 @@ where TDBContext : IODatabaseContext<TDBContext>
     #endregion
 
     #region Menu Methods
+
+    public void CheckMenuIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.MenuEditorEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
 
     public void AddMenuItem(IOMenuAddRequestModel requestModel)
     {

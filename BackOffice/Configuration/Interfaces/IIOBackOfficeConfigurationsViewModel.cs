@@ -8,6 +8,8 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Interfaces;
 public interface IIOBackOfficeConfigurationsViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext> 
 {
+    public void CheckConfigurationsIsEnabled();
+
     public void AddConfigItem(IOConfigurationAddRequestModel requestModel);
 
     public void DeleteConfigItem(int? configurationId);

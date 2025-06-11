@@ -99,6 +99,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOInvalidCredentialsException("You can not reset this user password.");
         }
 
+        if (currentUser.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > currentUser.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not reset this user password.");
+        }
+
         using (var passwordUtilities = new IOPasswordUtilities())
         {
             string decryptedNewPassword = DecryptString(newPassword);
@@ -168,6 +173,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserExistsException();
         }
 
+        if (user.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > user.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not edit this user.");
+        }
+
         // Update user properties
         user.UserName = userName;
         user.UserRole = request.UserRole ?? 999;
@@ -187,6 +197,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         if (user == null)
         {
             throw new IOUserNotFoundException();
+        }
+
+        if (user.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > user.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not delete this user.");
         }
 
         // Check user entity is not null

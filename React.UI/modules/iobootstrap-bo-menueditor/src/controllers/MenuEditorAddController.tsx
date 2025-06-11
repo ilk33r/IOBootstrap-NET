@@ -1,6 +1,6 @@
 import MenuAddRequestModel from "../models/MenuAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class MenuEditorAddController extends BOController<{}, {}> {
@@ -54,9 +54,17 @@ class MenuEditorAddController extends BOController<{}, {}> {
         }
         
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("Name", "", true, [ ValidationRequiredRule.initialize("Name is too short.", "Invalid menu name.") ]),
-            FormTypeTextProps.initializeWithValidations("Action", "", true, [ ValidationRequiredRule.initialize("Action is too short.", "Invalid menu action.") ]),
-            FormTypeTextProps.initialize("CSS Class Name", "fa-circle-o", true),
+            FormTypeTextProps.initializeWithValidations("Name", "", true, [ 
+                ValidationRequiredRule.initialize("Name is too short.", "Invalid menu name."),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
+            FormTypeTextProps.initializeWithValidations("Action", "", true, [ 
+                ValidationRequiredRule.initialize("Action is too short.", "Invalid menu action."),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
+            FormTypeTextProps.initializeWithValidations("CSS Class Name", "fa-circle-o", true, [
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
             FormTypeSelectProps.initialize("Required Role", "", true, userRoleFormDataOptions),
             FormTypeNumberProps.initializeWithValidations("Menu Order", "", true, [ 
                 ValidationRequiredRule.initialize("Menu order must be required.", "Invalid menu order."),

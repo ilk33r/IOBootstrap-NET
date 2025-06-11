@@ -11,6 +11,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Interfaces;
 using SixLabors.ImageSharp;
+using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels;
 
@@ -26,6 +27,15 @@ where TDBContext : IODatabaseContext<TDBContext>
     #endregion
 
     #region View Model Methods
+
+    public void CheckImagesIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.ImagesEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
 
     public IOGetImagesResponseModel GetImages(IOGetImagesRequestModel requestModel)
     {

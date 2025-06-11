@@ -10,6 +10,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
     private _formValue: string;
     private _fileValue: Blob | null;
     private _fileName: string | null;
+    private _validate: boolean;
 
     constructor(props: FormTypeImageProps) {
         super(props);
@@ -21,6 +22,8 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         this._formValue = this.props.value;
         this._fileValue = null;
         this._fileName = null;
+        this._validate = false;
+
         this.handleDeleteImage = this.handleDeleteImage.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
     }
@@ -33,9 +36,10 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         return this._fileValue;
     }
 
-    handleDeleteImage(event: React.MouseEvent<HTMLAnchorElement>) {
+    private handleDeleteImage(event: React.MouseEvent<HTMLAnchorElement>) {
         event.preventDefault();
 
+        this._validate = true;
         if (this._formValue.length > 0) {
             this._formValue = "";
             this._fileName = "";
@@ -50,7 +54,8 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         }
     }
 
-    handleValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+        this._validate = true;
         const files = event.target.files;
 
         if (files == null || files.length === 0) {
@@ -87,6 +92,11 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
     validate(): boolean {
         let validated = true;
+
+        if (this.props.fileName !== "" && !this._validate) {
+            return validated;
+        }
+
         let errorMessage = "";
         let errorTitle= "";
         const weakSelf = this;

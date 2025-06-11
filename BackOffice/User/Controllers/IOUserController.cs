@@ -115,6 +115,7 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]
+    [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
     public virtual IOResponseModel Logout([FromBody] IOLogoutRequestModel requestModel)
     {

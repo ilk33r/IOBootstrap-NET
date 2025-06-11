@@ -12,15 +12,13 @@ namespace IOBootstrap.NET.Common.Middlewares;
 public class IOErrorHandlingMiddleware
 {
 
-    private readonly bool IsDevelopment;
     private readonly ILogger<IOLoggerType> Logger;
     private readonly RequestDelegate RequestDelegate;
 
-    public IOErrorHandlingMiddleware(RequestDelegate next, ILogger<IOLoggerType> logger, IWebHostEnvironment env)
+    public IOErrorHandlingMiddleware(RequestDelegate next, ILogger<IOLoggerType> logger)
     {
         RequestDelegate = next;
         Logger = logger;
-        IsDevelopment = !(env.IsProduction());
     }
 
     public async Task Invoke(HttpContext context)
@@ -44,20 +42,20 @@ public class IOErrorHandlingMiddleware
             IOServiceException serviceException = (IOServiceException)ex;
             responseStatusModel = new IOResponseStatusModel(serviceException.Code, serviceException.Message, false, serviceException.DetailedMessage);
         }
-        else if (IsDevelopment)
+        else
         {
+        #if DEBUG
             string exceptionContent = ex.Message + '\n' + '\n' + ex.StackTrace;
             responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.UnkownException, exceptionContent);
 
             // Log call
             Logger.LogError(ex, exceptionContent);
-        }
-        else
-        {
+        #else
             responseStatusModel = new IOResponseStatusModel(IOResponseStatusMessages.UnkownException, "An exception occured.");
 
             // Log call
             Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);
+        #endif
         }
 
         IOResponseModel responseModel = new IOResponseModel(responseStatusModel);

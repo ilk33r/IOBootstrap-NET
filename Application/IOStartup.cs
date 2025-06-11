@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
 using IOBootstrap.NET.Common.Routes;
+using IOBootstrap.NET.Core.Services.Captcha;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -37,7 +38,10 @@ where TDBContext : IODatabaseContext<TDBContext>
     public virtual void ConfigureServices(IServiceCollection services)
     {
         services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
-        services.AddControllers()
+        services.AddControllersWithViews(options =>
+                {
+                    options.Filters.Add<IODatabaseLogFilter<TDBContext>>();
+                })
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     options.SuppressModelStateInvalidFilter = true;
@@ -95,6 +99,16 @@ where TDBContext : IODatabaseContext<TDBContext>
         });
         services.AddSingleton<IConfiguration>(Configuration);
         services.AddSingleton<IWebHostEnvironment>(Environment);
+
+        services.AddCaptcha(x =>
+        {
+            x.FontFamilies = [
+                "AncizarSerif-VariableFont.ttf",
+                "OpenSans-VariableFont.ttf",
+                "Oswald-VariableFont.ttf"
+            ];
+            x.DrawLines = 5;
+        });
     }
 
     public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
@@ -126,6 +140,12 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         // Use session
         app.UseSession();
+
+        app.Use(async (context, next) =>
+        {
+            context.Request.EnableBuffering();
+            await next();
+        });
 
         // Use middleware
         ConfigureMiddleWare(app, env, logger);

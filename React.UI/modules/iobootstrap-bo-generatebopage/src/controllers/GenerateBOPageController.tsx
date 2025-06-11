@@ -5,7 +5,7 @@ import GenerateBOPageRequestModel from "../models/GenerateBOPageRequestModel";
 import GenerateBOPageResponseModel from "../models/GenerateBOPageResponseModel";
 import CodeBlockView from "../views/CodeBlockView";
 import GenerateBOPageFilesRequestModel from "../models/GenerateBOPageFilesRequestModel";
-import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationBackofficeRequestRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class GenerateBOPageController extends BOController<GenerateBOPageProps, GenerateBOPageState> {
@@ -87,7 +87,10 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
         ];
 
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("Entity Name (X.DataAccess.Entities.{Y.Z})", "", true, [ ValidationMinLengthRule.initialize("Entity name is too short.", "Invalid entity name.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Entity Name (X.DataAccess.Entities.{Y.Z})", "", true, [ 
+                ValidationMinLengthRule.initialize("Entity name is too short.", "Invalid entity name.", 3),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
         ];
 
         if (this.state.boPageDataResponse == null) {

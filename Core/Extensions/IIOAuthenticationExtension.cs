@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Common.Models.Users;
@@ -13,13 +14,20 @@ namespace IOBootstrap.NET.Core.Extensions;
 
 public static class IIOAuthenticationExtension
 {
+    private static string CaptchaCacheName = "auth-captcha-{0}";
 
-    public static async Task<IOAuthenticationResponseModel> AuthenticateUser<TDBContext>(this IIOAuthentication<TDBContext> input, string userName, string password)
+    public static async Task<IOAuthenticationResponseModel> AuthenticateUser<TDBContext>(
+        this IIOAuthentication<TDBContext> input,
+        string userName,
+        string password,
+        string? captchaID,
+        string? encryptedCaptha
+    )
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Decrypt password
         string decryptedPassword = input.DecryptString(password);
-        
+
         IOUserEntity? findedUser = input.DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
                                                     .FirstOrDefault();
@@ -32,6 +40,23 @@ public static class IIOAuthenticationExtension
 
         // Check user is active
         input.CheckUserActivationStatus(findedUser);
+
+        // Check captcha status
+        string? requiredCaptchaID = input.CheckCaptchaIsRequired(findedUser);
+
+        // Check captcha is required
+        if (requiredCaptchaID != null)
+        {
+            // Then validate captcha
+            bool captchaValidationStatus = input.ValidateCaptcha(findedUser, captchaID, encryptedCaptha);
+
+            // Check captcha is valid
+            if (!captchaValidationStatus)
+            {
+                // Return response
+                throw new IOCaptchaRequiredException(requiredCaptchaID ?? "");
+            }
+        }
 
         // Check user is locked
         input.CheckUserIsLocked(findedUser);
@@ -51,7 +76,7 @@ public static class IIOAuthenticationExtension
                     input.DatabaseContext.SaveChanges();
 
                     // Return response
-                    throw new IOInvalidCredentialsException();
+                    throw new IOInvalidCredentialsException(requiredCaptchaID ?? "");
                 }
             });
         }
@@ -89,10 +114,14 @@ public static class IIOAuthenticationExtension
 
         // Encrypt sensitive data
         string encryptedUserName = input.EncryptString(findedUser.UserName ?? "");
-        string encryptedToken = input.EncryptString(userNewToken);
 
         // Return response
-        return new IOAuthenticationResponseModel(encryptedToken, tokenDate.Add(new TimeSpan(tokenLife * 1000)), encryptedUserName, findedUser.UserRole);
+        return new IOAuthenticationResponseModel(
+            userNewToken,
+            tokenDate.Add(new TimeSpan(tokenLife * 1000)),
+            encryptedUserName,
+            findedUser.UserRole
+        );
     }
 
     public static IOCheckTokenResponseModel CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token)
@@ -163,7 +192,7 @@ public static class IIOAuthenticationExtension
         throw new IOInvalidCredentialsException();
     }
 
-    private static void CheckUserActivationStatus<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
+    public static void CheckUserActivationStatus<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Check user is active
@@ -192,15 +221,77 @@ public static class IIOAuthenticationExtension
         }
     }
 
-    private static void CheckUserIsLocked<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
+    private static string? CheckCaptchaIsRequired<TDBContext>(
+        this IIOAuthentication<TDBContext> input,
+        IOUserEntity user
+    )
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Check password attempt count
         if (user.WrongPasswordAttemptCount < 3)
         {
             // Then do nothing
-            return;
+            return null;
         }
+
+        // Captcha cache key
+        string captchaID = IORandomUtilities.GenerateGUIDString();
+        string cacheKey = String.Format(CaptchaCacheName, captchaID);
+
+        // Cache captcha
+        string newCaptcha = IORandomUtilities.GenerateRandomAlphaNumericString(6);
+        IOCacheObject captchaCache = new IOCacheObject(cacheKey, newCaptcha, 300);
+        IOCache.CacheObject(captchaCache);
+
+        // Then return captcha id
+        return captchaID;
+    }
+
+    private static bool ValidateCaptcha<TDBContext>(
+        this IIOAuthentication<TDBContext> input,
+        IOUserEntity user,
+        string? captchaID,
+        string? encryptedCaptha
+    )
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        // Check captcha id is exists
+        if (captchaID == null)
+        {
+            return false;
+        }
+        
+        // Captcha cache key
+        string cacheKey = String.Format(CaptchaCacheName, captchaID);
+
+        // Obtain cached captcha
+        IOCacheObject? captchaCache = IOCache.GetCachedObject(cacheKey);
+        if (captchaCache == null)
+        {
+            return false;
+        }
+
+        // Obtain captcha string value
+        string captchaCacheValue = (string)captchaCache.Value;
+
+        // Check encrypted captcha
+        if (encryptedCaptha == null)
+        {
+            return false;
+        }
+        
+        // Decrypt captcha
+        string decryptCaptcha = input.DecryptString(encryptedCaptha);
+
+        // Then return captcha validation status
+        return decryptCaptcha.Equals(captchaCacheValue);
+    }
+
+    private static void CheckUserIsLocked<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
+    where TDBContext : IODatabaseContext<TDBContext>
+    {
+        // Check password attempt count
+        int currentWrongPasswordAttemptCount = user.WrongPasswordAttemptCount;
 
         // Obtain current unix time
         long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -217,6 +308,12 @@ public static class IIOAuthenticationExtension
             input.DatabaseContext.Update(user);
             input.DatabaseContext.SaveChanges();
 
+            // Then do nothing
+            return;
+        }
+
+        if (currentWrongPasswordAttemptCount < 7)
+        {
             // Then do nothing
             return;
         }

@@ -5,6 +5,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
+#if DEBUG
 namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
@@ -20,3 +21,4 @@ public class IOGenerateBOPageDefaultController : IOGenerateBOPageController<IOGe
     {
     }
 }
+#endif

@@ -1,6 +1,6 @@
 import ConfigurationAddRequestModel from "../models/ConfigurationAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationBackofficeRequestRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class ConfigurationsAddController extends BOController<{}, {}> {
@@ -42,7 +42,10 @@ class ConfigurationsAddController extends BOController<{}, {}> {
         ];
 
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("Config Key", "", true, [ ValidationMinLengthRule.initialize("Config key is too sort.", "Invalid config key.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Config Key", "", true, [ 
+                ValidationMinLengthRule.initialize("Config key is too sort.", "Invalid config key.", 3),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
             FormTypeNumberProps.initialize("Integer Value", "", true),
             FormTypeTextAreaProps.initialize("String Value", "", true)
         ];

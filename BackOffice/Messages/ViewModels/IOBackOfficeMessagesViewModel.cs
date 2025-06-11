@@ -1,4 +1,6 @@
 ﻿using System;
+using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.Messages;
 using IOBootstrap.NET.Common.Models.Messages;
 using IOBootstrap.NET.Core.ViewModels;
@@ -18,6 +20,15 @@ where TDBContext : IODatabaseContext<TDBContext>
     }
 
     #endregion
+
+    public void CheckMessagesIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.MessagesEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
 
     public IList<IOMessageModel> GetMessages()
     {

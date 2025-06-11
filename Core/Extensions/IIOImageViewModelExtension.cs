@@ -19,6 +19,12 @@ public static class IIOImageViewModelExtension
             throw new IOImageCorruptException();
         }
 
+        long maxFileSize = input.Configuration.GetValue<long>(IOConfigurationConstants.IOMaxUploadFileSize);
+        if (file.Length > maxFileSize)
+        {
+            throw new IOImageFileSizeException();
+        }
+
         byte[] jpegImage;
         try {
             Image rawImage = Image.Load(file.OpenReadStream());
@@ -58,6 +64,12 @@ public static class IIOImageViewModelExtension
         if (file.Length < 16)
         {
             throw new IOImageCorruptException();
+        }
+
+        long maxFileSize = input.Configuration.GetValue<long>(IOConfigurationConstants.IOMaxUploadFileSize);
+        if (file.Length > maxFileSize)
+        {
+            throw new IOImageFileSizeException();
         }
 
         string imagesFolder = input.Configuration.GetValue<string>(IOConfigurationConstants.ImagesFolderKey)!;

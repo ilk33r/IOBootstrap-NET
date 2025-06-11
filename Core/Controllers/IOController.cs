@@ -21,8 +21,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IOBootstrap.NET.Core.Controllers;
 
-public abstract class IOController<TViewModel, TDBContext> : Controller, 
-IIOController<TViewModel, TDBContext>, 
+public abstract class IOController<TViewModel, TDBContext> : Controller,
+IIOController<TViewModel, TDBContext>,
 IIONonce<TViewModel, TDBContext>,
 IIORateLimit<TViewModel, TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
@@ -148,7 +148,7 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     public override void OnActionExecuted(ActionExecutedContext context)
     {
         base.OnActionExecuted(context);
-        
+
         // Update nonce
         if (Session != null)
         {
@@ -294,7 +294,11 @@ where TViewModel : IIOViewModel<TDBContext>, new()
                     // Check attribute type and role
                     if (requiredRole != null && !IOUserRoleUtility.CheckRawRole((int)requiredRole, userRole))
                     {
+#if DEBUG
                         throw new IOInvalidPermissionException("Restricted page. User role is " + userRole + " required role is " + requiredRole);
+#else
+                        throw new IOInvalidPermissionException();
+#endif
                     }
                 }
             }
@@ -419,6 +423,14 @@ where TViewModel : IIOViewModel<TDBContext>, new()
     [ApiExplorerSettings(IgnoreApi = true)]
     public virtual void CheckRateLimit(ActionExecutingContext context)
     {
+        // Check rate limit enabled
+        bool rateLimitEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.RateLimitEnabled);
+        if (!rateLimitEnabled)
+        {
+            // Do nothing
+            return;
+        }
+        
         // Obtain action desctriptor
         ControllerActionDescriptor actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
 

@@ -1,6 +1,6 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
 import React from "react";
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationDateRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeDateProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 import UserLoginInformationView from "../views/UserLoginInformationView";
 import UserAddState from "../props/UserAddState";
@@ -84,7 +84,10 @@ class UsersAddController extends BOController<{}, UserAddState> {
 
         const weakSelf = this;
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithChangeListener("User Name", "", true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ], (index, text) => {
+            FormTypeTextProps.initializeWithChangeListener("User Name", "", true, [ 
+                ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ], (index, text) => {
                 const newState = new UserAddState();
                 newState.userName = text;
 
@@ -96,7 +99,10 @@ class UsersAddController extends BOController<{}, UserAddState> {
                 FormDataOptionModel.initialize("NO", "no"),
                 FormDataOptionModel.initialize("YES", "yes")
             ]),
-            FormTypeDateProps.initializeWithValidations("End Date", "", true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
+            FormTypeDateProps.initializeWithValidations("End Date", "", true, [ 
+                ValidationRequiredRule.initialize("End date is required.", "Invalid end date."),
+                ValidationDateRule.initialize("Invalid date.", "Invalid date.")
+            ])
         ];
 
         return (

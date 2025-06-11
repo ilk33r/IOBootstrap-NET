@@ -1,4 +1,5 @@
 ﻿using System;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Common.Models.PushNotification;
@@ -21,6 +22,15 @@ where TDBContext : IODatabaseContext<TDBContext>
     #endregion
 
     #region Back Office Methods
+
+    public void CheckPushNotificationsIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.PushNotificationsEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
 
     public virtual IList<PushNotificationMessageModel> ListMessages()
     {

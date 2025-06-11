@@ -187,6 +187,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );

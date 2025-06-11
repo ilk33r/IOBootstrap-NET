@@ -55,6 +55,11 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             return false;
         }
 
+        if (response.status?.code === 410) {
+            this.handleCapthca(response);
+            return false;
+        }
+
         if (response.status?.code === 630) {
             this.handleInvalidKeyID(response);
             return false;
@@ -65,6 +70,10 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
     }
 
     public handleInvalidCredential(response: BaseResponseModel) {
+        this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
+    }
+
+    public handleCapthca(response: BaseResponseModel) {
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
     }
 
@@ -106,7 +115,7 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             itemValue: itemValue
         };
 
-        const baseURL = new URL(process.env.REACT_APP_BACKOFFICE_PAGE_URL ?? "");
+        const baseURL = new URL(process.env.REACT_APP_POST_MESSAGE_URL ?? "");
         if (baseURL !== null && baseURL.host.length > 0) {
             window.postMessage(windowMessage, baseURL.origin);
         }

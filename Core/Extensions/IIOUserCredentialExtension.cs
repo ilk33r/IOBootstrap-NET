@@ -12,24 +12,36 @@ namespace IOBootstrap.NET.Core.Extensions;
 
 public static class IIOUserCredentialExtension
 {
-    public static bool CheckHasUserTokenAndIsValid<TDBContext>(this IIOUserCredential<TDBContext> input)
+    public static bool CheckHasUserTokenAndIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, HttpRequest request)
     where TDBContext : IODatabaseContext<TDBContext>
     {
+        bool cookieAuthentication = input.Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
+        string? appToken = null;
+
         // Check back office is not open and token exists
-        if (input.Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+        if (cookieAuthentication && request.Cookies.ContainsKey(IOCookieConstants.TokenCookieName))
         {
             // Obtain token
-            string token = input.Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
-
-            // Parse token
-            Tuple<string, int> tokenData = input.ParseUserToken(token);
-
-            // Return back office status
-            return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2);
+            appToken = request.Cookies[IOCookieConstants.TokenCookieName]!;
         }
 
-        // Then return back office
-        return false;
+        if (!cookieAuthentication && input.Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+        {
+            // Obtain token
+            appToken = input.Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
+        }
+
+        if (appToken == null)
+        {
+            // Then return back office
+            return false;
+        }
+        
+        // Parse token
+        Tuple<string, int> tokenData = input.ParseUserToken(appToken);
+
+        // Return back office status
+        return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2);
     }
 
     public static bool CheckUserTokenIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, string tokenData, int userId)

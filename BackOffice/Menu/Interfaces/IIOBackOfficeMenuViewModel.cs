@@ -8,6 +8,8 @@ namespace IOBootstrap.NET.BackOffice.Menu.Interfaces;
 public interface IIOBackOfficeMenuViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext> 
 {
+    public void CheckMenuIsEnabled();
+
     public void AddMenuItem(IOMenuAddRequestModel requestModel);
 
     public void DeleteMenuItem(int? menuId);

@@ -51,7 +51,6 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
     pageChangeHandler(start: number, length: number) {
         this.requestModel.start = start;
         this.requestModel.count = length;
-        console.log("Start: " + start + " Length: " + length);
         this.LoadImages();
     }
 
@@ -114,6 +113,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
                     deleteDataHandler={null}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={pagination} />
             </React.StrictMode>
         );

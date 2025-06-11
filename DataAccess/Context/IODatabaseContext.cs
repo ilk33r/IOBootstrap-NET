@@ -9,6 +9,7 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
 
     public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
     public virtual DbSet<IOImagesEntity> Images { get; set; }
+    public virtual DbSet<IOLogsEntity> Logs { get; set; }
     public virtual DbSet<IOMenuEntity> Menu { get; set; }
     public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
     public virtual DbSet<IOUserEntity> Users { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Core.Controllers;
@@ -37,7 +38,29 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     public virtual async Task<IOAuthenticationResponseModel> Authenticate([FromBody] IOAuthenticationRequestModel requestModel)
     {
         // Check if authentication result is true
-        return await ViewModel.Authenticate(requestModel.UserName ?? "", requestModel.Password ?? "");
+        IOAuthenticationResponseModel response = await ViewModel.Authenticate(
+            requestModel.UserName ?? "",
+            requestModel.Password ?? "",
+            requestModel.CaptchaID,
+            requestModel.EncryptedCaptcha
+        );
+
+        bool cookieAuthentication = Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
+        if (cookieAuthentication)
+        {
+            HttpContext.Response.Cookies.Append(IOCookieConstants.TokenCookieName, response.Token ?? string.Empty, new CookieOptions()
+            {
+                Secure = true,
+                HttpOnly = false,
+                Expires = DateTime.UtcNow.AddHours(9),
+                IsEssential = true,
+                SameSite = SameSiteMode.Lax
+            });
+
+            response.Token = null;
+        }
+
+        return response;
     }
 
     [IORequireHTTPS]
@@ -50,7 +73,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {
         // Check if authentication result is true
-        return ViewModel.CheckToken(requestModel.Token ?? "");
+        return ViewModel.CheckToken(requestModel.Token);
     }
 
     #endregion

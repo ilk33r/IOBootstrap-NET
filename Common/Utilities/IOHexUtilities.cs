@@ -12,7 +12,9 @@ public static class IOHexUtilities
         {
             stream.WriteByte(byte.Parse(hexString.Substring(i, 2), System.Globalization.NumberStyles.AllowHexSpecifier));
         }
-        return stream.ToArray();
+        byte[] response = stream.ToArray();
+        stream.Dispose();
+        return response;
     }
 
     public static string ByteArrayToHexString(byte[] byteArray)

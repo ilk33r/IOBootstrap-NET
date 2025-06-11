@@ -15,25 +15,26 @@ class LoginController extends BOController<LoginProps, LoginState> {
 
         this.handleUserNameChange = this.handleUserNameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleCaptchaChange = this.handleCaptchaChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
     }
 
     private handleUserNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const newState = new LoginState();
-        newState.userName = event.target.value;
-        newState.password = this.state.password;
-        newState.errorMessage = this.state.errorMessage;
-
-        this.setState(newState);
+        this.setState({
+            userName: event.target.value
+        });
     }
 
     private handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const newState = new LoginState();
-        newState.userName = this.state.userName;
-        newState.password = event.target.value;
-        newState.errorMessage = this.state.errorMessage;
+        this.setState({
+            password: event.target.value
+        });
+    }
 
-        this.setState(newState);
+    private handleCaptchaChange(event: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            captcha: event.target.value
+        });
     }
 
     private loginSuccessHandler() {
@@ -43,54 +44,69 @@ class LoginController extends BOController<LoginProps, LoginState> {
     public handleServiceError(title: string, message: string) {
         super.handleServiceError(title, message);
 
-        const newState = new LoginState();
-        newState.userName = "";
-        newState.password = "";
-        newState.errorMessage = message;
-        this.setState(newState);
+        this.setState({
+            userName: "",
+            password: "",
+            captcha: "",
+            errorMessage: message
+        });
     }
 
     public handleInvalidCredential(response: BaseResponseModel) {
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
     }
 
+    public handleCapthca(response: BaseResponseModel) {
+        this.setState({
+            password: "",
+            captcha: "",
+            captchaID: (response.status?.detailedMessage === undefined || response.status?.detailedMessage === "") ? null : response.status?.detailedMessage
+        });
+    }
+
     public handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (this.state.password === null || this.state.password.length < 4) {
+            return;
+        }
 
         this.indicatorPresenter.present();
 
         const weakSelf = this;
-        AppCryptography.Instance.encrypt(this.state.password)
-          .then((encryptedData) => {
-            weakSelf.authenticate(encryptedData);
-          })
-          .catch(() => {
-            weakSelf.indicatorPresenter.dismiss();
-
-            const newState = new LoginState();
-            newState.userName = weakSelf.state.userName;
-            newState.password = weakSelf.state.password;
-            newState.errorMessage = "Encryption error.";
-            weakSelf.setState(newState);
-          });
+        this.authenticate()
+            .catch(() => {
+                weakSelf.indicatorPresenter.dismiss();
+                weakSelf.setState({
+                    password: "",
+                    captcha: "",
+                    errorMessage: "Encryption error."
+                });
+            });
     }
 
-    private authenticate(encryptedPassword: string) {
+    private async authenticate(): Promise<any> {
+        const encryptedPassword = await AppCryptography.Instance.encrypt(this.state.password ?? "");
+        let encryptedCaptcha: string | null = null;
+        if (this.state.captcha != null) {
+            encryptedCaptcha = await AppCryptography.Instance.encrypt(this.state.captcha);
+        }
+
         const request = new AuthenticationRequestModel();
         request.UserName = this.state.userName;
         request.Password = encryptedPassword;
+        request.CaptchaID = this.state.captchaID;
+        request.EncryptedCaptcha = encryptedCaptcha;
 
         const requestURL = `${this.props.controllerName}/Authenticate`;
         const weakSelf = this;
         this.service.post(requestURL, request, function (response: AuthenticationResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
-                const token = (response.token == null) ? "" : response.token;
-
                 if (response.userRole != null) {
                     weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.decryptTokenAndUserName(token, response.userName ?? "")
+                weakSelf.decryptTokenAndUserName(response.token, response.userName ?? "")
                             .then(() => {
                                 weakSelf.loginSuccessHandler();
                             })
@@ -103,9 +119,11 @@ class LoginController extends BOController<LoginProps, LoginState> {
         });
     }
 
-    private async decryptTokenAndUserName(encryptedToken: string, encryptedUserName: string): Promise<any> {
-        const descryptedToken = await AppCryptography.Instance.decrypt(encryptedToken);
-        this.storage.setStringForKey(UICommonConstants.userTokenStorageKey, descryptedToken);
+    private async decryptTokenAndUserName(encryptedToken: string | null, encryptedUserName: string): Promise<any> {
+        const cookieAuthentication = process.env.REACT_APP_COOKIE_AUTHENTICATION;
+        if (cookieAuthentication !== "true") {
+            this.storage.setStringForKey(UICommonConstants.userTokenStorageKey, encryptedToken ?? "");
+        }
 
         const decryptedUserName = await AppCryptography.Instance.decrypt(encryptedUserName);
         this.storage.setStringForKey(BOCommonConstants.userNameStorageKey, decryptedUserName);
@@ -113,6 +131,28 @@ class LoginController extends BOController<LoginProps, LoginState> {
 
     public render() {
         const formGroupErrorClass = (this.state.errorMessage.length > 0) ? "form-group has-error" : "form-group";
+        let captchaComponent: React.JSX.Element;
+
+        if (this.state.captchaID == null) {
+            captchaComponent = (
+                <React.StrictMode>
+                </React.StrictMode>
+            );
+        } else {
+            const captchaURL = `${process.env.REACT_APP_API_URL}/ImageAsset/GetCaptcha?id=${this.state.captchaID ?? ""}`;
+            captchaComponent = (
+                <React.StrictMode>
+                    <div className={formGroupErrorClass}>
+                        <label htmlFor="inputCaptcha" className="col-sm-2 control-label">Captcha</label>
+                        <div className="col-sm-10">
+                            <input type="text" className="form-control" id="inputCaptcha" placeholder="Captcha" onChange={this.handleCaptchaChange} />
+                            <img src={captchaURL} alt="Captcha" />
+                        </div>
+                    </div>
+                </React.StrictMode>
+            );
+        }
+
         return (
             <React.StrictMode>
                 <div className="content-wrapper">
@@ -134,9 +174,10 @@ class LoginController extends BOController<LoginProps, LoginState> {
                                             <div className={formGroupErrorClass}>
                                                 <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
                                                 <div className="col-sm-10">
-                                                    <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
+                                                    <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={this.state.password ?? ""} onChange={this.handlePasswordChange} />
                                                 </div>
                                             </div>
+                                            {captchaComponent}
                                             <div className={formGroupErrorClass}>
                                                 <div className="col-sm-10">
                                                     <span className="help-block">{this.state.errorMessage}</span>

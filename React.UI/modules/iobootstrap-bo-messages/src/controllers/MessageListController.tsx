@@ -105,6 +105,7 @@ class MessageListController extends BOController<MessageListProps, MessageListSt
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );

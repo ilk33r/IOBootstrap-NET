@@ -5,7 +5,7 @@ import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
 import { DIHooks } from "iobootstrap-ui-base";
-import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView } from "iobootstrap-bo-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
 
 class UsersListController extends BOController<UsersListProps, UsersListState> {
 
@@ -17,6 +17,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         this.changePasswordHandler = this.changePasswordHandler.bind(this);
         this.deleteDataHandler = this.deleteDataHandler.bind(this);
         this.updateDataHandler = this.updateDataHandler.bind(this);
+        this.itemVisibleHandler = this.itemVisibleHandler.bind(this);
     }
 
     public componentDidMount?(): void {
@@ -41,7 +42,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         });
     }
 
-    changePasswordHandler(index: number) {
+    private changePasswordHandler(index: number) {
         const currentUser = this.state.userList[index];
 
         if (currentUser.userName == this.storage.stringForKey(BOCommonConstants.userNameStorageKey)) {
@@ -58,7 +59,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         this.navigateToPage("userResetPassword");
     }
 
-    deleteDataHandler(index: number) {
+    private deleteDataHandler(index: number) {
         const currentUser = this.state.userList[index];
         const deleteRequestModel = new DeleteUserRequestModel();
         deleteRequestModel.userId = currentUser.id;
@@ -67,7 +68,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         this.navigateToPage("usersDelete");
     }
 
-    updateDataHandler(index: number) {
+    private updateDataHandler(index: number) {
         const currentUser = this.state.userList[index];
         const updateRequestModel = new UpdateUserRequestModel();
         updateRequestModel.userId = currentUser.id;
@@ -78,6 +79,26 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
 
         this.appContext.setObjectForKey("usersUpdateRequest", updateRequestModel);
         this.navigateToPage("usersUpdate");
+    }
+
+    private itemVisibleHandler(listIndex: number, itemIndex: number): boolean {
+        const currentUserRole = this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) ?? UserRoles.AnonmyMouse;
+        const currentUserName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
+        const listUser = this.state.userList[listIndex];
+
+        if ((itemIndex == 1 || itemIndex == 3) && listUser.userName == currentUserName) {
+            return false;
+        }
+
+        if (currentUserRole == UserRoles.SuperAdmin) {
+            return true;
+        }
+
+        if (currentUserRole < listUser.userRole) {
+            return true;
+        }
+        
+        return false;
     }
 
     render() {
@@ -148,6 +169,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={this.itemVisibleHandler}
                     pagination={null} />
             </React.StrictMode>
         );

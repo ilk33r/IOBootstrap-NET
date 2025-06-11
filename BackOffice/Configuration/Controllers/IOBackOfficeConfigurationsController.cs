@@ -38,6 +38,9 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOConfigurationAddResponseModel AddConfigItem([FromBody] IOConfigurationAddRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckConfigurationsIsEnabled();
+
         // Add menu
         ViewModel.AddConfigItem(requestModel);
 
@@ -52,6 +55,9 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOConfigurationDeleteResponseModel DeleteConfigItem([FromBody] IOConfigurationDeleteRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckConfigurationsIsEnabled();
+
         // Add menu
         ViewModel.DeleteConfigItem(requestModel.ConfigId);
 
@@ -65,6 +71,9 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     [HttpGet("[action]")]
     public IOConfigurationListResponseModel ListConfigurationItems()
     {
+        // Check enabled
+        ViewModel.CheckConfigurationsIsEnabled();
+
         // Obtain configuration items
         IList<IOConfigurationModel> configurationItems = ViewModel.GetConfigurations();
 
@@ -79,6 +88,9 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOConfigurationUpdateResponseModel UpdateConfigItem([FromBody] IOConfigurationUpdateRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckConfigurationsIsEnabled();
+
         // Add menu
         ViewModel.UpdateConfigItem(requestModel);
 
@@ -92,6 +104,9 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
     [HttpGet("[action]")]
     public virtual IOConfigurationUpdateResponseModel ResetCache()
     {
+        // Check enabled
+        ViewModel.CheckConfigurationsIsEnabled();
+        
         IOCache.ClearCache();
         return new IOConfigurationUpdateResponseModel();
     }

@@ -91,6 +91,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={null}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );

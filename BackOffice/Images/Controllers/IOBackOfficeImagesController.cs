@@ -38,6 +38,9 @@ where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOGetImagesResponseModel GetImages([FromBody] IOGetImagesRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckImagesIsEnabled();
+
         return ViewModel.GetImages(requestModel);
     }
 

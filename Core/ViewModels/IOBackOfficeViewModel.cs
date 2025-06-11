@@ -28,7 +28,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public virtual bool IsBackOffice()
     {
-        return this.CheckHasUserTokenAndIsValid();
+        return this.CheckHasUserTokenAndIsValid(Request);
     }
 
     #endregion

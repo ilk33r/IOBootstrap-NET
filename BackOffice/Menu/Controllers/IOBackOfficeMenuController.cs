@@ -36,6 +36,9 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMenuAddResponseModel AddMenuItem([FromBody] IOMenuAddRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMenuIsEnabled();
+
         // Add menu
         ViewModel.AddMenuItem(requestModel);
 
@@ -50,6 +53,9 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMenuUpdateResponseModel DeleteMenuItem([FromBody] IOMenuDeleteRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMenuIsEnabled();
+
         // Add menu
         ViewModel.DeleteMenuItem(requestModel.ID);
 
@@ -77,6 +83,9 @@ where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMenuUpdateResponseModel UpdateMenuItem([FromBody] IOMenuUpdateRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMenuIsEnabled();
+        
         // Add menu
         ViewModel.UpdateMenuItem(requestModel);
 

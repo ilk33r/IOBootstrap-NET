@@ -33,7 +33,7 @@ class ValidationFileTypeRule implements ValidationRule {
             }
 
             const lastCharacters = value.slice(-extensionLength);
-            if (lastCharacters === it) {
+            if (lastCharacters.toLocaleLowerCase() === it.toLocaleLowerCase()) {
                 isValid = true;
             }
         });

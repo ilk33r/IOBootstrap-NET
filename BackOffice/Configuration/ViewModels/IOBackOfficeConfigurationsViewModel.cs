@@ -7,6 +7,7 @@ using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.BackOffice.Configuration.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
+using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 
@@ -23,6 +24,15 @@ where TDBContext : IODatabaseContext<TDBContext>
     #endregion
 
     #region Menu Methods
+
+    public void CheckConfigurationsIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.ConfigurationsEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
 
     public virtual void AddConfigItem(IOConfigurationAddRequestModel requestModel)
     {

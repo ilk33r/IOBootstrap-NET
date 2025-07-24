@@ -31,14 +31,13 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        context.HttpContext.Request.EnableBuffering();
-
         if (
             context.HttpContext.Request.Method.Equals("POST") ||
             context.HttpContext.Request.Method.Equals("GET") ||
             context.HttpContext.Request.Method.Equals("DELETE")
         )
         {
+            context.HttpContext.Request.EnableBuffering();
             string requestPath = context.HttpContext.Request.Path.ToString();
             string requestHeadersJson = JsonSerializer.Serialize(context.HttpContext.Request.Headers);
             string? ip4;
@@ -68,7 +67,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                     string currentRequestBody = await requestBodyReader.ReadToEndAsync();
                     requestBody = currentRequestBody.Substring(0, Math.Min(currentRequestBody.Length, 2048));
                 }
-                 context.HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
+                context.HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             }
             else
             {
@@ -115,6 +114,10 @@ where TDBContext : IODatabaseContext<TDBContext>
                 dbContext.Add(log);
                 dbContext.SaveChanges();
             }
+        }
+        else
+        {
+            await next();
         }
     }
 }

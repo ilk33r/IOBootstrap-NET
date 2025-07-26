@@ -25,7 +25,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MYSQL_DATABASE;DEBUG</DefineConstants>
+    <DefineConstants>USE_MYSQL_DATABASE;PLAIN_CONNECTION_STRING;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>

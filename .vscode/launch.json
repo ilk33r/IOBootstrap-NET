@@ -13,6 +13,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,
+            "checkForDevCert": false,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"

@@ -1,5 +1,3 @@
-using IOBootstrap.NET.Common.Messages.Clients;
-using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.DataAccess.Context;
 
@@ -14,14 +12,6 @@ public interface IIOBackOfficeViewModel<TDBContext> : IIOViewModel<TDBContext> w
     #endregion
         
     #region View Model Methods
-
-    public IOClientInfoModel CreateClient(IOClientAddRequestModel requestModel);
-
-    public void DeleteClient(IOClientDeleteRequestModel requestModel);
-
-    public IList<IOClientInfoModel> GetClients();
-
-    public void UpdateClient(IOClientUpdateRequestModel requestModel);
     
     public bool IsBackOffice();
 

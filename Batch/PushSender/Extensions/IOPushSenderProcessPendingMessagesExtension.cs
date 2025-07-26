@@ -16,7 +16,6 @@ public static class IOPushSenderProcessPendingMessagesExtension
     where TDBContext : IODatabaseContext<TDBContext>
     {
         IList<PushNotificationMessageEntity>? pushNotificationMessages = input.DatabaseContext?.PushNotificationMessages
-                                                                                            .Include(p => p.Client)
                                                                                             .Include(p => p.PushNotificationDeviceID)
                                                                                             .Where(p => p.IsCompleted == 0)
                                                                                             .OrderBy(p => p.NotificationDate)

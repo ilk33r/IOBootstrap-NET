@@ -74,11 +74,11 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
         const items = this.state.configurations.map(configurationModel => {
             const itemModel = new ListDataItemModel();
             const configIntValue = (configurationModel.configIntValue != null) ? configurationModel.configIntValue.toString() : "";
-            const configStringValue = (configurationModel.configStringValue != null) ? configurationModel.configStringValue : "";
+            const configStringValue = (configurationModel.configStringValue != null) ? configurationModel.configStringValue.RemoveHTML() : "";
 
             itemModel.itemList = [
                 configurationModel.id.toString(),
-                configurationModel.configKey,
+                configurationModel.configKey.RemoveHTML(),
                 configIntValue,
                 configStringValue
             ];
@@ -100,6 +100,7 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );

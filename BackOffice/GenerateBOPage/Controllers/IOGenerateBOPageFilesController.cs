@@ -7,6 +7,7 @@ using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
+#if DEBUG
 namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
@@ -38,7 +39,7 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
         byte[] result = await System.IO.File.ReadAllBytesAsync(apiFilesPath);
 
         FileContentResult fileResult = File(result, "application/octet-stream", generatedZipFileName);
-        
+
         string tempPath = Path.GetTempPath();
         string generatedFolderPath = Path.Join(tempPath, generatedFolderName);
 
@@ -64,7 +65,7 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
         byte[] result = await System.IO.File.ReadAllBytesAsync(uiFilesPath);
 
         FileContentResult fileResult = File(result, "application/octet-stream", generatedZipFileName);
-        
+
         string tempPath = Path.GetTempPath();
         string generatedFolderPath = Path.Join(tempPath, generatedFolderName);
 
@@ -78,3 +79,4 @@ where TViewModel : IOGenerateBOPageFilesViewModel<TDBContext>, new()
 
     #endregion
 }
+#endif

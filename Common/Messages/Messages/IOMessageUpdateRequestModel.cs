@@ -7,7 +7,7 @@ public class IOMessageUpdateRequestModel : IOMessageAddRequestModel
 {
 
     [Required]
-    public int MessageId { get; set; }
+    public int? MessageId { get; set; }
 
     public IOMessageUpdateRequestModel() : base()
     {

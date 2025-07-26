@@ -68,5 +68,18 @@ where TDBContext : IODatabaseContext<TDBContext>
         return ViewModel.Decrypt(requestModel);
     }
 
+    [IOValidateRequestModel]
+    [HttpPost("[action]")]
+    public IOEncryptResponseModel EncryptAES([FromBody] IOEncryptRequestModel requestModel)
+    {
+        return ViewModel.EncryptAES(requestModel);
+    }
+
+    [IOValidateRequestModel]
+    [HttpPost("[action]")]
+    public IOEncryptResponseModel DecryptAES([FromBody] IOEncryptRequestModel requestModel)
+    {
+        return ViewModel.DecryptAES(requestModel);
+    }
 }
 #endif

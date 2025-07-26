@@ -173,6 +173,7 @@ class FormView extends View<FormViewProps, {}> {
                             name={formElement.name}
                             value={formElement.value}
                             fileName={formElement.fileName}
+                            accept={formElement.accept}
                             isEnabled={formElement.isEnabled}
                             errorHandler={this.handleFormError}
                             validations={formElement.validations}

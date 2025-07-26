@@ -4,6 +4,7 @@ import ListDataPaginationModel from "../models/ListDataPaginationModel";
 import ListExtrasModel from "../models/ListExtrasModel";
 
 type ListViewPropsItemHandler = (index: number) => void;
+type ListViewVisibleItemHandler = (listIndex: number, itemIndex: number) => boolean;
 
 interface ListViewProps {
 
@@ -19,6 +20,7 @@ interface ListViewProps {
     deleteDataHandler: ListViewPropsItemHandler | null;
     updateDataHandler: ListViewPropsItemHandler | null;
     selectDataHandler: ListViewPropsItemHandler | null;
+    itemVisibleHandler: ListViewVisibleItemHandler | null;
     pagination: ListDataPaginationModel | null;
 }
 

@@ -1,10 +1,10 @@
 ﻿using System;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.Common.Models.Clients;
 using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels;
@@ -23,6 +23,15 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region Back Office Methods
 
+    public void CheckPushNotificationsIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.PushNotificationsEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
+
     public virtual IList<PushNotificationMessageModel> ListMessages()
     {
         // Obtain push notification entity
@@ -30,13 +39,6 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                             .Select(pm => new PushNotificationMessageModel()
                                                                             {
                                                                                 ID = pm.ID,
-                                                                                Client = (pm.Client == null) ? null : new IOClientInfoModel(pm.Client.ID,
-                                                                                                                                            pm.Client.ClientId ?? "",
-                                                                                                                                            pm.Client.ClientSecret ?? "",
-                                                                                                                                            pm.Client.ClientDescription ?? "",
-                                                                                                                                            pm.Client.IsEnabled,
-                                                                                                                                            pm.Client.RequestCount,
-                                                                                                                                            pm.Client.MaxRequestCount),
                                                                                 DeviceType = pm.DeviceType,
                                                                                 NotificationCategory = pm.NotificationCategory,
                                                                                 NotificationData = pm.NotificationData,
@@ -58,18 +60,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public void SendNotifications(SendPushNotificationRequestModel requestModel)
     {
-        // Obtain client
-        IOClientsEntity? clientsEntity = null;
-
-        if (requestModel.ClientId != null)
-        {
-            clientsEntity = DatabaseContext.Clients.Find(requestModel.ClientId);
-        }
-
         // Create push notification message entity
         PushNotificationMessageEntity pushNotificationMessageEntity = new PushNotificationMessageEntity()
         {
-            Client = clientsEntity,
             DeviceType = (int)requestModel.DeviceType,
             NotificationCategory = requestModel.NotificationCategory,
             NotificationData = requestModel.NotificationData,
@@ -84,8 +77,13 @@ where TDBContext : IODatabaseContext<TDBContext>
         DatabaseContext.SaveChanges();
     }
 
-    public void DeleteMessage(int messageId)
+    public void DeleteMessage(int? messageId)
     {
+        if (messageId == null)
+        {
+            throw new IOInvalidRequestException();
+        }
+        
         // Obtain message 
         PushNotificationMessageEntity? messageEntity = DatabaseContext.PushNotificationMessages.Find(messageId);
 

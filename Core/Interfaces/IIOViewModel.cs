@@ -15,8 +15,6 @@ public interface IIOViewModel<TDBContext> : IIOViewModelBase where TDBContext : 
 
     public void CheckAuthorizationHeader();
 
-    public void CheckClient();
-
     public int GetUserRole();
 
     #endregion

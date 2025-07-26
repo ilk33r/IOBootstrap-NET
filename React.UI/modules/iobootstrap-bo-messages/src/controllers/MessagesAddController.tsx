@@ -1,6 +1,6 @@
 import MessageAddRequestModel from "../models/MessageAddRequestModel";
 import React from "react";
-import { BaseResponseModel, CalloutTypes, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, ValidationDateRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeDateProps, FormTypeTextAreaProps, FormView } from "iobootstrap-bo-base";
 
 class MessagesAddController extends BOController<{}, {}> {
@@ -43,8 +43,12 @@ class MessagesAddController extends BOController<{}, {}> {
 
         const formElements: FormType[] = [
             FormTypeTextAreaProps.initializeWithValidations("Message", "", true, [ ValidationMinLengthRule.initialize("Message is too short.", "Invalid message.", 3) ]),
-            FormTypeDateProps.initialize("Start Date", "", true),
-            FormTypeDateProps.initialize("End Date", "", true)
+            FormTypeDateProps.initializeWithValidations("Start Date", "", true, [
+                ValidationDateRule.initialize("Invalid date.", "Invalid date.")
+            ]),
+            FormTypeDateProps.initializeWithValidations("End Date", "", true, [
+                ValidationDateRule.initialize("Invalid date.", "Invalid date.")
+            ])
         ];
 
         return (

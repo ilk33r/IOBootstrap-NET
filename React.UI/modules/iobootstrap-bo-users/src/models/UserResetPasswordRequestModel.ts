@@ -3,13 +3,13 @@ import { BaseRequestModel } from "iobootstrap-ui-base";
 class UserResetPasswordRequestModel extends BaseRequestModel {
 
     userName: string;
-    newPassword: string;
+    newPassword: string | null;
 
     constructor() {
         super();
 
         this.userName = "";
-        this.newPassword = "";
+        this.newPassword = null;
     }
 }
 

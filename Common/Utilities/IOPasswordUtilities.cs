@@ -3,8 +3,12 @@ using System.Security.Cryptography;
 
 namespace IOBootstrap.NET.Common.Utilities;
 
-public static class IOPasswordUtilities
+public class IOPasswordUtilities : IDisposable
 {
+
+    public delegate void PasswordResponse(string hashed);
+    public delegate void VerifyResponse(bool verified);
+
     #region Constants
 
     private const int HashSize = 64;
@@ -14,72 +18,97 @@ public static class IOPasswordUtilities
 
     #region Hash
 
-    public static string HashPassword(string password, int iterations)
+    public async Task HashPassword(string password, int iterations, PasswordResponse callback)
     {
-        //create salt
-        RandomNumberGenerator numberGenerator = RandomNumberGenerator.Create();
-        byte[] salt;
-        numberGenerator.GetBytes(salt = new byte[SaltSize]);
+        await Task.Run(() =>
+        {
+            //create salt
+            RandomNumberGenerator numberGenerator = RandomNumberGenerator.Create();
+            byte[] salt;
+            numberGenerator.GetBytes(salt = new byte[SaltSize]);
 
-        //create hash
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
-        var hash = pbkdf2.GetBytes(HashSize);
+            //create hash
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
+            var hash = pbkdf2.GetBytes(HashSize);
 
-        //combine salt and hash
-        var hashBytes = new byte[SaltSize + HashSize];
-        Array.Copy(salt, 0, hashBytes, 0, SaltSize);
-        Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
+            //combine salt and hash
+            var hashBytes = new byte[SaltSize + HashSize];
+            Array.Copy(salt, 0, hashBytes, 0, SaltSize);
+            Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
 
-        //convert to base64
-        var base64Hash = Convert.ToBase64String(hashBytes);
+            //convert to base64
+            string? base64Hash = Convert.ToBase64String(hashBytes);
 
-        //format hash with extra information
-        return string.Format("$IOPSSWD$V1${0}${1}", iterations, base64Hash);
+            //format hash with extra information
+            callback(string.Format("$IOPSSWD$V1${0}${1}", iterations, base64Hash));
+
+            // Null values
+            base64Hash = null;
+            hash = null;
+        });
     }
 
-    public static string HashPassword(string password)
+    public async Task HashPassword(string password, PasswordResponse callback)
     {
-        return HashPassword(password, 10000);
+        await HashPassword(password, 10000, callback);
     }
 
-    public static bool IsPasswordHashSupported(string hashString)
+    public bool IsPasswordHashSupported(string hashString)
     {
         return hashString.Contains("$IOPSSWD$V1$");
     }
 
-    public static bool VerifyPassword(string password, string hashedPassword)
+    public async Task VerifyPassword(string password, string hashedPassword, VerifyResponse callback)
     {
-        //check hash
-        if (!IsPasswordHashSupported(hashedPassword))
+        await Task.Run(() =>
         {
-            throw new NotSupportedException("The hashtype is not supported");
-        }
-
-        //extract iteration and Base64 string
-        var splittedHashString = hashedPassword.Replace("$IOPSSWD$V1$", "").Split('$');
-        var iterations = int.Parse(splittedHashString[0]);
-        var base64Hash = splittedHashString[1];
-
-        //get hashbytes
-        var hashBytes = Convert.FromBase64String(base64Hash);
-
-        //get salt
-        var salt = new byte[SaltSize];
-        Array.Copy(hashBytes, 0, salt, 0, SaltSize);
-
-        //create hash with given salt
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
-        byte[] hash = pbkdf2.GetBytes(HashSize);
-
-        //get result
-        for (var i = 0; i < HashSize; i++)
-        {
-            if (hashBytes[i + SaltSize] != hash[i])
+            //check hash
+            if (!IsPasswordHashSupported(hashedPassword))
             {
-                return false;
+                throw new NotSupportedException("The hashtype is not supported");
             }
-        }
-        return true;
+
+            //extract iteration and Base64 string
+            var splittedHashString = hashedPassword.Replace("$IOPSSWD$V1$", "").Split('$');
+            var iterations = int.Parse(splittedHashString[0]);
+            string? base64Hash = splittedHashString[1];
+
+            //get hashbytes
+            byte[]? hashBytes = Convert.FromBase64String(base64Hash);
+
+            //get salt
+            var salt = new byte[SaltSize];
+            Array.Copy(hashBytes, 0, salt, 0, SaltSize);
+
+            //create hash with given salt
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(HashSize);
+
+            //get result
+            for (var i = 0; i < HashSize; i++)
+            {
+                if (hashBytes[i + SaltSize] != hash[i])
+                {
+                    callback(false);
+                    base64Hash = null;
+                    hashBytes = null;
+                    return;
+                }
+            }
+
+            base64Hash = null;
+            hashBytes = null;
+            callback(true);
+        });
+    }
+
+    #endregion
+
+    #region Disposable
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
     }
 
     #endregion

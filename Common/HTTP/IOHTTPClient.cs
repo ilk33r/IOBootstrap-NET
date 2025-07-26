@@ -104,6 +104,28 @@ public class IOHTTPClient
         task.Wait();
     }
 
+    public async Task<(bool, TObject?)> CallJSONAsync<TObject>() where TObject : IOModel, new()
+    {
+        SetContentType("application/json");
+        (bool, TObject?) responseObject = (false, null);
+
+        Task task = Call((bool status, string response, HttpResponseHeaders? headers) =>
+        {
+            try
+            {
+                TObject? jsonObject = JsonSerializer.Deserialize<TObject>(response);
+                responseObject = (status, jsonObject);
+            }
+            catch (Exception)
+            {
+                responseObject = (status, null);
+            }
+        });
+
+        await task;
+        return responseObject;
+    }
+
     public TObject? CallJSONSync<TObject>() where TObject : IOModel, new()
     {
         TObject? jsonObject = null;

@@ -28,7 +28,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region View Model Methods
 
-    public virtual IOAddUserResponseModel AddUser(IOAddUserRequestModel requestModel)
+    public virtual async Task<IOAddUserResponseModel> AddUser(IOAddUserRequestModel requestModel)
     {
         // Obtain users entity
         IOUserEntity? user = DatabaseContext.Users
@@ -43,39 +43,46 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
 
         string decryptedPassword = DecryptString(requestModel.Password ?? "");
+        IOUserEntity? newUserEntity = null;
 
-        // Create a users entity 
-        IOUserEntity newUserEntity = new IOUserEntity()
+        using (var passwordUtilities = new IOPasswordUtilities())
         {
-            UserName = requestModel.UserName!.ToLower(),
-            Password = IOPasswordUtilities.HashPassword(decryptedPassword),
-            UserRole = requestModel.UserRole,
-            UserToken = null,
-            TokenDate = DateTimeOffset.UtcNow,
-            IsActive = requestModel.IsActive,
-            ActivationEndDate = requestModel.ActivationEndDate,
-            CreatedBy = UserModel?.UserName ?? string.Empty,
-            CreatedDate = DateTimeOffset.UtcNow,
-            UpdateDate = DateTimeOffset.UtcNow,
-            WrongPasswordAttemptCount = 0,
-            PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
-            LastWrongPasswordAttemptDate = new DateTimeOffset()
-        };
+            await passwordUtilities.HashPassword(decryptedPassword, hashed =>
+            {
+                // Create a users entity 
+                newUserEntity = new IOUserEntity()
+                {
+                    UserName = requestModel.UserName!.ToLower(),
+                    Password = hashed,
+                    UserRole = requestModel.UserRole,
+                    UserToken = null,
+                    TokenDate = DateTimeOffset.UtcNow,
+                    IsActive = requestModel.IsActive ?? false,
+                    ActivationEndDate = requestModel.ActivationEndDate ?? DateTimeOffset.UtcNow,
+                    CreatedBy = UserModel?.UserName ?? string.Empty,
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    UpdateDate = DateTimeOffset.UtcNow,
+                    WrongPasswordAttemptCount = 0,
+                    PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1),
+                    LastWrongPasswordAttemptDate = new DateTimeOffset()
+                };
 
-        // Write user to database
-        DatabaseContext.Add(newUserEntity);
-        DatabaseContext.SaveChanges();
+                // Write user to database
+                DatabaseContext.Add(newUserEntity);
+                DatabaseContext.SaveChanges();
+            });
+        }
 
         // Return status
-        return new IOAddUserResponseModel(newUserEntity.ID, requestModel.UserName);
+        return new IOAddUserResponseModel(newUserEntity?.ID ?? 0, requestModel.UserName ?? "");
     }
 
-    public virtual void ChangePassword(string oldPassword, string newPassword)
+    public virtual async Task ChangePassword(string oldPassword, string newPassword)
     {
-        this.ChangeUserPassword(oldPassword, newPassword);
+        await this.ChangeUserPassword(oldPassword, newPassword);
     }
 
-    public virtual void ResetPassword(string userName, string newPassword)
+    public virtual async Task ResetPassword(string userName, string newPassword)
     {
         IOUserEntity? currentUser = DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
@@ -92,18 +99,29 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOInvalidCredentialsException("You can not reset this user password.");
         }
 
-        // Update user password properties
-        string decryptedNewPassword = DecryptString(newPassword);
-        currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
-        currentUser.UserToken = null;
-        currentUser.UpdateDate = DateTimeOffset.UtcNow;
-        currentUser.WrongPasswordAttemptCount = 0;
-        currentUser.LastWrongPasswordAttemptDate = new DateTimeOffset();
-        currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1);
+        if (currentUser.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > currentUser.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not reset this user password.");
+        }
 
-        // Update user password
-        DatabaseContext.Update(currentUser);
-        DatabaseContext.SaveChanges();
+        using (var passwordUtilities = new IOPasswordUtilities())
+        {
+            string decryptedNewPassword = DecryptString(newPassword);
+            await passwordUtilities.HashPassword(decryptedNewPassword, hashed =>
+            {
+                // Update user password properties
+                currentUser.Password = hashed;
+                currentUser.UserToken = null;
+                currentUser.UpdateDate = DateTimeOffset.UtcNow;
+                currentUser.WrongPasswordAttemptCount = 0;
+                currentUser.LastWrongPasswordAttemptDate = new DateTimeOffset();
+                currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddYears(-1);
+
+                // Update user password
+                DatabaseContext.Update(currentUser);
+                DatabaseContext.SaveChanges();
+            });
+        }
     }
 
     public virtual IList<IOUserInfoModel> ListUsers()
@@ -155,11 +173,16 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserExistsException();
         }
 
+        if (user.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > user.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not edit this user.");
+        }
+
         // Update user properties
         user.UserName = userName;
-        user.UserRole = request.UserRole;
-        user.IsActive = request.IsActive;
-        user.ActivationEndDate = request.ActivationEndDate;
+        user.UserRole = request.UserRole ?? 999;
+        user.IsActive = request.IsActive ?? false;
+        user.ActivationEndDate = request.ActivationEndDate ?? DateTimeOffset.UtcNow;
         user.UpdateDate = DateTimeOffset.UtcNow;
 
         // Update user password
@@ -174,6 +197,11 @@ where TDBContext : IODatabaseContext<TDBContext>
         if (user == null)
         {
             throw new IOUserNotFoundException();
+        }
+
+        if (user.UserRole != (int)UserRoles.SuperAdmin && GetUserRole() > user.UserRole)
+        {
+            throw new IOInvalidCredentialsException("You can not delete this user.");
         }
 
         // Check user entity is not null

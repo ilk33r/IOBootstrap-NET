@@ -66,13 +66,37 @@ class ListView extends View<ListViewProps, {}> {
             const optionsColumnKey = "itemOptions" + itemIndex;
             const itemKey = "itemIndex" + itemIndex.toString();
 
+            let itemUpdateClass = updateClass;
+            let itemDeleteClass = deleteClass;
+            let itemSelectionClass = selectionClass;
+            if (this.props.itemVisibleHandler != null) {
+                if (!this.props.itemVisibleHandler(itemIndex, 0)) {
+                    itemUpdateClass = "btn btn-app hidden";
+                }
+                
+                if (!this.props.itemVisibleHandler(itemIndex, 1)) {
+                    itemDeleteClass = "btn btn-app hidden";
+                }
+
+                if (!this.props.itemVisibleHandler(itemIndex, 2)) {
+                    itemSelectionClass = "btn btn-app hidden";
+                }
+            }
+
             let itemExtras;
             if (this.props.extras != null && this.props.extras.length > 0) {
-                itemExtras = this.props.extras.map(itemExtra => {
+                itemExtras = this.props.extras.map((itemExtra, itemExtraIndex) => {
                     const iconClassName = "fa " + itemExtra.icon;
                     const key = "itemExtraKey" + itemIndex.toString() + itemExtra.name;
+                    let itemExtraClass = "btn btn-app";
+                    if (this.props.itemVisibleHandler != null) {
+                        if (!this.props.itemVisibleHandler(itemIndex, itemExtraIndex + 3)) {
+                            itemExtraClass = "btn btn-app hidden";
+                        }
+                    }
+
                     return (
-                        <a className="btn btn-app" key={key} onClick={() => itemExtra.itemSelectionHandler(itemIndex)}>
+                        <a className={itemExtraClass} key={key} onClick={() => itemExtra.itemSelectionHandler(itemIndex)}>
                             <i className={iconClassName}></i> {itemExtra.name}
                         </a>
                     );
@@ -85,13 +109,13 @@ class ListView extends View<ListViewProps, {}> {
                 <tr className={rowClass} key={itemKey}>
                     {listDataColumn}
                     <td key={optionsColumnKey}>
-                        <a className={updateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
+                        <a className={itemUpdateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
                             <i className="fa fa-edit"></i> {this.props.resourceEdit}
                         </a>
-                        <a className={deleteClass} onClick={(e) => this.handleItemDeleteClick(e, itemIndex)}>
+                        <a className={itemDeleteClass} onClick={(e) => this.handleItemDeleteClick(e, itemIndex)}>
                             <i className="fa fa-trash"></i> {this.props.resourceDelete}
                         </a>
-                        <a className={selectionClass} onClick={(e) => this.handleItemSelect(e, itemIndex)}>
+                        <a className={itemSelectionClass} onClick={(e) => this.handleItemSelect(e, itemIndex)}>
                             <i className="fa fa-check"></i> {this.props.resourceSelect}
                         </a>
                         {itemExtras}

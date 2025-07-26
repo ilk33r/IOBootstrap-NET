@@ -1,3 +1,4 @@
+import "./common/extensions/StringExtensions";
 export { default as UICommonConstants } from "./common/constants/UICommonConstants";
 export { default as DeviceTypes } from "./common/enumerations/DeviceTypes";
 export { default as BaseRequestModel } from "./common/models/BaseRequestModel";
@@ -22,6 +23,9 @@ export type { ValidationRule } from "./presentation/inerfaces/ValidationRule";
 export { default as CalloutPresenter } from "./presentation/presenters/CalloutPresenter";
 export { default as IndicatorPresenter } from "./presentation/presenters/IndicatorPresenter";
 export { default as UploadModalPresenter } from "./presentation/presenters/UploadModalPresenter";
+export { default as ValidationBackofficeRequestRule } from "./presentation/validations/ValidationBackofficeRequestRule";
+export { default as ValidationDateRule } from "./presentation/validations/ValidationDateRule";
+export { default as ValidationFileTypeRule } from "./presentation/validations/ValidationFileTypeRule";
 export { default as ValidationMaxLengthRule } from "./presentation/validations/ValidationMaxLengthRule";
 export { default as ValidationMinAmountRule } from "./presentation/validations/ValidationMinAmountRule";
 export { default as ValidationMinLengthRule } from "./presentation/validations/ValidationMinLengthRule";

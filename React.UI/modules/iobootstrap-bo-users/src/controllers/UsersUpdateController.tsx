@@ -1,6 +1,6 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
-import { BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationDateRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeDateProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class UsersUpdateController extends BOController<{}, {}> {
@@ -73,13 +73,19 @@ class UsersUpdateController extends BOController<{}, {}> {
         
         const activationEndDate = (this._updateRequest.activationEndDate === null) ? "" : this.formatDate(new Date(this._updateRequest.activationEndDate));
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("User Name", this._updateRequest.userName, true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("User Name", this._updateRequest.userName, true, [ 
+                ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ]),
             FormTypeSelectProps.initialize("Role", this._updateRequest.userRole.toString(), true, userRoleFormDataOptions),
             FormTypeSelectProps.initialize("Active", this._updateRequest.isActive ? "yes" : "no", true, [ 
                 FormDataOptionModel.initialize("NO", "no"),
                 FormDataOptionModel.initialize("YES", "yes")
             ]),
-            FormTypeDateProps.initializeWithValidations("End Date", activationEndDate, true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
+            FormTypeDateProps.initializeWithValidations("End Date", activationEndDate, true, [ 
+                ValidationRequiredRule.initialize("End date is required.", "Invalid end date."),
+                ValidationDateRule.initialize("Invalid date.", "Invalid date.")
+            ])
         ];
 
         return (

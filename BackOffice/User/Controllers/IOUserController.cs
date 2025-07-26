@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
@@ -37,10 +38,10 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
-    public virtual IOAddUserResponseModel AddUser([FromBody] IOAddUserRequestModel requestModel)
+    public virtual async Task<IOAddUserResponseModel> AddUser([FromBody] IOAddUserRequestModel requestModel)
     {
         // Create and return response
-        return ViewModel.AddUser(requestModel);
+        return await ViewModel.AddUser(requestModel);
     }
 
     [IORequireHTTPS]
@@ -50,10 +51,10 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOIgnorePasswordExpire]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPost("[action]")]
-    public virtual IOResponseModel ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel)
+    public virtual async Task<IOResponseModel> ChangePassword([FromBody] IOUserChangePasswordRequestModel requestModel)
     {
         // Check change password is success
-        ViewModel.ChangePassword(requestModel.OldPassword ?? String.Empty, requestModel.NewPassword ?? String.Empty);
+        await ViewModel.ChangePassword(requestModel.OldPassword ?? String.Empty, requestModel.NewPassword ?? String.Empty);
 
         // Return response
         return new IOResponseModel();
@@ -65,10 +66,10 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
-    public virtual IOResponseModel ResetPassword([FromBody] IOUserResetPasswordRequestModel requestModel)
+    public virtual async Task<IOResponseModel> ResetPassword([FromBody] IOUserResetPasswordRequestModel requestModel)
     {
         // Reset user password
-        ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, requestModel.NewPassword ?? String.Empty);
+        await ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, requestModel.NewPassword ?? String.Empty);
 
         // Return response
         return new IOResponseModel();
@@ -114,6 +115,7 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOValidateRequestModel]
     [IOEncryptionRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]
+    [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
     public virtual IOResponseModel Logout([FromBody] IOLogoutRequestModel requestModel)
     {

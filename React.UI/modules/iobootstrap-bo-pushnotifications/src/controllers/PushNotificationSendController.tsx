@@ -1,7 +1,7 @@
 import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
 import { BaseResponseModel, CalloutTypes, DeviceTypes, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class PushNotificationSendController extends BOController<{}, {}> {
 
@@ -22,11 +22,10 @@ class PushNotificationSendController extends BOController<{}, {}> {
         const requestPath = `${process.env.REACT_APP_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/SendNotification`;
         const request = new SendPushNotificationRequestModel();
         request.deviceType = Number(values[0]);
-        request.clientId = Number(values[1]);
-        request.notificationCategory = values[2];
-        request.notificationTitle = values[3];
-        request.notificationMessage = values[4];
-        request.notificationData = values[5];
+        request.notificationCategory = values[1];
+        request.notificationTitle = values[2];
+        request.notificationMessage = values[3];
+        request.notificationData = values[4];
 
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
@@ -51,7 +50,6 @@ class PushNotificationSendController extends BOController<{}, {}> {
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.iOS), DeviceTypes.iOS.toString()),
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.Generic), DeviceTypes.Generic.toString())
             ]),
-            FormTypePopupSelectionProps.initialize("Client", "", 0, "clientsSelect", true),
             FormTypeSelectProps.initialize("Category", "", true, [
                 FormDataOptionModel.initialize("-", "")
             ]),

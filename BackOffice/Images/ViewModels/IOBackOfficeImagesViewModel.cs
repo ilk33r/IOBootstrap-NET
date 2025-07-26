@@ -11,6 +11,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Interfaces;
 using SixLabors.ImageSharp;
+using IOBootstrap.NET.Common.Exceptions.Common;
 
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels;
 
@@ -27,6 +28,15 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     #region View Model Methods
 
+    public void CheckImagesIsEnabled()
+    {
+        bool isEnabled = Configuration.GetValue<bool>(IOConfigurationConstants.ImagesEnabled);
+        if (!isEnabled)
+        {
+            throw new IOInvalidAPIException();
+        }
+    }
+
     public IOGetImagesResponseModel GetImages(IOGetImagesRequestModel requestModel)
     {
         IQueryable<IOImagesEntity> images = DatabaseContext.Images;
@@ -41,8 +51,8 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                 Scale = i.Scale
                                                             })
                                                             .OrderBy(i => i.ID)
-                                                            .Skip(requestModel.Start)
-                                                            .Take(requestModel.Count)
+                                                            .Skip(requestModel.Start ?? 0)
+                                                            .Take(requestModel.Count ?? 0)
                                                             .ToList();
 
         foreach (IOImageVariationsModel image in paginatedImages)
@@ -65,8 +75,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         FileStream fs = File.OpenRead(filePath);
         Image rawImage = Image.Load(fs);
 
-        IOImagesEntity imageEntity = new IOImagesEntity(fileName)
+        IOImagesEntity imageEntity = new IOImagesEntity()
         {
+            FileName = fileName,
             FileType = "image/jpeg",
             Width = rawImage.Width,
             Height = rawImage.Height,
@@ -94,7 +105,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOImageNotFoundException();
         }
 
-        this.RemoveFile(imagesEntity.FileName);
+        if (imagesEntity.FileName != null)
+        {
+            this.RemoveFile(imagesEntity.FileName);
+        }
+        
         DatabaseContext.Remove(imagesEntity);
         DatabaseContext.SaveChanges();
     }

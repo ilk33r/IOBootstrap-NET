@@ -48,6 +48,9 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
     [HttpGet("[action]")]
     public IOListMessagesResponseModel ListAllMessages()
     {
+        // Check enabled
+        ViewModel.CheckMessagesIsEnabled();
+
         // Obtain message items
         IList<IOMessageModel> messages = ViewModel.GetAllMessages();
 
@@ -62,6 +65,9 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMessageAddResponseModel AddMessagesItem([FromBody] IOMessageAddRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMessagesIsEnabled();
+
         // Add menu
         ViewModel.AddMessage(requestModel);
 
@@ -76,6 +82,9 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMessageDeleteResponseModel DeleteMessagesItem([FromBody] IOMessageDeleteRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMessagesIsEnabled();
+
         // Add menu
         ViewModel.DeleteMessage(requestModel.MessageId);
 
@@ -90,6 +99,9 @@ where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOMessageUpdateResponseModel UpdateMessagesItem([FromBody] IOMessageUpdateRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckMessagesIsEnabled();
+        
         // Add menu
         ViewModel.UpdateMessage(requestModel);
 

@@ -11,8 +11,8 @@ public class IOMessageAddRequestModel : IORequestModel
     public string? Message { get; set; }
 
     [Required]
-    public DateTimeOffset MessageStartDate { get; set; }
+    public DateTimeOffset? MessageStartDate { get; set; }
 
     [Required]
-    public DateTimeOffset MessageEndDate { get; set; }
+    public DateTimeOffset? MessageEndDate { get; set; }
 }

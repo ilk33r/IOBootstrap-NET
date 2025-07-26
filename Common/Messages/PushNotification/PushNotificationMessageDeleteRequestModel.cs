@@ -8,7 +8,7 @@ public class PushNotificationMessageDeleteRequestModel : IORequestModel
 {
 
     [Required]
-    public int ID { get; set; }
+    public int? ID { get; set; }
 
     public PushNotificationMessageDeleteRequestModel() : base()
     {

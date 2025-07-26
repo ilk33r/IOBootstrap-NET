@@ -51,7 +51,6 @@ class PushNotificationListController extends BOController<PushNotificationListPr
 
         const listDataHeaders = [
             'ID',
-            'Client',
             'Date',
             'Category',
             'Message Data',
@@ -62,18 +61,16 @@ class PushNotificationListController extends BOController<PushNotificationListPr
 
         const items = this.state.messages.map(message => {
             const itemModel = new ListDataItemModel();
-            const clientDescription = (message.client != null) ? message.client.clientDescription : "";
             const notificationDate = new Date(message.notificationDate);
             const status = (message.isCompleted === true) ? "Completed" : "Sending";
 
             itemModel.itemList = [
                 message.id.toString(),
-                clientDescription,
                 notificationDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' }),
-                message.notificationCategory ?? "",
-                message.notificationData ?? "",
-                message.notificationMessage,
-                message.notificationTitle,
+                (message.notificationCategory ?? "").RemoveHTML(),
+                (message.notificationData ?? "").RemoveHTML(),
+                (message.notificationMessage).RemoveHTML(),
+                (message.notificationTitle).RemoveHTML(),
                 status
             ];
 
@@ -94,6 +91,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={null}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={null} />
             </React.StrictMode>
         );

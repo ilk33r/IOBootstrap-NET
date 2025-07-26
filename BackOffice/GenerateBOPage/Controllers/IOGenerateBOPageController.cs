@@ -7,6 +7,7 @@ using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
 
+#if DEBUG
 namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
@@ -37,3 +38,4 @@ where TViewModel : IOGenerateBOPageViewModel<TDBContext>, new()
 
     #endregion
 }
+#endif

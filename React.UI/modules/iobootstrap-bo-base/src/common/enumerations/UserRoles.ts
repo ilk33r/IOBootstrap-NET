@@ -2,7 +2,8 @@ enum UserRoles {
 
     SuperAdmin = 0,
     Admin = 1,
-    User = 2
+    User = 2,
+    AnonmyMouse = 999
 }
 
 namespace UserRoles {
@@ -36,7 +37,7 @@ namespace UserRoles {
             return UserRoles.User;
         }
 
-        return UserRoles.User;
+        return UserRoles.AnonmyMouse;
     }
 }
 

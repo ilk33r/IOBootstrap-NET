@@ -8,7 +8,7 @@ public class IOConfigurationDeleteRequestModel : IORequestModel
 {
 
     [Required]
-    public int ConfigId { get; set; }
+    public int? ConfigId { get; set; }
 
     public IOConfigurationDeleteRequestModel() : base()
     {

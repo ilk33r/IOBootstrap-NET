@@ -47,7 +47,7 @@ class UserLoginInformationView extends View<UserLoginInformationProps, {}> {
                                                                             <b>Password</b>
                                                                         </td>
                                                                         <td width="50%" style={{padding: '10px', border: '1px solid #000000'}}>
-                                                                            <b>{this.props.randomPassword}</b>
+                                                                            <b>{this.props.temporaryPassword}</b>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

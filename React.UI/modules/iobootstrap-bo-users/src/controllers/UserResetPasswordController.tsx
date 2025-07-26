@@ -70,9 +70,9 @@ class UserResetPasswordController extends BOController<{}, {}> {
             BreadcrumbNavigationModel.initialize("userResetPassword", "Reset Password")
         ];
 
-        const randomPassword = AppCryptography.Instance.random(8);
+        const temporaryPassword = AppCryptography.Instance.random(8);
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithValidations("Password", randomPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Password", temporaryPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
         ];
 
         return (
@@ -89,8 +89,8 @@ class UserResetPasswordController extends BOController<{}, {}> {
 
                 <div className="editor-wrapper">
                     <div className="content-wrapper">
-                        <UserLoginInformationView userName={this._updateRequest.userName}
-                            randomPassword={randomPassword} />
+                        <UserLoginInformationView userName={this._updateRequest.userName.RemoveHTML()}
+                            temporaryPassword={temporaryPassword} />
                     </div>
                 </div>
             </React.StrictMode>

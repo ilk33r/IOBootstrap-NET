@@ -37,6 +37,9 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     [HttpGet("[action]")]
     public ListPushNotificationMessageResponseModel ListMessages()
     {
+        // Check enabled
+        ViewModel.CheckPushNotificationsIsEnabled();
+
         // Obtain devices from view model
         IList<PushNotificationMessageModel> messages = ViewModel.ListMessages();
 
@@ -51,6 +54,9 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckPushNotificationsIsEnabled();
+
         // Send notification to all devices
         ViewModel.SendNotifications(requestModel);
 
@@ -65,6 +71,10 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
     {
+        // Check enabled
+        ViewModel.CheckPushNotificationsIsEnabled();
+
+        // Delete message
         ViewModel.DeleteMessage(requestModel.ID);
 
         // Return response

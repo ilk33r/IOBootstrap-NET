@@ -1,4 +1,5 @@
-﻿using IOBootstrap.NET.Common.Cache;
+﻿using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Members;
 using IOBootstrap.NET.Common.Models.Users;
@@ -11,24 +12,36 @@ namespace IOBootstrap.NET.Core.Extensions;
 
 public static class IIOUserCredentialExtension
 {
-    public static bool CheckHasUserTokenAndIsValid<TDBContext>(this IIOUserCredential<TDBContext> input)
+    public static bool CheckHasUserTokenAndIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, HttpRequest request)
     where TDBContext : IODatabaseContext<TDBContext>
     {
+        bool cookieAuthentication = input.Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
+        string? appToken = null;
+
         // Check back office is not open and token exists
-        if (input.Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+        if (cookieAuthentication && request.Cookies.ContainsKey(IOCookieConstants.TokenCookieName))
         {
             // Obtain token
-            string token = input.Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
-
-            // Parse token
-            Tuple<string, int> tokenData = input.ParseUserToken(token);
-
-            // Return back office status
-            return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2);
+            appToken = request.Cookies[IOCookieConstants.TokenCookieName]!;
         }
 
-        // Then return back office
-        return false;
+        if (!cookieAuthentication && input.Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
+        {
+            // Obtain token
+            appToken = input.Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
+        }
+
+        if (appToken == null)
+        {
+            // Then return back office
+            return false;
+        }
+        
+        // Parse token
+        Tuple<string, int> tokenData = input.ParseUserToken(appToken);
+
+        // Return back office status
+        return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2);
     }
 
     public static bool CheckUserTokenIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, string tokenData, int userId)
@@ -128,7 +141,7 @@ public static class IIOUserCredentialExtension
         }
     }
 
-    public static void ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
+    public static async Task ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         if (input.UserModel == null)
@@ -153,22 +166,31 @@ public static class IIOUserCredentialExtension
         }
 
         // Check user old password is valid
-        if (IOPasswordUtilities.VerifyPassword(decryptedOldPassword, currentUser.Password ?? ""))
+        using (var passwordUtilities = new IOPasswordUtilities())
         {
+            await passwordUtilities.VerifyPassword(decryptedOldPassword, currentUser.Password ?? "", verified =>
+            {
+                // Check verify status
+                if (!verified)
+                {
+                    // Return response
+                    throw new IOInvalidPasswordException();
+                }
+            });
+
             // Update user password properties
-            currentUser.Password = IOPasswordUtilities.HashPassword(decryptedNewPassword);
-            currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddMonths(6);
-            currentUser.UserToken = null;
-
-            // Update user password
-            input.DatabaseContext.Update(currentUser);
-            input.DatabaseContext.SaveChanges();
-
-            return;
+            await passwordUtilities.HashPassword(decryptedNewPassword, hashed =>
+            {
+                currentUser.Password = hashed;
+            });
         }
 
-        // Return response
-        throw new IOInvalidPasswordException();
+        currentUser.PasswordExpireDate = DateTimeOffset.UtcNow.AddMonths(6);
+        currentUser.UserToken = null;
+
+        // Update user password
+        input.DatabaseContext.Update(currentUser);
+        input.DatabaseContext.SaveChanges();
     }
 
     public static void LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)

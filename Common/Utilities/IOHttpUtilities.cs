@@ -15,14 +15,15 @@ public static class IOHttpUtilities
         // Check ip list is not null
         if (!string.IsNullOrEmpty(ipList))
         {
-            return ipList.Split(',')[0];
+            string splittedIPAddress = ipList.Split(',')[0];
+            return splittedIPAddress.Split(':')[0];
         }
 
         // Returrn ip address
         return request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
     }
 
-    public static string? GetUserHostName(HttpRequest request)
+    public static int? GetUserPort(HttpRequest request)
     {
         // Obtain ip list from forwaded
         string? ipList = request.Headers["HTTP_X_FORWARDED_FOR"];
@@ -30,17 +31,16 @@ public static class IOHttpUtilities
         // Check ip list is not null
         if (!string.IsNullOrEmpty(ipList))
         {
-            return ipList.Split(',')[0];
+            string splittedIPAddress = ipList.Split(',')[0];
+            var splittedAddress = splittedIPAddress.Split(':');
+            if (splittedAddress.Length > 1)
+            {
+                return int.Parse(splittedAddress[1]);
+            }
         }
 
         // Returrn ip address
-        IPAddress? remoteIpAddress = request.HttpContext?.Connection?.RemoteIpAddress;
-        if (remoteIpAddress != null)
-        {
-            return Dns.GetHostEntry(remoteIpAddress).HostName;
-        }
-        
-        return null;
+        return request.HttpContext?.Connection?.RemotePort;
     }
 
     #endregion

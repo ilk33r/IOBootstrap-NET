@@ -9,21 +9,12 @@ using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
-using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Common.Session;
 
 namespace IOBootstrap.NET.Core.ViewModels;
 
 public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
 {
-
-    #region Publics
-
-    public string? ClientId;
-    public string? ClientDescription;
-
-    #endregion
-
     #region Properties
 
     public IConfiguration Configuration { get; set; }
@@ -64,56 +55,6 @@ public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where T
         }
 
         throw new IOUnAuthorizeException();
-    }
-
-    public virtual void CheckClient()
-    {
-        // Obtain client info
-        bool checkClientInfo = Configuration.GetValue<bool>(IOConfigurationConstants.CheckClientInfo);
-        if (!checkClientInfo)
-        {
-            return;
-        }
-
-        // Obtain client ID and Secret
-        string clientId = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientId)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientId]!) : "";
-        string clientSecret = (Request.Headers.ContainsKey(IORequestHeaderConstants.ClientSecret)) ? ((string)Request.Headers[IORequestHeaderConstants.ClientSecret]!) : "";
-
-        // Find client
-        var clientsEntity = DatabaseContext.Clients.Where(arg1 => arg1.ClientId!.Equals(clientId));
-
-        // Check finded client counts is greater than zero
-        if (clientsEntity.Count() == 0)
-        {
-            // Then return invalid clients
-            throw new IOInvalidClientException();
-        }
-
-        // Obtain client
-        IOClientsEntity client = clientsEntity.First();
-
-        // Check client secret
-        if (client.IsEnabled == 1 && (client.ClientSecret?.Equals(clientSecret) ?? false))
-        {
-            // Obtain request counts
-            long requestCount = client.RequestCount + 1;
-            long maxRequestCount = client.MaxRequestCount;
-
-            // Check request counts
-            if (requestCount <= maxRequestCount)
-            {
-                // Update request count
-                client.RequestCount = requestCount;
-
-                // Update properties
-                ClientId = clientId;
-                ClientDescription = client.ClientDescription;
-
-                // Update client 
-                DatabaseContext.Update(client);
-                DatabaseContext.SaveChanges();
-            }
-        }
     }
 
     public virtual int GetUserRole()

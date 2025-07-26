@@ -1,11 +1,11 @@
 class UserLoginInformationProps {
     
     userName: string;
-    randomPassword: string;
+    temporaryPassword: string;
 
     constructor() {
         this.userName = ""
-        this.randomPassword = "";
+        this.temporaryPassword = "";
     }
 }
 

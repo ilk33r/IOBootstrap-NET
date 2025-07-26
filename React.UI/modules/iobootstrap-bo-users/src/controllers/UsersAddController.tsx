@@ -1,6 +1,6 @@
 import AddUserRequestModel from "../models/AddUserRequestModel";
 import React from "react";
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationDateRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeDateProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 import UserLoginInformationView from "../views/UserLoginInformationView";
 import UserAddState from "../props/UserAddState";
@@ -8,14 +8,14 @@ import UserAddState from "../props/UserAddState";
 class UsersAddController extends BOController<{}, UserAddState> {
 
     private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
-    private randomPassword: string;
+    private temporaryPassword: string;
 
     constructor(props: {}) {
         super(props);
 
         this.state = new UserAddState();
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
-        this.randomPassword = AppCryptography.Instance.random(8);
+        this.temporaryPassword = AppCryptography.Instance.random(8);
         
         this.handleFormError = this.handleFormError.bind(this);
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
@@ -84,19 +84,25 @@ class UsersAddController extends BOController<{}, UserAddState> {
 
         const weakSelf = this;
         const formElements: FormType[] = [
-            FormTypeTextProps.initializeWithChangeListener("User Name", "", true, [ ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3) ], (index, text) => {
+            FormTypeTextProps.initializeWithChangeListener("User Name", "", true, [ 
+                ValidationMinLengthRule.initialize("User name is too short.", "Invalid user name.", 3),
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ], (index, text) => {
                 const newState = new UserAddState();
                 newState.userName = text;
 
                 weakSelf.setState(newState);
             }),
-            FormTypeTextProps.initializeWithValidations("Password", this.randomPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
+            FormTypeTextProps.initializeWithValidations("Password", this.temporaryPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
             FormTypeSelectProps.initialize("Role", "", true, userRoleFormDataOptions),
             FormTypeSelectProps.initialize("Active", "", true, [ 
                 FormDataOptionModel.initialize("NO", "no"),
                 FormDataOptionModel.initialize("YES", "yes")
             ]),
-            FormTypeDateProps.initializeWithValidations("End Date", "", true, [ ValidationRequiredRule.initialize("End date is required.", "Invalid end date.") ])
+            FormTypeDateProps.initializeWithValidations("End Date", "", true, [ 
+                ValidationRequiredRule.initialize("End date is required.", "Invalid end date."),
+                ValidationDateRule.initialize("Invalid date.", "Invalid date.")
+            ])
         ];
 
         return (
@@ -113,8 +119,8 @@ class UsersAddController extends BOController<{}, UserAddState> {
                     
                 <div className="editor-wrapper">
                     <div className="content-wrapper">
-                        <UserLoginInformationView userName={this.state.userName}
-                            randomPassword={this.randomPassword} />
+                        <UserLoginInformationView userName={this.state.userName.RemoveHTML()}
+                            temporaryPassword={this.temporaryPassword} />
                     </div>
                 </div>
             </React.StrictMode>

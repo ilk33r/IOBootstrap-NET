@@ -8,8 +8,8 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
 {
 
     public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
-    public virtual DbSet<IOClientsEntity> Clients { get; set; }
     public virtual DbSet<IOImagesEntity> Images { get; set; }
+    public virtual DbSet<IOLogsEntity> Logs { get; set; }
     public virtual DbSet<IOMenuEntity> Menu { get; set; }
     public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
     public virtual DbSet<IOUserEntity> Users { get; set; }
@@ -25,9 +25,6 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
     {
         modelBuilder.Entity<IOConfigurationEntity>().HasIndex(
             configurationEntity => new { configurationEntity.ConfigKey }).IsUnique(true);
-
-        modelBuilder.Entity<IOClientsEntity>().HasIndex(
-            clientEntity => new { clientEntity.ClientId }).IsUnique(true);
 
         modelBuilder.Entity<IOMenuEntity>().HasIndex(
             menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);

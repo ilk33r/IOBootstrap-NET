@@ -7,8 +7,8 @@ namespace IOBootstrap.NET.Common.Messages.Images;
 public class IOGetImagesRequestModel : IORequestModel
 {
     [Required]
-    public int Count { get; set; }
+    public int? Count { get; set; }
 
     [Required]
-    public int Start { get; set; }
+    public int? Start { get; set; }
 }

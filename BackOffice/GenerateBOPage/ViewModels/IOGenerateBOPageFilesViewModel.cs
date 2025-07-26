@@ -330,7 +330,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string toStringMethod = item.Type switch
         {
             IOBOPagePropertyType.Int => ".toString()",
-            IOBOPagePropertyType.String => "",
+            IOBOPagePropertyType.String => ".RemoveHTML()",
             IOBOPagePropertyType.Double => ".toString()",
             IOBOPagePropertyType.Float => ".toString()",
             IOBOPagePropertyType.DateTimeOffset => "",
@@ -428,10 +428,10 @@ where TDBContext : IODatabaseContext<TDBContext>
                 }
                 else
                 {
-                    uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", {1}String, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
+                    uiEntityUpdateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", {1}String, true, [ ValidationRequiredRule.initialize(\"{2} is required.\", \"Invalid {3}.\"), ValidationDateRule.initialize(\"{2} is required.\", \"Invalid {3}.\") ]),\n",
                     item.PropertyName, item.PropertyJsonKey, item.PropertyName, item.PropertyName);
 
-                    uiEntityCreateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
+                    uiEntityCreateFormProperties += String.Format("            FormTypeDateProps.initializeWithValidations(\"{0}\", \"\", true, [ ValidationRequiredRule.initialize(\"{1} is required.\", \"Invalid {2}.\"), ValidationDateRule.initialize(\"{1} is required.\", \"Invalid {2}.\") ]),\n",
                     item.PropertyName, item.PropertyName, item.PropertyName);
                 }
                 break;

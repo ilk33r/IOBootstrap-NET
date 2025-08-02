@@ -138,8 +138,8 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                 menu.name.RemoveHTML(),
                 menu.action.RemoveHTML(),
                 menu.cssClass.RemoveHTML(),
-                roleName,
-                `<strong>${menu.menuOrder.toString()}</strong>`
+                `<strong>${roleName}</strong>`,
+                menu.menuOrder.toString()
             ];
 
             items.push(itemModel);
@@ -162,11 +162,11 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                         childMenu.name.RemoveHTML(),
                         childMenu.action.RemoveHTML(),
                         childMenu.cssClass.RemoveHTML(),
-                        childMenuRoleName,
-                        `<strong>${childMenu.menuOrder.toString()}</strong>`
+                        `<strong>${childMenuRoleName}</strong>`,
+                        childMenu.menuOrder.toString()
                     ];
         
-                    childItemModel.isEven = true;
+                    childItemModel.isChild = true;
                     items.push(childItemModel);
                     this._menuItems.push(childMenu);
                 });

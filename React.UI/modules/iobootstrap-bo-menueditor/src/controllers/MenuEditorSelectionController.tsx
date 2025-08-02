@@ -47,7 +47,7 @@ class MenuEditorSelectionController extends BOController<MenuEditorListProps, Me
 
     render() {
         const navigation: BreadcrumbNavigationModel[] = [
-            BreadcrumbNavigationModel.initialize("menuEditorList", "Menu Editor")
+            BreadcrumbNavigationModel.initialize("menuEditorList", "Select Menu")
         ];
 
         const listDataHeaders = [
@@ -79,7 +79,7 @@ class MenuEditorSelectionController extends BOController<MenuEditorListProps, Me
                 menu.name.RemoveHTML(),
                 menu.action.RemoveHTML(),
                 menu.cssClass.RemoveHTML(),
-                roleName,
+                `<strong>${roleName}</strong>`,
                 menu.menuOrder.toString()
             ];
 
@@ -103,11 +103,11 @@ class MenuEditorSelectionController extends BOController<MenuEditorListProps, Me
                         childMenu.name.RemoveHTML(),
                         childMenu.action.RemoveHTML(),
                         childMenu.cssClass.RemoveHTML(),
-                        childMenuRoleName,
+                        `<strong>${childMenuRoleName}</strong>`,
                         childMenu.menuOrder.toString()
                     ];
         
-                    childItemModel.isEven = true;
+                    childItemModel.isChild = true;
                     items.push(childItemModel);
                     this._menuItems.push({name: "itemSelected", itemID: childMenu.id, itemValue: childMenu.name});
                 });

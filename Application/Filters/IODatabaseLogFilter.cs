@@ -81,10 +81,12 @@ where TDBContext : IODatabaseContext<TDBContext>
             {
                 var responseContent = objectResult.Value;
                 responseBody = JsonSerializer.Serialize(responseContent);
+                responseBody = responseBody.Substring(0, Math.Min(responseBody.Length, 2048));
             }
             else if (resultContext.Result is ContentResult contentResult)
             {
                 responseBody = contentResult.Content;
+                responseBody = responseBody?.Substring(0, Math.Min(responseBody?.Length ?? 0, 2048));
             }
             else
             {

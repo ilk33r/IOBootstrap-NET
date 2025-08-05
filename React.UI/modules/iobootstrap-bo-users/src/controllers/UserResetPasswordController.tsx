@@ -77,22 +77,16 @@ class UserResetPasswordController extends BOController<{}, {}> {
 
         return (
             <React.StrictMode>
-                <div className="form-wrapper">
-                    <FormView navigation={navigation} 
-                        resourceHome="Home"
-                        title="Reset password"
-                        submitButtonName="Save"
-                        errorHandler={this.handleFormError}
-                        successHandler={this.handleFormSuccess}
-                        formElements={formElements} />
-                </div>
+                <FormView navigation={navigation} 
+                    resourceHome="Home"
+                    title="Reset password"
+                    submitButtonName="Save"
+                    errorHandler={this.handleFormError}
+                    successHandler={this.handleFormSuccess}
+                    formElements={formElements} />
 
-                <div className="editor-wrapper">
-                    <div className="content-wrapper">
-                        <UserLoginInformationView userName={this._updateRequest.userName.RemoveHTML()}
-                            temporaryPassword={temporaryPassword} />
-                    </div>
-                </div>
+                <UserLoginInformationView userName={this._updateRequest.userName.RemoveHTML()}
+                    temporaryPassword={temporaryPassword} />
             </React.StrictMode>
         );
     }

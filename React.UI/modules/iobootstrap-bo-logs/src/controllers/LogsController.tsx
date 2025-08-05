@@ -84,8 +84,8 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
                 `${ip}:${port}`,
                 path,
                 code,
-                `<div class="list-group"><h4 class="list-group-item-heading">Header</h4><p class="list-group-item-text">${requestHeaders}</p><h4 class="list-group-item-heading">Body</h4><p class="list-group-item-text">${requestBody}</p></div>`,
-                `<div class="list-group"><h4 class="list-group-item-heading">Header</h4><p class="list-group-item-text">${responseHeaders}</p><h4 class="list-group-item-heading">Body</h4><p class="list-group-item-text">${responseBody}</p></div>`
+                `<ul class="list-group"><li class="list-group-item"><h5>Header</h5><p>${requestHeaders}</p></li><li class="list-group-item"><h5>Body</h5><p>${requestBody}</p></li></ul>`,
+                `<ul class="list-group"><li class="list-group-item"><h5>Header</h5><p>${responseHeaders}</p></li><li class="list-group-item"><h5>Body</h5><p>${responseBody}</p></li></ul>`
             ];
 
             return itemModel;

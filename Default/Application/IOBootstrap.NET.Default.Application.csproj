@@ -36,6 +36,9 @@
     <Content Include="BOTemplates\**" LinkBase="BOTemplates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
+    <Content Include="Fonts\**" LinkBase="Fonts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
     <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
   </ItemGroup>
 

@@ -1,14 +1,9 @@
-import { BaseResponseModel, Controller, DIHooks, UICommonConstants } from "iobootstrap-ui-base";
-import ModalInputViewPresenter from "../interfaces/ModalInputViewPresenter";
+import { BaseResponseModel, Controller, UICommonConstants } from "iobootstrap-ui-base";
 
 class BOController<TProps, TState> extends Controller<TProps, TState> {
-
-    public modalInputPresenter: ModalInputViewPresenter;
     
     public constructor(props: TProps) {
         super(props);
-
-        this.modalInputPresenter = DIHooks.Instance.singletonForKey("modalInputPresenter");
     }
     
     public handleServiceSuccess<T extends BaseResponseModel>(response: T): boolean {

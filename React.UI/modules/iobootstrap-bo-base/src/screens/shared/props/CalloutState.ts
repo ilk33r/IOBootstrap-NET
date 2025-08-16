@@ -7,7 +7,7 @@ class CalloutState {
     constructor() {
         this.title = "";
         this.message = "";
-        this.className = "callout hidden";
+        this.className = "d-none";
     }
 }
 

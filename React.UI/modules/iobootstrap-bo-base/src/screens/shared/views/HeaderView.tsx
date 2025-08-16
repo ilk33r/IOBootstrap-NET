@@ -8,56 +8,37 @@ class HeaderView extends View<HeaderProps, HeaderState> {
 
     constructor(props: HeaderProps) {
         super(props);
-
-        this.handleSidebarToggleClick = this.handleSidebarToggleClick.bind(this);
-    }
-
-    private handleSidebarToggleClick(event: { target: {  }; }) {
-        const collapsedClassName = 'sidebar-collapse';
-        const isOpen = !$('body').hasClass(collapsedClassName);
-    
-        if (!isOpen) {
-            $('body').removeClass(collapsedClassName);
-        } else {
-            $('body').addClass(collapsedClassName);
-        }
     }
 
     render() {
         return (
             <React.StrictMode>
-                <header className="main-header">
-                    <a href={process.env.REACT_APP_BACKOFFICE_PAGE_URL} className="logo">
-                        <span className="logo-mini"><b>{process.env.REACT_APP_APP_NAME}</b></span>
-                        <span className="logo-lg"><b>{process.env.REACT_APP_APP_NAME}</b></span>
-                    </a>
-                    <nav className="navbar navbar-static-top">
-                        <a href="#" className="sidebar-toggle" data-toggle="push-menu" role="button" onClick={this.handleSidebarToggleClick} >
-                            <i className="fa fa-bars"></i>
-                            <span className="sr-only">Toggle navigation</span>
+                <nav className="navbar navbar-expand-lg bg-body-tertiary z-3">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href={process.env.REACT_APP_BACKOFFICE_PAGE_URL}>
+                            <h1 className="fs-5">{process.env.REACT_APP_APP_NAME}</h1>
                         </a>
-                        <div className="navbar-custom-menu">
-                            <ul className="nav navbar-nav">
-                                <li className="dropdown user user-menu">
-                                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                                        <span className="hidden-xs">{this.props.userName}</span>
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            </ul>
+                            <ul className="navbar-nav mb-2 mb-lg-0">
+                                <li className="nav-item dropdown">
+                                    <a className="nav-link dropdown-toggle" href="#root" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {this.props.userName}
                                     </a>
-                                    <ul className="dropdown-menu">
-                                        <li className="user-header"><p>{this.props.userName}</p></li>
-                                        <li className="user-footer">
-                                            <div className="pull-left">
-                                                <a href="#!userChangePassword" className="btn btn-default btn-flat">Change Password</a>
-                                            </div>
-                                            <div className="pull-right">
-                                                <a href="#!usersLogout" className="btn btn-default btn-flat">Sign out</a>
-                                            </div>
-                                        </li>
+                                    <ul className="dropdown-menu dropdown-menu-end">
+                                        <li><a className="dropdown-item" href="#!userChangePassword">Change Password</a></li>
+                                        <li><hr className="dropdown-divider" /></li>
+                                        <li><a className="dropdown-item" href="#!usersLogout">Sign out</a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </div>
-                    </nav>
-                </header>
+                    </div>
+                </nav>
             </React.StrictMode>
         );
     }

@@ -42,12 +42,12 @@ class UploadModalView extends View<UploadModalViewProps, UploadModalViewState> i
 
         return (
             <React.StrictMode>
-                <div id="uploadModal" className="modal fade" role="dialog">
+                <div id="uploadModal" className="modal fade" role="dialog" aria-hidden="true">
                      <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-body">
-                                <div className="progress">
-                                    <div className="progress-bar" data-valuenow="60" data-valuemin="0" data-valuemax="100" style={progressStyle}>
+                                <div className="progress" role="progressbar" data-valuenow="60" data-valuemin="0" data-valuemax="100" >
+                                    <div className="progress-bar" style={progressStyle}>
                                         {this.state.progress} %
                                     </div>
                                 </div>

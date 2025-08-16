@@ -1,10 +1,10 @@
 class ListDataItemModel {
 
-    isEven: boolean;
+    isChild: boolean;
     itemList: string[];
 
     constructor() {
-        this.isEven = false;
+        this.isChild = false;
         this.itemList = [];
     }
 }

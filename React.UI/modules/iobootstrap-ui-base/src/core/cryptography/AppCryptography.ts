@@ -141,7 +141,7 @@ class AppCryptography {
     private hexToBytes(hexString: string): any[] {
         let bytes = [];
         for (let c = 0; c < hexString.length; c += 2) {
-            bytes.push(parseInt(hexString.substr(c, 2), 16));
+            bytes.push(parseInt(hexString.substring(c, c + 2), 16));
         }
 
         return bytes;

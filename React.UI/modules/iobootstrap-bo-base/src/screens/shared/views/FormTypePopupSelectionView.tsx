@@ -8,7 +8,7 @@ type MessageEvent = { data: WindowMessageModel; };
 
 class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormViewState> implements FormElement, Validatable {
 
-    private _formSelectedItemId: number;
+    private _formSelectedItemId: number | null;
 
     constructor(props: FormTypePopupSelectionProps) {
         super(props);
@@ -37,8 +37,13 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
                     return;
                 }
 
-                if (originalEvent.data.itemID !== undefined && originalEvent.data.itemID !== null) {
-                    weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                if (originalEvent.data.itemID !== undefined) {
+                    if (originalEvent.data.itemID == null) {
+                        weakSelf._formSelectedItemId = null;
+                    } else {
+                        weakSelf._formSelectedItemId = originalEvent.data.itemID;
+                    }
+                    
                     
                     const closeSelection: WindowMessageModel = {
                         name: "closeSelection",
@@ -52,16 +57,19 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
                     }
                 }
 
-                const newState = new FormViewState();
-                newState.inputValue = originalEvent.data.itemValue ?? "";
-                
-                weakSelf.setState(newState);
+                weakSelf.setState({
+                    inputValue: originalEvent.data.itemValue ?? ""
+                });
             }
         });
     }
 
     public getValue(): string | null {
-        return this._formSelectedItemId.toString();
+        if (this._formSelectedItemId != null) {
+            return this._formSelectedItemId.toString();
+        }
+
+        return null;
     }
 
     public getBlobValue(): Blob | null {
@@ -83,7 +91,11 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
         const weakSelf = this;
 
         this.props.validations.forEach(rule => {
-            if (!rule.validationResult(weakSelf._formSelectedItemId.toString())) {
+            if (weakSelf._formSelectedItemId == null) {
+                errorMessage = rule.errorMessage;
+                errorTitle = rule.errorTitle;
+                validated = false;
+            } else if (!rule.validationResult(weakSelf._formSelectedItemId.toString())) {
                 errorMessage = rule.errorMessage;
                 errorTitle = rule.errorTitle;
                 validated = false;
@@ -106,16 +118,24 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
 
     render() {
         const formId = "formELM" + this.props.index;
-        const areaClass = (this.state.hasError) ? "form-group has-error" : "form-group";
-        const errorMessageClass = (this.state.errorMessage.length > 0) ? "help-block" : "help-block hidden";
+        const formClass = (this.state.hasError) ? "form-control is-invalid" : "form-control";
 
         return(
             <React.StrictMode>
-                <div className={areaClass}>
-                    <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
+                <div className="row mb-3">
+                    <div className="col-sm-2 text-end">
+                        <label htmlFor={formId} className="col-form-label my-2">
+                            <strong>{this.props.name}</strong>
+                        </label>
+                    </div>
                     <div className="col-sm-9">
-                        <input type={this.props.inputType} id={formId} className="form-control" value={this.state.inputValue} placeholder={this.props.name} onChange={this.handleValueChange} onClick={this.handleInputClick} disabled={!this.props.isEnabled} contentEditable={false} />
-                        <span className={errorMessageClass}>{this.state.errorMessage}</span>
+                        <div className="input-group has-validation">
+                            <div className="form-floating">
+                                <input type={this.props.inputType} id={formId} className={formClass} value={this.state.inputValue} placeholder={this.props.name} onChange={this.handleValueChange} onClick={this.handleInputClick} disabled={!this.props.isEnabled} contentEditable={false} />
+                                <span className="invalid-feedback">{this.state.errorMessage}</span>
+                                <label htmlFor={formId}>{this.props.name}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </React.StrictMode>

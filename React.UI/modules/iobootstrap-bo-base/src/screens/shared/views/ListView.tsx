@@ -41,9 +41,9 @@ class ListView extends View<ListViewProps, {}> {
     }
 
     render() {
-        const updateClass = (this.props.updateDataHandler != null) ? "btn btn-app" : "btn btn-app hidden";
-        const deleteClass = (this.props.deleteDataHandler != null) ? "btn btn-app" : "btn btn-app hidden";
-        const selectionClass = (this.props.selectDataHandler != null) ? "btn btn-app" : "btn btn-app hidden";
+        const updateClass = (this.props.updateDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
+        const deleteClass = (this.props.deleteDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
+        const selectionClass = (this.props.selectDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
 
         const headers = this.props.listDataHeaders.map((header, headerIndex) => {
             const key = "headerIndex" + headerIndex;
@@ -59,10 +59,10 @@ class ListView extends View<ListViewProps, {}> {
 
             const listDataColumn = listItem.itemList.map((itemColumn, columnIndex) => {
                 const key = "columnIndex" + columnIndex.toString();
-                return (<td key={key}><div className="breakWord" dangerouslySetInnerHTML={{__html: itemColumn}}></div></td>);
+                return (<td key={key}><div className="text-wrap text-break" dangerouslySetInnerHTML={{__html: itemColumn}}></div></td>);
             });
 
-            const rowClass = (listItem.isEven) ? "childmenu" : "";
+            const rowClass = (listItem.isChild) ? "table-warning" : "";
             const optionsColumnKey = "itemOptions" + itemIndex;
             const itemKey = "itemIndex" + itemIndex.toString();
 
@@ -71,15 +71,15 @@ class ListView extends View<ListViewProps, {}> {
             let itemSelectionClass = selectionClass;
             if (this.props.itemVisibleHandler != null) {
                 if (!this.props.itemVisibleHandler(itemIndex, 0)) {
-                    itemUpdateClass = "btn btn-app hidden";
+                    itemUpdateClass = "btn btn-square d-none";
                 }
                 
                 if (!this.props.itemVisibleHandler(itemIndex, 1)) {
-                    itemDeleteClass = "btn btn-app hidden";
+                    itemDeleteClass = "btn btn-square d-none";
                 }
 
                 if (!this.props.itemVisibleHandler(itemIndex, 2)) {
-                    itemSelectionClass = "btn btn-app hidden";
+                    itemSelectionClass = "btn btn-square d-none";
                 }
             }
 
@@ -88,10 +88,10 @@ class ListView extends View<ListViewProps, {}> {
                 itemExtras = this.props.extras.map((itemExtra, itemExtraIndex) => {
                     const iconClassName = "fa " + itemExtra.icon;
                     const key = "itemExtraKey" + itemIndex.toString() + itemExtra.name;
-                    let itemExtraClass = "btn btn-app";
+                    let itemExtraClass = "btn btn-square";
                     if (this.props.itemVisibleHandler != null) {
                         if (!this.props.itemVisibleHandler(itemIndex, itemExtraIndex + 3)) {
-                            itemExtraClass = "btn btn-app hidden";
+                            itemExtraClass = "btn btn-square d-none";
                         }
                     }
 
@@ -108,7 +108,7 @@ class ListView extends View<ListViewProps, {}> {
             return (
                 <tr className={rowClass} key={itemKey}>
                     {listDataColumn}
-                    <td key={optionsColumnKey}>
+                    <td key={optionsColumnKey} className="text-nowrap">
                         <a className={itemUpdateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
                             <i className="fa fa-edit"></i> {this.props.resourceEdit}
                         </a>
@@ -136,14 +136,14 @@ class ListView extends View<ListViewProps, {}> {
 
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
-                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} />
+                <section className="container-fluid">
+                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={true} />
                     <section className="content">
                         <div className="row">
                             <div className="col-xs-12">
                                 <div className="box">
                                     <div className="box-body">
-                                        <table className="table table-bordered table-hover menuTable">
+                                        <table className="table table-bordered table-hover table-striped">
                                             <thead>
                                                 <tr>
                                                     {headers}
@@ -164,9 +164,9 @@ class ListView extends View<ListViewProps, {}> {
                                 </div>
                             </div>
                         </div>
-                        {pagination}
                     </section>
-                </div>
+                    {pagination}
+                </section>
             </React.StrictMode>
         );
     }

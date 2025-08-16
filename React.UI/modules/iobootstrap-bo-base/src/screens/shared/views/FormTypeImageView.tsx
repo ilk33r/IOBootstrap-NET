@@ -125,8 +125,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
     render() {
         const formId = "formELM" + this.props.index;
-        const areaClass = (this.state.hasError) ? "form-group has-error" : "form-group";
-        const errorMessageClass = (this.state.errorMessage.length > 0) ? "help-block" : "help-block hidden";
+        const formClass = (this.state.hasError) ? "form-control is-invalid" : "form-control";
 
         let inputDisabled = !this.props.isEnabled;
         let imageFileAddress;
@@ -137,34 +136,42 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
 
             if (this.props.value.length > 0) {
                 inputDisabled = true;
-                deleteButtonClassName = "";
+                deleteButtonClassName = "icon-link";
             } else {
                 inputDisabled = false;
-                deleteButtonClassName = "hidden";
+                deleteButtonClassName = "icon-link d-none";
             }
         } else if (this.state.imagePreviewURL.length > 0) {
             imageFileAddress = this.state.imagePreviewURL;
             inputDisabled = true;
-            deleteButtonClassName = "";
+            deleteButtonClassName = "icon-link";
         } else {
             inputDisabled = false;
-            deleteButtonClassName = "hidden";
+            deleteButtonClassName = "icon-link d-none";
         }
 
         return(
             <React.StrictMode>
-                <div className={areaClass}>
-                    <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
+                <div className="row mb-3">
+                    <div className="col-sm-2 text-end">
+                        <label htmlFor={formId} className="col-form-label">
+                            <strong>{this.props.name}</strong>
+                        </label>
+                    </div>
                     <div className="col-sm-9">
-                        <input type="file" name="file" className="form-control" accept=".jpe,.jpg,.jpeg,.png,.heic,.pjpeg" onChange={this.handleValueChange} disabled={inputDisabled} />
-                        <span className={errorMessageClass}>{this.state.errorMessage}</span>
+                        <div className="input-group has-validation">
+                            <div className="w-100">
+                                <input type="file" name="file" id={formId} className={formClass} accept=".jpe,.jpg,.jpeg,.png,.heic,.pjpeg" onChange={this.handleValueChange} disabled={inputDisabled} />
+                                <span className="invalid-feedback">{this.state.errorMessage}</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-sm-2"></div>
                     <div className="col-sm-3">
                         <img src={imageFileAddress} width="100%" />
                     </div>
                     <div className="col-sm-1">
-                        <a href="#deleteImage" className={deleteButtonClassName} onClick={this.handleDeleteImage}><i className="fa fa-trash"></i> Delete</a>
+                        <a href="#deleteImage" className={deleteButtonClassName} onClick={this.handleDeleteImage}><i className="fa fa-trash bi"></i> Delete</a>
                     </div>
                 </div>
             </React.StrictMode>

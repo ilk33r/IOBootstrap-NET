@@ -35,7 +35,7 @@ class FormView extends View<FormViewProps, {}> {
         }
     }
 
-    handleForm(e: { preventDefault: () => void; }) {
+    private handleForm(e: { preventDefault: () => void; }) {
         e.preventDefault();
 
         let isValidated = true;
@@ -199,30 +199,32 @@ class FormView extends View<FormViewProps, {}> {
             return (<React.StrictMode></React.StrictMode>);
         });
 
+        const submitButtonClass = (this.props.submitButtonName.length > 0) ? "btn btn-primary btn-lg" : "btn btn-primary btn-lg d-none"
+
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
-                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} />
+                <section className="container-fluid">
+                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
                     <section className="content">
                         <div className="row">
-                            <div className="col-md-12">
-                                <div className="box box-info">
-                                    <div className="box-header with-border">
-                                        <h3 className="box-title">{this.props.title}</h3>
-                                    </div>
-                                    <form className="form-horizontal" onSubmit={this.handleForm}>
+                            <div className="col-xs-12">
+                                <div className="box">
+                                    <form className="needs-validation" onSubmit={this.handleForm}>
+                                        <div className="box-header">
+                                            <h3>{this.props.title}</h3>
+                                        </div>
                                         <div className="box-body">
                                             {formElements}
                                         </div>
-                                        <div className="box-footer">
-                                            <button type="submit" className="btn btn-info pull-right">{this.props.submitButtonName}</button>
+                                        <div className="box-footer text-end">
+                                            <button type="submit" className={submitButtonClass}>{this.props.submitButtonName}</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </section>
-                </div>
+                </section>
             </React.StrictMode>
         );
     }

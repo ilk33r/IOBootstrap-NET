@@ -21,33 +21,32 @@ class QuestionView extends View<QuestionViewProps, {}> {
     }
 
     render() {
-        const noButtonStyle = {
-            marginRight: '5px'
-        };
-
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
-                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} />
-                    <section className="content">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="box box-info">
-                                    <div className="box-header with-border">
-                                        <h3 className="box-title">{this.props.title}</h3>
-                                    </div>
-                                    <div className="box-body">
-                                        {this.props.questionMessage}
-                                    </div>
-                                    <div className="box-footer">
-                                        <button type="button" className="btn btn-danger pull-right" onClick={this.handleFormSuccess}>Yes</button>
-                                        <button type="button" className="btn btn-success pull-right" style={noButtonStyle} onClick={this.handleFormError}>NO</button>
-                                    </div>
+                <section className="container-fluid">
+                    <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
+                    <div className="row mb-5 mt-2">
+                        <div className="col-xs-12">
+                            <div className="box">
+                                <div className="box-header">
+                                    <h3>{this.props.title}</h3>
+                                </div>
+                                <div className="box-body">
+                                    <p className="fs-5">{this.props.questionMessage}</p>
+                                </div>
+                                <div className="box-footer text-end">
+                                    <button type="button" className="btn btn-danger btn-lg me-2" onClick={this.handleFormSuccess}>Yes</button>
+                                    <button type="button" className="btn btn-success btn-lg" onClick={this.handleFormError}>NO</button>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                </section>
             </React.StrictMode>
         );
     }

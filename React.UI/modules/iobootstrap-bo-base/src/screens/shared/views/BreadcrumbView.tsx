@@ -1,6 +1,6 @@
 import { View } from "iobootstrap-ui-base";
 import BreadcrumbNavigationProps from "../props/BreadcrumbNavigationProps";
-import React from "react";
+import React, { JSX } from "react";
 
 class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
 

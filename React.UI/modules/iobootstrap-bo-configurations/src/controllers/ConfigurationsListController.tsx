@@ -83,6 +83,13 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
                 configStringValue
             ];
 
+            itemModel.textWraps = [
+                false,
+                false,
+                false,
+                true
+            ];
+
             return itemModel;
         });
 

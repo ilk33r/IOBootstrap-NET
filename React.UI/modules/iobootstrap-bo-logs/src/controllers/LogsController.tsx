@@ -88,6 +88,16 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
                 `<ul class="list-group"><li class="list-group-item"><h5>Header</h5><p>${responseHeaders}</p></li><li class="list-group-item"><h5>Body</h5><p>${responseBody}</p></li></ul>`
             ];
 
+            itemModel.textWraps = [
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true
+            ];
+
             return itemModel;
         });
 

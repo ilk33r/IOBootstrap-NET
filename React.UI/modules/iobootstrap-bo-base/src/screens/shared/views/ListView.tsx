@@ -59,7 +59,13 @@ class ListView extends View<ListViewProps, {}> {
 
             const listDataColumn = listItem.itemList.map((itemColumn, columnIndex) => {
                 const key = "columnIndex" + columnIndex.toString();
-                return (<td key={key}><div className="text-wrap text-break" dangerouslySetInnerHTML={{__html: itemColumn}}></div></td>);
+                const textWrap = (listItem.textWraps.length > columnIndex) ? listItem.textWraps[columnIndex] : true;
+
+                if (textWrap) {
+                    return (<td key={key}><div className="text-wrap text-break" dangerouslySetInnerHTML={{__html: itemColumn}}></div></td>);
+                } else {
+                    return (<td key={key}><div dangerouslySetInnerHTML={{__html: itemColumn}}></div></td>);
+                }
             });
 
             const rowClass = (listItem.isChild) ? "table-warning" : "";

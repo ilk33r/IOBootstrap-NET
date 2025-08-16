@@ -15,11 +15,11 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
 
     public override void CheckAuthorizationHeader()
     {
-        #if DEBUG
+#if DEBUG
         return;
-        #else
+#else
         base.CheckAuthorizationHeader();
-        #endif
+#endif
     }
 
     public async Task CreateBOUser(string userName)
@@ -355,7 +355,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
         DatabaseContext.Add(templatesEntity);
         DatabaseContext.SaveChanges();
     }
-    
+
     private void GenerateLogsMenu()
     {
         IOMenuEntity templatesEntity = new IOMenuEntity()

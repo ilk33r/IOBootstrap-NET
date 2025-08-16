@@ -191,6 +191,8 @@ class LoginController extends BOController<LoginProps, LoginState> {
                     <div className="row mb-5"></div>
                     <div className="row mb-5"></div>
                     <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
                 </section>
             </React.StrictMode>
           );

@@ -6,7 +6,7 @@ import NavigationView from '../../shared/views/NavigationView';
 import SelectionWrapperView from '../../shared/views/SelectionWrapperView';
 import React from 'react';
 import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, CalloutPresenter, CalloutViewPresenter, DIHooks, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
-import { BOCommonConstants, BOController, FooterView, HeaderView, ModalInputPresenter, ModalInputViewPresenter } from 'iobootstrap-bo-base';
+import { BOCommonConstants, BOController, FooterView, HeaderView } from 'iobootstrap-bo-base';
 import { MenuController } from 'iobootstrap-bo-menu';
 import { LoginController } from 'iobootstrap-bo-login';
 import HandshakeResponseModel from '../models/HandshakeResponseModel';
@@ -37,11 +37,6 @@ class Main extends BOController<MainProps, MainState> {
             indicatorPresenter.indicatorView = props.indicatorView.current as IndicatorViewPresenter;
         }
 
-        if (props.modalInputView !== undefined) {
-            const modalInputPresenter = this.modalInputPresenter as ModalInputPresenter;
-            modalInputPresenter.modalInputView = props.modalInputView.current as ModalInputViewPresenter;
-        }
-
         if (props.uploadModalView !== undefined) {
             const uploadModalPresenter = this.uploadModalPresenter as UploadModalPresenter;
             uploadModalPresenter.uploadModalView = props.uploadModalView.current as UploadModalViewPresenter;
@@ -53,7 +48,7 @@ class Main extends BOController<MainProps, MainState> {
     private updateLocation(hash: string) {
         let hashName = hash;
         if (hash.startsWith('#!')) {
-            hashName = hash.substr(2, hash.length);;
+            hashName = hash.substring(2, 2 + hash.length);
 
             const newState = new MainState();
             newState.isLoggedIn = this.state.isLoggedIn;
@@ -143,42 +138,42 @@ class Main extends BOController<MainProps, MainState> {
     }
 
     private checkToken() {
-        const userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
-        const newState = new MainState();
-        newState.isLoggedIn = false;
+      const cookieAuthentication = process.env.REACT_APP_COOKIE_AUTHENTICATION;
+      let userToken: string | null = null;
 
-        if (userToken != null) {
-            this.indicatorPresenter.present();
+      if (cookieAuthentication !== "true") {
+        userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
+      }
 
-            const checkTokenRequest = new CheckTokenRequestModel();
-            checkTokenRequest.Token = userToken;
+      const newState = new MainState();
+      newState.isLoggedIn = false;
 
-            const requestPath = `${process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
-            const weakSelf = this;
+      this.indicatorPresenter.present();
 
-            this.service.post(requestPath, checkTokenRequest, function (response: CheckTokenResponseModel) {
-                weakSelf.indicatorPresenter.dismiss();
+      const checkTokenRequest = new CheckTokenRequestModel();
+      checkTokenRequest.Token = userToken;
 
-                if (response.status?.code !== 200) {
-                    weakSelf.setState(newState);
-                    return;
-                }
+      const requestPath = `${process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
+      const weakSelf = this;
 
-                if (response.userRole != null) {
-                    weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
-                }
+      this.service.post(requestPath, checkTokenRequest, function (response: CheckTokenResponseModel) {
+        weakSelf.indicatorPresenter.dismiss();
 
-                weakSelf.decryptResponseAndUpdateState(response.userName ?? "");
-            }, function (error: string) {
-                weakSelf.handleServiceError("", error);
-                newState.isLoggedIn = false;
-                weakSelf.setState(newState);
-            });
-
-            return
+        if (response.status?.code !== 200) {
+          weakSelf.setState(newState);
+          return;
         }
 
-        this.setState(newState);
+        if (response.userRole != null) {
+          weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
+        }
+
+        weakSelf.decryptResponseAndUpdateState(response.userName ?? "");
+      }, function (error: string) {
+        weakSelf.handleServiceError("", error);
+        newState.isLoggedIn = false;
+        weakSelf.setState(newState);
+      });
     }
 
     private decryptResponseAndUpdateState(encryptedUserName: string) {
@@ -196,6 +191,10 @@ class Main extends BOController<MainProps, MainState> {
             weakSelf.setState(newState, () => {
                 if (window.location.hash === "#!userChangePassword") {
                     weakSelf.updateLocation("#!userChangePassword");
+                } else {
+                    weakSelf.setState(newState, () => {
+                        weakSelf.updateLocation(window.location.hash);
+                    });
                 }
             });
           })
@@ -219,21 +218,36 @@ class Main extends BOController<MainProps, MainState> {
             return (
                 <React.StrictMode>
                     <HeaderView userName={userName} />
-                    <MenuController userName={userName}
-                    controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} />
-                    <NavigationView pageHash={this.state.pageHash ?? "dashboard"} />
-                    <SelectionWrapperView pageHash={this.state.pageHash ?? "dashboard"}
-                    selectionHash={this.state.selectionHash} />
-                    <FooterView />
+                    <MenuController
+                    controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} 
+                    pageHash={this.state.pageHash ?? "dashboard"}
+                    userName={userName} />
+                    <div className="content-wrapper bg-body-secondary z-1 pt-2">
+                        <NavigationView pageHash={this.state.pageHash ?? "dashboard"} />
+                        <SelectionWrapperView pageHash={this.state.pageHash ?? "dashboard"}
+                        selectionHash={this.state.selectionHash} />
+                        <FooterView />
+                    </div>
                 </React.StrictMode>
             );
         }
         
         return (
             <React.StrictMode>
-                <LoginController controllerName={process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
-                 loginSuccessHandler={this.handleLoginSuccess} />
-                <FooterView />
+                <nav className="navbar navbar-expand-lg bg-body-tertiary z-3">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href={process.env.REACT_APP_BACKOFFICE_PAGE_URL}>
+                            <h1 className="fs-5">{process.env.REACT_APP_APP_NAME}</h1>
+                        </a>
+                    </div>
+                </nav>
+                <nav className="navbar navbar-dark bg-dark bg-gradient flex-column align-items-start d-flex p-4 position-absolute start-0 bottom-0 z-2 overflow-visible sidebar" data-bs-theme="dark">
+                </nav>
+                <div className="content-wrapper bg-body-secondary z-1 pt-2">
+                    <LoginController controllerName={process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
+                    loginSuccessHandler={this.handleLoginSuccess} />
+                    <FooterView />
+                </div>
             </React.StrictMode>
         );
     }

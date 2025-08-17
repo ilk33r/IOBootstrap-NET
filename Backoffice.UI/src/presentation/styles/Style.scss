@@ -1,0 +1,41 @@
+@import "Variables.scss";
+
+/* Common */
+$link-color: #357EC7;
+$link-hover-color: shift-color($link-color, $link-shade-percentage);
+$link-decoration: none;
+
+/* Colors */
+$primary: #357EC7;
+$body-color: #111111;
+$body-tertiary-bg: #F7F9FD;
+$body-secondary-bg: #F0F0F0;
+
+/* Spinner */
+$spinner-width: 4rem;
+$spinner-height: $spinner-width;
+$spinner-border-width: .45em;
+
+/* Border */
+$border-radius: '0.5rem';
+
+@mixin top-border() {
+    border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+}
+
+@mixin bottom-border() {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+}
+
+/* Browser */
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 6px;
+}
+  
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba($primary, .6);
+    box-shadow: $box-shadow;
+}

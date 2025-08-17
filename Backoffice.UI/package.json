@@ -10,25 +10,26 @@
     "iobootstrap-bo-users": "file:../React.UI/modules/iobootstrap-bo-users",
     "iobootstrap-bo-configurations": "file:../React.UI/modules/iobootstrap-bo-configurations",
     "iobootstrap-bo-login": "file:../React.UI/modules/iobootstrap-bo-login",
+    "iobootstrap-bo-logs": "file:../React.UI/modules/iobootstrap-bo-logs",
     "iobootstrap-bo-messages": "file:../React.UI/modules/iobootstrap-bo-messages",
     "iobootstrap-bo-menueditor": "file:../React.UI/modules/iobootstrap-bo-menueditor",
     "iobootstrap-bo-pushnotifications": "file:../React.UI/modules/iobootstrap-bo-pushnotifications",
     "iobootstrap-bo-generatebopage": "file:../React.UI/modules/iobootstrap-bo-generatebopage",
     "iobootstrap-bo-images": "file:../React.UI/modules/iobootstrap-bo-images",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^29.5.12",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.4",
     "bootstrap": "^5.3.5",
     "jquery": "^3.7.1",
-    "react": "^18.3.1",
-    "react-bootstrap": "^2.10.9",
-    "react-dom": "^18.3.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "react-scripts": "^5.0.1",
     "rewire": "^7.0.0",
+    "sass": "^1.86.3",
     "typescript": "^4.9.5",
     "web-vitals": "^3.5.2"
   },
@@ -60,13 +61,13 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
-    "@types/jquery": "^3.5.29",
     "@types/node": "^16.9.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "overrides": {
-    "nth-check": "2.1.1",
+    "nth-check": ">=2.1.1",
+    "serve-static": "2.1.0",
     "serialize-javascript": "6.0.2",
-    "postcss": "8.4"
+    "postcss": ">=8.4"
   }
 }

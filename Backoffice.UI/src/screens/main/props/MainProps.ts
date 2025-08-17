@@ -1,12 +1,11 @@
-import { CalloutView, IndicatorView, ModalInputView, UploadModalView } from "iobootstrap-bo-base";
+import { CalloutView, IndicatorView, UploadModalView } from "iobootstrap-bo-base";
 import React from "react";
 
 interface MainProps {
 
-    calloutView: React.RefObject<CalloutView> | undefined;
-    indicatorView: React.RefObject<IndicatorView> | undefined;
-    modalInputView: React.RefObject<ModalInputView> | undefined;
-    uploadModalView: React.RefObject<UploadModalView> | undefined;
+    calloutView: React.RefObject<CalloutView | null> | undefined;
+    indicatorView: React.RefObject<IndicatorView | null> | undefined;
+    uploadModalView: React.RefObject<UploadModalView | null> | undefined;
 }
 
 export default MainProps;

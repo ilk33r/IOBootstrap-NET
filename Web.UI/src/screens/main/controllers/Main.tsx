@@ -19,7 +19,7 @@ class Main extends Controller<MainProps, MainState> {
         this.service.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
         const authorization = (process.env.REACT_APP_AUTHORIZATION === undefined) ? "" : process.env.REACT_APP_AUTHORIZATION;
-        this.appServiceHeaderInterceptor.initialize(authorization, "", "");
+        this.appServiceHeaderInterceptor.initialize(authorization);
     }
 
     public componentDidMount?(): void {

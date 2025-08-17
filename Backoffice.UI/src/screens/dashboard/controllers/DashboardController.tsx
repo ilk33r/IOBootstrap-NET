@@ -45,27 +45,27 @@ class DashboardController extends BOController<DashboardProps, DashboardState> {
         });
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
+                <section className="container-fluid">
                     <section className="content">
                         <div className="row">
-                            <BoxView backgroundStyle="bg-aqua" 
+                            <BoxView backgroundStyle="bg-info text-white" 
                             title="Products"
                             value="0"
                             iconName="fa-shopping-bag" />
-                            <BoxView backgroundStyle="bg-yellow" 
+                            <BoxView backgroundStyle="bg-warning text-white" 
                             title="User Registrations"
                             value="0"
                             iconName="fa-user-check" />
                         </div>
                         <div className="row">
                             <div className="col-md-6">
-                                <div className="box box-primary">
-                                    <div className="box-header with-border">
-                                        <h3 className="box-title">Announcements</h3>
+                                <div className="box">
+                                    <div className="box-header">
+                                        <h3>Announcements</h3>
                                     </div>
-                                    <div className="box-body no-padding">
-                                        <div className="table-responsive mailbox-messages">
-                                            <table className="table table-hover table-striped">
+                                    <div className="box-body">
+                                        <div className="hstack gap-3">
+                                            <table className="table table-bordered table-hover table-striped">
                                                 <tbody>{messages}</tbody>
                                             </table>
                                         </div>
@@ -74,7 +74,7 @@ class DashboardController extends BOController<DashboardProps, DashboardState> {
                             </div>
                         </div>
                     </section>
-                </div>
+                </section>
             </React.StrictMode>
         );
     }

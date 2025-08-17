@@ -1,4 +1,4 @@
-import { View } from "iobootstrap-ui-base";
+import { View, WindowMessageModel } from "iobootstrap-ui-base";
 import SelectionWrapperProps from "../props/SelectionWrapperProps";
 import SelectionWrapperState from "../props/SelectionWrapperState";
 import React from "react";
@@ -12,6 +12,8 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
         this.state = new SelectionWrapperState();
 
         this.handleClose = this.handleClose.bind(this);
+        this.closeButtonClicked = this.closeButtonClicked.bind(this);
+        this.trashButtonClicked = this.trashButtonClicked.bind(this);
     }
 
     public componentDidMount(): void {
@@ -35,15 +37,40 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
         window.location.hash = "#!" + this.props.pageHash;
     }
 
+    private closeButtonClicked(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.preventDefault();
+        this.handleClose();
+    }
+
+    private trashButtonClicked(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.preventDefault();
+        
+        const windowMessage: WindowMessageModel = {
+            name: "itemSelected",
+            itemID: null, 
+            itemValue: null
+        };
+
+        const baseURL = new URL(process.env.REACT_APP_POST_MESSAGE_URL ?? "");
+        if (baseURL !== null && baseURL.host.length > 0) {
+            window.postMessage(windowMessage, baseURL.origin);
+            this.handleClose();
+        }
+    }
+    
     render() {
         if (this.props.selectionHash != null) {
             return (
                 <React.StrictMode>
-                    <div className="wrapper selectionContent">
-                        <div className="overlayClick" onClick={this.handleClose}>
-                            <button type="button" className="close" onClick={this.handleClose}><span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div className="overlay">
+                    <div className="selection-content container-fluid">
+                        <div className="overlay" onClick={this.handleClose}></div>
+                        <a className="icon-link icon-link-hover link-underline-opacity-0 link-light fs-3 close" onClick={this.closeButtonClicked} href="#root">
+                            <i className="fas fa-circle-xmark" aria-hidden="true"></i>
+                        </a>
+                        <a className="icon-link icon-link-hover link-underline-opacity-0 link-light fs-3 delete" onClick={this.trashButtonClicked} href="#root">
+                            <i className="fas fa-trash" aria-hidden="true"></i>
+                        </a>
+                        <div className="content">
                             <NavigationView pageHash={this.props.selectionHash} />
                         </div>
                     </div>

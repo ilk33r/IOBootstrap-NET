@@ -1,0 +1,22 @@
+@import "Variables.scss";
+
+.small-box {
+    display: block;
+    position: relative;
+
+    .icon {
+        color: #00000026;
+        font-size: 5rem;
+        position: absolute;
+        right: 1rem;
+        top: -0.5rem;
+        transition: all .3s linear;
+        z-index: 0;
+    }
+
+    &:hover {
+        .icon {
+            font-size: 5.2rem;
+        }
+    }
+}

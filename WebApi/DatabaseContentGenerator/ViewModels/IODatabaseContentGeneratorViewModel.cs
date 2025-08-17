@@ -10,16 +10,16 @@ using IOBootstrap.NET.DataAccess.Entities;
 namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.ViewModels;
 
 public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext> 
+    where TDBContext : IODatabaseContext<TDBContext>
 {
 
     public override void CheckAuthorizationHeader()
     {
-        #if DEBUG
+#if DEBUG
         return;
-        #else
+#else
         base.CheckAuthorizationHeader();
-        #endif
+#endif
     }
 
     public async Task CreateBOUser(string userName)
@@ -61,6 +61,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
         GenerateNotificationMenu();
         GenerateImagesMenu();
         GenerateTemplatesMenu();
+        GenerateLogsMenu();
     }
 
     private void AddDefaultConfiguration()
@@ -127,7 +128,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "List Users",
             MenuOrder = 7,
             RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 4
+            ParentEntityID = null
         };
         DatabaseContext.Add(userListEntity);
 
@@ -138,7 +139,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Add User",
             MenuOrder = 8,
             RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 4
+            ParentEntityID = null
         };
         DatabaseContext.Add(userAddEntity);
         DatabaseContext.SaveChanges();
@@ -164,7 +165,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Edit Configurations",
             MenuOrder = 12,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 7
+            ParentEntityID = null
         };
         DatabaseContext.Add(configurationListEntity);
 
@@ -175,7 +176,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Add Configuration",
             MenuOrder = 13,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 7
+            ParentEntityID = null
         };
         DatabaseContext.Add(configurationAddEntity);
 
@@ -186,7 +187,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Reset Cache",
             MenuOrder = 14,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 7
+            ParentEntityID = null
         };
         DatabaseContext.Add(recycleAppEntity);
         DatabaseContext.SaveChanges();
@@ -212,7 +213,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "List Menu Items",
             MenuOrder = 16,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 11
+            ParentEntityID = null
         };
         DatabaseContext.Add(menuEditorListMenuEntity);
 
@@ -223,7 +224,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Add Menu Item",
             MenuOrder = 17,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 11
+            ParentEntityID = null
         };
         DatabaseContext.Add(menuEditorAddMenuEntity);
         DatabaseContext.SaveChanges();
@@ -249,7 +250,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "List Messages",
             MenuOrder = 19,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 14
+            ParentEntityID = null
         };
         DatabaseContext.Add(messagesListEntity);
 
@@ -260,7 +261,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Add Message",
             MenuOrder = 20,
             RequiredRole = (int)UserRoles.SuperAdmin,
-            ParentEntityID = 14
+            ParentEntityID = null
         };
         DatabaseContext.Add(messagesAddEntity);
         DatabaseContext.SaveChanges();
@@ -286,7 +287,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "List Messages",
             MenuOrder = 22,
             RequiredRole = (int)UserRoles.User,
-            ParentEntityID = 17
+            ParentEntityID = null
         };
         DatabaseContext.Add(listNotificationEntity);
 
@@ -297,12 +298,12 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Send",
             MenuOrder = 23,
             RequiredRole = (int)UserRoles.User,
-            ParentEntityID = 17
+            ParentEntityID = null
         };
         DatabaseContext.Add(sendNotificationEntity);
         DatabaseContext.SaveChanges();
     }
-    
+
     private void GenerateImagesMenu()
     {
         IOMenuEntity imagesEntity = new IOMenuEntity()
@@ -323,7 +324,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Edit Images",
             MenuOrder = 28,
             RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 20
+            ParentEntityID = null
         };
         DatabaseContext.Add(imagesListEntity);
 
@@ -334,7 +335,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Name = "Add Image",
             MenuOrder = 29,
             RequiredRole = (int)UserRoles.Admin,
-            ParentEntityID = 20
+            ParentEntityID = null
         };
         DatabaseContext.Add(imageAddEntity);
         DatabaseContext.SaveChanges();
@@ -348,6 +349,21 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             CssClass = "fa-file-code",
             Name = "Generate BO Page",
             MenuOrder = 30,
+            RequiredRole = (int)UserRoles.SuperAdmin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(templatesEntity);
+        DatabaseContext.SaveChanges();
+    }
+
+    private void GenerateLogsMenu()
+    {
+        IOMenuEntity templatesEntity = new IOMenuEntity()
+        {
+            Action = "logsEdit",
+            CssClass = "fa-book",
+            Name = "Logs",
+            MenuOrder = 31,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };

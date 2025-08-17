@@ -1,9 +1,7 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import MenuProps from '../props/MenuProps';
 import MenuResponseModel from '../models/MenuResponseModel';
 import MenuState from '../props/MenuState';
 import React from 'react';
-import MenuModel from '../models/MenuModel';
 import { BOController } from 'iobootstrap-bo-base';
 
 class MenuController extends BOController<MenuProps, MenuState> {
@@ -13,37 +11,73 @@ class MenuController extends BOController<MenuProps, MenuState> {
 
         this.state = new MenuState();
 
-        this.handleParentMenuClick = this.handleParentMenuClick.bind(this);
+        this.handleSidebarToggleClick = this.handleSidebarToggleClick.bind(this);
     }
 
     public componentDidMount?(): void {
         this.indicatorPresenter.present();
 
+        if (window.innerWidth <= 768) {
+            this.setState({
+                isMediumDevice: true
+            });
+            
+            const collapsedClassName = "sidebar-collapse";
+            const isOpen = !$('body').hasClass(collapsedClassName);
+    
+            if (isOpen) {
+                $('body').addClass(collapsedClassName);
+            }
+        }
+
         const requestURL = `${this.props.controllerName}/ListMenuItems`;
         const weakSelf = this;
         this.service.get<MenuResponseModel>(requestURL, function (response: MenuResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
-                const newState = new MenuState();
                 const items = (response.items === undefined || response.items == null) ? [] : response.items;
-                newState.menuItems = items;
-                weakSelf.setState(newState);
+
+                items.forEach(element => {
+                    if (element.action === weakSelf.props.pageHash) {
+                        element.isExpanded = true;
+                    }
+
+                    if (!element.isExpanded) {
+                        element.childItems?.forEach(childElement => {
+                            if (childElement.action === weakSelf.props.pageHash) {
+                                element.isExpanded = true;
+                            }
+                        });
+                    }
+                });
+
+                weakSelf.setState({
+                    menuItems: items
+                });
             }
         }, function (error: string) {
             weakSelf.handleServiceError("", error);
         });
     }
 
-    private handleParentMenuClick(event: { target: {  }; }, item: MenuModel) {
-        const menuItems = this.state.menuItems;
-        menuItems.forEach(element => {
-            if (element.action === item.action) {
-                element.isExpanded = !element.isExpanded;
-            }
-        });
+    private handleSidebarToggleClick(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.preventDefault();
 
-        const newState = new MenuState();
-        newState.menuItems = menuItems;
-        this.setState(newState);
+        const collapsedClassName = "sidebar-collapse";
+        const isOpen = !$('body').hasClass(collapsedClassName);
+    
+        if (!isOpen) {
+            this.setState({
+                isMediumDevice: false
+            });
+
+            $('body').removeClass(collapsedClassName);
+        } else {
+            this.setState({
+                isMediumDevice: true
+            });
+
+            $('body').addClass(collapsedClassName);
+        }
     }
 
     render() {
@@ -53,19 +87,27 @@ class MenuController extends BOController<MenuProps, MenuState> {
                 const childItemUI = childItems.map(childItem => {
                     const itemId = "menu" + childItem.action;
                     const itemUrl = "#!" + childItem.action;
-                    const itemClass = "far " + childItem.cssClass;
-                    return (<li id={itemId} key={itemId}><a href={itemUrl}><i className={itemClass}></i> {childItem.name}</a></li>);
+                    const itemClass = "fs-6 me-2 far " + childItem.cssClass;
+                    return (
+                        <li id={itemId} key={itemId}>
+                            <a href={itemUrl} className="dropdown-item">
+                                <i className={itemClass}></i> {childItem.name}
+                            </a>
+                        </li>
+                    );
                 });
 
-                const itemClass = "fa " + item.cssClass;
-                const parentItemClassName = (item.isExpanded) ? "treeview menu-open active" : "treeview";
+                const itemClass = "fs-6 me-2 fa " + item.cssClass;
+                const isExpanded = (!this.state.isMediumDevice && item.isExpanded) ? "true" : "false";
+                const dropdownClassName = (!this.state.isMediumDevice && item.isExpanded) ? "dropdown-menu dropdown-menu-dark show" : "dropdown-menu dropdown-menu-dark";
+                const autoClose = (this.state.isMediumDevice) ? "true" : "false";
                 return (
-                    <li className={parentItemClassName} key={item.action}>
-                        <a href="#" onClick={(e) => this.handleParentMenuClick(e, item)}>
-                            <i className={itemClass}></i> <span>{item.name}</span>
-                            <span className="pull-right-container"><i className="fa fa-angle-left pull-right"></i></span>
+                    <li className="nav-item dropdown" key={item.action}>
+                        <a className="nav-link dropdown-toggle" href={`#!${item.action}`} role="button" data-bs-toggle="dropdown" aria-expanded={isExpanded} data-bs-auto-close={autoClose}>
+                            <i className={itemClass}></i>
+                            <span className="hide-collapsed">{item.name}</span>
                         </a>
-                        <ul className="treeview-menu">
+                        <ul className={dropdownClassName}>
                             {childItemUI}
                         </ul>
                     </li>
@@ -73,32 +115,39 @@ class MenuController extends BOController<MenuProps, MenuState> {
             } else {
                 const itemId = "menu" + item.action;
                 const itemUrl = "#!" + item.action;
-                const itemClass = "fa " + item.cssClass;
-                return (<li id={itemId} key={itemId}><a href={itemUrl}><i className={itemClass}></i> <span>{item.name}</span></a></li>);
+                const itemClass = "fs-6 me-2 fa " + item.cssClass;
+                return (
+                    <li id={itemId} key={itemId} className="nav-item">
+                        <a href={itemUrl} className="nav-link" role="button">
+                            <i className={itemClass}></i>
+                            <span className="hide-collapsed">{item.name}</span>
+                        </a>
+                    </li>
+                );
             }
         });
         
         return (
             <React.StrictMode>
-                <aside className="main-sidebar">
-                    <section className="sidebar">
-                        <div className="user-panel">
-                            <div className="pull-left image">
-                                <div><br /></div>
-                                <div><br /></div>
-                                <div><br /></div>
+                <nav className="navbar navbar-dark bg-dark bg-gradient flex-column align-items-start d-flex p-4 position-absolute start-0 bottom-0 z-2 overflow-visible sidebar" data-bs-theme="dark">
+                    <ul className="navbar-nav mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <div className="hstack gap-3">
+                                <a className="nav-link active hide-collapsed" aria-current="page" href="#root" onClick={(e) => e.preventDefault()}>
+                                    <i className="fa fa-circle text-success fs-6 me-2"></i>{this.props.userName}
+                                </a>
+                                <a className="nav-link sidebar-toggle" aria-current="page" href="#root" onClick={this.handleSidebarToggleClick}>
+                                    <i className="fas fa-down-left-and-up-right-to-center hide-collapsed"></i>
+                                    <i className="fas fa-up-right-and-down-left-from-center hide-expanded"></i>
+                                </a>
                             </div>
-                            <div className="pull-left info text-center">
-                            <p>{this.props.userName}</p>
-                                <a><i className="fa fa-circle text-success"></i> Online</a>
-                            </div>
-                        </div>
-                        <ul className="sidebar-menu" data-widget="tree">
-                            <li className="header">MAIN NAVIGATION</li>
-                            {menuContent}
-                        </ul>
-                    </section>
-                </aside>
+                        </li>
+                        <li className="nav-item mb-1 mt-4 hide-collapsed">
+                            <a className="nav-link disabled text-uppercase" aria-disabled="true" href="#root">Main Navigation</a>
+                        </li>
+                        {menuContent}
+                    </ul>
+                </nav>
             </React.StrictMode>
         );
     }

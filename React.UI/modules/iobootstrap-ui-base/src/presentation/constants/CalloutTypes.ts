@@ -1,9 +1,9 @@
 class CalloutTypes {
 
-    static readonly info = "callout-info";
-    static readonly danger = "callout-danger";
-    static readonly success = "callout-success";
-    static readonly warning = "callout-warning";
+    static readonly info = "alert-info";
+    static readonly danger = "alert-danger";
+    static readonly success = "alert-success";
+    static readonly warning = "alert-warning";
 }
 
 export default CalloutTypes;

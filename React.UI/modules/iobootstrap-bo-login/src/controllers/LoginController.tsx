@@ -130,7 +130,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
     }
 
     public render() {
-        const formGroupErrorClass = (this.state.errorMessage.length > 0) ? "form-group has-error" : "form-group";
+        const formControlClass = (this.state.errorMessage.length > 0) ? "form-control is-invalid" : "form-control";
         let captchaComponent: React.JSX.Element;
 
         if (this.state.captchaID == null) {
@@ -142,11 +142,13 @@ class LoginController extends BOController<LoginProps, LoginState> {
             const captchaURL = `${process.env.REACT_APP_API_URL}/ImageAsset/GetCaptcha?id=${this.state.captchaID ?? ""}`;
             captchaComponent = (
                 <React.StrictMode>
-                    <div className={formGroupErrorClass}>
-                        <label htmlFor="inputCaptcha" className="col-sm-2 control-label">Captcha</label>
-                        <div className="col-sm-10">
-                            <input type="text" className="form-control" id="inputCaptcha" placeholder="Captcha" onChange={this.handleCaptchaChange} />
-                            <img src={captchaURL} alt="Captcha" />
+                    <div className="mb-4">
+                        <img src={captchaURL} alt="Captcha" />
+                    </div>
+                    <div className="mb-4">
+                        <div className="form-floating">
+                            <input type="text" id="inputCaptcha" className={formControlClass} placeholder="Captcha" onChange={this.handleCaptchaChange} />
+                            <label htmlFor="inputCaptcha">Captcha</label>
                         </div>
                     </div>
                 </React.StrictMode>
@@ -155,44 +157,43 @@ class LoginController extends BOController<LoginProps, LoginState> {
 
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
-                    <section className="content">
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="box box-info">
-                                    <div className="box-header with-border">
-                                        <h3 className="box-title">{process.env.REACT_APP_APP_NAME} Backoffice</h3>
-                                    </div>
-                                    <form className="form-horizontal" id="loginForm" onSubmit={this.handleLogin}>
-                                        <div className="box-body">
-                                            <div className={formGroupErrorClass}>
-                                                <label htmlFor="inputEmail3" className="col-sm-2 control-label">User Name</label>
-                                                <div className="col-sm-10">
-                                                    <input type="text" className="form-control" id="inputEmail3" placeholder="User Name" value={this.state.userName} onChange={this.handleUserNameChange} />
-                                                </div>
-                                            </div>
-                                            <div className={formGroupErrorClass}>
-                                                <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
-                                                <div className="col-sm-10">
-                                                    <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={this.state.password ?? ""} onChange={this.handlePasswordChange} />
-                                                </div>
-                                            </div>
-                                            {captchaComponent}
-                                            <div className={formGroupErrorClass}>
-                                                <div className="col-sm-10">
-                                                    <span className="help-block">{this.state.errorMessage}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="box-footer">
-                                            <button type="submit" className="btn btn-info pull-right">Sign in</button>
-                                        </div>
-                                    </form>
+                <section className="container-fluid">
+                    <div className="row mb-5 mt-5">
+                        <div className="col-sm-12 col-md-6 mx-auto">
+                            <div className="box">
+                                <div className="box-header">
+                                    <h3>{process.env.REACT_APP_APP_NAME} Backoffice</h3>
                                 </div>
+                                <form className="needs-validation" id="loginForm" onSubmit={this.handleLogin}>
+                                    <div className="box-body">
+                                        <div className="mb-4">
+                                            <div className="form-floating">
+                                                <input type="text" id="inputUserName" className={formControlClass} placeholder="User Name" value={this.state.userName} onChange={this.handleUserNameChange} />
+                                                <label htmlFor="inputUserName">User Name</label>
+                                            </div>
+                                        </div>
+                                        <div className="mb-4">
+                                            <div className="form-floating">
+                                                <input type="password" id="inputPassword" className={formControlClass} placeholder="Password" value={this.state.password ?? ""} onChange={this.handlePasswordChange} />
+                                                <span className="invalid-feedback">{this.state.errorMessage}</span>
+                                                <label htmlFor="inputPassword">Password</label>
+                                            </div>
+                                        </div>
+                                        {captchaComponent}
+                                    </div>
+                                    <div className="box-footer text-end">
+                                        <button type="submit" className="btn btn-primary btn-lg">Sign in</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                    <div className="row mb-5"></div>
+                </section>
             </React.StrictMode>
           );
     }

@@ -63,8 +63,7 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
 
     render() {
         const formId = "formELM" + this.props.index;
-        const areaClass = (this.state.hasError) ? "form-group has-error" : "form-group";
-        const errorMessageClass = (this.state.errorMessage.length > 0) ? "help-block" : "help-block hidden";
+        const formClass = (this.state.hasError) ? "form-select is-invalid" : "form-select";
 
         const options = this.props.options.map((option, index) => {
             const optionKey = "formOption" + this.props.index + "-" + index;
@@ -73,13 +72,22 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
 
         return(
             <React.StrictMode>
-                <div className={areaClass}>
-                    <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
+                <div className="row mb-3">
+                    <div className="col-sm-2 text-end">
+                        <label htmlFor={formId} className="col-form-label my-2">
+                            <strong>{this.props.name}</strong>
+                        </label>
+                    </div>
                     <div className="col-sm-9">
-                        <select className="form-control" onChange={this.handleValueChange} disabled={!this.props.isEnabled} defaultValue={this.props.value}>
-                            {options}
-                        </select>
-                        <span className={errorMessageClass}>{this.state.errorMessage}</span>
+                        <div className="input-group has-validation">
+                            <div className="form-floating">
+                                <select id={formId} className={formClass} defaultValue={this.props.value} onChange={this.handleValueChange} disabled={!this.props.isEnabled}>
+                                    {options}
+                                </select>
+                                <span className="invalid-feedback">{this.state.errorMessage}</span>
+                                <label htmlFor={formId}>{this.props.name}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </React.StrictMode>

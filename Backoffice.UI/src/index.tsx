@@ -3,16 +3,21 @@ import React from 'react';
 import Main from './screens/main/controllers/Main';
 import reportWebVitals from './reportWebVitals';
 import 'jquery/src/jquery'
-import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/regular.css';
+import '@fortawesome/fontawesome-free/css/solid.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-import './presentation/styles/AdminLTE.css';
-import './presentation/styles/AdminSkins.css';
-import './presentation/styles/App.css';
-import 'bootstrap/dist/js/bootstrap.js'
-import { CalloutView, IndicatorView, ModalInputView, UploadModalView } from 'iobootstrap-bo-base';
+import './presentation/styles/Variables.scss';
+import './presentation/styles/Style.scss';
+import './presentation/styles/Sidebar.scss';
+import './presentation/styles/Selection.scss';
+import './presentation/styles/Callout.scss';
+import './presentation/styles/Indicator.scss';
+import './presentation/styles/Dashboard.scss';
+import './presentation/styles/App.scss';
+import { CalloutView, IndicatorView, UploadModalView } from 'iobootstrap-bo-base';
 import DIUserRoleHooks from './di/DIUserRoleHooks';
 import DIControllerHooks from './di/DIControllerHooks';
+import * as Bootstrap from 'bootstrap';
 
 DIUserRoleHooks.setup();
 DIControllerHooks.setup();
@@ -29,42 +34,29 @@ const indicatorViewContainer = document.getElementById('indicatorWrapper');
 const indicatorViewRoot = createRoot(indicatorViewContainer!);
 indicatorViewRoot.render(indicatorView);
 
-let modalInputViewRef = React.createRef<ModalInputView>();
-let modalInputViewPresentHandler = function() {
-  $('#inputModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
-};
-let modalInputViewDismissHandler = function() {
-  $('#inputModal').modal('hide');
-};
-const modalInputView = (<ModalInputView ref={modalInputViewRef}
-  presentHandler={modalInputViewPresentHandler}
-  dismissHandler={modalInputViewDismissHandler} />);
-ReactDOM.render(modalInputView, document.getElementById('modalInputWrapper'));
-
+let bsUploadModal: Bootstrap.Modal | null = null;
 let uploadModalViewRef = React.createRef<UploadModalView>();
 let uploadModalViewPresentHandler = function() {
-  $('#uploadModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
+    bsUploadModal = new Bootstrap.Modal('#uploadModal', {
+        backdrop: 'static',
+        keyboard: false
+    });
+    bsUploadModal?.show();
 };
 let uploadModalViewDismissHandler = function() {
-  $('#uploadModal').modal('hide');
+    bsUploadModal?.hide();
 };
+
 const uploadModalView = (<UploadModalView ref={uploadModalViewRef}
-  presentHandler={uploadModalViewPresentHandler}
-  dismissHandler={uploadModalViewDismissHandler} />);
+    presentHandler={uploadModalViewPresentHandler}
+    dismissHandler={uploadModalViewDismissHandler} />);
 const uploadModalViewContainer = document.getElementById('uploadModalWrapper');
 const uploadModalViewRoot = createRoot(uploadModalViewContainer!);
 uploadModalViewRoot.render(uploadModalView);
 
 const mainView = (<Main calloutView={calloutViewRef}
-  indicatorView={indicatorViewRef}
-  modalInputView={modalInputViewRef}
-  uploadModalView={uploadModalViewRef} />);
+    indicatorView={indicatorViewRef}
+    uploadModalView={uploadModalViewRef} />);
 const mainViewContainer = document.getElementById('pagecontent');
 const mainViewRoot = createRoot(mainViewContainer!);
 mainViewRoot.render(mainView);

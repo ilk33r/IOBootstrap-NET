@@ -1,0 +1,41 @@
+@import "Variables.scss";
+
+/* Sidebar */
+.sidebar {
+    top: $navbar-padding-y + 3rem;
+    width: $sidebar-expanded-width;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar .navbar-nav {
+    width: 100%;
+}
+
+body.sidebar-collapse .sidebar {
+    width: $sidebar-collapsed-width;
+}
+
+body.sidebar-collapse .sidebar .hide-collapsed {
+    display: none;
+}
+
+body:not(.sidebar-collapse) .sidebar .hide-expanded {
+    display: none;
+}
+
+.sidebar .sidebar-toggle {
+    margin-left: auto;
+}
+
+body.sidebar-collapse .sidebar .sidebar-toggle {
+    margin-left: 0.3rem;
+    margin-right: auto;
+}
+
+body.sidebar-collapse .sidebar ul.dropdown-menu {
+    position: absolute;
+}
+
+.fa-circle-o:before {
+  content: "\f111";
+}

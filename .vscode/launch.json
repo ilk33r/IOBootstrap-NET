@@ -13,6 +13,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,
+            "checkForDevCert": false,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
@@ -42,7 +43,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "IOBootstrapNetApplicationPublish",

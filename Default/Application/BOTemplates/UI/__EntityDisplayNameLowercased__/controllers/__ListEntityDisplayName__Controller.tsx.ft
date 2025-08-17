@@ -110,6 +110,7 @@ __UIIetmListParameterArray__
                     deleteDataHandler={this.deleteDataHandler}
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
+                    itemVisibleHandler={null}
                     pagination={pagination} />
             </React.StrictMode>
         );

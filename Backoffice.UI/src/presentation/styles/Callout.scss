@@ -1,0 +1,66 @@
+@import "Variables.scss";
+
+/* Callout */
+
+#callout {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 20000;
+
+    &.alert-warning { 
+        i.fa-circle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-check {
+            display: none;
+        }
+
+        i.fa-circle-info {
+            display: none;
+        }
+    }
+
+    &.alert-success { 
+        i.fa-triangle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-info {
+            display: none;
+        }
+    }
+
+    &.alert-danger { 
+        i.fa-circle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-check {
+            display: none;
+        }
+
+        i.fa-circle-info {
+            display: none;
+        }
+    }
+
+    &.alert-info { 
+        i.fa-triangle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-exclamation {
+            display: none;
+        }
+
+        i.fa-circle-check {
+            display: none;
+        }
+    }
+}

@@ -1,11 +1,13 @@
 class ListDataItemModel {
 
-    isEven: boolean;
+    isChild: boolean;
     itemList: string[];
+    textWraps: boolean[];
 
     constructor() {
-        this.isEven = false;
+        this.isChild = false;
         this.itemList = [];
+        this.textWraps = [];
     }
 }
 

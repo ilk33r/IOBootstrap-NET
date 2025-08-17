@@ -10,6 +10,7 @@ import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListCont
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
 import { ImagesAddController, ImagesEditController, ImagesModifyController } from "iobootstrap-bo-images";
+import { LogsController } from "iobootstrap-bo-logs";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 
@@ -130,6 +131,10 @@ class NavigationView extends View<NavigationProps, NavigationState> {
 
         if (this.props.pageHash === "actionGenerateBOPage") {
             return <GenerateBOPageController />
+        }
+
+        if (this.props.pageHash === "logsEdit") {
+            return <LogsController />
         }
         
         return (

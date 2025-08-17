@@ -94,7 +94,7 @@ class UsersAddController extends BOController<{}, UserAddState> {
                 weakSelf.setState(newState);
             }),
             FormTypeTextProps.initializeWithValidations("Password", this.temporaryPassword, false, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-            FormTypeSelectProps.initialize("Role", "", true, userRoleFormDataOptions),
+            FormTypeSelectProps.initialize("Role", "2", true, userRoleFormDataOptions),
             FormTypeSelectProps.initialize("Active", "", true, [ 
                 FormDataOptionModel.initialize("NO", "no"),
                 FormDataOptionModel.initialize("YES", "yes")
@@ -107,22 +107,16 @@ class UsersAddController extends BOController<{}, UserAddState> {
 
         return (
             <React.StrictMode>
-                <div className="form-wrapper">
-                    <FormView navigation={navigation} 
-                        resourceHome="Home"
-                        title="Add a new user"
-                        submitButtonName="Add"
-                        errorHandler={this.handleFormError}
-                        successHandler={this.handleFormSuccess}
-                        formElements={formElements} />
-                </div>
+                <FormView navigation={navigation} 
+                    resourceHome="Home"
+                    title="Add a new user"
+                    submitButtonName="Add"
+                    errorHandler={this.handleFormError}
+                    successHandler={this.handleFormSuccess}
+                    formElements={formElements} />
                     
-                <div className="editor-wrapper">
-                    <div className="content-wrapper">
-                        <UserLoginInformationView userName={this.state.userName.RemoveHTML()}
-                            temporaryPassword={this.temporaryPassword} />
-                    </div>
-                </div>
+                <UserLoginInformationView userName={this.state.userName.RemoveHTML()}
+                    temporaryPassword={this.temporaryPassword} />
             </React.StrictMode>
         );
     }

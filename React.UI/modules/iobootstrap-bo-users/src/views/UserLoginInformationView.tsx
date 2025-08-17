@@ -5,7 +5,7 @@ class UserLoginInformationView extends View<UserLoginInformationProps, {}> {
 
     render() {
         return (
-            <section className="content">
+            <section className="container-fluid mb-3">
                 <div className="row">
                     <div className="col-md-12">
                         <div id="userInfo" className="editor" contentEditable>
@@ -63,6 +63,8 @@ class UserLoginInformationView extends View<UserLoginInformationProps, {}> {
                         </div>
                     </div>
                 </div>
+                <div className="row mb-5"></div>
+                <div className="row mb-5"></div>
             </section>
         );
     }

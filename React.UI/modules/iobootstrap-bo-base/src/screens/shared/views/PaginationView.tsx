@@ -34,8 +34,8 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
         return (this.props.length === 0) ? 0 : Math.ceil(this.props.count / this.props.length);
     }
 
-    nextPageButtonClick(e: { preventDefault: () => void; }) {
-        e.preventDefault();
+    private nextPageButtonClick(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.preventDefault();
 
         const currentPage = this.currentPage();
 
@@ -49,8 +49,8 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
         this.props.pageChangeHandler(start, length);
     }
 
-    previousPageButtonClick(e: { preventDefault: () => void; }) {
-        e.preventDefault();
+    private previousPageButtonClick(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.preventDefault();
 
         const currentPage = this.currentPage();
 
@@ -64,8 +64,8 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
         this.props.pageChangeHandler(start, length);
     }
 
-    pageButtonClick(e: { preventDefault: () => void; }, pageNumber: number) {
-        e.preventDefault();
+    private pageButtonClick(event: React.MouseEvent<HTMLAnchorElement>, pageNumber: number) {
+        event.preventDefault();
 
         const start = (pageNumber - 1) * this.props.length;
         const length = this.props.length;
@@ -75,43 +75,38 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
     render() {
         const currentPage = this.currentPage();
         const pageCount = this.pageCount();
-        const previousButtonClassName = (currentPage === 1) ? "paginate_button previous disabled" : "paginate_button previous";
-        const nextButtonClassName = (currentPage === pageCount) ? "paginate_button next disabled" : "paginate_button next";
+        const previousButtonClassName = (currentPage === 1) ? "page-item disabled" : "page-item";
+        const nextButtonClassName = (currentPage === pageCount) ? "page-item disabled" : "page-item";
 
         const pages = this.allPages().map(page => {
             let pageClassName;
             if (page === currentPage) {
-                pageClassName = "paginate_button active";
+                pageClassName = "page-item active";
             } else {
-                pageClassName = "paginate_button";
+                pageClassName = "page-item";
             }
 
             const key = "pageButton" + page.toString();
             return (
                 <li className={pageClassName} key={key}>
-                    <a href="#page" className="paginationPage" onClick={(e) => this.pageButtonClick(e, page)}>{page}</a>
+                    <a className="page-link" href="#page" onClick={(e) => this.pageButtonClick(e, page)}>{page}</a>
                 </li>
             );
         });
 
         return (
             <React.StrictMode>
-                <div className="row">
-                    <div className="col-sm-5"></div>
-                    <div className="col-sm-7">
-                        <div className="dataTables_paginate paging_simple_numbers">
-                            <ul className="pagination">
-                                <li className={previousButtonClassName}>
-                                    <a onClick={this.previousPageButtonClick} href="#previous">Previous</a>
-                                </li>
-                                {pages}
-                                <li className={nextButtonClassName}>
-                                    <a onClick={this.nextPageButtonClick} href="#next">Next</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <nav aria-label="Page navigation">
+                    <ul className="pagination pagination-wrap justify-content-center">
+                        <li className={previousButtonClassName}>
+                            <a className="page-link" href="#previous" onClick={this.previousPageButtonClick}>Previous</a>
+                        </li>
+                        {pages}
+                        <li className={nextButtonClassName}>
+                            <a className="page-link" href="#next" onClick={this.nextPageButtonClick}>Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </React.StrictMode>
         );
     }

@@ -39,7 +39,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                     RequestBody = log.RequestBody,
                                                     ResponseBody = log.ResponseBody
                                                 })
-                                                .OrderBy(i => i.ID)
+                                                .OrderByDescending(i => i.ID)
                                                 .Skip(requestModel.Start ?? 0)
                                                 .Take(requestModel.Count ?? 0)
                                                 .ToList();

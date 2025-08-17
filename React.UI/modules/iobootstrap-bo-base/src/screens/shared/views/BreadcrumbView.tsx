@@ -1,6 +1,6 @@
 import { View } from "iobootstrap-ui-base";
 import BreadcrumbNavigationProps from "../props/BreadcrumbNavigationProps";
-import React from "react";
+import React, { JSX } from "react";
 
 class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
 
@@ -18,21 +18,33 @@ class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
             const navigationId = "#!" + navigation.id;
 
             if (navigation.id === activeNavigationID) {
-                return (<li className="active" key={navigation.id}><a href={navigationId}>{navigation.name}</a></li>);
+                return (<li className="breadcrumb-item active" aria-current="page" key={navigation.id}><a href={navigationId} className="icon-link-hover link-secondary link-underline-opacity-0 link-underline-opacity-75-hover">{navigation.name}</a></li>);
             }
 
-            return (<li key={navigation.id}><a href={navigationId}>{navigation.name}</a></li>)
-        })
+            return (<li className="breadcrumb-item" key={navigation.id}><a href={navigationId} className="link-secondary link-underline-opacity-0 link-underline-opacity-75-hover">{navigation.name}</a></li>)
+        });
+
+        let activeNavigationTitle: JSX.Element;
+        
+        if (this.props.showTitle) {
+            activeNavigationTitle = (<h2>{activeNavigationName}</h2>);
+        } else {
+            activeNavigationTitle = (<h2> </h2>);
+        }
 
         return (
             <React.StrictMode>
-                <section className="content-header">
-                    <h1>{activeNavigationName}</h1>
+                <nav aria-label="breadcrumb" className="navbar">
+                    <h2>{activeNavigationTitle}</h2>
                     <ol className="breadcrumb">
-                        <li key="dashboard"><a href="#!dashboard"><i className="fa fa-dashboard"></i> {this.props.resourceHome}</a></li>
+                        <li key="dashboard" className="breadcrumb-item">
+                            <a href="#!dashboard" className="icon-link icon-link-hover link-secondary link-underline-opacity-0 link-underline-opacity-75-hover">
+                                <i className="fa fa-house fs-6 me-1 bi" aria-hidden="true"></i> {this.props.resourceHome}
+                            </a>
+                        </li>
                         {navigation}
                     </ol>
-                </section>
+                </nav>
             </React.StrictMode>
         );
     }

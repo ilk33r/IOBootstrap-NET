@@ -1,5 +1,6 @@
 using IOBootstrap.NET.Application;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,11 +24,29 @@ public class Startup : IOStartup<IODatabaseContextDefaultImpl>
             options.EnableSensitiveDataLogging(true);
 #endif
 
+#if PLAIN_CONNECTION_STRING
+        // Obtain connection string
+        string? connectionString = Configuration.GetConnectionString("DefaultConnection");
+#else
+        // Obtain connection string
+        string? connectionString = Configuration.GetConnectionString("EncryptedConnection");
+
+        // Convert key and iv to byte array
+        byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+        byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+
+        // Base 64 encode user token data
+        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+        
+        // Obtain decrypted token value
+        connectionString = aesUtilities.Decrypt(Convert.FromBase64String(connectionString ?? ""));
+#endif
+
 #if USE_MYSQL_DATABASE
             // options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
-            options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
+            options.UseMySql(connectionString, new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
 #elif USE_SQLSRV_DATABASE
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
+            options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssembly));
 #else
         options.UseInMemoryDatabase("IOMemory");
 #endif

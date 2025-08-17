@@ -1,0 +1,89 @@
+@import "Variables.scss";
+@import "Style.scss";
+
+body {
+    position: absolute;
+    top: 0;
+    height: auto;
+    min-height: 100%;
+    display: inline-block;
+    width: 100%;
+    bottom: 0;
+}
+
+.wrapper {
+    min-height: 100%
+}
+
+.content-wrapper {
+    margin-left: $sidebar-expanded-width;
+    transition: all 0.3s ease-in-out;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    section.content {
+        min-height: 79vh;
+    }
+
+    .container-fluid {
+        --bs-gutter-x: 4rem;
+    }
+}
+
+body.sidebar-collapse .content-wrapper {
+    margin-left: $sidebar-collapsed-width;
+}
+
+.box {
+    background-color: $white;
+    border-radius: map-get($border-widths, 3);
+    border-top: map-get($border-widths, 5) solid $primary-bg-subtle;
+    box-shadow: $box-shadow-sm;
+    margin-top: map-get($spacers, 2);
+    margin-bottom: map-get($spacers, 3);
+    position: relative;
+
+    .box-header {
+        @include bottom-border();
+        padding: map-get($spacers, 3);
+    }
+
+    .box-body {
+        padding: map-get($spacers, 3);
+    }
+
+    .box-footer {
+        @include top-border();
+        padding: map-get($spacers, 3);
+    }
+}
+
+.btn.btn-square {
+    --bs-btn-font-weight: 600;
+    --bs-btn-bg: var(--bs-gray-100);
+    --bs-btn-border-color: var(--bs-gray-400);
+    --bs-btn-hover-border-color: var(--bs-gray-500);
+    --bs-btn-color: var(--bs-gray-700);
+    --bs-btn-hover-color: var(--bs-gray-800);
+    transition: all 0.3s ease-in-out;
+    min-width: 80px;
+    height: 78px;
+    margin: 0 0 map-get($spacers, 3) map-get($spacers, 3);
+    padding-top: map-get($spacers, 3);
+
+    i {
+       display: block;
+        margin-bottom: map-get($spacers, 1);
+    }
+}
+
+.pagination.pagination-wrap {
+    flex-wrap: wrap;
+}
+
+.editor {
+  border: 1px solid #000; 
+  padding: 10px;
+}
+
+@import "bootstrap";

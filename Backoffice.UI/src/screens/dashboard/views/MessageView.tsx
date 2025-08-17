@@ -11,9 +11,9 @@ class MessageView extends View<MessageViewProps, {}> {
         return (
             <React.StrictMode>
                 <tr>
-                    <td className="mailbox-star"><a href="#unstar" className="messageReadControl"><i className={iconClass}></i></a></td>
-                    <td className="mailbox-subject"><div dangerouslySetInnerHTML={{__html: message}}></div></td>
-                    <td className="mailbox-date">{createDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' })}</td>
+                    <td><a href="#unstar" className="link-warning"><i className={iconClass}></i></a></td>
+                    <td ><div dangerouslySetInnerHTML={{__html: message}}></div></td>
+                    <td>{createDate.toLocaleDateString('en-US', { year: 'numeric', day: '2-digit', month: '2-digit' })}</td>
                 </tr>
             </React.StrictMode>
         );

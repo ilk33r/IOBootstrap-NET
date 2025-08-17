@@ -8,9 +8,5 @@ public class BO__DeleteEntityDisplayName__RequestModel : RequestModel
 {
 
     [Required]
-    public int __EntityIDProperty__ { get; set; }
-
-    public BO__DeleteEntityDisplayName__RequestModel() : base()
-    {
-    }
+    public int? __EntityIDProperty__ { get; set; }
 }

@@ -6,7 +6,7 @@ import GenerateBOPageResponseModel from "../models/GenerateBOPageResponseModel";
 import CodeBlockView from "../views/CodeBlockView";
 import GenerateBOPageFilesRequestModel from "../models/GenerateBOPageFilesRequestModel";
 import { BaseResponseModel, CalloutTypes, ValidationBackofficeRequestRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, BreadcrumbView, FormType, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class GenerateBOPageController extends BOController<GenerateBOPageProps, GenerateBOPageState> {
 
@@ -138,28 +138,27 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
         
         return (
             <React.StrictMode>
-                <div className="content-wrapper">
+                <section className="container-fluid">
+                    <BreadcrumbView navigation={navigation} resourceHome="Home" showTitle={true} />
                     <div className="row">
                         <CodeBlockView title="Entity"
                             sectionTitle={this.state.boPageDataResponse.entityName}
                             descriptions={[]} />
+
                         <div className="col-md-6">
-                            <div className="box box-solid">
-                                <div className="box-header with-border">
-                                    <i className="fa fa-file"></i>
-                                    <h3 className="box-title">Files</h3>
+                            <div className="box">
+                                <div className="box-header">
+                                    <h3><i className="fa fa-file"></i> Files</h3>
                                 </div>
                                 <div className="box-body">
-                                    <div className="col-md-3">
-                                        <button type="button" onClick={this.downloadAPIFiles} className="btn btn-success btn-flat">Download API Files</button>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <button type="button" onClick={this.downloadUIFiles} className="btn btn-success btn-flat">Download UI Files</button>
+                                    <div className="hstack gap-3">
+                                        <button type="button" onClick={this.downloadAPIFiles} className="btn btn-success">Download API Files</button>
+                                        <button type="button" onClick={this.downloadUIFiles} className="btn btn-success">Download UI Files</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="clearfix"></div>
+
                         <CodeBlockView title="Menu"
                             sectionTitle="Add Menu Item"
                             descriptions={menuParentViewDescriptions} />
@@ -168,7 +167,6 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
                             sectionTitle="Add Menu Item"
                             descriptions={menuListViewDescriptions} />
 
-                        <div className="clearfix"></div>
                         <CodeBlockView title="Menu"
                             sectionTitle="Add Menu Item"
                             descriptions={menuCreateViewDescriptions} />
@@ -177,7 +175,7 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
                             sectionTitle="Backoffice.UI/src/screens/shared/views/NavigationView.tsx"
                             descriptions={listNavigationViewDescriptions} />
                     </div>
-                </div>
+                </section>
             </React.StrictMode>
         );
     }

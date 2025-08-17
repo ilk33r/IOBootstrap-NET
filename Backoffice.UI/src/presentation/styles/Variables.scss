@@ -1,0 +1,8 @@
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+/* Sidebar */
+$sidebar-collapsed-width: 5rem;
+$sidebar-expanded-width: 15rem;
+$sidebar-top: $navbar-padding-y + 3rem;

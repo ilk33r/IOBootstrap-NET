@@ -106,8 +106,7 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
 
     render() {
         const formId = "formELM" + this.props.index;
-        const areaClass = (this.state.hasError) ? "form-group has-error" : "form-group";
-        const errorMessageClass = (this.state.errorMessage.length > 0) ? "help-block" : "help-block hidden";
+        const formClass = (this.state.hasError) ? "form-control is-invalid" : "form-control";
 
         let inputDisabled = !this.props.isEnabled;
         let imageFileAddress;
@@ -134,11 +133,19 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
 
         return(
             <React.StrictMode>
-                <div className={areaClass}>
-                    <label htmlFor={formId} className="col-sm-2 control-label">{this.props.name}</label>
+                <div className="row mb-3">
+                    <div className="col-sm-2 text-end">
+                        <label htmlFor={formId} className="col-form-label">
+                            <strong>{this.props.name}</strong>
+                        </label>
+                    </div>
                     <div className="col-sm-9">
-                        <input type="file" name="file" className="form-control" accept={this.props.accept} onChange={this.handleValueChange} disabled={inputDisabled} />
-                        <span className={errorMessageClass}>{this.state.errorMessage}</span>
+                        <div className="input-group has-validation">
+                            <div className="w-100">
+                                <input type="file" name="file" id={formId} className={formClass} accept={this.props.accept} onChange={this.handleValueChange} disabled={inputDisabled} />
+                                <span className="invalid-feedback">{this.state.errorMessage}</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-sm-2"></div>
                     <div className="col-sm-3">

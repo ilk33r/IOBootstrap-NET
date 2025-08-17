@@ -6,11 +6,15 @@ class FooterView extends View<{}, {}> {
     render() {        
         return (
             <React.StrictMode>
-                <footer className="main-footer">
-                    <div className="pull-right hidden-xs">
-                        <b>Version</b> {process.env.REACT_APP_VERSION}
+                <footer className="container-fluid bg-white border-top p-3">
+                    <div className="row">
+                        <div className="col-md-8 col-sm-12">
+                            <strong>Copyright &copy; 2025.</strong> All rights reserved.
+                        </div>
+                        <div className="col-md-4 col-sm-12 text-md-end text-sm-start">
+                            <strong>Version</strong> {process.env.REACT_APP_VERSION}
+                        </div>
                     </div>
-                    <strong>Copyright &copy; 2024.</strong> All rights reserved.
                 </footer>
             </React.StrictMode>
         );

@@ -26,12 +26,15 @@ class IndicatorView extends View<IndicatorProps, IndicatorState> implements Indi
     }
 
     render() {
-        const indicatorClassName = (this.state.isVisible) ? "" : "hidden";
+        const indicatorClassName = (this.state.isVisible) ? "" : "d-none";
         return (
             <React.StrictMode>
                 <div id="pageIndicator" className={indicatorClassName}>
-                    <div className="overlay">
-                        <i className="fa fa-spinner fa-spin fa-3x"></i>
+                    <div className="overlay"></div>
+                    <div className="spinner-container text-center">
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </React.StrictMode>

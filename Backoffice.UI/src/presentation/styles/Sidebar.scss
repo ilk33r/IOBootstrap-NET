@@ -5,10 +5,22 @@
     top: $navbar-padding-y + 3rem;
     width: $sidebar-expanded-width;
     transition: all 0.3s ease-in-out;
-}
 
-.sidebar .navbar-nav {
-    width: 100%;
+    .navbar-nav {
+        width: 100%;
+
+        .nav-item {
+            text-wrap-mode: wrap;
+
+            .dropdown-menu > li {
+                text-wrap-mode: wrap;
+
+                a {
+                    white-space: normal;
+                }
+            }
+        }
+    }
 }
 
 body.sidebar-collapse .sidebar {

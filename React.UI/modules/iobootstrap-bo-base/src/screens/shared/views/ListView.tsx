@@ -111,10 +111,12 @@ class ListView extends View<ListViewProps, {}> {
                 itemExtras = (<React.StrictMode></React.StrictMode>);
             }
 
+            const optionsTextWrap = (listItem.textWraps.length > listItem.itemList.length) ? listItem.textWraps[listItem.itemList.length] : false;
+            const optionsTextWrapClassName = (optionsTextWrap) ? "" : "text-nowrap";
             return (
                 <tr className={rowClass} key={itemKey}>
                     {listDataColumn}
-                    <td key={optionsColumnKey} className="text-nowrap">
+                    <td key={optionsColumnKey} className={optionsTextWrapClassName}>
                         <a className={itemUpdateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
                             <i className="fa fa-edit"></i> {this.props.resourceEdit}
                         </a>
@@ -146,7 +148,7 @@ class ListView extends View<ListViewProps, {}> {
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={true} />
                     <section className="content">
                         <div className="row">
-                            <div className="col-xs-12">
+                            <div className="col-12">
                                 <div className="box">
                                     <div className="box-body">
                                         <table className="table table-bordered table-hover table-striped">

@@ -10,7 +10,7 @@ class BoxView extends View<BoxViewProps, {}> {
 
         return (
             <React.StrictMode>
-                <div className="col-lg-3 col-xs-6">
+                <div className="col-lg-3 col-6">
                     <div className={backgroundClass}>
                         <div className="p-2">
                             <h3>{this.props.value}</h3>

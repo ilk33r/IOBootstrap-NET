@@ -139,7 +139,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                 </React.StrictMode>
             );
         } else {
-            const captchaURL = `${process.env.REACT_APP_API_URL}/ImageAsset/GetCaptcha?id=${this.state.captchaID ?? ""}`;
+            const captchaURL = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/GetCaptcha?id=${this.state.captchaID ?? ""}`;
             captchaComponent = (
                 <React.StrictMode>
                     <div className="mb-4">

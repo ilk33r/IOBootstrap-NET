@@ -207,7 +207,7 @@ class FormView extends View<FormViewProps, {}> {
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
                     <section className="content">
                         <div className="row">
-                            <div className="col-xs-12">
+                            <div className="col-12">
                                 <div className="box">
                                     <form className="needs-validation" onSubmit={this.handleForm}>
                                         <div className="box-header">

@@ -26,7 +26,7 @@ class QuestionView extends View<QuestionViewProps, {}> {
                 <section className="container-fluid">
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
                     <div className="row mb-5 mt-2">
-                        <div className="col-xs-12">
+                        <div className="col-12">
                             <div className="box">
                                 <div className="box-header">
                                     <h3>{this.props.title}</h3>

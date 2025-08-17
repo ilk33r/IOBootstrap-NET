@@ -148,6 +148,18 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
                 tokenDate,
             ];
 
+            itemModel.textWraps = [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false
+            ];
+
             return itemModel;
         });
 

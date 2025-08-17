@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
+    "@types/jquery": "^3.5.29",
     "@types/node": "^16.9.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },

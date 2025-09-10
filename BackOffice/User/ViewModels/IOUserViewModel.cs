@@ -42,7 +42,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserExistsException();
         }
 
-        string decryptedPassword = DecryptString(requestModel.Password ?? "");
+        string decryptedPassword = await DecryptString(requestModel.Password ?? "");
         IOUserEntity? newUserEntity = null;
 
         using (var passwordUtilities = new IOPasswordUtilities())
@@ -106,7 +106,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
         using (var passwordUtilities = new IOPasswordUtilities())
         {
-            string decryptedNewPassword = DecryptString(newPassword);
+            string decryptedNewPassword = await DecryptString(newPassword);
             await passwordUtilities.HashPassword(decryptedNewPassword, hashed =>
             {
                 // Update user password properties

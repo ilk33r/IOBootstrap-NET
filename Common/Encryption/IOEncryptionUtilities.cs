@@ -16,9 +16,9 @@ namespace IOBootstrap.NET.Common.Encryption;
 public static class IOEncryptionUtilities
 {
 
-    public static RsaPrivateCrtKeyParameters GenerateRSAKeyPair()
+    public static async Task<RsaPrivateCrtKeyParameters> GenerateRSAKeyPair()
     {
-        IOCacheObject? cachedKey = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyCacheKey);
+        IOCacheObject? cachedKey = await IOCache.GetCachedObjectAsync(IOCacheKeys.RSAPrivateKeyCacheKey);
         if (cachedKey != null)
         {
             RsaPrivateCrtKeyParameters cachedPrivateKey = (RsaPrivateCrtKeyParameters)cachedKey.Value;
@@ -36,15 +36,15 @@ public static class IOEncryptionUtilities
         AsymmetricCipherKeyPair keyPair = keyPairGenerator.GenerateKeyPair();
         RsaPrivateCrtKeyParameters privateKey = (RsaPrivateCrtKeyParameters)keyPair.Private;
         cachedKey = new IOCacheObject(IOCacheKeys.RSAPrivateKeyCacheKey, privateKey, IOCommonConstants.KeyPairCacheTimeInterval);
-        IOCache.CacheObject(cachedKey);
-        IOCache.CacheObject(keyIDCacheObject);
+        await IOCache.CacheObjectAsync(cachedKey);
+        await IOCache.CacheObjectAsync(keyIDCacheObject);
 
         return privateKey;
     }
 
-    public static byte[] DecryptString(byte[] encryptedData)
+    public static async Task<byte[]> DecryptString(byte[] encryptedData)
     {
-        RsaPrivateCrtKeyParameters privateKey = GenerateRSAKeyPair();
+        RsaPrivateCrtKeyParameters privateKey = await GenerateRSAKeyPair();
 
         IAsymmetricBlockCipher rsaEngine = new OaepEncoding(new RsaEngine(), new Sha256Digest());
         rsaEngine.Init(false, privateKey);

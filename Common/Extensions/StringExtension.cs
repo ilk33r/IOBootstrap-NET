@@ -54,4 +54,37 @@ public static class StringExtensions
 
         return sb.ToString();
     }
+
+    public static string ApplyPattern(this string value, string pattern)
+    {
+        int currentIndex = 0;
+        string formattedString = string.Empty;
+
+        for (int i = 0; i < pattern.Length; i++)
+        {
+            if (currentIndex >= value.Length)
+            {
+                break;
+            }
+
+            char patternCharacter = pattern[i];
+            if (patternCharacter == '#')
+            {
+                char currentCharacter = value[currentIndex];
+                formattedString += currentCharacter;
+                currentIndex += 1;
+            }
+            else if (patternCharacter == '*')
+            {
+                formattedString += patternCharacter;
+                currentIndex += 1;
+            }
+            else
+            {
+                formattedString += patternCharacter;
+            }
+        }
+
+        return formattedString;
+    }
 }

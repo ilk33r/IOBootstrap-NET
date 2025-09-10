@@ -9,7 +9,7 @@ namespace IOBootstrap.NET.Core.Extensions;
 public static class IIONonceExtension
 {
 
-    public static void CheckNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, string? headerNonce)
+    public static async Task CheckNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, string? headerNonce)
     where TDBContext : IODatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
@@ -24,7 +24,7 @@ public static class IIONonceExtension
             throw new IOInvalidNonceException();
         }
 
-        string decryptedNonce = input.ViewModel.DecryptString(headerNonce);
+        string decryptedNonce = await input.ViewModel.DecryptString(headerNonce);
         if (!nonce.Equals(decryptedNonce))
         {
             throw new IOInvalidNonceException();

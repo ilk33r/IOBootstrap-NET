@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Cors;
+using System.Threading.Tasks;
 
 #if DEBUG
 namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers;
@@ -63,9 +64,9 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     [IOValidateRequestModel]
     [HttpPost("[action]")]
-    public IOEncryptResponseModel Decrypt([FromBody] IOEncryptRequestModel requestModel)
+    public async Task<IOEncryptResponseModel> Decrypt([FromBody] IOEncryptRequestModel requestModel)
     {
-        return ViewModel.Decrypt(requestModel);
+        return await ViewModel.Decrypt(requestModel);
     }
 
     [IOValidateRequestModel]

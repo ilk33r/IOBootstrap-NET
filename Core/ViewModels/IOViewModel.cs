@@ -10,6 +10,7 @@ using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.Common.Session;
+using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.Core.ViewModels;
 
@@ -66,24 +67,24 @@ public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where T
 
     #region Encryption Decryption
 
-    public virtual string DecryptString(string encryptedString)
+    public virtual async Task<string> DecryptString(string encryptedString)
     {
         if (encryptedString == null)
         {
             return "";
         }
 
-        IOAESUtilities aesUtility = GetAesUtility();
+        IOAESUtilities aesUtility = await GetAesUtility();
         return aesUtility.Decrypt(Convert.FromBase64String(encryptedString));
     }
 
-    public virtual string EncryptString(string plainString)
+    public virtual async Task<string> EncryptString(string plainString)
     {
-        IOAESUtilities aesUtility = GetAesUtility();
+        IOAESUtilities aesUtility = await GetAesUtility();
         return Convert.ToBase64String(aesUtility.Encrypt(plainString));
     }
 
-    public virtual IOAESUtilities GetAesUtility()
+    public virtual async Task<IOAESUtilities> GetAesUtility()
     {
         string? symmetricIVString = Request.Headers[IORequestHeaderConstants.SymmetricIV];
         string? symmetricKeyString = Request.Headers[IORequestHeaderConstants.SymmetricKey];
@@ -96,10 +97,10 @@ public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where T
         try
         {
             byte[] encryptedSymmetricIV = Convert.FromBase64String(symmetricIVString);
-            byte[] symmetricIV = IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
+            byte[] symmetricIV = await IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
 
             byte[] encryptedSymmetricKey = Convert.FromBase64String(symmetricKeyString);
-            byte[] symmetricKey = IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
+            byte[] symmetricKey = await IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
 
             if (symmetricIV == null || symmetricKey == null)
             {

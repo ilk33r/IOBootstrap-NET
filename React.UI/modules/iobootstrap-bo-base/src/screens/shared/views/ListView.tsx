@@ -41,9 +41,9 @@ class ListView extends View<ListViewProps, {}> {
     }
 
     render() {
-        const updateClass = (this.props.updateDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
-        const deleteClass = (this.props.deleteDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
-        const selectionClass = (this.props.selectDataHandler != null) ? "btn btn-square" : "btn btn-square d-none";
+        const updateClass = (this.props.updateDataHandler != null) ? "btn btn-square edit" : "btn btn-square edit d-none";
+        const deleteClass = (this.props.deleteDataHandler != null) ? "btn btn-square delete" : "btn btn-square delete d-none";
+        const selectionClass = (this.props.selectDataHandler != null) ? "btn btn-square select" : "btn btn-square select d-none";
 
         const headers = this.props.listDataHeaders.map((header, headerIndex) => {
             const key = "headerIndex" + headerIndex;
@@ -77,15 +77,15 @@ class ListView extends View<ListViewProps, {}> {
             let itemSelectionClass = selectionClass;
             if (this.props.itemVisibleHandler != null) {
                 if (!this.props.itemVisibleHandler(itemIndex, 0)) {
-                    itemUpdateClass = "btn btn-square d-none";
+                    itemUpdateClass = "btn btn-square edit d-none";
                 }
                 
                 if (!this.props.itemVisibleHandler(itemIndex, 1)) {
-                    itemDeleteClass = "btn btn-square d-none";
+                    itemDeleteClass = "btn btn-square delete d-none";
                 }
 
                 if (!this.props.itemVisibleHandler(itemIndex, 2)) {
-                    itemSelectionClass = "btn btn-square d-none";
+                    itemSelectionClass = "btn btn-square select d-none";
                 }
             }
 
@@ -94,16 +94,16 @@ class ListView extends View<ListViewProps, {}> {
                 itemExtras = this.props.extras.map((itemExtra, itemExtraIndex) => {
                     const iconClassName = "fa " + itemExtra.icon;
                     const key = "itemExtraKey" + itemIndex.toString() + itemExtra.name;
-                    let itemExtraClass = "btn btn-square";
+                    let itemExtraClass = "btn btn-square general";
                     if (this.props.itemVisibleHandler != null) {
                         if (!this.props.itemVisibleHandler(itemIndex, itemExtraIndex + 3)) {
-                            itemExtraClass = "btn btn-square d-none";
+                            itemExtraClass = "btn btn-square general d-none";
                         }
                     }
 
                     return (
                         <a className={itemExtraClass} key={key} onClick={() => itemExtra.itemSelectionHandler(itemIndex)}>
-                            <i className={iconClassName}></i> {itemExtra.name}
+                            <i className={iconClassName}></i><span className="btn-label">{itemExtra.name}</span>
                         </a>
                     );
                 });
@@ -117,16 +117,18 @@ class ListView extends View<ListViewProps, {}> {
                 <tr className={rowClass} key={itemKey}>
                     {listDataColumn}
                     <td key={optionsColumnKey} className={optionsTextWrapClassName}>
-                        <a className={itemUpdateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
-                            <i className="fa fa-edit"></i> {this.props.resourceEdit}
-                        </a>
-                        <a className={itemDeleteClass} onClick={(e) => this.handleItemDeleteClick(e, itemIndex)}>
-                            <i className="fa fa-trash"></i> {this.props.resourceDelete}
-                        </a>
-                        <a className={itemSelectionClass} onClick={(e) => this.handleItemSelect(e, itemIndex)}>
-                            <i className="fa fa-check"></i> {this.props.resourceSelect}
-                        </a>
-                        {itemExtras}
+                        <div className="cell-actions">
+                            <a className={itemUpdateClass} onClick={(e) => this.handleItemUpdateClick(e, itemIndex)}>
+                                <i className="fa fa-edit"></i><span className="btn-label">{this.props.resourceEdit}</span>
+                            </a>
+                            <a className={itemDeleteClass} onClick={(e) => this.handleItemDeleteClick(e, itemIndex)}>
+                                <i className="fa fa-trash"></i><span className="btn-label">{this.props.resourceDelete}</span>
+                            </a>
+                            <a className={itemSelectionClass} onClick={(e) => this.handleItemSelect(e, itemIndex)}>
+                                <i className="fa fa-check"></i><span className="btn-label">{this.props.resourceSelect}</span>
+                            </a>
+                            {itemExtras}
+                        </div>
                     </td>
                 </tr>
             );
@@ -151,7 +153,7 @@ class ListView extends View<ListViewProps, {}> {
                             <div className="col-12">
                                 <div className="box">
                                     <div className="box-body">
-                                        <table className="table table-bordered table-hover table-striped">
+                                        <table className="table table-bordered table-hover table-striped table-sticky">
                                             <thead>
                                                 <tr>
                                                     {headers}

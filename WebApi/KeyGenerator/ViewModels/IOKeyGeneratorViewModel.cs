@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Utilities;
@@ -57,9 +58,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         return responseModel;
     }
 
-    public IOEncryptResponseModel Decrypt(IOEncryptRequestModel requestModel)
+    public async Task<IOEncryptResponseModel> Decrypt(IOEncryptRequestModel requestModel)
     {
-        string decryptedString = DecryptString(requestModel.PlainText ?? "");
+        string decryptedString = await DecryptString(requestModel.PlainText ?? "");
         IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
         {
             SymmetricKey = "",

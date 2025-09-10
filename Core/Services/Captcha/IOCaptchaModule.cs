@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using IOBootstrap.NET.Common.Utilities;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -23,10 +24,10 @@ public class IOCaptchaModule : IIOCaptchaModule
         {
             float position = 0;
             var random = new Random();
-            var startWith = (byte)random.Next(5, 10);
+            var startWith = (byte)IORandomUtilities.GenerateRandomNumber(5, 10);
             imgText.Mutate(ctx => ctx.BackgroundColor(Color.Transparent));
 
-            var fontName = Options.FontFamilies[random.Next(0, Options.FontFamilies.Length)];
+            var fontName = Options.FontFamilies[IORandomUtilities.GenerateRandomNumber(0, Options.FontFamilies.Length)];
             string fontsPath = Path.Combine(projectDir, "Fonts");
 
             FontCollection collection = new();
@@ -37,8 +38,8 @@ public class IOCaptchaModule : IIOCaptchaModule
 
             foreach (var c in stringText)
             {
-                var location = new PointF(startWith + position, random.Next(6, 13));
-                imgText.Mutate(ctx => ctx.DrawText(c.ToString(), font, Options.TextColor[random.Next(0, Options.TextColor.Length)], location));
+                var location = new PointF(startWith + position, IORandomUtilities.GenerateRandomNumber(6, 13));
+                imgText.Mutate(ctx => ctx.DrawText(c.ToString(), font, Options.TextColor[IORandomUtilities.GenerateRandomNumber(0, Options.TextColor.Length)], location));
                 position += TextMeasurer.MeasureSize(c.ToString(), new TextOptions(font)).Width;
             }
 
@@ -49,18 +50,18 @@ public class IOCaptchaModule : IIOCaptchaModule
             // add the dynamic image to original image
             var size = (ushort)TextMeasurer.MeasureSize(stringText, new TextOptions(font)).Width;
             var img = new Image<Rgba32>(size + 10 + 5, Options.Height);
-            img.Mutate(ctx => ctx.BackgroundColor(Options.BackgroundColor[random.Next(0, Options.BackgroundColor.Length)]));
+            img.Mutate(ctx => ctx.BackgroundColor(Options.BackgroundColor[IORandomUtilities.GenerateRandomNumber(0, Options.BackgroundColor.Length)]));
 
 
             Parallel.For(0, Options.DrawLines, i =>
             {
-                var x0 = random.Next(0, random.Next(0, 30));
-                var y0 = random.Next(10, img.Height);
-                var x1 = random.Next(img.Width - random.Next(0, (int)(img.Width * 0.25)), img.Width);
-                var y1 = random.Next(0, img.Height);
+                var x0 = IORandomUtilities.GenerateRandomNumber(0, IORandomUtilities.GenerateRandomNumber(0, 30));
+                var y0 = IORandomUtilities.GenerateRandomNumber(10, img.Height);
+                var x1 = IORandomUtilities.GenerateRandomNumber(img.Width - IORandomUtilities.GenerateRandomNumber(0, (int)(img.Width * 0.25)), img.Width);
+                var y1 = IORandomUtilities.GenerateRandomNumber(0, img.Height);
                 img.Mutate(ctx =>
-                    ctx.DrawLine(Options.DrawLinesColor[random.Next(0, Options.DrawLinesColor.Length)],
-                                  GenerateNextFloat(Options.MinLineThickness, Options.MaxLineThickness),
+                    ctx.DrawLine(Options.DrawLinesColor[IORandomUtilities.GenerateRandomNumber(0, Options.DrawLinesColor.Length)],
+                                  (float)IORandomUtilities.GenerateRandomNumber(Options.MinLineThickness, Options.MaxLineThickness),
                                   new PointF[] { new(x0, y0), new(x1, y1) })
                     );
             });
@@ -69,12 +70,12 @@ public class IOCaptchaModule : IIOCaptchaModule
 
             Parallel.For(0, Options.NoiseRate, i =>
             {
-                var x0 = random.Next(0, img.Width);
-                var y0 = random.Next(0, img.Height);
+                var x0 = IORandomUtilities.GenerateRandomNumber(0, img.Width);
+                var y0 = IORandomUtilities.GenerateRandomNumber(0, img.Height);
                 img.Mutate(
                         ctx => ctx
-                            .DrawLine(Options.NoiseRateColor[random.Next(0, Options.NoiseRateColor.Length)],
-                            GenerateNextFloat(0.5, 1.5), new PointF[] { new Vector2(x0, y0), new Vector2(x0, y0) })
+                            .DrawLine(Options.NoiseRateColor[IORandomUtilities.GenerateRandomNumber(0, Options.NoiseRateColor.Length)],
+                            (float)IORandomUtilities.GenerateRandomNumber(0.5, 1.5), new PointF[] { new Vector2(x0, y0), new Vector2(x0, y0) })
                     );
             });
 
@@ -95,21 +96,11 @@ public class IOCaptchaModule : IIOCaptchaModule
     {
         var random = new Random();
         var builder = new AffineTransformBuilder();
-        var width = random.Next(10, Options.Width);
-        var height = random.Next(10, Options.Height);
+        var width = IORandomUtilities.GenerateRandomNumber(10, Options.Width);
+        var height = IORandomUtilities.GenerateRandomNumber(10, Options.Height);
         var pointF = new PointF(width, height);
-        var rotationDegrees = random.Next(0, Options.MaxRotationDegrees);
+        var rotationDegrees = IORandomUtilities.GenerateRandomNumber(0, Options.MaxRotationDegrees);
         var result = builder.PrependRotationDegrees(rotationDegrees, pointF);
-        return result;
-    }
-
-    private float GenerateNextFloat(double min = -3.40282347E+38, double max = 3.40282347E+38)
-    {
-        var random = new Random();
-        var range = max - min;
-        var sample = random.NextDouble();
-        var scaled = (sample * range) + min;
-        var result = (float)scaled;
         return result;
     }
 }

@@ -199,7 +199,7 @@ class FormView extends View<FormViewProps, {}> {
             return (<React.StrictMode></React.StrictMode>);
         });
 
-        const submitButtonClass = (this.props.submitButtonName.length > 0) ? "btn btn-primary btn-lg" : "btn btn-primary btn-lg d-none"
+        const submitButtonClass = (this.props.submitButtonName.length > 0) ? "btn btn-primary" : "btn btn-primary d-none"
 
         return (
             <React.StrictMode>

@@ -8,6 +8,7 @@ using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Constants;
+using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
@@ -46,7 +47,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         return response;
     }
 
-    public virtual IOCheckTokenResponseModel CheckToken(string? token)
+    public virtual async Task<IOCheckTokenResponseModel> CheckToken(string? token)
     {
         bool cookieAuthentication = Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         string? appToken;
@@ -69,7 +70,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOInvalidPermissionException();
         }
 
-        IOCheckTokenResponseModel response = this.CheckUserToken(appToken);
+        IOCheckTokenResponseModel response = await this.CheckUserToken(appToken);
         if (response.UserRole >= (int)UserRoles.BackOfficeUser)
         {
             throw new IOInvalidPermissionException();

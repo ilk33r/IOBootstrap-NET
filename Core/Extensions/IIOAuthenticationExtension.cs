@@ -26,7 +26,7 @@ public static class IIOAuthenticationExtension
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Decrypt password
-        string decryptedPassword = input.DecryptString(password);
+        string decryptedPassword = await input.DecryptString(password);
 
         IOUserEntity? findedUser = input.DatabaseContext.Users
                                                     .Where(u => u.UserName!.Equals(userName))
@@ -48,7 +48,7 @@ public static class IIOAuthenticationExtension
         if (requiredCaptchaID != null)
         {
             // Then validate captcha
-            bool captchaValidationStatus = input.ValidateCaptcha(findedUser, captchaID, encryptedCaptha);
+            bool captchaValidationStatus = await input.ValidateCaptcha(findedUser, captchaID, encryptedCaptha);
 
             // Check captcha is valid
             if (!captchaValidationStatus)
@@ -113,7 +113,7 @@ public static class IIOAuthenticationExtension
         IOCache.InvalidateCache(cacheKey);
 
         // Encrypt sensitive data
-        string encryptedUserName = input.EncryptString(findedUser.UserName ?? "");
+        string encryptedUserName = await input.EncryptString(findedUser.UserName ?? "");
 
         // Return response
         return new IOAuthenticationResponseModel(
@@ -124,7 +124,7 @@ public static class IIOAuthenticationExtension
         );
     }
 
-    public static IOCheckTokenResponseModel CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token)
+    public static async Task<IOCheckTokenResponseModel> CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Parse token data
@@ -182,7 +182,7 @@ public static class IIOAuthenticationExtension
         if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
         {
             // Encrypt sensitive data
-            string encryptedUserName = input.EncryptString(findedUser.UserName ?? "");
+            string encryptedUserName = await input.EncryptString(findedUser.UserName ?? "");
 
             // Return status
             return new IOCheckTokenResponseModel(findedUser.TokenDate.DateTime, encryptedUserName, findedUser.UserRole);
@@ -247,7 +247,7 @@ public static class IIOAuthenticationExtension
         return captchaID;
     }
 
-    private static bool ValidateCaptcha<TDBContext>(
+    private static async Task<bool> ValidateCaptcha<TDBContext>(
         this IIOAuthentication<TDBContext> input,
         IOUserEntity user,
         string? captchaID,
@@ -281,7 +281,7 @@ public static class IIOAuthenticationExtension
         }
         
         // Decrypt captcha
-        string decryptCaptcha = input.DecryptString(encryptedCaptha);
+        string decryptCaptcha = await input.DecryptString(encryptedCaptha);
 
         // Then return captcha validation status
         return decryptCaptcha.Equals(captchaCacheValue);

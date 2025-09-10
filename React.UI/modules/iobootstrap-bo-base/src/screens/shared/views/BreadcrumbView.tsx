@@ -27,15 +27,15 @@ class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
         let activeNavigationTitle: JSX.Element;
         
         if (this.props.showTitle) {
-            activeNavigationTitle = (<h2>{activeNavigationName}</h2>);
+            activeNavigationTitle = (<h2 className="page-title">{activeNavigationName}</h2>);
         } else {
-            activeNavigationTitle = (<h2> </h2>);
+            activeNavigationTitle = (<h2 className="page-title"> </h2>);
         }
 
         return (
             <React.StrictMode>
                 <nav aria-label="breadcrumb" className="navbar">
-                    <h2>{activeNavigationTitle}</h2>
+                    {activeNavigationTitle}
                     <ol className="breadcrumb">
                         <li key="dashboard" className="breadcrumb-item">
                             <a href="#!dashboard" className="icon-link icon-link-hover link-secondary link-underline-opacity-0 link-underline-opacity-75-hover">

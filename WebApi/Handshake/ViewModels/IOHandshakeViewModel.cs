@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
@@ -10,9 +11,9 @@ namespace IOBootstrap.NET.WebApi.Handshake.ViewModels;
 public class IOHandshakeViewModel<TDBContext> : IOViewModel<TDBContext>
 where TDBContext : IODatabaseContext<TDBContext>
 {
-    public Tuple<string, string> GetPuplicKey()
+    public async Task<Tuple<string, string>> GetPuplicKey()
     {
-        RsaPrivateCrtKeyParameters privateKey = IOEncryptionUtilities.GenerateRSAKeyPair();
+        RsaPrivateCrtKeyParameters privateKey = await IOEncryptionUtilities.GenerateRSAKeyPair();
         byte[] modulusBytes = privateKey.Modulus.ToByteArray();
         byte[] exponentBytes = privateKey.PublicExponent.ToByteArray();
 

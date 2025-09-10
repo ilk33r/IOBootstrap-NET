@@ -16,7 +16,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         string? encryptedCaptha
     );
 
-    public IOCheckTokenResponseModel CheckToken(string? token);
+    public Task<IOCheckTokenResponseModel> CheckToken(string? token);
 
     public void Logout(string userName);
 

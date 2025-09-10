@@ -190,7 +190,7 @@ public class IOHTTPClient
     {
         try
         {
-            string serializedBody = "";
+            string? serializedBody = "";
 
             if (ContentType?.Contains("application/json") ?? false)
             {
@@ -220,6 +220,7 @@ public class IOHTTPClient
 
             // Deserialize the response body.
             var responseBody = await response.Content.ReadAsStringAsync();
+            serializedBody = null;
             callback(response.IsSuccessStatusCode, responseBody, response.Headers);
         }
         catch (Exception e)

@@ -151,8 +151,8 @@ public static class IIOUserCredentialExtension
         }
 
         // Obtain decrypted passwords
-        string decryptedOldPassword = input.DecryptString(oldPassword);
-        string decryptedNewPassword = input.DecryptString(newPassword);
+        string decryptedOldPassword = await input.DecryptString(oldPassword);
+        string decryptedNewPassword = await input.DecryptString(newPassword);
 
         // Obtain current user
         IOUserEntity? currentUser = input.DatabaseContext.Users
@@ -193,11 +193,11 @@ public static class IIOUserCredentialExtension
         input.DatabaseContext.SaveChanges();
     }
 
-    public static void LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)
+    public static async Task LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)
     where TDBContext : IODatabaseContext<TDBContext>
     {
         // Decrypt user name
-        string decryptedUserName = input.DecryptString(userName);
+        string decryptedUserName = await input.DecryptString(userName);
 
         // Validate user name
         if (!(input.UserModel?.UserName?.Equals(decryptedUserName) ?? false))

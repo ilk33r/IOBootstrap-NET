@@ -2,6 +2,7 @@ using System;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Handshake;
@@ -38,17 +39,24 @@ where TViewModel : IOHandshakeViewModel<TDBContext>, new()
     [IORequireHTTPS]
     [IORateLimit(seconds: 60, requestCount: 15)]
     [HttpGet("[action]")]
-    public virtual HandshakeResponseModel Index()
+    public virtual async Task<HandshakeResponseModel> Index()
     {
         // Get public key
-        Tuple<string, string> publicKey = ViewModel.GetPuplicKey();
+        Tuple<string, string> publicKey = await ViewModel.GetPuplicKey();
 
         // Obtain key id
         string keyID = "";
-        IOCacheObject? keyIDCacheObject = IOCache.GetCachedObject(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+        IOCacheObject? keyIDCacheObject = await IOCache.GetCachedObjectAsync(IOCacheKeys.RSAPrivateKeyIDCacheKey);
         if (keyIDCacheObject != null)
         {
             keyID = (string)keyIDCacheObject.Value;
+        }
+
+        if (String.IsNullOrEmpty(keyID))
+        {
+            await IOCache.InvalidateCacheAsync(IOCacheKeys.RSAPrivateKeyCacheKey);
+            await IOCache.InvalidateCacheAsync(IOCacheKeys.RSAPrivateKeyIDCacheKey);
+            throw new IOEncryptionRequiredException();
         }
 
         // Create and return response

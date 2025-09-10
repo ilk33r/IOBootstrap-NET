@@ -87,7 +87,7 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
                 false,
                 false,
                 false,
-                true
+                false
             ];
 
             return itemModel;

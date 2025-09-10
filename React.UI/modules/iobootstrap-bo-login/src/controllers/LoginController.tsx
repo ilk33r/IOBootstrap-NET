@@ -53,7 +53,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
     }
 
     public handleInvalidCredential(response: BaseResponseModel) {
-        this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
+        this.handleServiceError(response.status?.message ?? "", response.status?.message ?? "");
     }
 
     public handleCapthca(response: BaseResponseModel) {
@@ -182,7 +182,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                                         {captchaComponent}
                                     </div>
                                     <div className="box-footer text-end">
-                                        <button type="submit" className="btn btn-primary btn-lg">Sign in</button>
+                                        <button type="submit" className="btn btn-primary">Sign in</button>
                                     </div>
                                 </form>
                             </div>

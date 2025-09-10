@@ -35,8 +35,8 @@ class QuestionView extends View<QuestionViewProps, {}> {
                                     <p className="fs-5">{this.props.questionMessage}</p>
                                 </div>
                                 <div className="box-footer text-end">
-                                    <button type="button" className="btn btn-danger btn-lg me-2" onClick={this.handleFormSuccess}>Yes</button>
-                                    <button type="button" className="btn btn-success btn-lg" onClick={this.handleFormError}>NO</button>
+                                    <button type="button" className="btn btn-danger me-2" onClick={this.handleFormSuccess}>Yes</button>
+                                    <button type="button" className="btn btn-success" onClick={this.handleFormError}>NO</button>
                                 </div>
                             </div>
                         </div>

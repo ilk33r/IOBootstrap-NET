@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Constants;
@@ -70,10 +71,10 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     [IONonceRequired]
     [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
-    public virtual IOCheckTokenResponseModel CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
+    public virtual async Task<IOCheckTokenResponseModel> CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {
         // Check if authentication result is true
-        return ViewModel.CheckToken(requestModel.Token);
+        return await ViewModel.CheckToken(requestModel.Token);
     }
 
     #endregion

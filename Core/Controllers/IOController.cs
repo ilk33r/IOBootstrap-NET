@@ -86,7 +86,8 @@ where TViewModel : IIOViewModel<TDBContext>, new()
         if (HasControllerAttribute<IONonceRequiredAttribute>(context))
         {
             string? headerNonce = Request.Headers[IORequestHeaderConstants.Nonce];
-            this.CheckNonce(headerNonce);
+            Task task = this.CheckNonce(headerNonce);
+            task.Wait();
         }
 
         // Check user role

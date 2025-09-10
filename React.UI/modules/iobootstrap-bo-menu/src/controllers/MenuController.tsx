@@ -91,7 +91,10 @@ class MenuController extends BOController<MenuProps, MenuState> {
                     return (
                         <li id={itemId} key={itemId}>
                             <a href={itemUrl} className="dropdown-item">
-                                <i className={itemClass}></i> {childItem.name}
+                                <div className="hstack gap-1">
+                                    <i className={itemClass}></i>
+                                    {childItem.name}
+                                </div>
                             </a>
                         </li>
                     );

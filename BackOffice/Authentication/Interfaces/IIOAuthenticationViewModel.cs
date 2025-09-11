@@ -18,7 +18,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public Task<IOCheckTokenResponseModel> CheckToken(string? token);
 
-    public void Logout(string userName);
+    public Task Logout(string userName);
 
     #endregion
 }

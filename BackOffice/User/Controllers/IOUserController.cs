@@ -117,10 +117,10 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IOUserRole(UserRoles.BackOfficeUser)]
     [IOIgnorePasswordExpire]
     [HttpPost("[action]")]
-    public virtual IOResponseModel Logout([FromBody] IOLogoutRequestModel requestModel)
+    public virtual async Task<IOResponseModel> Logout([FromBody] IOLogoutRequestModel requestModel)
     {
         // Check if authentication result is true
-        ViewModel.Logout(requestModel.UserName ?? "");
+        await ViewModel.Logout(requestModel.UserName ?? "");
         return new IOResponseModel();
     }
     

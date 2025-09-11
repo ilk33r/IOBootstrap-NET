@@ -217,9 +217,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         throw new IOInvalidPermissionException();
     }
 
-    public virtual void Logout(string userName)
+    public virtual async Task Logout(string userName)
     {
-        this.LogoutUser(userName);
+        await this.LogoutUser(userName);
     }
 
     #endregion

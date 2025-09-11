@@ -79,9 +79,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         return response;
     }
 
-    public virtual void Logout(string userName)
+    public virtual async Task Logout(string userName)
     {
-        this.LogoutUser(userName);
+        await this.LogoutUser(userName);
     }
 
     #endregion

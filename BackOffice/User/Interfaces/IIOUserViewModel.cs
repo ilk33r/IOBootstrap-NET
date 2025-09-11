@@ -14,5 +14,5 @@ where TDBContext : IODatabaseContext<TDBContext>
     public IList<IOUserInfoModel> ListUsers();
     public void UpdateUser(IOUpdateUserRequestModel request);
     public void DeleteUser(IODeleteUserRequestModel request);
-    public void Logout(string userName);
+    public Task Logout(string userName);
 }

@@ -3,7 +3,7 @@ import GetImagesResponseModel from "../models/GetImagesResponseModel";
 import ImagesListProps from "../props/ImagesListProps";
 import ImagesListState from "../props/ImagesListState";
 import React from "react";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 
 class ImagesEditController extends BOController<ImagesListProps, ImagesListState> {
 
@@ -23,7 +23,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
     private LoadImages() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/GetImages`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_IMAGES_CONTROLLER_NAME}/GetImages`;
         const weakSelf = this;
 
         this.service.post(requestPath, this.requestModel, function (response: GetImagesResponseModel) {
@@ -66,17 +66,17 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
             BreadcrumbNavigationModel.initialize("imagesEdit", "Images")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Image',
-            'Width',
-            'Height',
-            'Scale'
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initialize("Image"),
+            ListDataHeaderModel.initialize("Width"),
+            ListDataHeaderModel.initialize("Height"),
+            ListDataHeaderModel.initialize("Scale"),
         ];
 
         const items = this.state.images.map(image => {
             const itemModel = new ListDataItemModel();
-            const imageHtml = `<img src="${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${image.fileName.RemoveHTML()}" width="150" />`
+            const imageHtml = `<img src="${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${image.fileName.RemoveHTML()}" width="150" />`
             const imageId = (image.id == null) ? "" : image.id.toString();
             const imageWidth = (image.width == null) ? "" : image.width.toString();
             const imageHeight = (image.height == null) ? "" : image.height.toString();
@@ -102,7 +102,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete=""
                     resourceEdit="Edit"

@@ -15,10 +15,10 @@ class Main extends Controller<MainProps, MainState> {
         this.state = new MainState();
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
-        this.service.baseUrl = (process.env.REACT_APP_API_URL === undefined) ? "" : process.env.REACT_APP_API_URL;
+        this.service.baseUrl = (import.meta.env.VITE_API_URL === undefined) ? "" : import.meta.env.VITE_API_URL;
         this.service.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
-        const authorization = (process.env.REACT_APP_AUTHORIZATION === undefined) ? "" : process.env.REACT_APP_AUTHORIZATION;
+        const authorization = (import.meta.env.VITE_AUTHORIZATION === undefined) ? "" : import.meta.env.VITE_AUTHORIZATION;
         this.appServiceHeaderInterceptor.initialize(authorization);
     }
 

@@ -2,7 +2,9 @@ package core
 
 import (
 	"fmt"
+	"io"
 	"os/exec"
+	"sync"
 )
 
 type IExecutor interface {
@@ -44,43 +46,60 @@ func (executor *Executor) Run() {
 	stdout, err := executor.command.StdoutPipe()
 	if err != nil {
 		executor.logger.LogErrorf("%v", err)
+		return
 	}
-
 	stderr, err := executor.command.StderrPipe()
 	if err != nil {
 		executor.logger.LogErrorf("%v", err)
+		return
 	}
 
-	if err = executor.command.Start(); err != nil {
+	if err := executor.command.Start(); err != nil {
 		executor.logger.LogErrorf("%v", err)
+		return
 	}
 
-	for {
-		stdOutBuffer := make([]byte, 1024)
-		stdOutSize, stdOutErr := stdout.Read(stdOutBuffer)
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-		if stdOutSize > 0 {
-			stdOutString := string(stdOutBuffer)
-			executor.logger.LogMessage(stdOutString)
-		}
+	// stdout'u anlık kopyala
+	go func() {
+		defer wg.Done()
+		_, _ = io.Copy(loggerWriter{write: func(p []byte) {
+			executor.logger.LogMessage(string(p))
+		}}, stdout)
+	}()
 
-		stdErrBuffer := make([]byte, 1024)
-		stdErrSize, stdErrErr := stderr.Read(stdErrBuffer)
-
-		if stdErrSize > 0 {
-			stdErrString := string(stdErrBuffer)
+	// stderr'i anlık kopyala (ister normal, ister error olarak logla)
+	go func() {
+		defer wg.Done()
+		_, _ = io.Copy(loggerWriter{write: func(p []byte) {
 			if executor.disableSTDErr {
-				executor.logger.LogMessage(stdErrString)
+				executor.logger.LogMessage(string(p))
 			} else {
-				executor.logger.LogError(stdErrString)
+				executor.logger.LogError(string(p))
 			}
-		}
+		}}, stderr)
+	}()
 
-		if stdOutErr != nil && stdErrErr != nil {
-			break
-		}
+	// Süreç çıkışını bekle (pipes kapanacak, goroutine'ler EOF alıp bitecek)
+	waitErr := executor.command.Wait()
+	wg.Wait()
+
+	if waitErr != nil {
+		executor.logger.LogErrorf("Command %s failed: %v", *executor.commandName, waitErr)
+		return
 	}
 
 	executor.logger.LogInfof("Command %s", *executor.commandName)
 	executor.logger.LogSuccess("Success")
+}
+
+type loggerWriter struct {
+	write func(p []byte)
+}
+
+func (lw loggerWriter) Write(p []byte) (int, error) {
+	lw.write(p)
+	return len(p), nil
 }

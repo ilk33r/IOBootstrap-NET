@@ -27,7 +27,7 @@ class ImagesAddController extends BOController<{}, {}> {
     private generateNonce(blob: Blob) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: BaseResponseModel) {
@@ -42,7 +42,7 @@ class ImagesAddController extends BOController<{}, {}> {
     private uploadImage(blob: Blob) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/SaveImage`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_IMAGES_CONTROLLER_NAME}/SaveImage`;
         const weakSelf = this;
         
         this.service.upload(requestPath, blob, function (response: SaveImageResponseModel) {

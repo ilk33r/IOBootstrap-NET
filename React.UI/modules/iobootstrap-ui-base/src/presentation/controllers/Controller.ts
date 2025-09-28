@@ -115,7 +115,7 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
             itemValue: itemValue
         };
 
-        const baseURL = new URL(process.env.REACT_APP_POST_MESSAGE_URL ?? "");
+        const baseURL = new URL(import.meta.env.VITE_POST_MESSAGE_URL ?? "");
         if (baseURL !== null && baseURL.host.length > 0) {
             window.postMessage(windowMessage, baseURL.origin);
         }

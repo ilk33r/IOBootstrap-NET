@@ -37,13 +37,42 @@
             "request": "launch",
             "cwd": "${workspaceFolder}/Application/Backoffice.UI",
             "runtimeArgs": [
-                "start"
+                "run",
+                "dev"
             ],
             "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "type": "node"
+        },
+        {
+            "name": "Backoffice.UI (Chrome Vite)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/backoffice/",
+            "webRoot": "${workspaceFolder}/Backoffice.UI/src"
+        },
+        {
+            "name": "Web.UI",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/Web.UI",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "name": "Web.UI (Chrome Vite)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3001/ui/",
+            "webRoot": "${workspaceFolder}/Backoffice.UI/src"
         },
         {
             "name": "IOBootstrapNetApplicationPublish",
@@ -112,5 +141,21 @@
                 "ASPNETCORE_ENVIRONMENT": "Development",
             }
         },
+    ],
+    "compounds": [
+        {
+            "name": "Backoffice.UI (Dev + Chrome)",
+            "configurations": [
+                "Backoffice.UI",
+                "Backoffice.UI (Chrome Vite)"
+            ]
+        },
+        {
+            "name": "Web.UI (Dev + Chrome)",
+            "configurations": [
+                "Web.UI",
+                "Web.UI (Chrome Vite)"
+            ]
+        }
     ]
 }

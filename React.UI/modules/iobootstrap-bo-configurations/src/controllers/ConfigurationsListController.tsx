@@ -4,7 +4,7 @@ import ConfigurationListResponseModel from "../models/ConfigurationListResponseM
 import ConfigurationListState from "../props/ConfigurationListState";
 import ConfigurationUpdateRequestModel from "../models/ConfigurationUpdateRequestModel";
 import React from "react";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class ConfigurationsListController extends BOController<ConfigurationListProps, ConfigurationListState> {
 
@@ -23,7 +23,7 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
 
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/ListConfigurationItems`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/ListConfigurationItems`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: ConfigurationListResponseModel) {
@@ -64,11 +64,11 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
             BreadcrumbNavigationModel.initialize("configurationsList", "Configurations")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Key',
-            'Int Value',
-            'String Value'
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initializeWithFilter("Key", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initialize("Int Value"),
+            ListDataHeaderModel.initializeWithFilter("String Value", ListDataFilterTypes.Input, null),
         ];
 
         const items = this.state.configurations.map(configurationModel => {
@@ -96,7 +96,7 @@ class ConfigurationsListController extends BOController<ConfigurationListProps, 
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

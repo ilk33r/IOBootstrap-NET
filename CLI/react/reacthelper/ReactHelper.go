@@ -63,7 +63,7 @@ func (helper *ReactHelper) Build() {
 	(*helper.cliStep).StartStep("Build application")
 
 	environment := *helper.environment
-	executor := (*helper.executorInitializer).CreateExecutor("npm", "run", "build:"+environment)
+	executor := (*helper.executorInitializer).CreateExecutorWithoutSTDErr("npm", "run", "build:"+environment)
 	executor.WorkingDirectory(*helper.workingDirectory)
 	executor.Run()
 

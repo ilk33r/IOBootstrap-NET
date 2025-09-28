@@ -19,7 +19,7 @@ class ConfigurationsAddController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/AddConfigItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/AddConfigItem`;
         const request = new ConfigurationAddRequestModel();
         request.configKey = values[0];
         request.intValue = (values[1] == null) ? null : Number(values[1]);

@@ -19,7 +19,7 @@ class PushNotificationSendController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/SendNotification`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/SendNotification`;
         const request = new SendPushNotificationRequestModel();
         request.deviceType = Number(values[0]);
         request.notificationCategory = values[1];

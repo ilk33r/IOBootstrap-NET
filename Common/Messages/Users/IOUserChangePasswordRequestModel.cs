@@ -11,7 +11,8 @@ public class IOUserChangePasswordRequestModel : IORequestModel
     public string? OldPassword { get; set; }
 
     [Required]
-    [MinLength(4)]
+    [MinLength(8)]
+    [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$")]
     [DataType(DataType.Password)]
     public string? NewPassword { get; set; }
 

@@ -6,7 +6,7 @@ import MenuListResponseModel from "../models/MenuListResponseModel";
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
 import React from "react";
 import { DIHooks } from "iobootstrap-ui-base";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MenuEditorListController extends BOController<MenuEditorListProps, MenuEditorListState> {
 
@@ -29,7 +29,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
 
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME}/ListMenuItems`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MENU_CONTROLLER_NAME}/ListMenuItems`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: MenuListResponseModel) {
@@ -110,13 +110,13 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
             BreadcrumbNavigationModel.initialize("menuEditorList", "Menu Editor")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Name',
-            'Action',
-            'Css Class',
-            'Role',
-            'Order'
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initializeWithFilter("Name", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Action", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initialize("Css Class"),
+            ListDataHeaderModel.initializeWithFilter("Role", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initialize("Order"),
         ];
 
         let items: ListDataItemModel[] = [];
@@ -176,7 +176,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

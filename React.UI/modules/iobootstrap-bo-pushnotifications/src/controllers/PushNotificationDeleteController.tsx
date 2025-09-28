@@ -27,7 +27,7 @@ class PushNotificationDeleteController extends BOController<{}, {}> {
     handleFormSuccess() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/DeleteMessage`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/DeleteMessage`;
         const request = new PushNotificationMessageDeleteRequestModel();
         request.id = this._deleteRequest.id;
 

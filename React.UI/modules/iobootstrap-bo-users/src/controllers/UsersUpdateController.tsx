@@ -27,7 +27,7 @@ class UsersUpdateController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/UpdateUser`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_USER_CONTROLLER_NAME}/UpdateUser`;
         const request = new UpdateUserRequestModel();
         request.userId = this._updateRequest.userId;
         request.userName = values[0];

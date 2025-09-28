@@ -15,8 +15,8 @@ class HeaderView extends View<HeaderProps, HeaderState> {
             <React.StrictMode>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary z-3">
                     <div className="container-fluid">
-                        <a className="navbar-brand" href={process.env.REACT_APP_BACKOFFICE_PAGE_URL}>
-                            <h1 className="page-title">{process.env.REACT_APP_APP_NAME}</h1>
+                        <a className="navbar-brand" href={import.meta.env.VITE_BACKOFFICE_PAGE_URL}>
+                            <h1 className="page-title">{import.meta.env.VITE_APP_NAME}</h1>
                         </a>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>

@@ -4,7 +4,7 @@ import MessageListResponseModel from "../models/MessageListResponseModel";
 import MessageListState from "../props/MessageListState";
 import MessageUpdateRequestModel from "../models/MessageUpdateRequestModel";
 import React from "react";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MessageListController extends BOController<MessageListProps, MessageListState> {
 
@@ -23,7 +23,7 @@ class MessageListController extends BOController<MessageListProps, MessageListSt
 
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/ListAllMessages`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/ListAllMessages`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: MessageListResponseModel) {
@@ -63,12 +63,12 @@ class MessageListController extends BOController<MessageListProps, MessageListSt
             BreadcrumbNavigationModel.initialize("messagesList", "Messages")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Message',
-            'Create Date',
-            'Start Date',
-            'End Date'
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initializeWithFilter("Message", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initialize("Create Date"),
+            ListDataHeaderModel.initialize("Start Date"),
+            ListDataHeaderModel.initialize("End Date"),
         ];
 
         let items: ListDataItemModel[] = [];
@@ -94,7 +94,7 @@ class MessageListController extends BOController<MessageListProps, MessageListSt
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

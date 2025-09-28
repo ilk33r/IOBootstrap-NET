@@ -5,7 +5,7 @@ import React from "react";
 class BoxView extends View<BoxViewProps, {}> {
 
     render() {
-        const backgroundClass = "small-box shadow-sm rounded-1 mb-3 " + this.props.backgroundStyle;
+        const backgroundClass = "small-box shadow-soft rounded-1 mb-3 " + this.props.backgroundStyle;
         const iconClass = "fas " + this.props.iconName;
 
         return (

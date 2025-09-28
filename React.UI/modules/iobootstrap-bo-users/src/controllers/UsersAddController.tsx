@@ -42,7 +42,7 @@ class UsersAddController extends BOController<{}, UserAddState> {
 
         const encryptPasswords = await AppCryptography.Instance.encrypt(password);
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/AddUser`;
+        const requestPath = `${import.meta.env.VITEBACKOFFICE_USER_CONTROLLER_NAME}/AddUser`;
         const request = new AddUserRequestModel();
         request.userName = userName;
         request.password = encryptPasswords;

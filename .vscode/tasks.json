@@ -88,6 +88,36 @@
             }
         },
         {
+            "label": "buildCLI",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "build",
+                "-gcflags=all=-N -l",
+                "-tags",
+                "COMPILE_DEV",
+                "-o",
+                "${workspaceFolder}/CLI/__debug_bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/CLI"
+            }
+        },
+        {
+            "label": "debugCLI",
+            "type": "shell",
+            "command": "go",
+            "args": [
+                "test",
+                "-c",
+                "-o",
+                "${workspaceFolder}/CLI/__debug_bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/CLI"
+            }
+        },
+        {
             "label": "publish (functions)",
             "command": "dotnet",
             "args": [

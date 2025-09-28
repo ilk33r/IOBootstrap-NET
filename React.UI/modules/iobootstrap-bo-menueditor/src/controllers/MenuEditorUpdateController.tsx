@@ -27,7 +27,7 @@ class MenuEditorUpdateController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME}/UpdateMenuItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MENU_CONTROLLER_NAME}/UpdateMenuItem`;
         const request = new MenuUpdateRequestModel();
         request.id = this._updateRequest.id;
         request.name = values[0];

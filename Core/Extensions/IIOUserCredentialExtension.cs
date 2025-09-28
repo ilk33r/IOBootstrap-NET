@@ -154,10 +154,17 @@ public static class IIOUserCredentialExtension
         string decryptedOldPassword = await input.DecryptString(oldPassword);
         string decryptedNewPassword = await input.DecryptString(newPassword);
 
+        // Check passwords are equal
+        if (decryptedOldPassword.Equals(decryptedNewPassword))
+        {
+            // Return response
+            throw new IOInvalidPasswordException();
+        }
+
         // Obtain current user
         IOUserEntity? currentUser = input.DatabaseContext.Users
-                                                    .Where(u => u.ID == input.UserModel.ID)
-                                                    .FirstOrDefault();
+                                                        .Where(u => u.ID == input.UserModel.ID)
+                                                        .FirstOrDefault();
 
         if (currentUser == null)
         {

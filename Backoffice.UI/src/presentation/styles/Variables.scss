@@ -4,5 +4,5 @@
 
 /* Sidebar */
 $sidebar-collapsed-width: 5rem;
-$sidebar-expanded-width: 15rem;
-$sidebar-top: $navbar-padding-y + 3rem;
+$sidebar-expanded-width: 260px;
+$sidebar-top: calc(3rem - $navbar-padding-y);

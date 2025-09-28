@@ -3,6 +3,7 @@ import FormElement from "../interfaces/FormElement";
 import FormTypePopupSelectionProps from "../props/FormTypePopupSelectionProps";
 import FormViewState from "../props/FormViewState";
 import React from "react";
+import $ from 'jquery';
 
 type MessageEvent = { data: WindowMessageModel; };
 
@@ -51,7 +52,7 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
                         itemValue: null 
                     };
                     
-                    const baseURL = new URL(process.env.REACT_APP_BACKOFFICE_PAGE_URL ?? "");
+                    const baseURL = new URL(import.meta.env.VITE_BACKOFFICE_PAGE_URL ?? "");
                     if (baseURL !== null && baseURL.host.length > 0) {
                         window.postMessage(closeSelection, baseURL.origin);
                     }

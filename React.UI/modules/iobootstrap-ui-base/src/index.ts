@@ -29,5 +29,6 @@ export { default as ValidationFileTypeRule } from "./presentation/validations/Va
 export { default as ValidationMaxLengthRule } from "./presentation/validations/ValidationMaxLengthRule";
 export { default as ValidationMinAmountRule } from "./presentation/validations/ValidationMinAmountRule";
 export { default as ValidationMinLengthRule } from "./presentation/validations/ValidationMinLengthRule";
+export { default as ValidationRegexRule } from "./presentation/validations/ValidationRegexRule";
 export { default as ValidationRequiredRule } from "./presentation/validations/ValidationRequiredRule";
 export { default as View } from "./presentation/views/View";

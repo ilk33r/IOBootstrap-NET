@@ -1,10 +1,11 @@
 import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UserChangePasswordRequestModel from "../models/UserChangePasswordRequestModel";
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, UICommonConstants, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, CalloutTypes, DIHooks, UICommonConstants, ValidationMinLengthRule, ValidationRegexRule } from "iobootstrap-ui-base";
 import { BOCommonConstants, BOController, BreadcrumbNavigationModel, FormType, FormTypePasswordProps, FormView } from "iobootstrap-bo-base";
+import UserChangePasswordState from "../props/UserChangePasswordState";
 
-class UserChangePasswordController extends BOController<{}, {}> {
+class UserChangePasswordController extends BOController<{}, UserChangePasswordState> {
 
     private appServiceHeaderInterceptor: AppServiceHeaderAuthenticationInterceptor;
     private _updateRequest: UpdateUserRequestModel;
@@ -12,6 +13,7 @@ class UserChangePasswordController extends BOController<{}, {}> {
     constructor(props: {}) {
         super(props);
 
+        this.state = new UserChangePasswordState();
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
         this._updateRequest = this.appContext.objectForKey("usersChangePasswordRequest") as UpdateUserRequestModel;
         if (this._updateRequest == null) {
@@ -57,12 +59,13 @@ class UserChangePasswordController extends BOController<{}, {}> {
 
         const encryptedNewPassword = await AppCryptography.Instance.encrypt(password);
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ChangePassword`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_USER_CONTROLLER_NAME}/ChangePassword`;
         const request = new UserChangePasswordRequestModel();
         request.oldPassword = encryptedCurrentPassword;
         request.newPassword = encryptedNewPassword;
 
         const weakSelf = this;
+        this.setState({passwordUpdated: true});
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 weakSelf.showCalloutAndRedirectToHash("User password has been changed successfully.", "usersList");
@@ -73,8 +76,11 @@ class UserChangePasswordController extends BOController<{}, {}> {
                     weakSelf.appContext.removeObject(BOCommonConstants.userRoleStorageKey);
                     window.location.reload();
                 }, 3000);
+            } else {
+                weakSelf.setState({passwordUpdated: false});
             }
         }, function (error: string) {
+            weakSelf.setState({passwordUpdated: false});
             weakSelf.handleServiceError("", error);
         });
     }
@@ -90,9 +96,17 @@ class UserChangePasswordController extends BOController<{}, {}> {
         ];
 
         let formElements: FormType[] = [
-            FormTypePasswordProps.initializeWithValidations("Current Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-            FormTypePasswordProps.initializeWithValidations("Password", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]),
-            FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", true, [ ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ])
+            FormTypePasswordProps.initializeWithValidations("Current Password", "", !this.state.passwordUpdated, [ 
+                ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 3) ]
+            ),
+            FormTypePasswordProps.initializeWithValidations("Password", "", !this.state.passwordUpdated, [ 
+                ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 7),
+                ValidationRegexRule.initialize("Password must be at least 8 characters and contains special characters.", "Invalid password", /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/g)
+            ]),
+            FormTypePasswordProps.initializeWithValidations("Password (Repeat)", "", !this.state.passwordUpdated, [ 
+                ValidationMinLengthRule.initialize("Password is too short.", "Invalid password.", 7),
+                ValidationRegexRule.initialize("Password must be at least 8 characters and contains special characters.", "Invalid password", /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/g)
+            ])
         ];
 
         return (
@@ -100,7 +114,7 @@ class UserChangePasswordController extends BOController<{}, {}> {
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Change password"
-                    submitButtonName="Save"
+                    submitButtonName={!this.state.passwordUpdated ? "Save" : ""}
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />

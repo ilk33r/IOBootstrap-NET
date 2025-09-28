@@ -5,7 +5,7 @@ import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
 import { DIHooks } from "iobootstrap-ui-base";
-import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataItemModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
 
 class UsersListController extends BOController<UsersListProps, UsersListState> {
 
@@ -27,7 +27,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
 
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ListUsers`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_USER_CONTROLLER_NAME}/ListUsers`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: ListUserResponseModel) {
@@ -106,16 +106,29 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
             BreadcrumbNavigationModel.initialize("usersList", "Users")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Name',
-            'Role',
-            'Active',
-            'End Date',
-            'Created Date',
-            'Created By',
-            'Update Date',
-            'Last Login Date',
+        const roleNames = this.state.userList.map(user => { 
+            let roleName = ""
+            const userRoleNameHook = DIHooks.Instance.hookForKey("userRoleName")
+            if (userRoleNameHook != null) {
+                const roleNameAny = userRoleNameHook(user.userRole);
+                if (roleNameAny != null) {
+                    roleName = roleNameAny;
+                }
+            }
+
+            return roleName
+        });
+
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initializeWithFilter("Name", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Role", ListDataFilterTypes.Select, roleNames),
+            ListDataHeaderModel.initializeWithFilter("Active", ListDataFilterTypes.Select, ["YES", "NO"]),
+            ListDataHeaderModel.initialize("End Date"),
+            ListDataHeaderModel.initialize("Created Date"),
+            ListDataHeaderModel.initialize("Created By"),
+            ListDataHeaderModel.initialize("Update Date"),
+            ListDataHeaderModel.initialize("Last Login Date"),
         ];
 
         const items = this.state.userList.map(user => {
@@ -170,7 +183,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

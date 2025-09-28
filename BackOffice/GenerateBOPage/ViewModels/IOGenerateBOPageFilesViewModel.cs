@@ -210,7 +210,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             string itemUIConstructorData = String.Format("        this.{0} = {1};\n", item.PropertyJsonKey, PropertyUIConstructorValue(item));
             uiConstructorProperties += itemUIConstructorData;
 
-            uiListDataHeaders += String.Format("            '{0}',\n", item.PropertyName);
+            uiListDataHeaders += String.Format("            ListDataHeaderModel.initializeWithFilter('{0}', ListDataFilterTypes.Input, null),\n", item.PropertyName);
             uiItemListParameters += PropertyItemParameter(item, itemNameLowercased);
             uiItemListParameterArray += String.Format("                {0},\n", item.PropertyJsonKey);
             uiIetmListUpdateParameters += String.Format("        updateRequestModel.{0} = current{1}.{2};\n", item.PropertyJsonKey, requestModel.EntityItemName, item.PropertyJsonKey);

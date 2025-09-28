@@ -12,7 +12,7 @@ class FooterView extends View<{}, {}> {
                             <strong>&copy; 2025</strong>
                         </div>
                         <div className="col-md-4 col-sm-12 text-md-end text-sm-start">
-                            <strong>Version</strong> {process.env.REACT_APP_VERSION}
+                            <strong>Version</strong> {import.meta.env.VITE_VERSION}
                         </div>
                     </div>
                 </footer>

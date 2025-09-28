@@ -1,4 +1,5 @@
 import BreadcrumbNavigationModel from "../models/BreadcrumbNavigationModel";
+import ListDataHeaderModel from "../models/ListDataHeaderModel";
 import ListDataItemModel from "../models/ListDataItemModel";
 import ListDataPaginationModel from "../models/ListDataPaginationModel";
 import ListExtrasModel from "../models/ListExtrasModel";
@@ -9,7 +10,7 @@ type ListViewVisibleItemHandler = (listIndex: number, itemIndex: number) => bool
 interface ListViewProps {
 
     navigation: BreadcrumbNavigationModel[];
-    listDataHeaders: string[];
+    headers: ListDataHeaderModel[];
     items: ListDataItemModel[];
     resourceDelete: string;
     resourceEdit: string;

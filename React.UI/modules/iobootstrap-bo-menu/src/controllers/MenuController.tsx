@@ -2,6 +2,7 @@ import MenuProps from '../props/MenuProps';
 import MenuResponseModel from '../models/MenuResponseModel';
 import MenuState from '../props/MenuState';
 import React from 'react';
+import $ from 'jquery';
 import { BOController } from 'iobootstrap-bo-base';
 
 class MenuController extends BOController<MenuProps, MenuState> {

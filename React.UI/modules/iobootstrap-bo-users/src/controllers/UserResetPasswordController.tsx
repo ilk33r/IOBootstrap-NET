@@ -45,7 +45,7 @@ class UserResetPasswordController extends BOController<{}, {}> {
 
         const encryptedNewPassword = await AppCryptography.Instance.encrypt(password);
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ResetPassword`;
+        const requestPath = `${import.meta.env.VITE_APP_BACKOFFICE_USER_CONTROLLER_NAME}/ResetPassword`;
         const request = new UserResetPasswordRequestModel();
         request.userName = this._updateRequest.userName;
         request.newPassword = encryptedNewPassword;

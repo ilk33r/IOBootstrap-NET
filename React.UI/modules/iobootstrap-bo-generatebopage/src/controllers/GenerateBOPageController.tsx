@@ -28,7 +28,7 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
     private handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_CONTROLLER_NAME}/CreateModel`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_GENERATE_BOPAGE_CONTROLLER_NAME}/CreateModel`;
         const request = new GenerateBOPageRequestModel();
         request.entityName = values[0];
 
@@ -46,7 +46,7 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
     private downloadAPIFiles(event: React.MouseEvent<HTMLButtonElement>) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateAPIFiles`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateAPIFiles`;
         const request = this.createRequest();
         
         const weakSelf = this;
@@ -65,7 +65,7 @@ class GenerateBOPageController extends BOController<GenerateBOPageProps, Generat
     private downloadUIFiles(event: React.MouseEvent<HTMLButtonElement>) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateUIFiles`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_GENERATE_BOPAGE_FILES_CONTROLLER_NAME}/CreateUIFiles`;
         const request = this.createRequest();
         
         const weakSelf = this;

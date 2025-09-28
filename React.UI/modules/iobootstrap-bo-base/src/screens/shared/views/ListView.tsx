@@ -4,40 +4,62 @@ import React from "react";
 import { View } from "iobootstrap-ui-base";
 import PaginationView from "./PaginationView";
 import BreadcrumbView from "./BreadcrumbView";
+import ListHeaderView from "./ListHeaderView";
+import ListViewState from "../props/ListViewState";
 
-class ListView extends View<ListViewProps, {}> {
+class ListView extends View<ListViewProps, ListViewState> {
 
     constructor(props: ListViewProps) {
         super(props);
+
+        this.state = new ListViewState();
 
         this.handleItemDeleteClick = this.handleItemDeleteClick.bind(this);
         this.handleItemSelect = this.handleItemSelect.bind(this);
         this.handleItemUpdateClick = this.handleItemUpdateClick.bind(this);
         this.handlePagination = this.handlePagination.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
+        this.handleClearFilter = this.handleClearFilter.bind(this);
     }
 
-    handleItemDeleteClick(e: {}, itemIndex: number) {
+    private handleItemDeleteClick(e: {}, itemIndex: number) {
         if (this.props.deleteDataHandler != null) {
             this.props.deleteDataHandler(itemIndex);
         }
     }
 
-    handleItemSelect(e: {}, itemIndex: number) {
+    private handleItemSelect(e: {}, itemIndex: number) {
         if (this.props.selectDataHandler != null) {
             this.props.selectDataHandler(itemIndex);
         }
     }
 
-    handleItemUpdateClick(e: {}, itemIndex: number) {
+    private handleItemUpdateClick(e: {}, itemIndex: number) {
         if (this.props.updateDataHandler != null) {
             this.props.updateDataHandler(itemIndex);
         }
     }
 
-    handlePagination(start: number, length: number) {
+    private handlePagination(start: number, length: number) {
         if (this.props.pagination != null && this.props.pagination.pageClickHandler != null) {
             this.props.pagination.pageClickHandler(start, length);
         }
+    }
+
+    private handleFilter(index: number, word: string) {
+        const filteredItems = this.props.items.filter((it) => {
+            return it.itemList[index].toLowerCase().includes(word.toLocaleLowerCase());
+        });
+
+        this.setState({
+            items: filteredItems
+        });
+    }
+
+    private handleClearFilter() {
+        this.setState({
+            items: null
+        });
     }
 
     render() {
@@ -45,18 +67,13 @@ class ListView extends View<ListViewProps, {}> {
         const deleteClass = (this.props.deleteDataHandler != null) ? "btn btn-square delete" : "btn btn-square delete d-none";
         const selectionClass = (this.props.selectDataHandler != null) ? "btn btn-square select" : "btn btn-square select d-none";
 
-        const headers = this.props.listDataHeaders.map((header, headerIndex) => {
-            const key = "headerIndex" + headerIndex;
-            return (<th key={key}>{header}</th>);
-        });
-
-        const footers = this.props.listDataHeaders.map((footer, footerIndex) => {
+        const footers = this.props.headers.map((footer, footerIndex) => {
             const key = "footerIndex" + footerIndex;
-            return (<th key={key}>{footer}</th>);
+            return (<th key={key}>{footer.title}</th>);
         });
 
-        const listData = this.props.items.map((listItem, itemIndex) => {
-
+        const listItems = this.state.items ?? this.props.items;
+        const listData = listItems.map((listItem, itemIndex) => {
             const listDataColumn = listItem.itemList.map((itemColumn, columnIndex) => {
                 const key = "columnIndex" + columnIndex.toString();
                 const textWrap = (listItem.textWraps.length > columnIndex) ? listItem.textWraps[columnIndex] : true;
@@ -156,7 +173,11 @@ class ListView extends View<ListViewProps, {}> {
                                         <table className="table table-bordered table-hover table-striped table-sticky">
                                             <thead>
                                                 <tr>
-                                                    {headers}
+                                                    <ListHeaderView 
+                                                    headers={this.props.headers}
+                                                    filterHandler={this.handleFilter}
+                                                    clearFilterHandler={this.handleClearFilter}
+                                                    />
                                                     <th key="headerOptions">{this.props.resourceOptions}</th>
                                                 </tr>
                                             </thead>

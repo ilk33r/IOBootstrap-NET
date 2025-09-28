@@ -36,7 +36,7 @@ class ImagesModifyController extends BOController<{}, {}> {
     private generateNonce() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONTROLLER_NAME}/GenerateNonce`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: BaseResponseModel) {
@@ -55,7 +55,7 @@ class ImagesModifyController extends BOController<{}, {}> {
         const request = new DeleteImagesRequestModel();
         request.imageId = imageId;
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_IMAGES_CONTROLLER_NAME}/DeleteImage`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_IMAGES_CONTROLLER_NAME}/DeleteImage`;
         const weakSelf = this;
 
         this.service.delete(requestPath, request, function (response: BaseResponseModel) {
@@ -79,7 +79,7 @@ class ImagesModifyController extends BOController<{}, {}> {
         const keepRatio = (this._selectedImage?.keepRatio !== undefined && this._selectedImage?.keepRatio != null) ? this._selectedImage?.keepRatio : true;
         const keepRationValue = (keepRatio) ? "1" : "0";
         const imageFileName = (this._selectedImage?.fileName !== undefined && this._selectedImage?.fileName != null) ? this._selectedImage?.fileName : "";
-        const imageUrl = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${imageFileName}`
+        const imageUrl = `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_IMAGE_ASSETS_CONTROLLER}/Get?publicId=${imageFileName}`
 
         const formElements: FormType[] = [
             FormTypeNumberProps.initializeWithValidations("Width", imageWidth.toString(), false, [ ValidationMinAmountRule.initialize("Width must be greater than 0.", "Invalid image width.", 0) ]),

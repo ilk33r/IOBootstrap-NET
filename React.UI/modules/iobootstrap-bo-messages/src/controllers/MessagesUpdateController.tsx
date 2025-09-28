@@ -37,7 +37,7 @@ class MessagesUpdateController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/UpdateMessagesItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/UpdateMessagesItem`;
         const request = new MessageUpdateRequestModel();
         request.messageId = this._updateRequest.messageId;
         request.message = values[0];

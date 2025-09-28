@@ -2,6 +2,7 @@ import { View, WindowMessageModel } from "iobootstrap-ui-base";
 import SelectionWrapperProps from "../props/SelectionWrapperProps";
 import SelectionWrapperState from "../props/SelectionWrapperState";
 import React from "react";
+import $ from 'jquery';
 import NavigationView from "./NavigationView";
 
 class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperState> {
@@ -51,7 +52,7 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
             itemValue: null
         };
 
-        const baseURL = new URL(process.env.REACT_APP_POST_MESSAGE_URL ?? "");
+        const baseURL = new URL(import.meta.env.VITE_POST_MESSAGE_URL ?? "");
         if (baseURL !== null && baseURL.host.length > 0) {
             window.postMessage(windowMessage, baseURL.origin);
             this.handleClose();
@@ -70,7 +71,7 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
                         <a className="icon-link icon-link-hover link-underline-opacity-0 link-light fs-3 delete" onClick={this.trashButtonClicked} href="#root">
                             <i className="fas fa-trash" aria-hidden="true"></i>
                         </a>
-                        <div className="content">
+                        <div className="selection-container">
                             <NavigationView pageHash={this.props.selectionHash} />
                         </div>
                     </div>

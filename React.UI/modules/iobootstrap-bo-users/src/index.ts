@@ -1,4 +1,5 @@
 export { default as UserAddState } from "./props/UserAddState";
+export { default as UserChangePasswordState } from "./props/UserChangePasswordState";
 export { default as UsersListProps } from "./props/UsersListProps";
 export { default as UsersListState } from "./props/UsersListState";
 export { default as UserLoginInformationProps } from "./props/UserLoginInformationProps";

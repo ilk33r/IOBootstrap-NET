@@ -20,7 +20,7 @@ class DashboardController extends BOController<DashboardProps, DashboardState> {
         this._isMounted = true;
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/ListMessages`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/ListMessages`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: MessagesResponseModel) {
@@ -65,7 +65,7 @@ class DashboardController extends BOController<DashboardProps, DashboardState> {
                                     </div>
                                     <div className="box-body">
                                         <div className="hstack gap-3">
-                                            <table className="table table-bordered table-hover table-striped">
+                                            <table className="table table-bordered table-hover table-striped ann-table">
                                                 <tbody>{messages}</tbody>
                                             </table>
                                         </div>

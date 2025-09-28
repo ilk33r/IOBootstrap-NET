@@ -10,7 +10,6 @@ using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.WebApi.Handshake.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers;
 
@@ -28,11 +27,6 @@ where TViewModel : IOHandshakeViewModel<TDBContext>, new()
     }
 
     #endregion
-
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public override void CheckIsMaintenanceMode(ActionExecutingContext context)
-    {
-    }
 
     #region Handshake Methods
 

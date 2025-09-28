@@ -27,7 +27,7 @@ class MessagesDeleteController extends BOController<{}, {}> {
     handleFormSuccess() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/DeleteMessagesItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/DeleteMessagesItem`;
         const request = new MessageDeleteRequestModel();
         request.messageId = this._deleteRequest.messageId;
 

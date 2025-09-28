@@ -27,7 +27,7 @@ class MenuEditorDeleteController extends BOController<{}, {}> {
     handleFormSuccess() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME}/DeleteMenuItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MENU_CONTROLLER_NAME}/DeleteMenuItem`;
         const request = new MenuDeleteRequestModel();
         request.id = this._deleteRequest.id;
 

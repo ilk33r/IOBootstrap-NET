@@ -8,6 +8,7 @@ using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
 using IOBootstrap.NET.Common.Models.Users;
+using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc;
@@ -68,8 +69,20 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [HttpPost("[action]")]
     public virtual async Task<IOResponseModel> ResetPassword([FromBody] IOUserResetPasswordRequestModel requestModel)
     {
+        string newPassword;
+
+        if (String.IsNullOrEmpty(requestModel.NewPassword))
+        {
+            string randomPassword = IORandomUtilities.GenerateRandomAlphaNumericString(8);
+            string base64Password = IOBase64Utilities.Base64Encode(randomPassword).Substring(Math.Max(0, randomPassword.Length - 8));
+            newPassword = await ViewModel.EncryptString(base64Password);
+        }
+        else
+        {
+            newPassword = requestModel.NewPassword;
+        }
         // Reset user password
-        await ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, requestModel.NewPassword ?? String.Empty);
+        await ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, newPassword);
 
         // Return response
         return new IOResponseModel();

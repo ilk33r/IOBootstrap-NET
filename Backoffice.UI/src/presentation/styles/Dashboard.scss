@@ -1,22 +1,115 @@
 @import "Variables.scss";
+@import "Style.scss";
 
+/* ==============================
+   6) Dashboard tiles (.small-box)
+   ============================== */
 .small-box {
-    display: block;
     position: relative;
+    overflow: hidden;
+    border-radius: $radius-lg;
+    box-shadow: var(--shadow-sm);
+    background: $bg-card;
+    color: $text-primary;
+    border: 1px solid $stroke-default;
+
+    // Replace contextual backgrounds with outline + soft bg
+    &.bg-info {
+        background: mix($primary-1, #fff, 70%);
+        color: $secondary-4;
+        border-color: $primary-2;
+    }
+
+    &.bg-warning {
+        background: #FFF8E8;
+        color: #7A4D00;
+        border-color: #FFE3A3;
+    }
+
+    &.bg-success {
+        background: #E9FBF6;
+        color: #0B7A60;
+        border-color: #B9F4E3;
+    }
+
+    &.bg-danger {
+        background: #FEE9E9;
+        color: #8F1D1D;
+        border-color: #F7C4C4;
+    }
+
+    .p-2 {
+        padding: $space-5 !important;
+    }
+
+    h3 {
+        font-size: 2.25rem;
+        line-height: 1.1;
+        margin: 0 0 $space-2 0;
+        font-weight: 800;
+    }
+
+    p {
+        font-size: $font-size-2;
+        margin: 0;
+    }
 
     .icon {
-        color: #00000026;
-        font-size: 5rem;
         position: absolute;
-        right: 1rem;
-        top: -0.5rem;
+        right: $space-4;
+        bottom: $space-4;
+        font-size: 2rem;
+        opacity: .18;
         transition: all .3s linear;
-        z-index: 0;
     }
 
     &:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+        transition: box-shadow .2s ease, transform .2s ease;
+
         .icon {
-            font-size: 5.2rem;
+            font-size: 3.2rem;
         }
+    }
+}
+
+/* ==============================
+   7) Cards/Boxes
+   ============================== */
+.box {
+    background: $bg-card;
+    border: 1px solid $stroke-default;
+    border-radius: $radius-lg;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+
+    .box-header {
+        padding: $space-4 $space-5;
+        border-bottom: 1px solid $divider;
+
+        h3 {
+            font-size: $font-size-3;
+            margin: 0;
+            font-weight: 700;
+        }
+    }
+
+    .box-body {
+        padding: $space-5;
+    }
+}
+
+/* ==============================
+   12) Announcements table (example in your HTML)
+   ============================== */
+.ann-table {
+    td:first-child {
+        width: 44px;
+        text-align: center;
+    }
+
+    a.link-warning {
+        color: #F59E0B;
     }
 }

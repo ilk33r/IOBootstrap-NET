@@ -1,6 +1,10 @@
 @import "Variables.scss";
 @import "Style.scss";
 
+html {
+    font-size: $font-size-root;
+}
+
 body {
     position: absolute;
     top: 0;
@@ -9,6 +13,12 @@ body {
     display: inline-block;
     width: 100%;
     bottom: 0;
+    color: $text-primary;
+    background: $bg-soft;
+}
+
+a {
+    text-underline-offset: 2px;
 }
 
 .wrapper {
@@ -34,27 +44,38 @@ body.sidebar-collapse .content-wrapper {
     margin-left: $sidebar-collapsed-width;
 }
 
+/* ==============================
+   7) Cards/Boxes
+   ============================== */
 .box {
-    background-color: $white;
+    background: $bg-card;
     border-radius: map-get($border-widths, 3);
     border-top: map-get($border-widths, 5) solid $primary-bg-subtle;
-    box-shadow: $box-shadow-sm;
+    box-shadow: var(--shadow-sm);
     margin-top: map-get($spacers, 2);
     margin-bottom: map-get($spacers, 3);
     position: relative;
+    overflow: hidden;
 
     .box-header {
         @include bottom-border();
-        padding: map-get($spacers, 3);
+        padding: $space-4 $space-5;
+
+        h3 {
+            font-size: $font-size-3;
+            margin: 0;
+            font-weight: 700;
+        }
     }
 
     .box-body {
-        padding: map-get($spacers, 3);
+        padding: $space-5;
+        overflow-x: auto;
     }
 
     .box-footer {
         @include top-border();
-        padding: map-get($spacers, 3);
+        padding: $space-4 $space-5;
     }
 }
 
@@ -77,7 +98,7 @@ body.sidebar-collapse .content-wrapper {
     white-space: normal;
 
     i {
-       display: block;
+        display: block;
         margin-bottom: map-get($spacers, 1);
     }
 }
@@ -87,8 +108,238 @@ body.sidebar-collapse .content-wrapper {
 }
 
 .editor {
-  border: 1px solid #000; 
-  padding: 10px;
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+/* ==============================
+   10) Forms
+   ============================== */
+.form-control,
+.form-select {
+    border-radius: $radius-md;
+    border-color: $stroke-default;
+
+    &:focus {
+        border-color: $primary-4;
+        box-shadow: 0 0 0 .2rem rgba(17, 191, 222, .16);
+    }
+
+    &::placeholder {
+        color: $text-placeholder;
+    }
+}
+
+/* ==============================
+   13) Footer
+   ============================== */
+footer.container-fluid {
+    background: $bg-card !important;
+    border-top: 1px solid $divider;
+
+    .row {
+        align-items: center;
+    }
+}
+
+
+/* ==============================
+   14) Optional: page headings
+   ============================== */
+.page-title {
+    font-size: $font-size-5;
+    font-weight: 800;
+    letter-spacing: .2px;
+    margin-bottom: $space-6;
+}
+
+/* ==============================
+   8) Tables
+   ============================== */
+.table {
+    min-height: 200px;
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: #F7FAFF;
+    --bs-table-striped-color: inherit;
+    --bs-table-hover-bg: #F0F6FF;
+    --bs-table-hover-color: inherit;
+    border-color: $divider;
+
+    th,
+    td {
+        vertical-align: middle;
+        font-size: $font-size-2;
+    }
+
+    thead th {
+        color: $text-secondary;
+        font-weight: 600;
+    }
+}
+
+/* ==============================
+   Table polish
+   ============================== */
+.table.table-striped.table-hover {
+    border-radius: var(--bs-border-radius-lg);
+    overflow: hidden;
+
+    th,
+    td {
+        padding: .75rem .875rem;
+    }
+
+    thead th {
+        background: #F5F9FF;
+        border-bottom: 1px solid var(--bs-border-color);
+        font-weight: 700;
+        letter-spacing: .1px;
+    }
+
+    tbody tr {
+        transition: background .15s ease, box-shadow .15s ease;
+    }
+
+    tbody tr:hover {
+        background: #F0F6FF;
+    }
+}
+
+/* Sticky header for long lists (optional) */
+.table-sticky thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* ==============================
+   Action buttons inside table cells
+   ============================== */
+.cell-actions {
+    display: grid;
+    grid-template-columns: repeat(3, max-content); /* tam iki sütun */
+    gap: .5rem;
+}
+
+/* Base square button */
+.btn.btn-square {
+    --btn-bg: var(--bs-gray-100);
+    --btn-bd: var(--bs-border-color);
+    --btn-fg: var(--bs-gray-800);
+    --btn-bg-hover: #EEF2F6;
+    --btn-bd-hover: #D1D7E0;
+
+    --size-minw: 92px;
+    --size-minh: 64px;
+
+    background: var(--btn-bg);
+    border-color: var(--btn-bd);
+    color: var(--btn-fg);
+    border-radius: var(--bs-border-radius);
+    font-weight: 700;
+    padding: .5rem .5rem;
+    min-width: var(--size-minw);
+    min-height: var(--size-minh);
+    text-align: center;
+    line-height: 1.15;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .02);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    i {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: .35rem;
+        opacity: .9;
+    }
+
+    .btn-label {
+        font-size: .8125rem;
+        font-weight: 700;
+        letter-spacing: .15px;
+    }
+
+    &:hover {
+        background: var(--btn-bg-hover);
+        border-color: var(--btn-bd-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+        text-decoration: none;
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+/* Compact size variant for dense tables */
+.btn-square.btn-square-sm {
+    --size-minw: 84px;
+    --size-minh: 54px;
+    font-weight: 600;
+
+    i {
+        margin-bottom: .25rem;
+    }
+}
+
+/* Softer color variants mapped to actions */
+.btn-square.edit {
+    --btn-bg: rgba(17, 191, 222, .10);
+    --btn-bd: rgba(17, 191, 222, .35);
+    --btn-fg: #0B6F80;
+    --btn-bg-hover: rgba(17, 191, 222, .16);
+    --btn-bd-hover: rgba(17, 191, 222, .55);
+}
+
+.btn-square.delete {
+    --btn-bg: #FEECEC;
+    --btn-bd: #F7C4C4;
+    --btn-fg: #8F1D1D;
+    --btn-bg-hover: #FBD8D8;
+    --btn-bd-hover: #EFAAAA;
+}
+
+.btn-square.reset {
+    --btn-bg: #F3F7FF;
+    --btn-bd: #C9DAFF;
+    --btn-fg: #1E46A5;
+    --btn-bg-hover: #E8F1FF;
+    --btn-bd-hover: #AFC8FF;
+}
+
+.btn-square.general {
+    --btn-bg: #F9FAFB; // açık gri arka plan
+    --btn-bd: #E5E7EB; // nötr border
+    --btn-fg: #374151; // koyu gri text/icon
+    --btn-bg-hover: #F3F4F6;
+    --btn-bd-hover: #D1D5DB;
+
+    i {
+        color: #4B5563; // ikon hafif koyu
+    }
+}
+
+
+/* Icon-only buttons for mobile: hide label on small widths */
+@media (max-width: 640px) {
+    .btn.btn-square {
+        --size-minw: 44px;
+        --size-minh: 44px;
+        padding: .5rem;
+    }
+
+    .btn.btn-square .btn-label {
+        display: none;
+    }
+
+    .cell-actions {
+        gap: .35rem;
+    }
 }
 
 @import "bootstrap";

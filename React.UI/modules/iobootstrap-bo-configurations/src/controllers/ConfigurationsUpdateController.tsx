@@ -27,7 +27,7 @@ class ConfigurationsUpdateController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/UpdateConfigItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/UpdateConfigItem`;
         const request = new ConfigurationUpdateRequestModel();
         request.configId = this._updateRequest.configId;
         request.configKey = values[0];

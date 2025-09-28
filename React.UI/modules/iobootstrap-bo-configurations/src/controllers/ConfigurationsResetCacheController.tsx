@@ -18,7 +18,7 @@ class ConfigurationsResetCacheController extends BOController<{}, {}> {
     handleFormSuccess() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/ResetCache`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_CONFIGURATION_CONTROLLER_NAME}/ResetCache`;
 
         const weakSelf = this;
         this.service.get(requestPath, function (response: BaseResponseModel) {

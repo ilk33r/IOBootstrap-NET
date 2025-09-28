@@ -3,7 +3,7 @@ import PushNotificationMessageDeleteRequestModel from "../models/PushNotificatio
 import PushNotificationListProops from "../props/PushNotificationListProops";
 import PushNotificationListState from "../props/PushNotificationListState";
 import React from "react";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class PushNotificationListController extends BOController<PushNotificationListProops, PushNotificationListState> {
 
@@ -20,7 +20,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
 
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/ListMessages`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_PUSH_NOTIFICATION_CONTROLLER_NAME}/ListMessages`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: ListPushNotificationMessageResponseModel) {
@@ -49,14 +49,14 @@ class PushNotificationListController extends BOController<PushNotificationListPr
             BreadcrumbNavigationModel.initialize("pushNotificationList", "Push Notification Messages")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Date',
-            'Category',
-            'Message Data',
-            'Message',
-            'Title',
-            'Status'
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initialize("Date"),
+            ListDataHeaderModel.initializeWithFilter("Category", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Message Data", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Message", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Title", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Status", ListDataFilterTypes.Select, ["Completed", "Sending"]),
         ];
 
         const items = this.state.messages.map(message => {
@@ -80,7 +80,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

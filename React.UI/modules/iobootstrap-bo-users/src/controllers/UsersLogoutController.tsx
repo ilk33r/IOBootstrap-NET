@@ -38,7 +38,7 @@ class UsersLogoutController extends BOController<{}, {}> {
 
         const encryptUserName = await AppCryptography.Instance.encrypt(userName);
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_USER_CONTROLLER_NAME}/Logout`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_USER_CONTROLLER_NAME}/Logout`;
         const request = new IOLogoutRequestModel();
         request.userName = encryptUserName;
 

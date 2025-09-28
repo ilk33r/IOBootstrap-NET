@@ -120,7 +120,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
     }
 
     private async decryptTokenAndUserName(encryptedToken: string | null, encryptedUserName: string): Promise<any> {
-        const cookieAuthentication = process.env.REACT_APP_COOKIE_AUTHENTICATION;
+        const cookieAuthentication = import.meta.env.VITE_COOKIE_AUTHENTICATION;
         if (cookieAuthentication !== "true") {
             this.storage.setStringForKey(UICommonConstants.userTokenStorageKey, encryptedToken ?? "");
         }
@@ -139,7 +139,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                 </React.StrictMode>
             );
         } else {
-            const captchaURL = `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_IMAGE_ASSETS_CONTROLLER}/GetCaptcha?id=${this.state.captchaID ?? ""}`;
+            const captchaURL = `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_IMAGE_ASSETS_CONTROLLER}/GetCaptcha?id=${this.state.captchaID ?? ""}`;
             captchaComponent = (
                 <React.StrictMode>
                     <div className="mb-4">
@@ -162,7 +162,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                         <div className="col-sm-12 col-md-6 mx-auto">
                             <div className="box">
                                 <div className="box-header">
-                                    <h3>{process.env.REACT_APP_APP_NAME} Backoffice</h3>
+                                    <h3>{import.meta.env.VITE_APP_NAME} Backoffice</h3>
                                 </div>
                                 <form className="needs-validation" id="loginForm" onSubmit={this.handleLogin}>
                                     <div className="box-body">

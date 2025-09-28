@@ -11,6 +11,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
+using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels;
 
@@ -94,6 +95,11 @@ where TDBContext : IODatabaseContext<TDBContext>
             throw new IOUserNotFoundException();
         }
 
+        if (UserModel?.ID == currentUser.ID)
+        {
+            throw new IOInvalidPermissionException();
+        }
+
         if (currentUser.UserRole == (int)UserRoles.SuperAdmin && GetUserRole() > (int)UserRoles.SuperAdmin)
         {
             throw new IOInvalidCredentialsException("You can not reset this user password.");
@@ -155,6 +161,11 @@ where TDBContext : IODatabaseContext<TDBContext>
     {
         UserRoles currentUserRole = ((UserRoles?)UserModel?.UserRole) ?? UserRoles.AnonmyMouse;
         if (!IOUserRoleUtility.CheckRole(UserRoles.Admin, currentUserRole))
+        {
+            throw new IOInvalidPermissionException();
+        }
+
+        if (UserModel?.ID == request.UserId)
         {
             throw new IOInvalidPermissionException();
         }

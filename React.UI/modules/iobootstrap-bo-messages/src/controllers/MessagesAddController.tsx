@@ -19,7 +19,7 @@ class MessagesAddController extends BOController<{}, {}> {
     handleFormSuccess(values: string[], blobs: Blob[]) {
         this.indicatorPresenter.present();
         
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/AddMessagesItem`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_MESSAGES_CONTROLLER_NAME}/AddMessagesItem`;
         const request = new MessageAddRequestModel();
         request.message = values[0];
         request.messageStartDate = values[1];

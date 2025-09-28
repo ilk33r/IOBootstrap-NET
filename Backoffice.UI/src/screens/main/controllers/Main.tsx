@@ -5,6 +5,7 @@ import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
 import SelectionWrapperView from '../../shared/views/SelectionWrapperView';
 import React from 'react';
+import $ from 'jquery';
 import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, CalloutPresenter, CalloutViewPresenter, DIHooks, IndicatorPresenter, IndicatorViewPresenter, UICommonConstants, UploadModalPresenter, UploadModalViewPresenter } from 'iobootstrap-ui-base';
 import { BOCommonConstants, BOController, FooterView, HeaderView } from 'iobootstrap-bo-base';
 import { MenuController } from 'iobootstrap-bo-menu';
@@ -21,10 +22,10 @@ class Main extends BOController<MainProps, MainState> {
         this.state = new MainState();
         this.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
-        this.service.baseUrl = (process.env.REACT_APP_API_URL === undefined) ? "" : process.env.REACT_APP_API_URL;
+        this.service.baseUrl = (import.meta.env.VITE_API_URL === undefined) ? "" : import.meta.env.VITE_API_URL;
         this.service.appServiceHeaderInterceptor = DIHooks.Instance.singletonForKey("appServiceHeaderInterceptor");
 
-        const authorization = (process.env.REACT_APP_AUTHORIZATION === undefined) ? "" : process.env.REACT_APP_AUTHORIZATION;
+        const authorization = (import.meta.env.VITE_AUTHORIZATION === undefined) ? "" : import.meta.env.VITE_AUTHORIZATION;
         this.appServiceHeaderInterceptor.initialize(authorization);
         
         if (props.calloutView !== undefined) {
@@ -84,7 +85,7 @@ class Main extends BOController<MainProps, MainState> {
         const newState = new MainState();
         newState.isLoggedIn = false;
 
-        const requestPath = `${process.env.REACT_APP_HANDSHAKE_CONTROLLER_NAME}/Index`;
+        const requestPath = `${import.meta.env.VITE_HANDSHAKE_CONTROLLER_NAME}/Index`;
         const weakSelf = this;
 
         this.service.get(requestPath, function (response: HandshakeResponseModel) {
@@ -138,7 +139,7 @@ class Main extends BOController<MainProps, MainState> {
     }
 
     private checkToken() {
-      const cookieAuthentication = process.env.REACT_APP_COOKIE_AUTHENTICATION;
+      const cookieAuthentication = import.meta.env.VITE_COOKIE_AUTHENTICATION;
       let userToken: string | null = null;
 
       if (cookieAuthentication !== "true") {
@@ -153,7 +154,7 @@ class Main extends BOController<MainProps, MainState> {
       const checkTokenRequest = new CheckTokenRequestModel();
       checkTokenRequest.Token = userToken;
 
-      const requestPath = `${process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
+      const requestPath = `${import.meta.env.VITE_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
       const weakSelf = this;
 
       this.service.post(requestPath, checkTokenRequest, function (response: CheckTokenResponseModel) {
@@ -219,7 +220,7 @@ class Main extends BOController<MainProps, MainState> {
                 <React.StrictMode>
                     <HeaderView userName={userName} />
                     <MenuController
-                    controllerName={process.env.REACT_APP_BACKOFFICE_MENU_CONTROLLER_NAME} 
+                    controllerName={import.meta.env.VITE_BACKOFFICE_MENU_CONTROLLER_NAME} 
                     pageHash={this.state.pageHash ?? "dashboard"}
                     userName={userName} />
                     <div className="content-wrapper bg-body-secondary z-1 pt-2">
@@ -236,15 +237,15 @@ class Main extends BOController<MainProps, MainState> {
             <React.StrictMode>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary z-3">
                     <div className="container-fluid">
-                        <a className="navbar-brand" href={process.env.REACT_APP_BACKOFFICE_PAGE_URL}>
-                            <h1 className="fs-5">{process.env.REACT_APP_APP_NAME}</h1>
+                        <a className="navbar-brand" href={import.meta.env.VITE_BACKOFFICE_PAGE_URL}>
+                            <h1 className="page-title">{import.meta.env.VITE_APP_NAME}</h1>
                         </a>
                     </div>
                 </nav>
                 <nav className="navbar navbar-dark bg-dark bg-gradient flex-column align-items-start d-flex p-4 position-absolute start-0 bottom-0 z-2 overflow-visible sidebar" data-bs-theme="dark">
                 </nav>
                 <div className="content-wrapper bg-body-secondary z-1 pt-2">
-                    <LoginController controllerName={process.env.REACT_APP_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
+                    <LoginController controllerName={import.meta.env.VITE_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}
                     loginSuccessHandler={this.handleLoginSuccess} />
                     <FooterView />
                 </div>

@@ -3,7 +3,7 @@ import GetLogsResponseModel from "../models/GetLogsResponseModel";
 import LogsListProps from "../props/LogsListProps";
 import LogsListState from "../props/LogsListState";
 import React from "react";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 
 class LogsController extends BOController<LogsListProps, LogsListState> {
 
@@ -22,7 +22,7 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
     private LoadLogs() {
         this.indicatorPresenter.present();
 
-        const requestPath = `${process.env.REACT_APP_BACKOFFICE_LOGS_CONTROLLER_NAME}/GetLogs`;
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_LOGS_CONTROLLER_NAME}/GetLogs`;
         const weakSelf = this;
 
         this.service.post(requestPath, this.requestModel, function (response: GetLogsResponseModel) {
@@ -55,14 +55,22 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
             BreadcrumbNavigationModel.initialize("logsEdit", "Logs")
         ];
 
-        const listDataHeaders = [
-            'ID',
-            'Date',
-            'IP',
-            'Path',
-            'Code',
-            'Request',
-            'Response'
+        const ips = this.state.logs.map(log => {
+            return log.ipV4 ?? "";
+        });
+
+        const codes = this.state.logs.map(log => {
+            return log.responseCode?.toString() ?? "";
+        });
+
+        const headers = [
+            ListDataHeaderModel.initialize("ID"),
+            ListDataHeaderModel.initialize("Date"),
+            ListDataHeaderModel.initializeWithFilter("IP", ListDataFilterTypes.Select, ips),
+            ListDataHeaderModel.initializeWithFilter("Path", ListDataFilterTypes.Input, null),
+            ListDataHeaderModel.initializeWithFilter("Code", ListDataFilterTypes.Select, codes),
+            ListDataHeaderModel.initialize("Request"),
+            ListDataHeaderModel.initialize("Response"),
         ];
 
         const items = this.state.logs.map(log => {
@@ -110,7 +118,7 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete=""
                     resourceEdit=""

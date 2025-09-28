@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import React from 'react';
 import Main from './screens/main/controllers/Main';
 import reportWebVitals from './reportWebVitals';
-import 'jquery/src/jquery'
+import $ from 'jquery';  
 import '@fortawesome/fontawesome-free/css/regular.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@fortawesome/fontawesome-free/css/all.css';

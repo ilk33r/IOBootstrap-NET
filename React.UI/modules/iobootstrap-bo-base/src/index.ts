@@ -6,10 +6,16 @@ export { default as BreadcrumbView } from "./screens/shared/views/BreadcrumbView
 export { default as PaginationViewProps } from "./screens/shared/props/PaginationViewProps";
 export { default as PaginationViewState } from "./screens/shared/props/PaginationViewState";
 export { default as PaginationView } from "./screens/shared/views/PaginationView";
+export { default as ListDataFilterTypes } from "./screens/shared/models/ListDataFilterTypes";
+export { default as ListDataHeaderModel } from "./screens/shared/models/ListDataHeaderModel";
 export { default as ListDataItemModel } from "./screens/shared/models/ListDataItemModel";
 export { default as ListExtrasModel } from "./screens/shared/models/ListExtrasModel";
 export { default as ListDataPaginationModel } from "./screens/shared/models/ListDataPaginationModel";
+export { default as ListHeaderViewProps } from "./screens/shared/props/ListHeaderViewProps";
+export { default as ListHeaderViewState } from "./screens/shared/props/ListHeaderViewState";
 export { default as ListViewProps } from "./screens/shared/props/ListViewProps";
+export { default as ListViewState } from "./screens/shared/props/ListViewState";
+export { default as ListHeaderView } from "./screens/shared/views/ListHeaderView";
 export { default as ListView } from "./screens/shared/views/ListView";
 export { default as CalloutProps } from "./screens/shared/props/CalloutProps";
 export { default as CalloutState } from "./screens/shared/props/CalloutState";

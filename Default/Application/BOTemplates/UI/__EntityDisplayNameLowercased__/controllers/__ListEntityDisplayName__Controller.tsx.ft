@@ -5,7 +5,7 @@ import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDis
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { BOController, BreadcrumbNavigationModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, istDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
 class __ListEntityDisplayName__Controller extends BOController<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
@@ -76,7 +76,7 @@ __UIIetmListUpdateParameters__
             BreadcrumbNavigationModel.initialize("__ListEntityName__", "__EntityDisplayName__")
         ];
 
-        const listDataHeaders = [
+        const headers = [
 __UIListDataHeaders__
         ];
 
@@ -99,7 +99,7 @@ __UIIetmListParameterArray__
         return (
             <React.StrictMode>
                 <ListView navigation={navigation} 
-                    listDataHeaders={listDataHeaders} 
+                    headers={headers} 
                     items={items}
                     resourceDelete="Delete"
                     resourceEdit="Edit"

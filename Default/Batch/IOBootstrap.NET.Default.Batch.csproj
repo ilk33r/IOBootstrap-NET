@@ -20,6 +20,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -35,4 +36,9 @@
     <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="batchsettings*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+  </ItemGroup>
 </Project>

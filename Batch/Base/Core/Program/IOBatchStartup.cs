@@ -38,7 +38,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         Logger = loggerFactory.CreateLogger<IOLoggerType>();
 
         string workingDirectory = CurrentDirectory();
-        string configFilePath = Path.Combine(workingDirectory, "appsettings." + Environment + ".json");
+        string configFilePath = Path.Combine(workingDirectory, "batchsettings." + Environment + ".json");
         string configurationJson = File.ReadAllText(configFilePath);
 
         Configuration = JsonSerializer.Deserialize<TConfig>(configurationJson);

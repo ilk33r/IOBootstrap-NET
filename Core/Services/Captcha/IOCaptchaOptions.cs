@@ -6,7 +6,7 @@ namespace IOBootstrap.NET.Core.Services.Captcha;
 public class IOCaptchaOptions
 {
     public string[] FontFamilies { get; set; } = new string[] { "Courier" };
-    public Color[] TextColor { get; set; } = new Color[] { Color.Blue, Color.Black, Color.Black, Color.Brown, Color.Gray, Color.Green };
+    public Color[] TextColor { get; set; } = new Color[] { Color.Blue, Color.Black, Color.Black, Color.Brown, Color.Green };
     public Color[] DrawLinesColor { get; set; } = new Color[] { Color.Blue, Color.Black, Color.Black, Color.Brown, Color.Gray, Color.Green };
     public float MinLineThickness { get; set; } = 0.7f;
     public float MaxLineThickness { get; set; } = 2.0f;

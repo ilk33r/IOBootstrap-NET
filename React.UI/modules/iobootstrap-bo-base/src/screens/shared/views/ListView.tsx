@@ -24,19 +24,22 @@ class ListView extends View<ListViewProps, ListViewState> {
 
     private handleItemDeleteClick(e: {}, itemIndex: number) {
         if (this.props.deleteDataHandler != null) {
-            this.props.deleteDataHandler(itemIndex);
+            const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
+            this.props.deleteDataHandler(realIndex);
         }
     }
 
     private handleItemSelect(e: {}, itemIndex: number) {
         if (this.props.selectDataHandler != null) {
-            this.props.selectDataHandler(itemIndex);
+            const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
+            this.props.selectDataHandler(realIndex);
         }
     }
 
     private handleItemUpdateClick(e: {}, itemIndex: number) {
         if (this.props.updateDataHandler != null) {
-            this.props.updateDataHandler(itemIndex);
+            const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
+            this.props.updateDataHandler(realIndex);
         }
     }
 
@@ -47,18 +50,27 @@ class ListView extends View<ListViewProps, ListViewState> {
     }
 
     private handleFilter(index: number, word: string) {
-        const filteredItems = this.props.items.filter((it) => {
-            return it.itemList[index].toLowerCase().includes(word.toLocaleLowerCase());
+        let filteredItemIndexes: number[] = [];
+        const filteredItems = this.props.items.filter((it, idx) => {
+            const filterStatus = it.itemList[index].toLowerCase().includes(word.toLocaleLowerCase());
+            
+            if (filterStatus) {
+                filteredItemIndexes.push(idx);
+            }
+            
+            return filterStatus;
         });
 
         this.setState({
-            items: filteredItems
+            items: filteredItems,
+            filteredItemIndexes: filteredItemIndexes
         });
     }
 
     private handleClearFilter() {
         this.setState({
-            items: null
+            items: null,
+            filteredItemIndexes: null
         });
     }
 

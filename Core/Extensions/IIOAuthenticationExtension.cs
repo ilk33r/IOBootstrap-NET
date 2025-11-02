@@ -221,7 +221,7 @@ public static class IIOAuthenticationExtension
         }
     }
 
-    private static string? CheckCaptchaIsRequired<TDBContext>(
+    public static string? CheckCaptchaIsRequired<TDBContext>(
         this IIOAuthentication<TDBContext> input,
         IOUserEntity user
     )
@@ -247,7 +247,7 @@ public static class IIOAuthenticationExtension
         return captchaID;
     }
 
-    private static async Task<bool> ValidateCaptcha<TDBContext>(
+    public static async Task<bool> ValidateCaptcha<TDBContext>(
         this IIOAuthentication<TDBContext> input,
         IOUserEntity user,
         string? captchaID,

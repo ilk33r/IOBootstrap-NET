@@ -38,7 +38,7 @@ public class IOCaptchaModule : IIOCaptchaModule
 
             foreach (var c in stringText)
             {
-                var location = new PointF(startWith + position, IORandomUtilities.GenerateRandomNumber(6, 13));
+                var location = new PointF(startWith + position, IORandomUtilities.GenerateRandomNumber(7, 13));
                 imgText.Mutate(ctx => ctx.DrawText(c.ToString(), font, Options.TextColor[IORandomUtilities.GenerateRandomNumber(0, Options.TextColor.Length)], location));
                 position += TextMeasurer.MeasureSize(c.ToString(), new TextOptions(font)).Width;
             }

@@ -10,12 +10,13 @@ public static class IOHttpUtilities
     public static string? GetUserIP(HttpRequest request)
     {
         // Obtain ip list from forwaded
-        string? ipList = request.Headers["HTTP_X_FORWARDED_FOR"];
+        request.Headers.TryGetValue("X-Forwarded-For", out var ipList);
 
         // Check ip list is not null
         if (!string.IsNullOrEmpty(ipList))
         {
-            string splittedIPAddress = ipList.Split(',')[0];
+            string userIP = ipList!;
+            string splittedIPAddress = userIP.Split(',')[0];
             return splittedIPAddress.Split(':')[0];
         }
 
@@ -26,12 +27,13 @@ public static class IOHttpUtilities
     public static int? GetUserPort(HttpRequest request)
     {
         // Obtain ip list from forwaded
-        string? ipList = request.Headers["HTTP_X_FORWARDED_FOR"];
+        request.Headers.TryGetValue("X-Forwarded-For", out var ipList);
 
         // Check ip list is not null
         if (!string.IsNullOrEmpty(ipList))
         {
-            string splittedIPAddress = ipList.Split(',')[0];
+            string userIP = ipList!;
+            string splittedIPAddress = userIP.Split(',')[0];
             var splittedAddress = splittedIPAddress.Split(':');
             if (splittedAddress.Length > 1)
             {

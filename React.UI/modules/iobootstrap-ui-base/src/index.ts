@@ -26,6 +26,7 @@ export { default as UploadModalPresenter } from "./presentation/presenters/Uploa
 export { default as ValidationBackofficeRequestRule } from "./presentation/validations/ValidationBackofficeRequestRule";
 export { default as ValidationDateRule } from "./presentation/validations/ValidationDateRule";
 export { default as ValidationFileTypeRule } from "./presentation/validations/ValidationFileTypeRule";
+export { default as ValidationMaxDateRule } from "./presentation/validations/ValidationMaxDateRule";
 export { default as ValidationMaxLengthRule } from "./presentation/validations/ValidationMaxLengthRule";
 export { default as ValidationMinAmountRule } from "./presentation/validations/ValidationMinAmountRule";
 export { default as ValidationMinLengthRule } from "./presentation/validations/ValidationMinLengthRule";

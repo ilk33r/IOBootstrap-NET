@@ -34,6 +34,11 @@ public static class IORandomUtilities
         int value;
 
         int range = max - min;
+        if (range == 0)
+        {
+            return 0;
+        }
+        
         using (RandomNumberGenerator rnd = RandomNumberGenerator.Create())
         {
             do

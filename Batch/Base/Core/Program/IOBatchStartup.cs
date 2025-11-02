@@ -32,7 +32,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         {
             builder.AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("SampleApp.Program", LogLevel.Debug)
+                    .AddFilter(typeof(IOLoggerType).FullName, LogLevel.Debug)
                     .AddConsole();
         });
         Logger = loggerFactory.CreateLogger<IOLoggerType>();

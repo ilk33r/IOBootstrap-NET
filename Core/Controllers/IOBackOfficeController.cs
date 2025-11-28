@@ -49,6 +49,7 @@ where TViewModel : IIOBackOfficeViewModel<TDBContext>, new()
 
     [IOIgnorePasswordExpire]
     [IOUserRole(UserRoles.BackOfficeUser)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [HttpGet("[action]")]
     public IOResponseModel GenerateNonce()
     {

@@ -40,7 +40,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         );
     }
 
-    public virtual void Run()
+    public virtual async Task Run()
     {
         IList<PushNotificationMessageEntity> pendingMessages = this.GetPendingPushNotificationMessages();
         this.SendMessages(pendingMessages);

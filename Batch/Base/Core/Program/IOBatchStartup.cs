@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using IOBootstrap.NET.Batch.Base.Common.Models;
 using IOBootstrap.NET.Batch.Base.Core.Interface;
 using IOBootstrap.NET.Common.Logger;
@@ -115,7 +116,16 @@ where TDBContext : IODatabaseContext<TDBContext>
     {
         foreach (IIOBatchProcess<TConfig, TDBContext> process in RegisteredProcesses)
         {
-            process.Run();
+            try
+            {
+                Task subProcess = process.Run();
+                subProcess.Wait();   
+            }
+            catch (Exception e)
+            {
+                Logger?.LogError("Process {0} exception.\n{1}\n\n{2}", process.ToString(), e.Message, e.StackTrace?.ToString());
+                Thread.Sleep(2000);
+            }
         }
     }
 }

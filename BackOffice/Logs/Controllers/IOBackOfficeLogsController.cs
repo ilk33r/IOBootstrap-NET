@@ -38,5 +38,15 @@ where TViewModel : IOBackOfficeLogsViewModel<TDBContext>, new()
         return ViewModel.GetLogs(requestModel);
     }
 
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.SuperAdmin)]
+    [HttpPost("[action]")]
+    public IOGetLogsResponseModel GetExceptions([FromBody] IOGetLogsRequestModel requestModel)
+    {
+        return ViewModel.GetExceptions(requestModel);
+    }
+
     #endregion
 }

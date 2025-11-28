@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
+[IOSession]
 public class IOBackOfficeImagesDefaultController : IOBackOfficeImagesController<IOBackOfficeImagesDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOBackOfficeImagesDefaultController(IConfiguration configuration,

@@ -124,14 +124,16 @@ class ListView extends View<ListViewProps, ListViewState> {
                     const iconClassName = "fa " + itemExtra.icon;
                     const key = "itemExtraKey" + itemIndex.toString() + itemExtra.name;
                     let itemExtraClass = "btn btn-square general";
+                    const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
+                    
                     if (this.props.itemVisibleHandler != null) {
-                        if (!this.props.itemVisibleHandler(itemIndex, itemExtraIndex + 3)) {
+                        if (!this.props.itemVisibleHandler(realIndex, itemExtraIndex + 3)) {
                             itemExtraClass = "btn btn-square general d-none";
                         }
                     }
 
                     return (
-                        <a className={itemExtraClass} key={key} onClick={() => itemExtra.itemSelectionHandler(itemIndex)}>
+                        <a className={itemExtraClass} key={key} onClick={() => itemExtra.itemSelectionHandler(realIndex)}>
                             <i className={iconClassName}></i><span className="btn-label">{itemExtra.name}</span>
                         </a>
                     );

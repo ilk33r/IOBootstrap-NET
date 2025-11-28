@@ -82,6 +82,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                                                                             ConfigIntValue = c.ConfigIntValue,
                                                                             ConfigStringValue = c.ConfigStringValue
                                                                         })
+                                                                        .OrderBy(c => c.ID)
                                                                         .ToList();
 
         if (configurations == null)

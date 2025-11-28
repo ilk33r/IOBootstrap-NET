@@ -47,5 +47,28 @@ where TDBContext : IODatabaseContext<TDBContext>
         return new IOGetLogsResponseModel(logCount, paginatedImages);
     }
 
+    public IOGetLogsResponseModel GetExceptions(IOGetLogsRequestModel requestModel)
+    {
+        IQueryable<IOExceptionEntity> exceptions = DatabaseContext.Exceptions;
+        int exceptionCount = exceptions.Count();
+        IList<IOLogModel> paginatedImages = exceptions
+                                                .Select(log => new IOLogModel()
+                                                {
+                                                    ID = log.ID,
+                                                    RequestDate = log.RequestDate,
+                                                    RequestPath = log.RequestPath,
+                                                    RequestHeaders = log.RequestHeaders,
+                                                    ResponseHeaders = log.ExceptionMessage,
+                                                    RequestBody = log.RequestBody,
+                                                    ResponseBody = log.ExceptionStackTrace
+                                                })
+                                                .OrderByDescending(i => i.RequestDate)
+                                                .Skip(requestModel.Start ?? 0)
+                                                .Take(requestModel.Count ?? 0)
+                                                .ToList();
+
+        return new IOGetLogsResponseModel(exceptionCount, paginatedImages);
+    }
+
     #endregion
 }

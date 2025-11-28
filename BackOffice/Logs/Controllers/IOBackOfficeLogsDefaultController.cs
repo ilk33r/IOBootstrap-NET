@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.BackOffice.Logs.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
+[IOSession]
 public class IOBackOfficeLogsDefaultController : IOBackOfficeLogsController<IOBackOfficeLogsDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOBackOfficeLogsDefaultController(IConfiguration configuration,

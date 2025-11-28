@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
+[IOSession]
 public class IOGenerateBOPageFilesDefaultController : IOGenerateBOPageFilesController<IOGenerateBOPageFilesDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOGenerateBOPageFilesDefaultController(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, IODatabaseContextDefaultImpl databaseContext) : base(configuration, environment, logger, databaseContext)

@@ -8,6 +8,7 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
 {
 
     public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
+    public virtual DbSet<IOExceptionEntity> Exceptions { get; set; }
     public virtual DbSet<IOImagesEntity> Images { get; set; }
     public virtual DbSet<IOLogsEntity> Logs { get; set; }
     public virtual DbSet<IOMenuEntity> Menu { get; set; }
@@ -23,8 +24,8 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<IOConfigurationEntity>().HasIndex(
-            configurationEntity => new { configurationEntity.ConfigKey }).IsUnique(true);
+        CreateConfigurationModel(modelBuilder);
+        CreateExceptionModel(modelBuilder);
 
         modelBuilder.Entity<IOMenuEntity>().HasIndex(
             menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);
@@ -56,11 +57,23 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
             });
     }
 
+    private void CreateConfigurationModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IOConfigurationEntity>().HasIndex(
+            configurationEntity => new { configurationEntity.ConfigKey }).IsUnique(true);
+    }
+
+    private void CreateExceptionModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IOExceptionEntity>().HasIndex(
+            userEntity => new { userEntity.RequestDate }).IsUnique(true);
+    }
+    
     private void CreateUserModel(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IOUserEntity>().HasIndex(
             userEntity => new { userEntity.UserName }).IsUnique(true);
-        
+
         modelBuilder.Entity<IOUserEntity>().HasIndex(u => u.IsActive);
     }
 }

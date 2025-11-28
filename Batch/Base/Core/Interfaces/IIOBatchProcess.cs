@@ -15,5 +15,5 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public void OnLoad();
     
-    public void Run();
+    public Task Run();
 }

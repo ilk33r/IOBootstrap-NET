@@ -5,6 +5,7 @@ using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Middlewares;
 using IOBootstrap.NET.Common.Routes;
+using IOBootstrap.NET.Core.Middlewares;
 using IOBootstrap.NET.Core.Services.Captcha;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
@@ -205,7 +206,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     public virtual void ConfigureMiddleWare(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IOLoggerType> logger)
     {
-        app.UseMiddleware(typeof(IOErrorHandlingMiddleware));
+        app.UseMiddleware(typeof(IOErrorHandlingMiddleware<TDBContext>));
         app.UseMiddleware(typeof(IOFNRequestDecryptorMiddleware));
     }
 

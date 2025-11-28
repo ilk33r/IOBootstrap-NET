@@ -79,7 +79,7 @@ func (helper *DotnetHelper) CreateWWW() {
 	if _, err := os.Stat(wwwPath); !os.IsExist(err) {
 		dirError := os.Mkdir(wwwPath, 0755)
 		if dirError != nil {
-			(*helper.logger).LogErrorf("%v", dirError)
+			(*helper.logger).LogInfof("%v", dirError)
 		}
 	}
 

@@ -6,15 +6,15 @@ namespace IOBootstrap.NET.Common.Attributes;
 [AttributeUsage(AttributeTargets.Method)]
 public class IOUserRoleAttribute : Attribute
 {
-    public int requiredRole;
+    public int RequiredRole;
 
     public IOUserRoleAttribute(UserRoles requiredRole)
     {
-        this.requiredRole = (int)requiredRole;
+        this.RequiredRole = (int)requiredRole;
     }
 
     public IOUserRoleAttribute(int requiredRole)
     {
-        this.requiredRole = requiredRole;
+        this.RequiredRole = requiredRole;
     }
 }

@@ -25,6 +25,9 @@ public static class IIOImageViewModelExtension
             throw new IOImageFileSizeException();
         }
 
+        var fileData = input.CheckFile(file);
+        fileData.Item3.Close();
+
         byte[] jpegImage;
         try {
             Image rawImage = Image.Load(file.OpenReadStream());

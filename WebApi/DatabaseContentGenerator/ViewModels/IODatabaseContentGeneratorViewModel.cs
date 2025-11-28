@@ -368,6 +368,17 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             ParentEntityID = null
         };
         DatabaseContext.Add(templatesEntity);
+
+        IOMenuEntity exceptionsEntity = new IOMenuEntity()
+        {
+            Action = "exceptionsEdit",
+            CssClass = "fa-book",
+            Name = "Exceptions",
+            MenuOrder = 32,
+            RequiredRole = (int)UserRoles.SuperAdmin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(exceptionsEntity);
         DatabaseContext.SaveChanges();
     }
 }

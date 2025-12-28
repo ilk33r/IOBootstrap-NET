@@ -10,46 +10,65 @@ namespace IOBootstrap.NET.Batch.PushSender.Extensions;
 public static class IOPushSenderProcessFirebaseExtension
 {
 
-    public static IList<PushNotificationEntity> SendNotificationToAllFirebaseDevices<TConfig, TDBContext>(
-        this IOPushSenderProcess<TConfig, TDBContext> input,
-        PushNotificationMessageEntity message,
-        IList<PushNotificationEntity> googleDevices
+    public static async Task SendNotificationToAllFirebaseDevices<TConfig, TDBContext, TPushNotificationDevicesEntity>(
+        this IOPushSenderProcess<TConfig, TDBContext, TPushNotificationDevicesEntity> input,
+        PushNotificationMessageEntity pushNotificationMessage,
+        IList<PushNotificationDeliveredMessagesEntity> pendingDevices
     )
     where TConfig : IOBatchConfigurationModel
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+    where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     {
-        input.Logger?.LogDebug("Firebase devices found size of {0}", googleDevices.Count);
-        IList<PushNotificationEntity> invalidDevices = new List<PushNotificationEntity>();
-        IList<PushNotificationEntity> deliveredMessages = new List<PushNotificationEntity>();
-
-        // Loop throught devices
-        foreach (PushNotificationEntity pushNotification in googleDevices)
+        if (input.FirebaseMessageUtilities == null)
         {
-            FirebaseModel firebaseModel = new FirebaseModel(pushNotification.DeviceToken ?? "",
-                                                            message.NotificationTitle ?? "",
-                                                            message.NotificationMessage ?? "",
-                                                            message.NotificationCategory ?? "",
-                                                            message.ID,
-                                                            message.NotificationData ?? "",
-                                                            pushNotification.BadgeCount);
+            return;
+        }
 
-            FirebaseUtils.FirebaseUtilsMessageTypes? response = input.FirebaseMessageUtilities?.SendNotifications(firebaseModel);
+        string firebaseToken = await input.FirebaseMessageUtilities.GetAccessTokenAsync();
+        foreach (PushNotificationDeliveredMessagesEntity deliveredMessage in pendingDevices)
+        {
+            int badgeCount = deliveredMessage.Device?.BadgeCount ?? 0;
+            badgeCount += 1;
 
+            FirebaseModel firebaseModel = new FirebaseModel(
+                deliveredMessage.Device?.DeviceToken ?? String.Empty,
+                pushNotificationMessage.NotificationTitle ?? String.Empty,
+                pushNotificationMessage.NotificationMessage ?? String.Empty,
+                pushNotificationMessage.NotificationCategory ?? String.Empty,
+                pushNotificationMessage.ID,
+                pushNotificationMessage.NotificationData ?? String.Empty,
+                badgeCount
+            );
+
+            if (input.FirebaseMessageUtilities == null)
+            {
+                continue;
+            }
+
+            FirebaseUtils.FirebaseUtilsMessageTypes? response = await input.FirebaseMessageUtilities.SendNotificationsAsync(firebaseModel, firebaseToken);
             if (response == FirebaseUtils.FirebaseUtilsMessageTypes.Success)
             {
-                deliveredMessages.Add(pushNotification);
+                deliveredMessage.IsDelivered = true;
+                deliveredMessage.DeliverDate = DateTimeOffset.UtcNow;
+                input.DatabaseContext?.Update(deliveredMessage);
             }
-            else
+            else if (response == FirebaseUtils.FirebaseUtilsMessageTypes.DeviceNotFound && deliveredMessage.Device != null)
             {
-                invalidDevices.Add(pushNotification);
+                int wrongAttemptCount = deliveredMessage.Device.WrongAttemptCount;
+                wrongAttemptCount += 1;
+
+                if (wrongAttemptCount > 3)
+                {
+                    deliveredMessage.Device.LastUpdateTime = DateTimeOffset.UtcNow;
+                    deliveredMessage.Device.IsActive = false;
+                }
+                else
+                {
+                    deliveredMessage.Device.WrongAttemptCount = wrongAttemptCount;
+                }
+
+                input.DatabaseContext?.Update(deliveredMessage.Device);
             }
         }
-
-        if (deliveredMessages.Count > 0)
-        {
-            input.UpdateDeliveredMessages(message, deliveredMessages);
-        }
-        
-        return invalidDevices;
     }
 }

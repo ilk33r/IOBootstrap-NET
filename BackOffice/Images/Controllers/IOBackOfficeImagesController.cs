@@ -15,7 +15,7 @@ namespace IOBootstrap.NET.BackOffice.Images.Controllers;
 
 [IOBackoffice]
 public class IOBackOfficeImagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOBackOfficeImagesViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

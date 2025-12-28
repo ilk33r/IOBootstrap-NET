@@ -13,7 +13,7 @@ using System.Text;
 namespace IOBootstrap.NET.Core.Middlewares;
 
 public class IOErrorHandlingMiddleware<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     private readonly ILogger<IOLoggerType> Logger;

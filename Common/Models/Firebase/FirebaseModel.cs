@@ -7,15 +7,19 @@ namespace IOBootstrap.NET.Common.Models.Firebase;
 public class FirebaseModel : IOModel
 {
 
-    [JsonPropertyName("to")]
-    public string To { get; set; }
+    [JsonPropertyName("token")]
+    public string Token { get; set; }
+
+    [JsonPropertyName("notification")]
+    public FirebaseNotificationModel Notification { get; set; }
 
     [JsonPropertyName("data")]
     public FirebaseDataModel Data { get; set; }
 
-    public FirebaseModel(string token, string title, string message, string notificationType, int notificationId, string customData, int badgeCount) : base()
+    public FirebaseModel(string token, string title, string body, string notificationType, int notificationId, string customData, int badgeCount) : base()
     {
-        this.To = token;
-        this.Data = new FirebaseDataModel(title, message, notificationType, notificationId, customData, badgeCount);
+        this.Token = token;
+        this.Notification = new FirebaseNotificationModel(title, body);
+        this.Data = new FirebaseDataModel(notificationType, notificationId, customData, badgeCount);
     }
 }

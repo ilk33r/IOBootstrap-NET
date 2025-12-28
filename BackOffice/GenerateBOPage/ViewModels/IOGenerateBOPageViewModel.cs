@@ -13,7 +13,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.BackOffice.GenerateBOPage.ViewModels;
 
 public class IOGenerateBOPageViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext> 
 {
     #region Initialization Methods
 

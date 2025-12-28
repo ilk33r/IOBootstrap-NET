@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.BackOffice.Authentication.Controllers;
 
 [IOBackoffice]
 public abstract class IOAuthenticationController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

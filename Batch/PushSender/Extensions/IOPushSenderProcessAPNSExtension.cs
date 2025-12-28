@@ -9,46 +9,58 @@ namespace IOBootstrap.NET.Batch.PushSender.Extensions;
 
 public static class IOPushSenderProcessAPNSExtension
 {
-
-    public static IList<PushNotificationEntity> SendNotificationToAllApnsDevices<TConfig, TDBContext>(
-        this IOPushSenderProcess<TConfig, TDBContext> input,
-        PushNotificationMessageEntity message,
-        IList<PushNotificationEntity> apnsDevices
+    public static async Task SendNotificationToAllApnsDevices<TConfig, TDBContext, TPushNotificationDevicesEntity>(
+        this IOPushSenderProcess<TConfig, TDBContext, TPushNotificationDevicesEntity> input,
+        PushNotificationMessageEntity pushNotificationMessage,
+        IList<PushNotificationDeliveredMessagesEntity> pendingDevices
     )
     where TConfig : IOBatchConfigurationModel
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+    where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     {
-        input.Logger?.LogDebug("APNS devices found size of {0}", apnsDevices.Count);
-        IList<PushNotificationEntity> invalidDevices = new List<PushNotificationEntity>();
-        IList<PushNotificationEntity> deliveredMessages = new List<PushNotificationEntity>();
-
-        // Loop throught devices
-        foreach (PushNotificationEntity pushNotification in apnsDevices)
+        foreach (PushNotificationDeliveredMessagesEntity deliveredMessage in pendingDevices)
         {
-            APNSSendPayloadModel sendPayloadModel = new APNSSendPayloadModel(message.NotificationTitle ?? "",
-                                                                            message.NotificationMessage ?? "",
-                                                                            pushNotification.BadgeCount,
-                                                                            pushNotification.DeviceToken ?? "",
-                                                                            message.NotificationData ?? "",
-                                                                            message.NotificationCategory?? "");
+            int badgeCount = deliveredMessage.Device?.BadgeCount ?? 0;
+            badgeCount += 1;
 
-            APNSHttpServiceUtils.APNSHttpServiceUtilsMessageTypes? response = input.APNSUtilities?.SendNotifications(sendPayloadModel);
+            APNSSendPayloadModel sendPayloadModel = new APNSSendPayloadModel(
+                pushNotificationMessage.NotificationTitle ?? String.Empty,
+                pushNotificationMessage.NotificationMessage ?? String.Empty,
+                badgeCount,
+                deliveredMessage.Device?.DeviceToken ?? String.Empty,
+                pushNotificationMessage.NotificationData ?? String.Empty,
+                pushNotificationMessage.NotificationCategory ?? String.Empty
+            );
 
+            if (input.APNSUtilities == null)
+            {
+                continue;
+            }
+
+            APNSHttpServiceUtils.APNSHttpServiceUtilsMessageTypes? response = await input.APNSUtilities.SendNotifications(sendPayloadModel);
             if (response == APNSHttpServiceUtils.APNSHttpServiceUtilsMessageTypes.Success)
             {
-                deliveredMessages.Add(pushNotification);
+                deliveredMessage.IsDelivered = true;
+                deliveredMessage.DeliverDate = DateTimeOffset.UtcNow;
+                input.DatabaseContext?.Update(deliveredMessage);
             }
-            else
+            else if (response == APNSHttpServiceUtils.APNSHttpServiceUtilsMessageTypes.DeviceNotFound && deliveredMessage.Device != null)
             {
-                invalidDevices.Add(pushNotification);
+                int wrongAttemptCount = deliveredMessage.Device.WrongAttemptCount;
+                wrongAttemptCount += 1;
+
+                if (wrongAttemptCount > 3)
+                {
+                    deliveredMessage.Device.LastUpdateTime = DateTimeOffset.UtcNow;
+                    deliveredMessage.Device.IsActive = false;
+                }
+                else
+                {
+                    deliveredMessage.Device.WrongAttemptCount = wrongAttemptCount;
+                }
+
+                input.DatabaseContext?.Update(deliveredMessage.Device);
             }
         }
-
-        if (deliveredMessages.Count > 0)
-        {
-            input.UpdateDeliveredMessages(message, deliveredMessages);
-        }
-        
-        return invalidDevices;
     }
 }

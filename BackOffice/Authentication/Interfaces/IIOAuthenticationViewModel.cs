@@ -5,7 +5,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 
 public interface IIOAuthenticationViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext> 
 {
     #region View Model Methods
 

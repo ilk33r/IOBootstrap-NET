@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,19 @@ public class PushNotificationDeliveredMessagesEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ID { get; set; }
 
-    [DeleteBehavior(DeleteBehavior.NoAction)]
-    public virtual PushNotificationEntity? PushNotification { get; set; }
+    [DeleteBehavior(DeleteBehavior.Cascade)]
+    public virtual IOPushNotificationDevicesEntity? Device { get; set; }
 
-    [DeleteBehavior(DeleteBehavior.NoAction)]
+    [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual PushNotificationMessageEntity? PushNotificationMessage { get; set; }
+
+    [DefaultValue(false)]
+    public bool IsDelivered { get; set; }
+
+    [Required]
+    public DateTimeOffset CreatedDate { get; set; }
+
+    public DateTimeOffset? DeliverDate { get; set; }
 
     #endregion
 

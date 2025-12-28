@@ -10,7 +10,7 @@ using IOBootstrap.NET.DataAccess.Entities;
 namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.ViewModels;
 
 public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext> 
+    where TDBContext : IOBaseDatabaseContext<TDBContext> 
 {
 
     public override void CheckAuthorizationHeader()

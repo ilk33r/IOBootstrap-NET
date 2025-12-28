@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.Core.Extensions;
 public static class IIOUserCredentialExtension
 {
     public static bool CheckHasUserTokenAndIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, HttpRequest request)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         bool cookieAuthentication = input.Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         string? appToken = null;
@@ -45,7 +45,7 @@ public static class IIOUserCredentialExtension
     }
 
     public static bool CheckUserTokenIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, string tokenData, int userId)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check token data is correct
         if (tokenData.Count() > 1)
@@ -114,7 +114,7 @@ public static class IIOUserCredentialExtension
     }
 
     public static Tuple<string, int> ParseUserToken<TDBContext>(this IIOUserCredential<TDBContext> input, string token)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Convert key and iv to byte array
         byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
@@ -142,7 +142,7 @@ public static class IIOUserCredentialExtension
     }
 
     public static async Task ChangeUserPassword<TDBContext>(this IIOUserCredential<TDBContext> input, string oldPassword, string newPassword)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         if (input.UserModel == null)
         {
@@ -201,7 +201,7 @@ public static class IIOUserCredentialExtension
     }
 
     public static async Task LogoutUser<TDBContext>(this IIOUserCredential<TDBContext> input, string userName)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Decrypt user name
         string decryptedUserName = await input.DecryptString(userName);

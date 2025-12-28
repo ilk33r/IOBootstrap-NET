@@ -7,11 +7,6 @@ public static class IOConfigurationConstants
     #region Properties
 
     public static string AllowedOrigins = "IOAllowedOrigins";
-    public static string APNSBundleID = "IOAPNSBundleID";
-    public static string APNSApiURL = "IOAPNSApiURL";
-    public static string APNSAuthKeyID = "IOAPNSAuthKeyID";
-    public static string APNSKeyFilePath = "IOAPNSKeyFilePath";
-    public static string APNSTeamID = "IOAPNSTeamID";
     public static string AuthorizationKey = "IOAuthorizationKey";
     public static string AzureStorageBlobNameKey = "IOAzureStorageBlobName";
     public static string AzureStorageConnectionStringKey = "IOAzureStorageConnectionString";

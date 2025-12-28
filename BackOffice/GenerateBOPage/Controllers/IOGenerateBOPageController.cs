@@ -12,7 +12,7 @@ namespace IOBootstrap.NET.BackOffice.GenerateBOPage.Controllers;
 
 [IOBackoffice]
 public class IOGenerateBOPageController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOGenerateBOPageViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

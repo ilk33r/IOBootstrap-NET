@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.WebApi.Handshake.Controllers;
 
 public class IOHandshakeController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOHandshakeViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

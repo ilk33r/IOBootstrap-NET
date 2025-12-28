@@ -11,7 +11,7 @@ using IOBootstrap.NET.Common.Constants;
 namespace IOBootstrap.NET.BackOffice.Menu.ViewModels;
 
 public class IOBackOfficeMenuViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOBackOfficeMenuViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Initialization Methods

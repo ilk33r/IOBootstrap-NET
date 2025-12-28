@@ -2,6 +2,7 @@ using System;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.WebApi.PushNotification.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,8 @@ namespace IOBootstrap.NET.WebApi.PushNotification.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
-public class IOPushNotificationDefaultController : IOPushNotificationController<IOPushNotificationDefaultViewModel, IODatabaseContextDefaultImpl>
+[IOSession]
+public class IOPushNotificationDefaultController : IOPushNotificationController<IOPushNotificationDefaultViewModel, IODatabaseContextDefaultImpl, IOPushNotificationDevicesDefaultEntity>
 {
     public IOPushNotificationDefaultController(IConfiguration configuration,
                                                IWebHostEnvironment environment,

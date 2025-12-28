@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace IOBootstrap.NET.Application.Filters;
 
 public class IODatabaseLogFilter<TDBContext> : IAsyncActionFilter
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     private readonly IConfiguration Configuration;
     private readonly ILogger<IOLoggerType> Logger;

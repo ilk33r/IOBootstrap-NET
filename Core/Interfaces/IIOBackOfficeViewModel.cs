@@ -3,7 +3,8 @@ using IOBootstrap.NET.DataAccess.Context;
 
 namespace IOBootstrap.NET.Core.Interfaces;
 
-public interface IIOBackOfficeViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+public interface IIOBackOfficeViewModel<TDBContext> : IIOViewModel<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     #region Publics
 

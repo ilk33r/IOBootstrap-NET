@@ -6,7 +6,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.BackOffice.User.Interfaces;
 
 public interface IIOUserViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext> 
 {
     public Task<IOAddUserResponseModel> AddUser(IOAddUserRequestModel requestModel);
     public Task ChangePassword(string oldPassword, string newPassword);

@@ -12,7 +12,7 @@ namespace IOBootstrap.NET.BackOffice.Logs.Controllers;
 
 [IOBackoffice]
 public class IOBackOfficeLogsController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOBackOfficeLogsViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

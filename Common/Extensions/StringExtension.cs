@@ -1,4 +1,5 @@
 using System.Text;
+using Ganss.Xss;
 
 namespace IOBootstrap.NET.Common.Extensions;
 
@@ -53,6 +54,12 @@ public static class StringExtensions
         }
 
         return sb.ToString();
+    }
+
+    public static string SanitizeHtml(this string value)
+    {
+        var sanitizer = new HtmlSanitizer();
+        return sanitizer.Sanitize(value);
     }
 
     public static string ApplyPattern(this string value, string pattern)

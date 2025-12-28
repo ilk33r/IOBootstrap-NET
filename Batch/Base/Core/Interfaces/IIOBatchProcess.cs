@@ -1,12 +1,14 @@
 ﻿using IOBootstrap.NET.Batch.Base.Common.Models;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.Batch.Base.Core.Interface;
 
-public interface IIOBatchProcess<TConfig, TDBContext>
+public interface IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>
 where TConfig : IOBatchConfigurationModel
-where TDBContext : IODatabaseContext<TDBContext>
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
 {
     public string? Environment { get; set; }
     public ILogger<IOLoggerType>? Logger { get; set; }

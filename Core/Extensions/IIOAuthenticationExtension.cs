@@ -23,7 +23,7 @@ public static class IIOAuthenticationExtension
         string? captchaID,
         string? encryptedCaptha
     )
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Decrypt password
         string decryptedPassword = await input.DecryptString(password);
@@ -125,7 +125,7 @@ public static class IIOAuthenticationExtension
     }
 
     public static async Task<IOCheckTokenResponseModel> CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Parse token data
         Tuple<string, int> tokenData = input.ParseUserToken(token);
@@ -193,7 +193,7 @@ public static class IIOAuthenticationExtension
     }
 
     public static void CheckUserActivationStatus<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check user is active
         if (user.IsActive)
@@ -225,7 +225,7 @@ public static class IIOAuthenticationExtension
         this IIOAuthentication<TDBContext> input,
         IOUserEntity user
     )
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check password attempt count
         if (user.WrongPasswordAttemptCount < 3)
@@ -253,7 +253,7 @@ public static class IIOAuthenticationExtension
         string? captchaID,
         string? encryptedCaptha
     )
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check captcha id is exists
         if (captchaID == null)
@@ -288,7 +288,7 @@ public static class IIOAuthenticationExtension
     }
 
     private static void CheckUserIsLocked<TDBContext>(this IIOAuthentication<TDBContext> input, IOUserEntity user)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check password attempt count
         int currentWrongPasswordAttemptCount = user.WrongPasswordAttemptCount;

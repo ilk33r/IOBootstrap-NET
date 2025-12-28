@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.Core.ViewModels;
 
-public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> where TDBContext : IODatabaseContext<TDBContext>
+public abstract class IOViewModel<TDBContext> : IIOViewModel<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     #region Properties
 

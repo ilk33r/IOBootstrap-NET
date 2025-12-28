@@ -1,6 +1,6 @@
 import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
-import { BaseResponseModel, CalloutTypes, DeviceTypes, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, CalloutTypes, DeviceTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class PushNotificationSendController extends BOController<{}, {}> {
@@ -43,6 +43,18 @@ class PushNotificationSendController extends BOController<{}, {}> {
             BreadcrumbNavigationModel.initialize("pushNotificationSend", "Send Push Notification")
         ];
 
+
+        let notificationCategories: FormDataOptionModel[] = [
+            FormDataOptionModel.initialize("-", "")
+        ]
+        const notificationCategoriesHook = DIHooks.Instance.hookForKey("notificationCategories")
+        if (notificationCategoriesHook != null) {
+            const notificationCategoriesAny = notificationCategoriesHook(null);
+            if (notificationCategoriesAny != null) {
+                notificationCategories = notificationCategoriesAny;
+            }
+        }
+
         const formElements: FormType[] = [
             FormTypeSelectProps.initialize("Device Type", "", true, [
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.AndroidGoogle), DeviceTypes.AndroidGoogle.toString()),
@@ -50,14 +62,18 @@ class PushNotificationSendController extends BOController<{}, {}> {
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.iOS), DeviceTypes.iOS.toString()),
                 FormDataOptionModel.initialize(DeviceTypes.getDeviceName(DeviceTypes.Generic), DeviceTypes.Generic.toString())
             ]),
-            FormTypeSelectProps.initialize("Category", "", true, [
-                FormDataOptionModel.initialize("-", "")
+            FormTypeSelectProps.initialize("Category", "", true, notificationCategories),
+            FormTypeTextProps.initializeWithValidations("Title", "", true, [ 
+                ValidationRequiredRule.initialize("Title is too short.", "Invalid notification title."),
+                ValidationMaxLengthRule.initialize("Title is too long.", "Title must be smaller than 32 characters.", 32) 
             ]),
-            FormTypeTextProps.initializeWithValidations("Title", "", true, [ ValidationRequiredRule.initialize("Title is too short.", "Invalid notification title."),
-                                                                                ValidationMaxLengthRule.initialize("Title is too long.", "Title must be smaller than 32 characters.", 32) ]),
-            FormTypeTextProps.initializeWithValidations("Message", "", true, [ ValidationMinLengthRule.initialize("Message is too short.", "Invalid notification message.", 3),
-                                                                                ValidationMaxLengthRule.initialize("Message is too long.", "Message must be smaller than 256 characters.", 256) ]),
-            FormTypeTextAreaProps.initialize("Custom Data", "", true)
+            FormTypeTextAreaProps.initializeWithValidations("Message", "", true, [ 
+                ValidationMinLengthRule.initialize("Message is too short.", "Invalid notification message.", 3),
+                ValidationMaxLengthRule.initialize("Message is too long.", "Message must be smaller than 256 characters.", 256) 
+            ]),
+            FormTypeTextAreaProps.initializeWithValidations("Custom Data", "", true, [
+                ValidationBackofficeRequestRule.initialize("Invalid characters.", "Invalid characters.")
+            ])
         ];
 
         return (

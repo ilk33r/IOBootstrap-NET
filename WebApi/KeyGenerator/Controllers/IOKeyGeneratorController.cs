@@ -20,7 +20,7 @@ namespace IOBootstrap.NET.WebApi.KeyGenerator.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class IOKeyGeneratorController<TDBContext> : IOController<IOKeyGeneratorViewModel<TDBContext>, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Controller Lifecycle

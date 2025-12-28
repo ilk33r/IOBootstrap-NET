@@ -4,20 +4,22 @@ using IOBootstrap.NET.Batch.Base.Common.Models;
 using IOBootstrap.NET.Batch.Base.Core.Interface;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.Batch.Base.Core.Program;
 
-public abstract class IOBatchStartup<TConfig, TDBContext>
+public abstract class IOBatchStartup<TConfig, TDBContext, TPushNotificationDevicesEntity>
 where TConfig : IOBatchConfigurationModel
-where TDBContext : IODatabaseContext<TDBContext>
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
 {
     public string? Environment { get; set; }
     public ILogger<IOLoggerType>? Logger { get; set; }
     public TConfig? Configuration { get; set; }
     public TDBContext? DatabaseContext { get; set; }
 
-    private List<IIOBatchProcess<TConfig, TDBContext>> RegisteredProcesses { get; set; }
+    private List<IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>> RegisteredProcesses { get; set; }
 
     public IOBatchStartup(string[] args)
     {
@@ -59,7 +61,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         Logger?.LogDebug("Database initialized");
 
         // Process Register
-        RegisteredProcesses = new List<IIOBatchProcess<TConfig, TDBContext>>();
+        RegisteredProcesses = new List<IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>>();
         Logger?.LogDebug("Process register initialized");
     }
 
@@ -85,7 +87,7 @@ where TDBContext : IODatabaseContext<TDBContext>
             return;
         }
 
-        IIOBatchProcess<TConfig, TDBContext>? process = (IIOBatchProcess<TConfig, TDBContext>)processInstance;
+        IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>? process = (IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>)processInstance;
 
         if (process == null)
         {
@@ -114,7 +116,7 @@ where TDBContext : IODatabaseContext<TDBContext>
 
     private void RunSubProcesses()
     {
-        foreach (IIOBatchProcess<TConfig, TDBContext> process in RegisteredProcesses)
+        foreach (IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity> process in RegisteredProcesses)
         {
             try
             {

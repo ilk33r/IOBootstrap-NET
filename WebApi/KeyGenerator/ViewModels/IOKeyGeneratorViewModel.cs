@@ -16,7 +16,7 @@ using Org.BouncyCastle.Math;
 namespace IOBootstrap.NET.WebApi.KeyGenerator.ViewModels;
 
 public class IOKeyGeneratorViewModel<TDBContext> : IOViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     public override void CheckAuthorizationHeader()

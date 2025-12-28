@@ -1,7 +1,9 @@
 ﻿using System;
-using FirebaseAdmin;
-using FirebaseAdmin.Messaging;
+using System.Text.Json;
 using Google.Apis.Auth.OAuth2;
+using IOBootstrap.NET.Common.HTTP;
+using IOBootstrap.NET.Common.HTTP.Enumerations;
+using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Models.Firebase;
 
 namespace IOBootstrap.NET.Common.Firebase;
@@ -17,93 +19,83 @@ public class FirebaseUtils
 
     #region Properties
 
-    private ILogger Logger;
+    private string APIURL;
+    private string ProjectID;
+    private ILogger<IOLoggerType>? Logger;
+    private GoogleCredential Credential;
 
     #endregion
 
     #region Initialization Methods
 
-    public FirebaseUtils(string privateKeyFileName, ILogger logger)
+    public FirebaseUtils(
+        ILogger<IOLoggerType>? logger,
+        string apiURL,
+        string projectID,
+        string keyFile
+    )
     {
         // Setup properties
-        Logger = logger;
+        this.Logger = logger;
+        this.APIURL = apiURL;
+        this.ProjectID = projectID;
 
-        string currentDirectory = Directory.GetCurrentDirectory();
-        string privateKeyFile = Path.Combine(currentDirectory,privateKeyFileName);
-
-        try
-        {
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile(privateKeyFile),
-            });
-        } 
-        catch (Exception e)
-        {
-            Logger.LogWarning(e.Message);
-        }
+        this.Credential = CredentialFactory.FromJson(keyFile, "service_account")
+                                .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
     }
 
     #endregion
 
     #region Utility Methods
 
-    public FirebaseUtilsMessageTypes SendNotifications(FirebaseModel firebaseData)
+    public async Task<string> GetAccessTokenAsync()
     {
-        // Create a message
-        Message message = new Message()
-        {
-            Notification = new Notification
-            {
-                Title = firebaseData.Data.Title,
-                Body = firebaseData.Data.Message,
-
-            },
-            Data = new Dictionary<string, string>()
-            {
-                { "notificationType", firebaseData.Data.NotificationType },
-                { "notificationId", firebaseData.Data.NotificationId.ToString() },
-                { "customData", firebaseData.Data.CustomData },
-                { "badgeCount", firebaseData.Data.BadgeCount.ToString() },
-            },
-            Token = firebaseData.To
-        };
-
-        // Call http client
-        string? result = SendMessage(message);
-
-        // Check result
-        if (string.IsNullOrEmpty(result))
-        {
-            Logger.LogError("Firebase api call failed. Device not found.");
-            return FirebaseUtilsMessageTypes.DeviceNotFound;
-        }
-        else
-        {
-            Logger.LogInformation("Firebase api called successfully.");
-            return FirebaseUtilsMessageTypes.Success;
-        }
+        return await Credential.UnderlyingCredential
+        .GetAccessTokenForRequestAsync(APIURL);
     }
 
-    #endregion
-
-    #region Helper Methods
-
-    private string? SendMessage(Message message)
+    public async Task<FirebaseUtilsMessageTypes> SendNotificationsAsync(FirebaseModel firebaseData, string token)
     {
-        FirebaseMessaging messaging = FirebaseMessaging.DefaultInstance;
-        Task<string> task = messaging.SendAsync(message);
-        try
+        // Create a message
+        FirebaseMessageModel message = new FirebaseMessageModel()
         {
-            task.Wait();
-        } 
-        catch (Exception e)
+            Message = firebaseData
+        };
+
+        var url = $"{APIURL}/v1/projects/{ProjectID}/messages:send";
+
+        // Call http client
+        IOHTTPClient httpClient = new IOHTTPClient(url, Logger!);
+
+        // Set request method
+        httpClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
+        httpClient.AddHeader("Authorization", String.Format("Bearer {0}", token));
+
+        // Set request body
+        httpClient.SetPostBody(message);
+
+        // Call http client
+        var response = await httpClient.CallJSONAsync<FirebaseResponseModel>();
+
+        // Check result
+        if (response.Item1 && response.Item2?.Error == null)
         {
-            Logger.LogError(e.Message);
-            return null;
+            Logger?.LogInformation("Firebase api called successfully.");
+            return FirebaseUtilsMessageTypes.Success;
         }
 
-        return task.Result;
+        if (response.Item2?.Error != null && response.Item2.Error.Status == "INVALID_ARGUMENT")
+        {
+            var unregisteredDevice = response.Item2.Error.Details?.Where(d => d.ErrorCode == "UNREGISTERED") ?? [];
+            if (unregisteredDevice.Count() > 0)
+            {
+                Logger?.LogError("Firebase api call failed. Device not found.");
+                return FirebaseUtilsMessageTypes.DeviceNotFound;
+            }
+        }
+
+        Logger?.LogError("Firebase api call failed.");
+        return FirebaseUtilsMessageTypes.Failure;
     }
 
     #endregion

@@ -22,18 +22,25 @@ public class PushNotificationMessageEntity
     [StringLength(256)]
     public string? NotificationData { get; set; }
 
-    public DateTimeOffset NotificationDate { get; set; }
-
     [StringLength(256)]
     public string? NotificationMessage { get; set; }
 
     [StringLength(32)]
     public string? NotificationTitle { get; set; }
 
-    [DefaultValue(0)]
-    public int IsCompleted { get; set; }
+    [Required]
+    [DefaultValue(false)]
+    public bool IsCompleted { get; set; }
 
-    public PushNotificationEntity? PushNotificationDeviceID { get; set; }
+    [StringLength(255)]
+    public string? CreatedBy { get; set; }
+
+    public DateTimeOffset CreatedDate { get; set; }
+
+    public DateTimeOffset UpdateDate { get; set; }
+
+    [ForeignKey("PushNotificationMessageID")]
+    public ICollection<PushNotificationDeliveredMessagesEntity>? DeliveredMessages { get; set; }
 
     #endregion
 }

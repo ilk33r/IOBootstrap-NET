@@ -4,19 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.DataAccess.Context;
 
-public abstract class IODatabaseContext<TContext> : DbContext where TContext : DbContext
+public abstract class IODatabaseContext<TContext, TPushNotificationDevicesEntity> : IOBaseDatabaseContext<TContext>
+where TContext : DbContext
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity
 {
-
-    public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
-    public virtual DbSet<IOExceptionEntity> Exceptions { get; set; }
-    public virtual DbSet<IOImagesEntity> Images { get; set; }
-    public virtual DbSet<IOLogsEntity> Logs { get; set; }
-    public virtual DbSet<IOMenuEntity> Menu { get; set; }
-    public virtual DbSet<IOBackOfficeMessageEntity> Messages { get; set; }
-    public virtual DbSet<IOUserEntity> Users { get; set; }
-    public virtual DbSet<PushNotificationEntity> PushNotifications { get; set; }
-    public virtual DbSet<PushNotificationMessageEntity> PushNotificationMessages { get; set; }
-    public virtual DbSet<PushNotificationDeliveredMessagesEntity> PushNotificationDeliveredMessages { get; set; }
+    public virtual DbSet<TPushNotificationDevicesEntity> PushNotificationDevices { get; set; }
 
     public IODatabaseContext(DbContextOptions<TContext> options) : base(options)
     {
@@ -31,22 +23,7 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
             menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);
 
         CreateUserModel(modelBuilder);
-
-        modelBuilder.Entity<PushNotificationEntity>().HasIndex(
-            pushNotificationEntity => new
-            {
-                pushNotificationEntity.DeviceId,
-                pushNotificationEntity.DeviceType,
-                pushNotificationEntity.LastUpdateTime
-            }).IsUnique(false);
-
-        modelBuilder.Entity<PushNotificationMessageEntity>().HasIndex(
-            pushNotificationMessageEntity => new
-            {
-                pushNotificationMessageEntity.NotificationDate,
-                pushNotificationMessageEntity.DeviceType,
-                pushNotificationMessageEntity.IsCompleted
-            });
+        CreatePushNotificationsModel(modelBuilder);
 
         modelBuilder.Entity<IOBackOfficeMessageEntity>().HasIndex(
             messagesEntity => new
@@ -75,5 +52,37 @@ public abstract class IODatabaseContext<TContext> : DbContext where TContext : D
             userEntity => new { userEntity.UserName }).IsUnique(true);
 
         modelBuilder.Entity<IOUserEntity>().HasIndex(u => u.IsActive);
+    }
+
+    private void CreatePushNotificationsModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TPushNotificationDevicesEntity>().HasIndex(
+            d => new
+            {
+                d.DeviceId,
+                d.DeviceType,
+                d.LastUpdateTime
+            });
+
+        modelBuilder.Entity<TPushNotificationDevicesEntity>().HasIndex(
+            d => new
+            {
+                d.IsActive
+            });
+
+        modelBuilder.Entity<PushNotificationMessageEntity>().HasIndex(
+            pushNotificationMessageEntity => new
+            {
+                pushNotificationMessageEntity.CreatedDate,
+                pushNotificationMessageEntity.DeviceType,
+                pushNotificationMessageEntity.IsCompleted
+            });
+
+        modelBuilder.Entity<PushNotificationDeliveredMessagesEntity>().HasIndex(
+            dm => new
+            {
+                dm.CreatedDate,
+                dm.IsDelivered
+            });
     }
 }

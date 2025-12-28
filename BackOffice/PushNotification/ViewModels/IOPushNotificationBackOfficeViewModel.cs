@@ -1,6 +1,8 @@
 ﻿using System;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
+using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
@@ -9,8 +11,9 @@ using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.ViewModels;
 
-public class IOPushNotificationBackOfficeViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+public class IOPushNotificationBackOfficeViewModel<TDBContext, TPushNotificationDevicesEntity> : IOBackOfficeViewModel<TDBContext>
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
 {
 
     #region Initialization Methods
@@ -32,30 +35,34 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
     }
 
-    public virtual IList<PushNotificationMessageModel> ListMessages()
+    public virtual ListPushNotificationMessageResponseModel ListMessages(IOListPushNotificationsRequestModel requestModel)
     {
+        int pushNotificationMessagesCount = DatabaseContext.PushNotificationMessages.Count();
+        
         // Obtain push notification entity
-        IList<PushNotificationMessageModel>? messages = DatabaseContext.PushNotificationMessages
+        IList<PushNotificationMessageModel>? paginatedMessages = DatabaseContext.PushNotificationMessages
                                                                             .Select(pm => new PushNotificationMessageModel()
                                                                             {
                                                                                 ID = pm.ID,
                                                                                 DeviceType = pm.DeviceType,
                                                                                 NotificationCategory = pm.NotificationCategory,
                                                                                 NotificationData = pm.NotificationData,
-                                                                                NotificationDate = pm.NotificationDate,
-                                                                                NotificationTitle = pm.NotificationTitle,
                                                                                 NotificationMessage = pm.NotificationMessage,
-                                                                                IsCompleted = pm.IsCompleted
+                                                                                NotificationTitle = pm.NotificationTitle,
+                                                                                IsCompleted = pm.IsCompleted,
+                                                                                CreatedBy = pm.CreatedBy,
+                                                                                CreatedDate = pm.CreatedDate,
+                                                                                UpdateDate = pm.UpdateDate,
+                                                                                DeliveredDevicesCount = pm.DeliveredMessages!
+                                                                                .Where(dm => dm.IsDelivered)
+                                                                                .Count()
                                                                             })
                                                                             .OrderByDescending(p => p.ID)
+                                                                            .Skip(requestModel.Start ?? 0)
+                                                                            .Take(requestModel.Count ?? 0)
                                                                             .ToList();
 
-        if (messages == null)
-        {
-            return new List<PushNotificationMessageModel>();
-        }
-
-        return messages;
+        return new ListPushNotificationMessageResponseModel(pushNotificationMessagesCount, paginatedMessages);
     }
 
     public void SendNotifications(SendPushNotificationRequestModel requestModel)
@@ -65,11 +72,13 @@ where TDBContext : IODatabaseContext<TDBContext>
         {
             DeviceType = (int)requestModel.DeviceType,
             NotificationCategory = requestModel.NotificationCategory,
-            NotificationData = requestModel.NotificationData,
-            NotificationMessage = requestModel.NotificationMessage,
-            NotificationTitle = requestModel.NotificationTitle,
-            NotificationDate = DateTime.UtcNow,
-            IsCompleted = 0
+            NotificationData = requestModel.NotificationData?.SanitizeHtml(),
+            NotificationMessage = requestModel.NotificationMessage?.SanitizeHtml(),
+            NotificationTitle = requestModel.NotificationTitle?.SanitizeHtml(),
+            IsCompleted = false,
+            CreatedBy = UserModel?.UserName,
+            CreatedDate = DateTime.UtcNow,
+            UpdateDate = DateTime.UtcNow
         };
 
         // Write message to database
@@ -94,9 +103,9 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
 
         // Set message completed
-        if (messageEntity.IsCompleted == 0)
+        if (!messageEntity.IsCompleted)
         {
-            messageEntity.IsCompleted = 1;
+            messageEntity.IsCompleted = true;
             DatabaseContext.Update(messageEntity);
             DatabaseContext.SaveChanges();
         }

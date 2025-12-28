@@ -16,7 +16,7 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 namespace IOBootstrap.NET.BackOffice.Images.ViewModels;
 
 public class IOBackOfficeImagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOImageViewModel, IIOImageAssetViewModel
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     #region Initialization Methods
 

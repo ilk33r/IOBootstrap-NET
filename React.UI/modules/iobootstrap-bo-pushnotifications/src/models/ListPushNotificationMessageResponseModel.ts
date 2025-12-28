@@ -3,11 +3,13 @@ import PushNotificationMessageModel from "./PushNotificationMessageModel";
 
 class ListPushNotificationMessageResponseModel extends BaseResponseModel {
 
+    count: number;
     messages: PushNotificationMessageModel[];
 
     constructor() {
         super();
 
+        this.count = 0;
         this.messages = [];
     }
 }

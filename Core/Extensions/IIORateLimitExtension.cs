@@ -10,7 +10,7 @@ public static class IIORateLimitExtension
 {
 
     public static void CheckAndUpdateRateLimit<TViewModel, TDBContext>(this IIORateLimit<TViewModel, TDBContext> input, string apiName, int seconds, int requestCount)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         string sessionName = "RateLimit" + apiName;
@@ -60,7 +60,7 @@ public static class IIORateLimitExtension
     }
 
     private static void CreateRateLimit<TViewModel, TDBContext>(this IIORateLimit<TViewModel, TDBContext> input, string sessionName)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         List<long> rateLimit = [DateTimeOffset.UtcNow.ToUnixTimeSeconds()];
@@ -68,7 +68,7 @@ public static class IIORateLimitExtension
     }
 
     private static void UpdateRateLimit<TViewModel, TDBContext>(this IIORateLimit<TViewModel, TDBContext> input, string sessionName, List<long> rateLimit)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         string rateLimitJson = JsonSerializer.Serialize(rateLimit);

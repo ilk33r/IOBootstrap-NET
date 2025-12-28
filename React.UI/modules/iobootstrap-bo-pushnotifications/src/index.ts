@@ -1,5 +1,6 @@
 export { default as PushNotificationListProops } from "./props/PushNotificationListProops";
 export { default as PushNotificationListState } from "./props/PushNotificationListState";
+export { default as IOListPushNotificationsRequestModel } from "./models/IOListPushNotificationsRequestModel";
 export { default as ListPushNotificationMessageResponseModel } from "./models/ListPushNotificationMessageResponseModel";
 export { default as PushNotificationMessageDeleteRequestModel } from "./models/PushNotificationMessageDeleteRequestModel";
 export { default as PushNotificationMessageModel } from "./models/PushNotificationMessageModel";

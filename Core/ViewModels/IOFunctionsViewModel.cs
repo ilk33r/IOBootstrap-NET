@@ -8,7 +8,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.Core.ViewModels;
 
 public abstract class IOFunctionsViewModel<TDBContext> : IOViewModel<TDBContext>, IIOFunctionsViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 	public override void CheckAuthorizationHeader()
 	{

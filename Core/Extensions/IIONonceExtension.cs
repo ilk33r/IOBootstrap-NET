@@ -10,7 +10,7 @@ public static class IIONonceExtension
 {
 
     public static async Task CheckNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input, string? headerNonce)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         if (headerNonce == null)
@@ -32,7 +32,7 @@ public static class IIONonceExtension
     }
 
     public static string UpdateNonce<TViewModel, TDBContext>(this IIONonce<TViewModel, TDBContext> input)
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
         string nonce = IORandomUtilities.GenerateRandomAlphaNumericString(8);

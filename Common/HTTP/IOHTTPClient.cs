@@ -24,13 +24,22 @@ public class IOHTTPClient
 
     #region Initialization Methods
 
-    public IOHTTPClient(string baseUrl, ILogger logger)
+    public IOHTTPClient(string baseUrl, ILogger logger, HttpClientHandler? handler = null)
     {
         UseHttp2 = false;
         IgnoreNullValues = false;
         BaseUrl = baseUrl;
-        IOHttpClientHandler httpClientHandler = new IOHttpClientHandler(new HttpClientHandler(), logger);
-        HttpClient = new HttpClient(httpClientHandler);
+        HttpClientHandler httpClientHandler;
+        if (handler == null)
+        {
+            httpClientHandler = new HttpClientHandler();
+        }
+        else
+        {
+            httpClientHandler = handler;
+        }
+        IOHttpClientHandler ioHTTPClientHandler = new IOHttpClientHandler(httpClientHandler, logger);
+        HttpClient = new HttpClient(ioHTTPClientHandler);
         HttpClient.DefaultRequestHeaders.Accept.Clear();
         HttpClient.DefaultRequestHeaders.Add("User-Agent", "IOBootstrap.NET");
     }

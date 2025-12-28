@@ -10,7 +10,7 @@ using IOBootstrap.NET.DataAccess.Entities;
 namespace IOBootstrap.NET.BackOffice.Messages.ViewModels;
 
 public class IOBackOfficeMessagesViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Initialization Methods

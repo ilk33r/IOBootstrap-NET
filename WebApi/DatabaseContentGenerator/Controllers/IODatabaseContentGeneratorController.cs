@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.WebApi.DatabaseContentGenerator.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class IODatabaseContentGeneratorController<TDBContext> : IOController<IODatabaseContentGeneratorViewModel<TDBContext>, TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     public IODatabaseContentGeneratorController(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)
     {

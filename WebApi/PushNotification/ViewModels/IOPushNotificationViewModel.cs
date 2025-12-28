@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Enumerations;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Messages.PushNotification;
 using IOBootstrap.NET.Core.ViewModels;
 using IOBootstrap.NET.DataAccess.Context;
@@ -7,36 +9,55 @@ using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.WebApi.PushNotification.ViewModels;
 
-public class IOPushNotificationViewModel<TDBContext> : IOViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+public class IOPushNotificationViewModel<TDBContext, TPushNotificationDevicesEntity> : IOViewModel<TDBContext>
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
 {
-	public void AddTokenV2(AddPushNotificationRequestModel requestModel)
+
+
+	public async Task AddPushNotificationToken(AddPushNotificationRequestModel requestModel)
 	{
+		// Decrypt values
+		string? deviceId = await DecryptString(requestModel.EncryptedDeviceId!);
+		string? bundleId = await DecryptString(requestModel.EncryptedAppBundleId!);
+		string? deviceName = await DecryptString(requestModel.EncryptedDeviceName!);
+		string? deviceToken = await DecryptString(requestModel.EncryptedDeviceToken!);
+
 		// Obtain push notification entity
-		IQueryable<PushNotificationEntity> pushNotificationsEntities = DatabaseContext.PushNotifications
-															.Where(pn => pn.DeviceId!.Equals(requestModel.DeviceId));
+		if (String.IsNullOrEmpty(deviceId))
+        {
+            throw new IOInvalidRequestException();
+        }
+
+		IQueryable<TPushNotificationDevicesEntity> pushNotificationsEntities = DatabaseContext.PushNotificationDevices
+															.Where(pn => pn.DeviceId!.Equals(deviceId));
 
 		// Check push notification entity exists
 		if (pushNotificationsEntities != null && pushNotificationsEntities.Count() > 0)
 		{
 			// Loop throught push notification entity
-			foreach (PushNotificationEntity pushEntity in pushNotificationsEntities)
+			foreach (TPushNotificationDevicesEntity pushEntity in pushNotificationsEntities)
 			{
 				pushEntity.DeviceType = DeviceTypes.Unkown;
 				DatabaseContext.Update(pushEntity);
 			}
 
 			// Obtain push notification entity
-			PushNotificationEntity pushNotificationEntity = pushNotificationsEntities.First();
+			TPushNotificationDevicesEntity pushNotificationEntity = pushNotificationsEntities.First();
 
 			// Update entity properties
 			pushNotificationEntity.AppBuildNumber = requestModel.AppBuildNumber ?? 0;
-			pushNotificationEntity.AppBundleId = requestModel.AppBundleId;
+			pushNotificationEntity.AppBundleId = bundleId;
 			pushNotificationEntity.AppVersion = requestModel.AppVersion;
-			pushNotificationEntity.DeviceName = requestModel.DeviceName;
-			pushNotificationEntity.DeviceToken = requestModel.DeviceToken;
+			pushNotificationEntity.WrongAttemptCount = 0;
+			pushNotificationEntity.IsActive = true;
+			pushNotificationEntity.DeviceName = deviceName;
+			pushNotificationEntity.DeviceToken = deviceToken;
 			pushNotificationEntity.DeviceType = requestModel.DeviceType ?? DeviceTypes.Unkown;
 			pushNotificationEntity.LastUpdateTime = DateTime.UtcNow;
+
+			// Update entity
+			UpdatePushNotificationDeviceEntity(ref pushNotificationEntity);
 
 			// Update entity
 			DatabaseContext.Update(pushNotificationEntity);
@@ -47,21 +68,30 @@ where TDBContext : IODatabaseContext<TDBContext>
 		}
 
 		// Create a push notification entity
-		PushNotificationEntity newPushNotificationDeviceEntity = new PushNotificationEntity()
+		TPushNotificationDevicesEntity newPushNotificationDeviceEntity = new TPushNotificationDevicesEntity()
 		{
 			AppBuildNumber = requestModel.AppBuildNumber ?? 0,
-			AppBundleId = requestModel.AppBundleId,
+			AppBundleId = bundleId,
 			AppVersion = requestModel.AppVersion,
 			BadgeCount = 0,
-			DeviceId = requestModel.DeviceId,
-			DeviceName = requestModel.DeviceName,
-			DeviceToken = requestModel.DeviceToken,
+			WrongAttemptCount = 0,
+			IsActive = true,
+			DeviceId = deviceId,
+			DeviceName = deviceName,
+			DeviceToken = deviceToken,
 			DeviceType = requestModel.DeviceType ?? DeviceTypes.Unkown,
 			LastUpdateTime = DateTime.UtcNow
 		};
+
+		// Update entity
+		UpdatePushNotificationDeviceEntity(ref newPushNotificationDeviceEntity);
 
 		// Write push notification to database
 		DatabaseContext.Add(newPushNotificationDeviceEntity);
 		DatabaseContext.SaveChanges();
 	}
+
+	public virtual void UpdatePushNotificationDeviceEntity(ref TPushNotificationDevicesEntity pushNotificationEntity)
+    {
+    }
 }

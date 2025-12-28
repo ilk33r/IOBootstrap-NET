@@ -10,7 +10,7 @@ using IOBootstrap.NET.WebApi.Index.ViewModels;
 namespace IOBootstrap.NET.WebApi.Index.Controllers;
 
 public class IOIndexController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOIndexViewModel<TDBContext>, new()
 {
     public IOIndexController(IConfiguration configuration,

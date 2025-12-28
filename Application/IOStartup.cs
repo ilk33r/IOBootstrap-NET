@@ -14,7 +14,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace IOBootstrap.NET.Application;
 
 public abstract class IOStartup<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Properties

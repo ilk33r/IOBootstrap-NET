@@ -6,7 +6,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.BackOffice.Configuration.Interfaces;
 
 public interface IIOBackOfficeConfigurationsViewModel<TDBContext> : IIOBackOfficeViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext> 
+where TDBContext : IOBaseDatabaseContext<TDBContext> 
 {
     public void CheckConfigurationsIsEnabled();
 

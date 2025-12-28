@@ -5,17 +5,18 @@ using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.PushNotification;
-using IOBootstrap.NET.Common.Models.PushNotification;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers;
 
 [IOBackoffice]
-public class IOPushNotificationBackOfficeController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
-where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
+public class IOPushNotificationBackOfficeController<TViewModel, TDBContext, TPushNotificationDevicesEntity> : IOBackOfficeController<TViewModel, TDBContext>
+where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
+where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext, TPushNotificationDevicesEntity>, new()
 {
 
     #region Initialization Methods
@@ -34,25 +35,22 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     [IORequireHTTPS]
     [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.User)]
-    [HttpGet("[action]")]
-    public ListPushNotificationMessageResponseModel ListMessages()
+    [HttpPost("[action]")]
+    public virtual ListPushNotificationMessageResponseModel ListMessages([FromBody] IOListPushNotificationsRequestModel requestModel)
     {
         // Check enabled
         ViewModel.CheckPushNotificationsIsEnabled();
 
-        // Obtain devices from view model
-        IList<PushNotificationMessageModel> messages = ViewModel.ListMessages();
-
         // Return response
-        return new ListPushNotificationMessageResponseModel(messages);
+        return ViewModel.ListMessages(requestModel);
     }
 
     [IORequireHTTPS]
-    [IORateLimit(seconds: 60, requestCount: 15)]
+    [IORateLimit(seconds: 60, requestCount: 5)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.User)]
     [HttpPost("[action]")]
-    public IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
+    public virtual IOResponseModel SendNotification([FromBody] SendPushNotificationRequestModel requestModel)
     {
         // Check enabled
         ViewModel.CheckPushNotificationsIsEnabled();
@@ -69,7 +67,7 @@ where TViewModel : IOPushNotificationBackOfficeViewModel<TDBContext>, new()
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.User)]
     [HttpPost("[action]")]
-    public PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
+    public virtual PushNotificationMessageDeleteResponseModel DeleteMessage([FromBody] PushNotificationMessageDeleteRequestModel requestModel)
     {
         // Check enabled
         ViewModel.CheckPushNotificationsIsEnabled();

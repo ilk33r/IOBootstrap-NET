@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
 public abstract class IOAuthenticationViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOAuthenticationViewModel<TDBContext>, IIOAuthentication<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Initialization Methods

@@ -7,7 +7,7 @@ using IOBootstrap.NET.Common.Models.Users;
 namespace IOBootstrap.NET.Core.ViewModels;
 
 public abstract class IOBackOfficeViewModel<TDBContext> : IOViewModel<TDBContext>, IIOBackOfficeViewModel<TDBContext>, IIOUserCredential<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Publics

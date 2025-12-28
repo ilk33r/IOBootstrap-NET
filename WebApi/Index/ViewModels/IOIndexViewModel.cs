@@ -5,7 +5,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.WebApi.Index.ViewModels;
 
 public class IOIndexViewModel<TDBContext> : IOViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     public override void CheckAuthorizationHeader()
     {

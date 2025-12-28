@@ -12,11 +12,12 @@ using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
 using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Extensions;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels;
 
 public class IOUserViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOUserViewModel<TDBContext>, IIOUserCredential<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Initialization Methods
@@ -53,7 +54,7 @@ where TDBContext : IODatabaseContext<TDBContext>
                 // Create a users entity 
                 newUserEntity = new IOUserEntity()
                 {
-                    UserName = requestModel.UserName!.ToLower(),
+                    UserName = requestModel.UserName?.SanitizeHtml().ToLower(),
                     Password = hashed,
                     UserRole = requestModel.UserRole,
                     UserToken = null,
@@ -171,7 +172,7 @@ where TDBContext : IODatabaseContext<TDBContext>
         }
 
         IOUserEntity? user = DatabaseContext.Users.Find(request.UserId);
-        string userName = request.UserName?.ToLower() ?? "";
+        string userName = request.UserName?.SanitizeHtml().ToLower() ?? String.Empty;
 
         if (user == null)
         {

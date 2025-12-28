@@ -11,24 +11,24 @@ public class AddPushNotificationRequestModel : IORequestModel
 	public int? AppBuildNumber { get; set; }
 
 	[Required]
-	[StringLength(64)]
-	public String? AppBundleId { get; set; }
+	[StringLength(256)]
+	public String? EncryptedAppBundleId { get; set; }
 
 	[Required]
 	[StringLength(10)]
 	public String? AppVersion { get; set; }
 
 	[Required]
-	[StringLength(128)]
-	public String? DeviceId { get; set; }
-
-	[Required]
-	[StringLength(128)]
-	public String? DeviceName { get; set; }
+	[StringLength(512)]
+	public String? EncryptedDeviceId { get; set; }
 
 	[Required]
 	[StringLength(512)]
-	public String? DeviceToken { get; set; }
+	public String? EncryptedDeviceName { get; set; }
+
+	[Required]
+	[StringLength(1024)]
+	public String? EncryptedDeviceToken { get; set; }
 
 	[Required]
 	public DeviceTypes? DeviceType { get; set; }

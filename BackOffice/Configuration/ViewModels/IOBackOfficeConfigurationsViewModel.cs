@@ -12,7 +12,7 @@ using IOBootstrap.NET.Common.Exceptions.Common;
 namespace IOBootstrap.NET.BackOffice.Configuration.ViewModels;
 
 public class IOBackOfficeConfigurationsViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOBackOfficeConfigurationsViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     #region Initialization Methods

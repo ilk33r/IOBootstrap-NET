@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.BackOffice.Messages.Controllers;
 
 [IOBackoffice]
 public abstract class IOBackOfficeMessagesController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IOBackOfficeMessagesViewModel<TDBContext>, new()
 {
 

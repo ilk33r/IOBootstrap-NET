@@ -17,7 +17,7 @@ namespace IOBootstrap.NET.BackOffice.User.Controllers;
 
 [IOBackoffice]
 public abstract class IOUserController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOUserViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

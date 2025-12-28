@@ -9,7 +9,7 @@ using IOBootstrap.NET.Core.Interfaces;
 namespace IOBootstrap.NET.BackOffice.Logs.ViewModels;
 
 public class IOBackOfficeLogsViewModel<TDBContext> : IOBackOfficeViewModel<TDBContext>, IIOImageViewModel, IIOImageAssetViewModel
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     #region Initialization Methods
 

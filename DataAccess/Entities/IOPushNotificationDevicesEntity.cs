@@ -1,13 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IOBootstrap.NET.Common.Enumerations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IOBootstrap.NET.DataAccess.Entities;
 
-public class PushNotificationEntity
+public abstract class IOPushNotificationDevicesEntity
 {
 
     #region Properties
@@ -26,6 +26,12 @@ public class PushNotificationEntity
 
     public int BadgeCount { get; set; }
 
+    [DefaultValue(0)]
+    public int WrongAttemptCount { get; set; }
+
+    [DefaultValue(false)]
+    public bool IsActive { get; set; }
+
     [StringLength(128)]
     public string? DeviceId { get; set; }
 
@@ -39,8 +45,7 @@ public class PushNotificationEntity
 
     public DateTimeOffset LastUpdateTime { get; set; }
 
-    [ForeignKey("PushNotificationID")]
-    [DeleteBehavior(DeleteBehavior.Cascade)]
+    [ForeignKey("PushNotificationDeviceID")]
     public ICollection<PushNotificationDeliveredMessagesEntity>? DeliveredMessages { get; set; }
 
     #endregion

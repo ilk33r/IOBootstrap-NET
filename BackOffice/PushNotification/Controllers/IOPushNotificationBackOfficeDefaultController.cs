@@ -3,6 +3,7 @@ using IOBootstrap.NET.BackOffice.PushNotification.ViewModels;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
+using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +15,8 @@ namespace IOBootstrap.NET.BackOffice.PushNotification.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
-public class IOPushNotificationBackOfficeDefaultController : IOPushNotificationBackOfficeController<IOPushNotificationBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl>
+[IOSession]
+public class IOPushNotificationBackOfficeDefaultController : IOPushNotificationBackOfficeController<IOPushNotificationBackOfficeDefaultViewModel, IODatabaseContextDefaultImpl, IOPushNotificationDevicesDefaultEntity>
 {
     public IOPushNotificationBackOfficeDefaultController(IConfiguration configuration,
                                                          IWebHostEnvironment environment,

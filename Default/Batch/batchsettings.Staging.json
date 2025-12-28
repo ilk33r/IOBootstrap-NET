@@ -1,10 +1,6 @@
 {
     "IOConnectionStrings": "server=localhost;database=iobootstrap;user=dbu;password=12345678",
-    "IOAPNSBundleID": "",
     "IOAPNSApiURL": "https://api.sandbox.push.apple.com",
-    "IOAPNSAuthKeyID": "",
-    "IOAPNSKeyFilePath": "Certificates/xyz.p12",
-    "IOAPNSTeamID": "",
     "IOFirebasePrivateKeyFile": "firebase-adminsdk-cgcit-04519c3df2.json",
     "IOVersion": "0.0.0"
   }

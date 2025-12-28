@@ -14,7 +14,7 @@ namespace IOBootstrap.NET.BackOffice.Configuration.Controllers;
 
 [IOBackoffice]
 public class IOBackOfficeConfigurationsController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
 {
 

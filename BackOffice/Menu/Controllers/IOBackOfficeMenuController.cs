@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.BackOffice.Menu.Controllers;
 
 [IOBackoffice]
 public abstract class IOBackOfficeMenuController<TViewModel, TDBContext> : IOBackOfficeController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOBackOfficeMenuViewModel<TDBContext>, new()
 {
     #region Controller Lifecycle

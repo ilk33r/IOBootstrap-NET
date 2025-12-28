@@ -25,7 +25,7 @@ public abstract class IOController<TViewModel, TDBContext> : Controller,
 IIOController<TViewModel, TDBContext>,
 IIONonce<TViewModel, TDBContext>,
 IIORateLimit<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOViewModel<TDBContext>, new()
 {
 

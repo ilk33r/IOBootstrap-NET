@@ -11,7 +11,7 @@ using IOBootstrap.NET.DataAccess.Context;
 namespace IOBootstrap.NET.WebApi.Statics;
 
 public class IOImageAssetViewModel<TDBContext> : IOViewModel<TDBContext>, IIOImageAssetViewModel
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
     private static string CaptchaCacheName = "auth-captcha-{0}";

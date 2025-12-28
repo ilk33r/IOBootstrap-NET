@@ -9,58 +9,55 @@ namespace IOBootstrap.NET.Batch.PushSender.Extensions;
 public static class IOPushSenderProcessSendMessagesExtension
 {
 
-    public static void SendMessages<TConfig, TDBContext>(
-        this IOPushSenderProcess<TConfig, TDBContext> input, 
-        IList<PushNotificationMessageEntity> pushNotificationMessages
+    public static async Task SendMessages<TConfig, TDBContext, TPushNotificationDevicesEntity>(
+        this IOPushSenderProcess<TConfig, TDBContext, TPushNotificationDevicesEntity> input, 
+        PushNotificationMessageEntity pushNotificationMessage,
+        IList<PushNotificationDeliveredMessagesEntity> pendingDevices
     )
     where TConfig : IOBatchConfigurationModel
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity, new()
+    where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     {
-        foreach (PushNotificationMessageEntity message in pushNotificationMessages)
+        foreach (PushNotificationDeliveredMessagesEntity deliveredMessage in pendingDevices)
         {
-            // Check notification is not for single device
-            if (message.PushNotificationDeviceID?.DeviceType == DeviceTypes.Generic)
+            if (pushNotificationMessage.DeviceType == (int)DeviceTypes.Generic)
             {
-                // Obtain firebase devices
-                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID);
-                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
-                input.DeleteInvalidDevices(invalidDevices);
-
-                // Obtain apns devices
-                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID);
-                IList<PushNotificationEntity> invalidAPNSDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
-                input.DeleteInvalidDevices(invalidAPNSDevices);
-
-                if (googleDevices.Count == 0 && apnsDevices.Count == 0)
+                if (deliveredMessage.Device?.DeviceType == DeviceTypes.iOS)
                 {
-                    input.SetMessageSended(message);
+                    await input.SendNotificationToAllApnsDevices(
+                        pushNotificationMessage,
+                        pendingDevices
+                    );
+                }
+                else if (deliveredMessage.Device?.DeviceType == DeviceTypes.AndroidGoogle)
+                {
+                    await input.SendNotificationToAllFirebaseDevices(
+                        pushNotificationMessage,
+                        pendingDevices
+                    );
                 }
             }
-            else if (message.DeviceType == (int)DeviceTypes.AndroidGoogle)
+            else if (pushNotificationMessage.DeviceType == (int)DeviceTypes.AndroidGoogle)
             {
-                // Send firebase message// Obtain firebase devices
-                IList<PushNotificationEntity> googleDevices = input.GetDevices(DeviceTypes.AndroidGoogle, message.ID);
-                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllFirebaseDevices(message, googleDevices);
-                input.DeleteInvalidDevices(invalidDevices);
-
-                if (googleDevices.Count == 0)
-                {
-                    input.SetMessageSended(message);
-                }
+                await input.SendNotificationToAllFirebaseDevices(
+                    pushNotificationMessage,
+                    pendingDevices
+                );
             }
-            else if (message.DeviceType == (int)DeviceTypes.iOS)
+            else if (pushNotificationMessage.DeviceType == (int)DeviceTypes.iOS)
             {
-                // Send firebase message// Obtain firebase devices
-                IList<PushNotificationEntity> apnsDevices = input.GetDevices(DeviceTypes.iOS, message.ID);
-                IList<PushNotificationEntity> invalidDevices = input.SendNotificationToAllApnsDevices(message, apnsDevices);
-                input.DeleteInvalidDevices(invalidDevices);
-
-                if (apnsDevices.Count == 0)
-                {
-                    input.SetMessageSended(message);
-                }
+                await input.SendNotificationToAllApnsDevices(
+                    pushNotificationMessage,
+                    pendingDevices
+                );
+            }
+            else
+            {
+                deliveredMessage.IsDelivered = true;
+                input.DatabaseContext?.Update(deliveredMessage);
             }
         }
-    }
 
+        input.DatabaseContext?.SaveChanges();
+    }
 }

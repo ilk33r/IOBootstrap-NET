@@ -48,13 +48,13 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
         this.LoadImages();
     }
 
-    pageChangeHandler(start: number, length: number) {
+    private pageChangeHandler(start: number, length: number) {
         this.requestModel.start = start;
         this.requestModel.count = length;
         this.LoadImages();
     }
 
-    updateDataHandler(index: number) {
+    private updateDataHandler(index: number) {
         const currentImage = this.state.images[index];
         
         this.appContext.setObjectForKey("selectedImage", currentImage);

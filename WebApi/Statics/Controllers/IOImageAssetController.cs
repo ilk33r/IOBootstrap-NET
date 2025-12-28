@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IOBootstrap.NET.WebApi.Statics;
 
 public class IOImageAssetController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
-    where TDBContext : IODatabaseContext<TDBContext>
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IOImageAssetViewModel<TDBContext>, new()
 {
     public IOImageAssetController(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, TDBContext databaseContext) : base(configuration, environment, logger, databaseContext)

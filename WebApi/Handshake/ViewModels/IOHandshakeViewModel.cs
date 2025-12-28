@@ -9,7 +9,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 namespace IOBootstrap.NET.WebApi.Handshake.ViewModels;
 
 public class IOHandshakeViewModel<TDBContext> : IOViewModel<TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
     public async Task<Tuple<string, string>> GetPuplicKey()
     {

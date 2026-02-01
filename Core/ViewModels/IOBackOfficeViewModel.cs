@@ -12,6 +12,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
     #region Publics
 
+    public string[]? TokenExtras { get; set; }
     public IOUserInfoModel? UserModel { get; set; }
 
     #endregion

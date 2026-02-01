@@ -2,8 +2,8 @@ import GetLogsRequestModel from "../models/GetLogsRequestModel";
 import GetLogsResponseModel from "../models/GetLogsResponseModel";
 import LogsListProps from "../props/LogsListProps";
 import LogsListState from "../props/LogsListState";
-import React from "react";
 import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BaseView } from "iobootstrap-ui-base";
 
 class LogsController extends BOController<LogsListProps, LogsListState> {
 
@@ -116,7 +116,7 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
         pagination.pageClickHandler = this.pageChangeHandler;
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -131,7 +131,7 @@ class LogsController extends BOController<LogsListProps, LogsListState> {
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={pagination} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

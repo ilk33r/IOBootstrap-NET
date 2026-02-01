@@ -40,6 +40,7 @@ public class IOHTTPClient
         }
         IOHttpClientHandler ioHTTPClientHandler = new IOHttpClientHandler(httpClientHandler, logger);
         HttpClient = new HttpClient(ioHTTPClientHandler);
+        HttpClient.Timeout = TimeSpan.FromSeconds(90);
         HttpClient.DefaultRequestHeaders.Accept.Clear();
         HttpClient.DefaultRequestHeaders.Add("User-Agent", "IOBootstrap.NET");
     }
@@ -73,7 +74,7 @@ public class IOHTTPClient
         }
         else
         {
-            task = PostRequest(callback);
+            task = HTTPRequest(RequestMethod, callback);
         }
 
         return task;
@@ -88,7 +89,7 @@ public class IOHTTPClient
         }
         else
         {
-            task = PostRequest(path, callback);
+            task = HTTPRequest(path, RequestMethod, callback);
         }
 
         return task;
@@ -159,7 +160,7 @@ public class IOHTTPClient
         ContentType = contentType;
     }
 
-    public void SetPostBody(Object bodyObject)
+    public void SetBody(Object bodyObject)
     {
         PostBody = bodyObject;
     }
@@ -190,12 +191,12 @@ public class IOHTTPClient
         }
     }
 
-    private async Task PostRequest(HttpResponse callback)
+    private async Task HTTPRequest(IOHTTPClientRequestMethods method, HttpResponse callback)
     {
-        await PostRequest("", callback);
+        await HTTPRequest("", method, callback);
     }
 
-    private async Task PostRequest(string path, HttpResponse callback)
+    private async Task HTTPRequest(string path, IOHTTPClientRequestMethods method, HttpResponse callback)
     {
         try
         {
@@ -214,10 +215,22 @@ public class IOHTTPClient
             }
 
             HttpContent postContent = new StringContent(serializedBody, Encoding.UTF8, ContentType ?? "");
-            var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + path)
+            HttpRequestMessage request;
+            
+            if (method == IOHTTPClientRequestMethods.PATCH)
             {
-                Content = postContent
-            };
+                request = new HttpRequestMessage(HttpMethod.Patch, BaseUrl + path)
+                {
+                    Content = postContent
+                };   
+            }
+            else
+            {
+                request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + path)
+                {
+                    Content = postContent
+                };  
+            }
 
             if (UseHttp2)
             {

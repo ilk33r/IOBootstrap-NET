@@ -1,8 +1,7 @@
-import { Validatable, View } from "iobootstrap-ui-base";
+import { BaseView, Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeSelectProps from "../props/FormTypeSelectProps";
 import FormViewState from "../props/FormViewState";
-import React from "react";
 
 class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implements FormElement, Validatable {
 
@@ -71,7 +70,7 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
         });
 
         return(
-            <React.StrictMode>
+            <BaseView>
                 <div className="row mb-3">
                     <div className="col-sm-2 text-end">
                         <label htmlFor={formId} className="col-form-label my-2">
@@ -90,7 +89,7 @@ class FormTypeSelectView extends View<FormTypeSelectProps, FormViewState> implem
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

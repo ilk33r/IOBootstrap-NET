@@ -8,6 +8,7 @@ public static class IORequestHeaderConstants
 
     public static string Authorization = "X-IO-AUTHORIZATION";
     public static string AuthorizationToken = "X-IO-AUTHORIZATION-TOKEN";
+    public static string AuthorizationTokenExtras = "X-IO-AUTHORIZATION-TOKEN-EXTRAS";
     public static string Nonce = "X-NONCE";
     public static string IsEncrypted = "X-IO-IS-ENCRYPTED";
     public static string KeyID = "X-KEY-ID";

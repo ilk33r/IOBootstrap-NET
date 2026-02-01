@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { View } from 'iobootstrap-ui-base';
+import { BaseView, View } from 'iobootstrap-ui-base';
 import HeaderProps from '../props/HeaderProps';
 import HeaderState from '../props/HeaderState';
-import React from 'react';
 
 class HeaderView extends View<HeaderProps, HeaderState> {
 
@@ -12,7 +11,7 @@ class HeaderView extends View<HeaderProps, HeaderState> {
 
     render() {
         return (
-            <React.StrictMode>
+            <BaseView>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary z-3">
                     <div className="container-fluid">
                         <a className="navbar-brand" href={import.meta.env.VITE_BACKOFFICE_PAGE_URL}>
@@ -39,7 +38,7 @@ class HeaderView extends View<HeaderProps, HeaderState> {
                         </div>
                     </div>
                 </nav>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

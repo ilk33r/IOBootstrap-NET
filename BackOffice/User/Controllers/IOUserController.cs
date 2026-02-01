@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using IOBootstrap.NET.BackOffice.User.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Enumerations;
@@ -7,7 +6,6 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
 using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Users;
-using IOBootstrap.NET.Common.Models.Users;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.Controllers;
 using IOBootstrap.NET.DataAccess.Context;
@@ -91,14 +89,11 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
     [IORequireHTTPS]
     [IORateLimit(seconds: 60, requestCount: 15)]
     [IOUserRole(UserRoles.Admin)]
-    [HttpGet("[action]")]
-    public virtual IOListUserResponseModel ListUsers()
+    [HttpPost("[action]")]
+    public virtual IOListUserResponseModel ListUsers([FromBody] IOListUserRequestModel requestModel)
     {
         // Obtain user list
-        IList<IOUserInfoModel> users = ViewModel.ListUsers();
-
-        // Create and return response
-        return new IOListUserResponseModel(users);
+        return ViewModel.ListUsers(requestModel.Start, requestModel.Count);
     }
 
     [IORequireHTTPS]

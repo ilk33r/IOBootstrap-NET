@@ -1,4 +1,4 @@
-import { AppCryptography, BaseResponseModel, UICommonConstants } from 'iobootstrap-ui-base';
+import { AppCryptography, BaseResponseModel, BaseView, UICommonConstants } from 'iobootstrap-ui-base';
 import AuthenticationRequestModel from '../models/AuthenticationRequestModel';
 import AuthenticationResponseModel from '../models/AuthenticationResponseModel';
 import LoginProps from '../props/LoginProps';
@@ -106,7 +106,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                     weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
                 }
 
-                weakSelf.decryptTokenAndUserName(response.token, response.userName ?? "")
+                weakSelf.storeTokenAndUserName(response.token, response.extras ?? "")
                             .then(() => {
                                 weakSelf.loginSuccessHandler();
                             })
@@ -119,14 +119,12 @@ class LoginController extends BOController<LoginProps, LoginState> {
         });
     }
 
-    private async decryptTokenAndUserName(encryptedToken: string | null, encryptedUserName: string): Promise<any> {
+    private async storeTokenAndUserName(encryptedToken: string | null, encryptedTokenExtras: string): Promise<any> {
         const cookieAuthentication = import.meta.env.VITE_COOKIE_AUTHENTICATION;
         if (cookieAuthentication !== "true") {
             this.storage.setStringForKey(UICommonConstants.userTokenStorageKey, encryptedToken ?? "");
+            this.storage.setStringForKey(UICommonConstants.userTokenExtrasStorageKey, encryptedTokenExtras ?? "");
         }
-
-        const decryptedUserName = await AppCryptography.Instance.decrypt(encryptedUserName);
-        this.storage.setStringForKey(BOCommonConstants.userNameStorageKey, decryptedUserName);
     }
 
     public render() {
@@ -135,13 +133,13 @@ class LoginController extends BOController<LoginProps, LoginState> {
 
         if (this.state.captchaID == null) {
             captchaComponent = (
-                <React.StrictMode>
-                </React.StrictMode>
+                <BaseView>
+                </BaseView>
             );
         } else {
             const captchaURL = `${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_IMAGE_ASSETS_CONTROLLER}/GetCaptcha?id=${this.state.captchaID ?? ""}`;
             captchaComponent = (
-                <React.StrictMode>
+                <BaseView>
                     <div className="mb-4">
                         <img src={captchaURL} alt="Captcha" />
                     </div>
@@ -151,12 +149,12 @@ class LoginController extends BOController<LoginProps, LoginState> {
                             <label htmlFor="inputCaptcha">Captcha</label>
                         </div>
                     </div>
-                </React.StrictMode>
+                </BaseView>
             );
         }
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <section className="container-fluid">
                     <div className="row mb-5 mt-5">
                         <div className="col-sm-12 col-md-6 mx-auto">
@@ -194,7 +192,7 @@ class LoginController extends BOController<LoginProps, LoginState> {
                     <div className="row mb-5"></div>
                     <div className="row mb-5"></div>
                 </section>
-            </React.StrictMode>
+            </BaseView>
           );
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using IOBootstrap.NET.BackOffice.Authentication.Interfaces;
 using IOBootstrap.NET.Common.Attributes;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Messages.Authentication;
@@ -46,6 +47,14 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
             requestModel.EncryptedCaptcha
         );
 
+        #if DEBUG
+        IOCacheObject tokenCacheObject = new IOCacheObject(IOCacheKeys.SwaggerToken, response.Token ?? string.Empty, 0);
+        IOCacheObject tokenExtraCacheObject = new IOCacheObject(IOCacheKeys.SwaggerTokenExtra, response.Extras ?? string.Empty, 0);
+
+        IOCache.CacheObject(tokenCacheObject);
+        IOCache.CacheObject(tokenExtraCacheObject);
+        #endif
+
         bool cookieAuthentication = Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         if (cookieAuthentication)
         {
@@ -53,12 +62,23 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
             {
                 Secure = true,
                 HttpOnly = false,
-                Expires = DateTime.UtcNow.AddHours(9),
+                Expires = DateTime.UtcNow.AddHours(24),
                 IsEssential = true,
                 SameSite = SameSiteMode.Lax
             });
 
             response.Token = null;
+
+            HttpContext.Response.Cookies.Append(IOCookieConstants.TokenExtrasCookieName, response.Extras ?? string.Empty, new CookieOptions()
+            {
+                Secure = true,
+                HttpOnly = false,
+                Expires = DateTime.UtcNow.AddHours(24),
+                IsEssential = true,
+                SameSite = SameSiteMode.Lax
+            });
+
+            response.Extras = null;
         }
 
         return response;
@@ -74,7 +94,7 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
     public virtual async Task<IOCheckTokenResponseModel> CheckToken([FromBody] IOCheckTokenRequestModel requestModel)
     {
         // Check if authentication result is true
-        return await ViewModel.CheckToken(requestModel.Token);
+        return await ViewModel.CheckToken(requestModel.Token, requestModel.Extras);
     }
 
     #endregion

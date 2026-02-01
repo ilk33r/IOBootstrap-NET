@@ -4,8 +4,7 @@ import MenuEditorListState from "../props/MenuEditorListState";
 import MenuListModel from "../models/MenuListModel";
 import MenuListResponseModel from "../models/MenuListResponseModel";
 import MenuUpdateRequestModel from "../models/MenuUpdateRequestModel";
-import React from "react";
-import { DIHooks } from "iobootstrap-ui-base";
+import { BaseView, DIHooks } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListView } from "iobootstrap-bo-base";
 
 class MenuEditorListController extends BOController<MenuEditorListProps, MenuEditorListState> {
@@ -174,7 +173,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
         });
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -189,7 +188,7 @@ class MenuEditorListController extends BOController<MenuEditorListProps, MenuEdi
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={null} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

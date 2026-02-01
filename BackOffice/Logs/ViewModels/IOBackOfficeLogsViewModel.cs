@@ -63,6 +63,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
                                                     ResponseBody = log.ExceptionStackTrace
                                                 })
                                                 .OrderByDescending(i => i.RequestDate)
+                                                .ThenBy(it => it.ID)
                                                 .Skip(requestModel.Start ?? 0)
                                                 .Take(requestModel.Count ?? 0)
                                                 .ToList();

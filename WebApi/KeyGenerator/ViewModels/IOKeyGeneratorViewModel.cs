@@ -1,7 +1,9 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Encryption;
 using IOBootstrap.NET.Common.Messages.KeyGenerator;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.Core.ViewModels;
@@ -28,13 +30,42 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 #endif
     }
 
-    public IOEncryptResponseModel Encrypt(IOEncryptRequestModel requestModel)
+    public async Task<IOEncryptResponseModel> Encrypt(IOEncryptRequestModel requestModel)
     {
+        IOCacheObject? encryptedKey = IOCache.GetCachedObject(IOCacheKeys.SwaggerSymmetricKey);
+        IOCacheObject? encryptedIV = IOCache.GetCachedObject(IOCacheKeys.SwaggerSymmetricIV);
+
+        string aesKey;
+        string aesIV;
+        string symmetricKey = "";
+        string symmetricIV = "";
+
         // Create aes key and iv
-        string aesKey = IORandomUtilities.GenerateRandomAlphaNumericString(32);
-        string aesIV = IORandomUtilities.GenerateRandomAlphaNumericString(16);
-        byte[] aesKeyBytes = Encoding.UTF8.GetBytes(aesKey);
-        byte[] aesIVBytes = Encoding.UTF8.GetBytes(aesIV);
+        byte[] aesKeyBytes;
+        byte[] aesIVBytes;
+
+        if (encryptedKey == null || encryptedIV == null)
+        {
+            aesKey = IORandomUtilities.GenerateRandomAlphaNumericString(32);
+            aesIV = IORandomUtilities.GenerateRandomAlphaNumericString(16);
+            aesKeyBytes = Encoding.UTF8.GetBytes(aesKey);
+            aesIVBytes = Encoding.UTF8.GetBytes(aesIV);
+        }
+        else
+        {
+            string encryptedKeyString = (string)encryptedKey.Value;
+            string encryptedIVString = (string)encryptedIV.Value;
+
+            byte[] encryptedSymmetricIV = Convert.FromBase64String(encryptedIVString);
+            aesIVBytes = await IOEncryptionUtilities.DecryptString(encryptedSymmetricIV);
+
+            byte[] encryptedSymmetricKey = Convert.FromBase64String(encryptedKeyString);
+            aesKeyBytes = await IOEncryptionUtilities.DecryptString(encryptedSymmetricKey);
+
+            symmetricKey = encryptedKeyString;
+            symmetricIV = encryptedIVString;
+        }
+
         IOAESUtilities aesUtilities = new IOAESUtilities(aesKeyBytes, aesIVBytes);
 
         byte[] exponent = Convert.FromHexString(requestModel.PublicKeyExponent ?? "");
@@ -43,15 +74,27 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         RsaKeyParameters publicKey = new RsaKeyParameters(false, new BigInteger(modulus), new BigInteger(exponent));
         IAsymmetricBlockCipher rsaEngine = new OaepEncoding(new RsaEngine(), new Sha256Digest());
         rsaEngine.Init(true, publicKey);
-        byte[] encryptedSymmetricKey = rsaEngine.ProcessBlock(aesKeyBytes, 0, aesKeyBytes.Length);
-        byte[] encryptedSymmetricIV = rsaEngine.ProcessBlock(aesIVBytes, 0, aesIVBytes.Length);
 
+        if (encryptedKey == null || encryptedIV == null)
+        {
+            byte[] encryptedSymmetricKey = rsaEngine.ProcessBlock(aesKeyBytes, 0, aesKeyBytes.Length);
+            byte[] encryptedSymmetricIV = rsaEngine.ProcessBlock(aesIVBytes, 0, aesIVBytes.Length);
+            symmetricKey = Convert.ToBase64String(encryptedSymmetricKey);
+            symmetricIV = Convert.ToBase64String(encryptedSymmetricIV);
+
+            encryptedKey = new IOCacheObject(IOCacheKeys.SwaggerSymmetricKey, symmetricKey, 0);
+            encryptedIV = new IOCacheObject(IOCacheKeys.SwaggerSymmetricIV, symmetricIV, 0);
+
+            IOCache.CacheObject(encryptedKey);
+            IOCache.CacheObject(encryptedIV);
+        }
+        
         string encryptedString = Convert.ToBase64String(aesUtilities.Encrypt(requestModel.PlainText ?? ""));
 
         IOEncryptResponseModel responseModel = new IOEncryptResponseModel()
         {
-            SymmetricKey = Convert.ToBase64String(encryptedSymmetricKey),
-            SymmetricIV = Convert.ToBase64String(encryptedSymmetricIV),
+            SymmetricKey = symmetricKey,
+            SymmetricIV = symmetricIV,
             EncryptedValue = encryptedString
         };
 

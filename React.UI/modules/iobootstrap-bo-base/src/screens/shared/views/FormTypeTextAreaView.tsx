@@ -1,8 +1,7 @@
-import { Validatable, View } from "iobootstrap-ui-base";
+import { BaseView, Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeTextAreaProps from "../props/FormTypeTextProps";
 import FormViewState from "../props/FormViewState";
-import React from "react";
 
 class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> implements FormElement, Validatable {
 
@@ -66,7 +65,7 @@ class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> im
         const formClass = (this.state.hasError) ? "form-control is-invalid" : "form-control";
 
         return(
-            <React.StrictMode>
+            <BaseView>
                 <div className="row mb-3">
                     <div className="col-sm-2 text-end">
                         <label htmlFor={formId} className="col-form-label my-2">
@@ -82,7 +81,7 @@ class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> im
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

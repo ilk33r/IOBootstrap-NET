@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using IOBootstrap.NET.Common.Cache;
+﻿using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Exceptions.Members;
@@ -84,16 +83,13 @@ public static class IIOAuthenticationExtension
         // Generate token for user
         string userTokenString = IORandomUtilities.GenerateGUIDString();
 
-        // Create decrypted user token string
-        string decryptedUserToken = String.Format("{0},{1}", findedUser.ID, userTokenString);
-
-        // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
-
-        // Base 64 encode user token data
-        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
-        string userNewToken = Convert.ToBase64String(aesUtilities.Encrypt(decryptedUserToken));
+        // Create token
+        string userNewToken = input.CreateTokenExtras(
+            [
+                findedUser.ID,
+                userTokenString
+            ]
+        );
 
         // Create token date
         DateTime tokenDate = DateTime.UtcNow;
@@ -113,79 +109,140 @@ public static class IIOAuthenticationExtension
         IOCache.InvalidateCache(cacheKey);
 
         // Encrypt sensitive data
-        string encryptedUserName = await input.EncryptString(findedUser.UserName ?? "");
+        string tokenExtras = input.CreateTokenExtras(
+            [
+                findedUser.ID,
+                findedUser.UserName ?? String.Empty, 
+                findedUser.UserRole.ToString()
+            ]
+        );
 
         // Return response
         return new IOAuthenticationResponseModel(
             userNewToken,
             tokenDate.Add(new TimeSpan(tokenLife * 1000)),
-            encryptedUserName,
+            tokenExtras,
             findedUser.UserRole
         );
     }
 
-    public static async Task<IOCheckTokenResponseModel> CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token)
+    public static string CreateTokenExtras<TDBContext>(
+        this IIOAuthentication<TDBContext> input,
+        params object?[] args
+    )
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
+    {
+        List<string> formatStringList = new List<string>();
+        for (int i = 0; i < args.Length; i++)
+        {
+            formatStringList.Add(
+                String.Format("{{{0}}}", i)
+            );
+        }
+
+        // Create decrypted user token string
+        string formatString = String.Join(";", formatStringList);
+        string decryptedUserTokenExtras = String.Format(formatString, args);
+
+        // Convert key and iv to byte array
+        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+
+        // Base 64 encode user token data
+        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+        return Convert.ToBase64String(aesUtilities.Encrypt(decryptedUserTokenExtras));
+    }
+
+    public static IOCheckTokenResponseModel CheckUserToken<TDBContext>(this IIOAuthentication<TDBContext> input, string token, string extras)
     where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Parse token data
         Tuple<string, int> tokenData = input.ParseUserToken(token);
-
-        IOUserInfoModel? findedUser = input.DatabaseContext.Users
-                                                    .Select(u => new IOUserInfoModel()
-                                                    {
-                                                        ID = u.ID,
-                                                        Password = u.Password,
-                                                        UserName = u.UserName,
-                                                        UserRole = u.UserRole,
-                                                        UserToken = u.UserToken,
-                                                        TokenDate = u.TokenDate,
-                                                        IsActive = u.IsActive,
-                                                        ActivationEndDate = u.ActivationEndDate,
-                                                        PasswordExpireDate = u.PasswordExpireDate
-                                                    })
-                                                    .Where(u => u.ID == tokenData.Item2)
-                                                    .FirstOrDefault();
-
-        if (findedUser == null)
+            
+        if (tokenData.Item2 > 0)
         {
-            throw new IOInvalidCredentialsException();
-        }
 
-        // Check user is active
-        if (findedUser.IsActive)
-        {
-            // Obtain current unix time
-            long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            long activationEndUnixTime = findedUser.ActivationEndDate.ToUnixTimeSeconds();
+            IOUserInfoModel? findedUser;
+        
+            // Obtain user entity from database
+            string cacheKey = String.Format(IOCacheKeys.BackOfficeUserCacheKey, tokenData.Item2);
+            IOCacheObject? userCache = IOCache.GetCachedObject(cacheKey);
 
-            // Check activation is ended
-            if (currentUnixTime > activationEndUnixTime)
+            if (userCache != null)
+            {
+                findedUser = (IOUserInfoModel)userCache.Value;
+            }
+            else
+            {
+                findedUser = input.DatabaseContext.Users
+                                            .Select(u => new IOUserInfoModel()
+                                            {
+                                                ID = u.ID,
+                                                Password = u.Password,
+                                                UserName = u.UserName,
+                                                UserRole = u.UserRole,
+                                                UserToken = u.UserToken,
+                                                TokenDate = u.TokenDate,
+                                                IsActive = u.IsActive,
+                                                ActivationEndDate = u.ActivationEndDate,
+                                                PasswordExpireDate = u.PasswordExpireDate
+                                            })
+                                            .Where(u => u.ID == tokenData.Item2)
+                                            .FirstOrDefault();
+            }
+
+            if (findedUser == null)
+            {
+                throw new IOInvalidCredentialsException();
+            }
+
+            // Check user is active
+            if (findedUser.IsActive)
+            {
+                // Obtain current unix time
+                long currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                long activationEndUnixTime = findedUser.ActivationEndDate.ToUnixTimeSeconds();
+
+                // Check activation is ended
+                if (currentUnixTime > activationEndUnixTime)
+                {
+                    // Throw an exception
+                    throw new IOUserDeactivatedException();
+                }
+            }
+            else
             {
                 // Throw an exception
                 throw new IOUserDeactivatedException();
             }
-        }
-        else
-        {
-            // Throw an exception
-            throw new IOUserDeactivatedException();
-        }
 
-        // Obtain token life from configuration
-        int tokenLife = input.Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
+            // Obtain token life from configuration
+            int tokenLife = input.Configuration.GetValue<int>(IOConfigurationConstants.TokenLife);
 
-        // Calculate token end seconds and current seconds
-        long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
-        long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(findedUser.TokenDate.DateTime) + tokenLife;
+            // Calculate token end seconds and current seconds
+            long currentSeconds = IODateTimeUtilities.UnixTimeFromDate(DateTime.UtcNow);
+            long tokenEndSeconds = IODateTimeUtilities.UnixTimeFromDate(findedUser.TokenDate.DateTime) + tokenLife;
 
-        // Compare user token
-        if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
-        {
-            // Encrypt sensitive data
-            string encryptedUserName = await input.EncryptString(findedUser.UserName ?? "");
+            // Compare user token
+            if (findedUser.UserToken != null && currentSeconds < tokenEndSeconds && findedUser.UserToken.Equals(tokenData.Item1))
+            {
+                // Encrypt sensitive data
+                input.TokenExtras = input.ParseUserTokenExtras(extras);
 
-            // Return status
-            return new IOCheckTokenResponseModel(findedUser.TokenDate.DateTime, encryptedUserName, findedUser.UserRole);
+                if (input.TokenExtras.Length == 0 || int.Parse(input.TokenExtras[0]) != tokenData.Item2)
+                {
+                    throw new IOInvalidCredentialsException();
+                }
+
+                if (userCache == null)
+                {
+                    userCache = new IOCacheObject(cacheKey, findedUser, 60);
+                    IOCache.CacheObject(userCache);
+                }
+
+                // Return status
+                return new IOCheckTokenResponseModel(findedUser.TokenDate.DateTime, [.. input.TokenExtras]);
+            }
         }
 
         // Return status

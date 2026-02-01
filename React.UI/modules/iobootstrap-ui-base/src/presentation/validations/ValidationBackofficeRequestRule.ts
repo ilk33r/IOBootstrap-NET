@@ -23,7 +23,13 @@ class ValidationBackofficeRequestRule implements ValidationRule {
             return true;
         }
         
-        return /^([a-zA-Z0-9-_@./\\\#\+\ \(\)\?]+)$/i.test(value);
+        const isValid = /^([a-zA-Z0-9-_@./\\\#\+\ \(\)\?\n\=]+)$/i.test(value);
+        const sanitizedString = value.RemoveHTML();
+        if (sanitizedString == value) {
+            return isValid;
+        }
+
+        return false;
     }
 }
 

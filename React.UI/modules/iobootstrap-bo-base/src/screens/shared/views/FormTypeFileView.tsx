@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Validatable, View } from "iobootstrap-ui-base";
+import { BaseView, Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeFileProps from "../props/FormTypeFileProps";
 import FormViewState from "../props/FormViewState";
@@ -132,7 +132,7 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
         }
 
         return(
-            <React.StrictMode>
+            <BaseView>
                 <div className="row mb-3">
                     <div className="col-sm-2 text-end">
                         <label htmlFor={formId} className="col-form-label">
@@ -155,7 +155,7 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
                         <a href="#deleteFile" className={deleteButtonClassName} onClick={this.handleDeleteFile}><i className="fa fa-trash"></i> Delete</a>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

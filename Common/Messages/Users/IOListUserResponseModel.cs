@@ -7,16 +7,17 @@ namespace IOBootstrap.NET.Common.Messages.Users;
 public class IOListUserResponseModel : IOResponseModel
 {
 	#region Properties
-
+	public int Count { get; set; }
 	public IList<IOUserInfoModel> Users { get; }
 
 	#endregion
 
 	#region Initialization Methods
 
-	public IOListUserResponseModel(IList<IOUserInfoModel> users) : base()
+	public IOListUserResponseModel(int count, IList<IOUserInfoModel> users) : base()
 	{
 		// Setup properties
+		Count = count;
 		Users = users;
 	}
 

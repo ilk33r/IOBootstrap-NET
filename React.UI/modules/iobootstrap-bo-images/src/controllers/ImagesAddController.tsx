@@ -1,6 +1,5 @@
-import React from "react";
 import SaveImageResponseModel from "../models/SaveImageResponseModel";
-import { BaseResponseModel, CalloutTypes, ValidationFileTypeRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, ValidationFileTypeRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeImageProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesAddController extends BOController<{}, {}> {
@@ -68,7 +67,7 @@ class ImagesAddController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Add an new image"
@@ -76,7 +75,7 @@ class ImagesAddController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

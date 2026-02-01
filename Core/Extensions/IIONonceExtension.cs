@@ -13,6 +13,12 @@ public static class IIONonceExtension
     where TDBContext : IOBaseDatabaseContext<TDBContext>
     where TViewModel : IIOViewModel<TDBContext>, new()
     {
+        bool nonceEnabled = input.Configuration.GetValue<bool>(IOConfigurationConstants.NonceEnabled)!;
+        if (!nonceEnabled)
+        {
+            return;
+        }
+        
         if (headerNonce == null)
         {
             throw new IOInvalidNonceException();

@@ -1,4 +1,4 @@
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 import PaginationViewProps from "../props/PaginationViewProps";
 import PaginationViewState from "../props/PaginationViewState";
 import React from "react";
@@ -95,7 +95,7 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
         });
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <nav aria-label="Page navigation">
                     <ul className="pagination pagination-wrap justify-content-center">
                         <li className={previousButtonClassName}>
@@ -107,7 +107,7 @@ class PaginationView extends View<PaginationViewProps, PaginationViewState> {
                         </li>
                     </ul>
                 </nav>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

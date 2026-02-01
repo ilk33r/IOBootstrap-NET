@@ -85,6 +85,13 @@ class AppServiceHeaderAuthenticationInterceptor implements IAppServiceHeaderInte
         }
 
         headers['X-IO-AUTHORIZATION-TOKEN'] = userToken;
+
+        const userTokenExtras = AppStorage.Instance.stringForKey(UICommonConstants.userTokenExtrasStorageKey);
+        if (userTokenExtras == null) {
+            return headers;
+        }
+
+        headers['X-IO-AUTHORIZATION-TOKEN-EXTRAS'] = userTokenExtras;
         return headers;
     }
 }

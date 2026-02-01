@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import ListViewProps from "../props/ListViewProps";
-import React from "react";
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 import PaginationView from "./PaginationView";
 import BreadcrumbView from "./BreadcrumbView";
 import ListHeaderView from "./ListHeaderView";
@@ -104,16 +103,18 @@ class ListView extends View<ListViewProps, ListViewState> {
             let itemUpdateClass = updateClass;
             let itemDeleteClass = deleteClass;
             let itemSelectionClass = selectionClass;
+            const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
+
             if (this.props.itemVisibleHandler != null) {
-                if (!this.props.itemVisibleHandler(itemIndex, 0)) {
+                if (!this.props.itemVisibleHandler(realIndex, 0)) {
                     itemUpdateClass = "btn btn-square edit d-none";
                 }
                 
-                if (!this.props.itemVisibleHandler(itemIndex, 1)) {
+                if (!this.props.itemVisibleHandler(realIndex, 1)) {
                     itemDeleteClass = "btn btn-square delete d-none";
                 }
 
-                if (!this.props.itemVisibleHandler(itemIndex, 2)) {
+                if (!this.props.itemVisibleHandler(realIndex, 2)) {
                     itemSelectionClass = "btn btn-square select d-none";
                 }
             }
@@ -124,7 +125,6 @@ class ListView extends View<ListViewProps, ListViewState> {
                     const iconClassName = "fa " + itemExtra.icon;
                     const key = "itemExtraKey" + itemIndex.toString() + itemExtra.name;
                     let itemExtraClass = "btn btn-square general";
-                    const realIndex = this.state.filteredItemIndexes != null ? this.state.filteredItemIndexes[itemIndex] : itemIndex;
                     
                     if (this.props.itemVisibleHandler != null) {
                         if (!this.props.itemVisibleHandler(realIndex, itemExtraIndex + 3)) {
@@ -139,7 +139,7 @@ class ListView extends View<ListViewProps, ListViewState> {
                     );
                 });
             } else {
-                itemExtras = (<React.StrictMode></React.StrictMode>);
+                itemExtras = (<BaseView></BaseView>);
             }
 
             const optionsTextWrap = (listItem.textWraps.length > listItem.itemList.length) ? listItem.textWraps[listItem.itemList.length] : false;
@@ -167,7 +167,7 @@ class ListView extends View<ListViewProps, ListViewState> {
 
         let pagination;
         if (this.props.pagination == null) {
-            pagination = (<React.StrictMode></React.StrictMode>);
+            pagination = (<BaseView></BaseView>);
         } else {
             pagination = (<PaginationView start={this.props.pagination.start}
                             length={this.props.pagination.length}
@@ -176,7 +176,7 @@ class ListView extends View<ListViewProps, ListViewState> {
         }
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <section className="container-fluid">
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={true} />
                     <section className="content">
@@ -212,7 +212,7 @@ class ListView extends View<ListViewProps, ListViewState> {
                     </section>
                     {pagination}
                 </section>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

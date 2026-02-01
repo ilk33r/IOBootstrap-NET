@@ -118,5 +118,39 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         IOCache.InvalidateCache(cacheKey);
     }
 
+    public virtual void RemoveLogs(DateTimeOffset? startDate)
+    {
+        // Obtain item entity
+        IList<IOLogsEntity> logs = DatabaseContext.Logs
+                                                        .Where(p => p.RequestDate < startDate)
+                                                        .OrderBy(p => p.RequestDate)
+                                                        .ToList();
+
+        foreach (IOLogsEntity log in logs)
+        {
+            // Remove entity
+            DatabaseContext.Remove(log);
+        }
+
+        DatabaseContext.SaveChanges();
+    }
+
+    public virtual void RemoveExceptions(DateTimeOffset? startDate)
+    {
+        // Obtain item entity
+        IList<IOExceptionEntity> exceptions = DatabaseContext.Exceptions
+                                                        .Where(p => p.RequestDate < startDate)
+                                                        .OrderBy(p => p.RequestDate)
+                                                        .ToList();
+
+        foreach (IOExceptionEntity exception in exceptions)
+        {
+            // Remove entity
+            DatabaseContext.Remove(exception);
+        }
+
+        DatabaseContext.SaveChanges();
+    }
+
     #endregion
 }

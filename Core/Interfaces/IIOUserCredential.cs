@@ -6,5 +6,6 @@ namespace IOBootstrap.NET.Core.Interfaces;
 public interface IIOUserCredential<TDBContext> : IIOViewModel<TDBContext> 
 where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
+    public string[]? TokenExtras { get; set; }
     public IOUserInfoModel? UserModel { get; set; }
 }

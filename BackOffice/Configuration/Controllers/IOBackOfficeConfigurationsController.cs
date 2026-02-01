@@ -4,6 +4,7 @@ using IOBootstrap.NET.Common.Attributes;
 using IOBootstrap.NET.Common.Cache;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Logger;
+using IOBootstrap.NET.Common.Messages.Base;
 using IOBootstrap.NET.Common.Messages.Configuration;
 using IOBootstrap.NET.Common.Models.Configuration;
 using IOBootstrap.NET.Core.Controllers;
@@ -109,6 +110,30 @@ where TViewModel : IIOBackOfficeConfigurationsViewModel<TDBContext>, new()
         
         IOCache.ClearCache();
         return new IOConfigurationUpdateResponseModel();
+    }
+
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.SuperAdmin)]
+    [IONonceRequired]
+    [HttpPost("[action]")]
+    public virtual IOResponseModel RemoveLogs([FromBody] IORemoveLogsRequestModel requestModel)
+    {
+        ViewModel.RemoveLogs(requestModel.StartDate);
+        return new IOResponseModel();
+    }
+
+    [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
+    [IOValidateRequestModel]
+    [IOUserRole(UserRoles.SuperAdmin)]
+    [IONonceRequired]
+    [HttpPost("[action]")]
+    public virtual IOResponseModel RemoveExceptions([FromBody] IORemoveLogsRequestModel requestModel)
+    {
+        ViewModel.RemoveExceptions(requestModel.StartDate);
+        return new IOResponseModel();
     }
 
     #endregion

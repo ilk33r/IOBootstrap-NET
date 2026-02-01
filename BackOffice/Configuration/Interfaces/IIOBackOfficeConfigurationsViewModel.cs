@@ -17,4 +17,8 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
     public IList<IOConfigurationModel> GetConfigurations();
 
     public void UpdateConfigItem(IOConfigurationUpdateRequestModel requestModel);
+
+    public void RemoveLogs(DateTimeOffset? startDate);
+
+    public void RemoveExceptions(DateTimeOffset? startDate);
 }

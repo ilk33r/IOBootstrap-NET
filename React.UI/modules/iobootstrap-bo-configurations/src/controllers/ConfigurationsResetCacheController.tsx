@@ -1,5 +1,4 @@
-import { BaseResponseModel } from "iobootstrap-ui-base";
-import React from "react";
+import { BaseResponseModel, BaseView } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 
 class ConfigurationsResetCacheController extends BOController<{}, {}> {
@@ -37,7 +36,7 @@ class ConfigurationsResetCacheController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <QuestionView navigation={navigation} 
                     resourceHome="Home"
                     title="Clean application cache"
@@ -45,7 +44,7 @@ class ConfigurationsResetCacheController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                      />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

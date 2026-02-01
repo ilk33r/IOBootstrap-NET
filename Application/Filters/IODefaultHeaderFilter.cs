@@ -47,6 +47,12 @@ public class IODefaultHeaderFilter : IOperationFilter
             }
         });
 
+        string sessionID = "";
+        IOCacheObject? sessionIDObject = IOCache.GetCachedObject(IOCacheKeys.SwaggerSessionID);
+        if (sessionIDObject != null) 
+        {
+            sessionID = (string)sessionIDObject.Value;
+        }
         operation.Parameters.Add(new OpenApiParameter
         {
             Name = IORequestHeaderConstants.SessionID,
@@ -55,10 +61,16 @@ public class IODefaultHeaderFilter : IOperationFilter
             Schema = new OpenApiSchema
             {
                 Type = "string",
-                Default = new OpenApiString("")
+                Default = new OpenApiString(sessionID)
             }
         });
 
+        string symmetricKey = "";
+        IOCacheObject? symmetricKeyObject = IOCache.GetCachedObject(IOCacheKeys.SwaggerSymmetricKey);
+        if (symmetricKeyObject != null) 
+        {
+            symmetricKey = (string)symmetricKeyObject.Value;
+        }
         operation.Parameters.Add(new OpenApiParameter
         {
             Name = IORequestHeaderConstants.SymmetricKey,
@@ -67,10 +79,16 @@ public class IODefaultHeaderFilter : IOperationFilter
             Schema = new OpenApiSchema
             {
                 Type = "string",
-                Default = new OpenApiString("")
+                Default = new OpenApiString(symmetricKey)
             }
         });
 
+        string symmetricIV = "";
+        IOCacheObject? symmetricIVObject = IOCache.GetCachedObject(IOCacheKeys.SwaggerSymmetricIV);
+        if (symmetricIVObject != null) 
+        {
+            symmetricIV = (string)symmetricIVObject.Value;
+        }
         operation.Parameters.Add(new OpenApiParameter
         {
             Name = IORequestHeaderConstants.SymmetricIV,
@@ -79,7 +97,43 @@ public class IODefaultHeaderFilter : IOperationFilter
             Schema = new OpenApiSchema
             {
                 Type = "string",
-                Default = new OpenApiString("")
+                Default = new OpenApiString(symmetricIV)
+            }
+        });
+
+        string token = "";
+        IOCacheObject? tokenObject = IOCache.GetCachedObject(IOCacheKeys.SwaggerToken);
+        if (tokenObject != null) 
+        {
+            token = (string)tokenObject.Value;
+        }
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            Name = IORequestHeaderConstants.AuthorizationToken,
+            In = ParameterLocation.Header,
+            Required = false,
+            Schema = new OpenApiSchema
+            {
+                Type = "string",
+                Default = new OpenApiString(token)
+            }
+        });
+
+        string tokenExtra = "";
+        IOCacheObject? tokenExtraObject = IOCache.GetCachedObject(IOCacheKeys.SwaggerTokenExtra);
+        if (tokenExtraObject != null) 
+        {
+            tokenExtra = (string)tokenExtraObject.Value;
+        }
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            Name = IORequestHeaderConstants.AuthorizationTokenExtras,
+            In = ParameterLocation.Header,
+            Required = false,
+            Schema = new OpenApiSchema
+            {
+                Type = "string",
+                Default = new OpenApiString(tokenExtra)
             }
         });
     }

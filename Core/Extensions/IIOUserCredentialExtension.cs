@@ -17,18 +17,21 @@ public static class IIOUserCredentialExtension
     {
         bool cookieAuthentication = input.Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         string? appToken = null;
+        string? appTokenExtras = null;
 
         // Check back office is not open and token exists
         if (cookieAuthentication && request.Cookies.ContainsKey(IOCookieConstants.TokenCookieName))
         {
             // Obtain token
             appToken = request.Cookies[IOCookieConstants.TokenCookieName]!;
+            appTokenExtras = input.Request.Cookies[IOCookieConstants.TokenExtrasCookieName]!;
         }
 
         if (!cookieAuthentication && input.Request.Headers.ContainsKey(IORequestHeaderConstants.AuthorizationToken))
         {
             // Obtain token
             appToken = input.Request.Headers[IORequestHeaderConstants.AuthorizationToken]!;
+            appTokenExtras = input.Request.Headers[IORequestHeaderConstants.AuthorizationTokenExtras]!;
         }
 
         if (appToken == null)
@@ -39,12 +42,13 @@ public static class IIOUserCredentialExtension
         
         // Parse token
         Tuple<string, int> tokenData = input.ParseUserToken(appToken);
+        string[] tokenExtras = input.ParseUserTokenExtras(appTokenExtras ?? string.Empty);
 
         // Return back office status
-        return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2);
+        return input.CheckUserTokenIsValid(tokenData.Item1, tokenData.Item2, tokenExtras);
     }
 
-    public static bool CheckUserTokenIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, string tokenData, int userId)
+    public static bool CheckUserTokenIsValid<TDBContext>(this IIOUserCredential<TDBContext> input, string tokenData, int userId, string[] tokenExtras)
     where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Check token data is correct
@@ -71,6 +75,8 @@ public static class IIOUserCredentialExtension
                                                         UserRole = u.UserRole,
                                                         UserToken = u.UserToken,
                                                         TokenDate = u.TokenDate,
+                                                        IsActive = u.IsActive,
+                                                        ActivationEndDate = u.ActivationEndDate,
                                                         PasswordExpireDate = u.PasswordExpireDate
                                                     })
                                                     .Where(u => u.ID == userId)
@@ -96,6 +102,13 @@ public static class IIOUserCredentialExtension
             {
                 // Return is back office
                 input.UserModel = findedUserEntity;
+                input.TokenExtras = tokenExtras;
+
+                if (input.TokenExtras.Length == 0 || int.Parse(input.TokenExtras[0]) != input.UserModel.ID)
+                {
+                    return false;
+                }
+                
                 if (userCache == null)
                 {
                     userCache = new IOCacheObject(cacheKey, findedUserEntity, 60);
@@ -127,7 +140,7 @@ public static class IIOUserCredentialExtension
             string decryptedToken = aesUtilities.Decrypt(Convert.FromBase64String(token));
 
             // Split user id and token value
-            string[] tokenData = decryptedToken.Split(',');
+            string[] tokenData = decryptedToken.Split(';');
 
             // Obtain user id from token data
             int userId = int.Parse(tokenData[0]);
@@ -138,6 +151,31 @@ public static class IIOUserCredentialExtension
         {
             input.Logger.LogDebug(e.StackTrace);
             return new Tuple<string, int>("", 0);
+        }
+    }
+
+    public static string[] ParseUserTokenExtras<TDBContext>(this IIOUserCredential<TDBContext> input, string extras)
+    where TDBContext : IOBaseDatabaseContext<TDBContext>
+    {
+        // Convert key and iv to byte array
+        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
+        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+
+        IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
+        try
+        {
+            // Obtain decrypted token value
+            string decryptedToken = aesUtilities.Decrypt(Convert.FromBase64String(extras));
+
+            // Split user id and token value
+            string[] tokenData = decryptedToken.Split(';');
+
+            return tokenData;
+        }
+        catch (Exception e)
+        {
+            input.Logger.LogDebug(e.StackTrace);
+            return [];
         }
     }
 

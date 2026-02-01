@@ -1,5 +1,4 @@
-import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, DIHooks, UICommonConstants } from "iobootstrap-ui-base";
-import React from "react";
+import { AppCryptography, AppServiceHeaderAuthenticationInterceptor, BaseResponseModel, BaseView, DIHooks, UICommonConstants } from "iobootstrap-ui-base";
 import { BOCommonConstants, BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
 import IOLogoutRequestModel from "../models/IOLogoutRequestModel";
 
@@ -23,7 +22,7 @@ class UsersLogoutController extends BOController<{}, {}> {
     handleFormSuccess() {
         this.indicatorPresenter.present();
         
-        const userName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
+        const userName = this.appContext.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
 
         const weakSelf = this;
         this.logout(userName)
@@ -45,9 +44,10 @@ class UsersLogoutController extends BOController<{}, {}> {
         const weakSelf = this;
         this.service.post(requestPath, request, function (response: BaseResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
-                weakSelf.storage.removeObject(BOCommonConstants.userNameStorageKey);
-                weakSelf.storage.removeObject(UICommonConstants.userTokenStorageKey);
+                weakSelf.appContext.removeObject(BOCommonConstants.userNameStorageKey);
                 weakSelf.appContext.removeObject(BOCommonConstants.userRoleStorageKey);
+                weakSelf.storage.removeObject(UICommonConstants.userTokenStorageKey);
+                weakSelf.storage.removeObject(UICommonConstants.userTokenExtrasStorageKey);
                 window.location.reload();
             }
         }, function (error: string) {
@@ -62,7 +62,7 @@ class UsersLogoutController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <QuestionView navigation={navigation} 
                     resourceHome="Home"
                     title="Sign Out"
@@ -70,7 +70,7 @@ class UsersLogoutController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                      />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

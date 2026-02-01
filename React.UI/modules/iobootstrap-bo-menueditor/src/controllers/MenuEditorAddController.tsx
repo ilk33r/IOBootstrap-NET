@@ -1,6 +1,5 @@
 import MenuAddRequestModel from "../models/MenuAddRequestModel";
-import React from "react";
-import { BaseResponseModel, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeNumberProps, FormTypePopupSelectionProps, FormTypeSelectProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class MenuEditorAddController extends BOController<{}, {}> {
@@ -74,7 +73,7 @@ class MenuEditorAddController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Add a menu item"
@@ -82,7 +81,7 @@ class MenuEditorAddController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

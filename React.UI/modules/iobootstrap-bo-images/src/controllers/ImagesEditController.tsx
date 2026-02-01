@@ -2,8 +2,8 @@ import GetImagesRequestModel from "../models/GetImagesRequestModel";
 import GetImagesResponseModel from "../models/GetImagesResponseModel";
 import ImagesListProps from "../props/ImagesListProps";
 import ImagesListState from "../props/ImagesListState";
-import React from "react";
 import { BOController, BreadcrumbNavigationModel, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BaseView } from "iobootstrap-ui-base";
 
 class ImagesEditController extends BOController<ImagesListProps, ImagesListState> {
 
@@ -100,7 +100,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
         pagination.pageClickHandler = this.pageChangeHandler;
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -115,7 +115,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={pagination} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

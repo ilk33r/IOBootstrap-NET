@@ -1,6 +1,6 @@
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 import BreadcrumbNavigationProps from "../props/BreadcrumbNavigationProps";
-import React, { JSX } from "react";
+import React from "react";
 
 class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
 
@@ -24,7 +24,7 @@ class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
             return (<li className="breadcrumb-item" key={navigation.id}><a href={navigationId} className="link-secondary link-underline-opacity-0 link-underline-opacity-75-hover">{navigation.name}</a></li>)
         });
 
-        let activeNavigationTitle: JSX.Element;
+        let activeNavigationTitle: React.JSX.Element;
         
         if (this.props.showTitle) {
             activeNavigationTitle = (<h2 className="page-title">{activeNavigationName}</h2>);
@@ -33,7 +33,7 @@ class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
         }
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <nav aria-label="breadcrumb" className="navbar">
                     {activeNavigationTitle}
                     <ol className="breadcrumb">
@@ -45,7 +45,7 @@ class BreadcrumbView extends View<BreadcrumbNavigationProps, {}> {
                         {navigation}
                     </ol>
                 </nav>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

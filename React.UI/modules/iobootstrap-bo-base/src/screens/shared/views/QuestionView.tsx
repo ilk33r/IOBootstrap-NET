@@ -1,6 +1,5 @@
 import QuestionViewProps from "../props/QuestionViewProps";
-import React from "react";
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 import BreadcrumbView from "./BreadcrumbView";
 
 class QuestionView extends View<QuestionViewProps, {}> {
@@ -22,7 +21,7 @@ class QuestionView extends View<QuestionViewProps, {}> {
 
     render() {
         return (
-            <React.StrictMode>
+            <BaseView>
                 <section className="container-fluid">
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
                     <div className="row mb-5 mt-2">
@@ -47,7 +46,7 @@ class QuestionView extends View<QuestionViewProps, {}> {
                     <div className="row mb-5"></div>
                     <div className="row mb-5"></div>
                 </section>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

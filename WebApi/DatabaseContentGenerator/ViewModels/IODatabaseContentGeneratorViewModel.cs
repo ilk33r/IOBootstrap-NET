@@ -191,6 +191,30 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
         };
         DatabaseContext.Add(recycleAppEntity);
         DatabaseContext.SaveChanges();
+
+        IOMenuEntity removeLogsEntity = new IOMenuEntity()
+        {
+            Action = "removeLogs",
+            CssClass = "fa-circle-o",
+            Name = "Remove Logs",
+            MenuOrder = 15,
+            RequiredRole = (int)UserRoles.SuperAdmin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(removeLogsEntity);
+        DatabaseContext.SaveChanges();
+
+        IOMenuEntity removeExceptionsEntity = new IOMenuEntity()
+        {
+            Action = "removeExceptions",
+            CssClass = "fa-circle-o",
+            Name = "Remove Exceptions",
+            MenuOrder = 16,
+            RequiredRole = (int)UserRoles.SuperAdmin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(removeExceptionsEntity);
+        DatabaseContext.SaveChanges();
     }
 
     private void GenerateMenuEditorMenu()
@@ -200,7 +224,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "actionMenuEditor",
             CssClass = "fa-list",
             Name = "Menu Editor",
-            MenuOrder = 15,
+            MenuOrder = 17,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -211,7 +235,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "menuEditorList",
             CssClass = "fa-circle-o",
             Name = "List Menu Items",
-            MenuOrder = 16,
+            MenuOrder = 18,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -222,7 +246,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "menuEditorAdd",
             CssClass = "fa-circle-o",
             Name = "Add Menu Item",
-            MenuOrder = 17,
+            MenuOrder = 19,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -237,7 +261,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "actionMessages",
             CssClass = "fa-envelope",
             Name = "Messages",
-            MenuOrder = 18,
+            MenuOrder = 20,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -248,7 +272,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "messagesList",
             CssClass = "fa-circle-o",
             Name = "List Messages",
-            MenuOrder = 19,
+            MenuOrder = 21,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -259,7 +283,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "messagesAdd",
             CssClass = "fa-circle-o",
             Name = "Add Message",
-            MenuOrder = 20,
+            MenuOrder = 22,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -274,7 +298,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "actionPushNotification",
             CssClass = "fa-comment-alt",
             Name = "Push Notifications",
-            MenuOrder = 21,
+            MenuOrder = 23,
             RequiredRole = (int)UserRoles.User,
             ParentEntityID = null
         };
@@ -285,7 +309,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "pushNotificationList",
             CssClass = "fa-circle-o",
             Name = "List Messages",
-            MenuOrder = 22,
+            MenuOrder = 24,
             RequiredRole = (int)UserRoles.User,
             ParentEntityID = null
         };
@@ -296,7 +320,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "pushNotificationSend",
             CssClass = "fa-circle-o",
             Name = "Send",
-            MenuOrder = 23,
+            MenuOrder = 25,
             RequiredRole = (int)UserRoles.User,
             ParentEntityID = null
         };

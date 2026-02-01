@@ -1,7 +1,6 @@
 import IndicatorProps from '../props/IndicatorProps';
 import IndicatorState from '../props/IndicatorState';
-import { IndicatorViewPresenter, View } from "iobootstrap-ui-base";
-import React from 'react';
+import { BaseView, IndicatorViewPresenter, View } from "iobootstrap-ui-base";
 
 class IndicatorView extends View<IndicatorProps, IndicatorState> implements IndicatorViewPresenter {
 
@@ -28,7 +27,7 @@ class IndicatorView extends View<IndicatorProps, IndicatorState> implements Indi
     render() {
         const indicatorClassName = (this.state.isVisible) ? "" : "d-none";
         return (
-            <React.StrictMode>
+            <BaseView>
                 <div id="pageIndicator" className={indicatorClassName}>
                     <div className="overlay"></div>
                     <div className="spinner-container text-center">
@@ -37,7 +36,7 @@ class IndicatorView extends View<IndicatorProps, IndicatorState> implements Indi
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

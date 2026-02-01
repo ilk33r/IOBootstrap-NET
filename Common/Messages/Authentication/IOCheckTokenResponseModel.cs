@@ -7,16 +7,14 @@ public class IOCheckTokenResponseModel : IOResponseModel
 {
 
     public DateTimeOffset TokenLifeTime { get; set; }
-    public string UserName { get; set; }
-    public int UserRole { get; set; }
+    public IList<string> Extras { get; set; }
 
     #region Initialization Methods
 
-    public IOCheckTokenResponseModel(DateTimeOffset lifeTime, string userName, int userRole) : base()
+    public IOCheckTokenResponseModel(DateTimeOffset lifeTime, IList<string> extras) : base()
     {
         TokenLifeTime = lifeTime;
-        UserName = userName;
-        UserRole = userRole;
+        Extras = extras;
     }
 
     #endregion

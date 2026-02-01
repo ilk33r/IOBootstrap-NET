@@ -9,6 +9,7 @@ using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using System.Text;
+using IOBootstrap.NET.Common.Utilities;
 
 namespace IOBootstrap.NET.Core.Middlewares;
 
@@ -70,10 +71,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             using (IServiceScope scope = ServiceScopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TDBContext>();
-                IOExceptionEntity exception = await LogException(context, ex);
-                
-                dbContext.Add(exception);
-                dbContext.SaveChanges();
+                await SaveExceptionToDatabase(context, dbContext, ex);
             }
         }
 
@@ -89,8 +87,34 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         });
         await context.Response.WriteAsync(responseString);
     }
+
+    private async Task SaveExceptionToDatabase(HttpContext context, TDBContext dbContext, Exception ex)
+    {
+        IOExceptionEntity exception = await CreateExceptionEntity(context, ex);
+
+        int stackTraceLength = ex.StackTrace?.Count() ?? 0;
+        int stackTraceBuffer = 0;
+        while (stackTraceBuffer < stackTraceLength)
+        {
+            IOExceptionEntity copiedException = IOSerializableUtilities.Copy(exception);
+
+            string exceptionStackTrace = string.Empty;
+            int stringSize = Math.Min(stackTraceLength - stackTraceBuffer, 2048);
+            if (!String.IsNullOrEmpty(ex.StackTrace))
+            {
+                exceptionStackTrace = ex.StackTrace?.Substring(stackTraceBuffer, stringSize) ?? string.Empty;
+            }
+
+            copiedException.ExceptionStackTrace = exceptionStackTrace;
+            dbContext.Add(copiedException);
+
+            stackTraceBuffer += stringSize;
+        }
+
+        dbContext.SaveChanges();
+    }
     
-    private async Task<IOExceptionEntity> LogException(HttpContext context, Exception ex)
+    private async Task<IOExceptionEntity> CreateExceptionEntity(HttpContext context, Exception ex)
     {
         string requestPath = context.Request.Path.ToString();
         string requestHeadersJson = JsonSerializer.Serialize(context.Request.Headers);
@@ -125,17 +149,13 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             requestHeadersJson = requestHeadersJson.Substring(0, Math.Min(requestHeadersJson.Length, 512));
         }
 
-        string exceptionMessage = "";
+        string exceptionMessage = string.Empty;
         if (!String.IsNullOrEmpty(ex.Message))
         {
             exceptionMessage = ex.Message.Substring(0, Math.Min(ex.Message.Length, 2048));
         }
 
-        string exceptionStackTrace = "";
-        if (!String.IsNullOrEmpty(ex.StackTrace))
-        {
-            exceptionStackTrace = ex.StackTrace?.Substring(0, Math.Min(ex.StackTrace?.Length ?? 0, 2048)) ?? "";
-        }
+        string exceptionStackTrace = string.Empty;
 
         return new IOExceptionEntity()
         {

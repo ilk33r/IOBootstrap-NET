@@ -1,7 +1,6 @@
 import DeleteImagesRequestModel from "../models/DeleteImagesRequestModel";
 import ImageVariationsModel from "../models/ImageVariationsModel";
-import React from "react";
-import { BaseResponseModel, CalloutTypes, ValidationFileTypeRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, ValidationFileTypeRule, ValidationMinAmountRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeImageProps, FormTypeNumberProps, FormTypeSelectProps, FormView } from "iobootstrap-bo-base";
 
 class ImagesModifyController extends BOController<{}, {}> {
@@ -96,7 +95,7 @@ class ImagesModifyController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Add an new image"
@@ -104,7 +103,7 @@ class ImagesModifyController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

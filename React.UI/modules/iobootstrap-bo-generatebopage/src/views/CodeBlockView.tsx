@@ -1,6 +1,5 @@
-import React from "react";
 import CodeBlockViewProps from "../props/CodeBlockViewProps";
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 
 class CodeBlockView extends View<CodeBlockViewProps, {}> {
 
@@ -10,7 +9,7 @@ class CodeBlockView extends View<CodeBlockViewProps, {}> {
         })
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <div className="col-md-6">
                     <div className="box">
                         <div className="box-header">
@@ -26,7 +25,7 @@ class CodeBlockView extends View<CodeBlockViewProps, {}> {
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

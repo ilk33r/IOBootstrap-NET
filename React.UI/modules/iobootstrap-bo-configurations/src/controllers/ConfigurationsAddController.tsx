@@ -1,6 +1,5 @@
 import ConfigurationAddRequestModel from "../models/ConfigurationAddRequestModel";
-import React from "react";
-import { BaseResponseModel, CalloutTypes, ValidationBackofficeRequestRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, ValidationBackofficeRequestRule, ValidationMinLengthRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormType, FormTypeNumberProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class ConfigurationsAddController extends BOController<{}, {}> {
@@ -51,7 +50,7 @@ class ConfigurationsAddController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Add a configuration parameter"
@@ -59,7 +58,7 @@ class ConfigurationsAddController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

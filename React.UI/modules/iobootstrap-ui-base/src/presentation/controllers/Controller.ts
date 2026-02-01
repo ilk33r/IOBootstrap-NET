@@ -68,6 +68,30 @@ class Controller<TProps, TState> extends React.Component<TProps, TState> impleme
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
         return false;
     }
+    
+    public handleServiceSuccessWithoutDismissIndicator<T extends BaseResponseModel>(response: T): boolean {
+        if (response.status?.code === 200) {
+            return true;
+        }
+
+        if (response.status?.code === 401 || response.status?.code === 403) {
+            this.handleInvalidCredential(response);
+            return false;
+        }
+
+        if (response.status?.code === 410) {
+            this.handleCapthca(response);
+            return false;
+        }
+
+        if (response.status?.code === 630) {
+            this.handleInvalidKeyID(response);
+            return false;
+        }
+
+        this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");
+        return false;
+    }
 
     public handleInvalidCredential(response: BaseResponseModel) {
         this.handleServiceError(response.status?.message ?? "", response.status?.detailedMessage ?? "");

@@ -16,6 +16,7 @@ public static class IOConfigurationConstants
     public static string ConfigurationsEnabled = "IOConfigurationsEnabled";
     public static string CookieAuthentication = "IOCookieAuthentication";
     public static string DataAccessAssembly = "IODataAccessAssembly";
+    public static string DataProtectionPath = "IODataProtectionPath";
     public static string EncryptionKey = "IOEncryptionKey";
     public static string EncryptionIV = "IOEncryptionIV";
     public static string HttpsRequired = "IOHttpsRequired";
@@ -26,6 +27,7 @@ public static class IOConfigurationConstants
     public static string MenuEditorEnabled = "IOMenuEditorEnabled";
     public static string MessagesEnabled = "IOMessagesEnabled";
     public static string MigrationsAssemblyKey = "IOMWMigrationsAssembly";
+    public static string NonceEnabled = "IONonceEnabled";
     public static string PushNotificationsEnabled = "IOPushNotificationsEnabled";
     public static string RateLimitEnabled = "IORateLimitEnabled";
     public static string SendGridApiKey = "IOSendGridApiKey";

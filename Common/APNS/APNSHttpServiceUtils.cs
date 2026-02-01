@@ -81,7 +81,7 @@ public class APNSHttpServiceUtils
         httpClient.SetRequestMethod(IOHTTPClientRequestMethods.POST);
 
         // Set request body
-        httpClient.SetPostBody(payloadData.Payload);
+        httpClient.SetBody(payloadData.Payload);
 
         // Call http client
         var response = await httpClient.CallJSONAsync<APNSResponseModel>();

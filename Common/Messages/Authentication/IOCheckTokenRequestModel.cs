@@ -9,4 +9,7 @@ public class IOCheckTokenRequestModel : IORequestModel
 {
     [IOBackofficeRequest]
     public string? Token { get; set; }
+
+    [IOBackofficeRequest]
+    public string? Extras { get; set; }
 }

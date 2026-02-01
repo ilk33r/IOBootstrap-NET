@@ -2,8 +2,8 @@ import GetLogsRequestModel from "../models/GetLogsRequestModel";
 import GetLogsResponseModel from "../models/GetLogsResponseModel";
 import LogsListProps from "../props/LogsListProps";
 import LogsListState from "../props/LogsListState";
-import React from "react";
 import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BaseView } from "iobootstrap-ui-base";
 
 class ExceptionsController extends BOController<LogsListProps, LogsListState> {
 
@@ -52,7 +52,7 @@ class ExceptionsController extends BOController<LogsListProps, LogsListState> {
 
     render() {
         const navigation: BreadcrumbNavigationModel[] = [
-            BreadcrumbNavigationModel.initialize("exceptionsEdit", "Logs")
+            BreadcrumbNavigationModel.initialize("exceptionsEdit", "Exceptions")
         ];
 
         const headers = [
@@ -99,7 +99,7 @@ class ExceptionsController extends BOController<LogsListProps, LogsListState> {
         pagination.pageClickHandler = this.pageChangeHandler;
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -114,7 +114,7 @@ class ExceptionsController extends BOController<LogsListProps, LogsListState> {
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={pagination} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

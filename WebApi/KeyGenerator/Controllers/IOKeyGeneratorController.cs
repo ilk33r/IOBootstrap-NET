@@ -57,9 +57,9 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
     [IOValidateRequestModel]
     [HttpPost("[action]")]
-    public IOEncryptResponseModel Encrypt([FromBody] IOEncryptRequestModel requestModel)
+    public async Task<IOEncryptResponseModel> Encrypt([FromBody] IOEncryptRequestModel requestModel)
     {
-        return ViewModel.Encrypt(requestModel);
+        return await ViewModel.Encrypt(requestModel);
     }
 
     [IOValidateRequestModel]

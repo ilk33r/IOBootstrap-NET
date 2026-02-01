@@ -14,10 +14,12 @@ import FormTypeTextProps from "../props/FormTypeTextProps";
 import FormTypeTextView from "./FormTypeTextView";
 import FormViewProps from "../props/FormViewProps";
 import React from "react";
-import { Validatable, View } from "iobootstrap-ui-base";
+import { BaseView, Validatable, View } from "iobootstrap-ui-base";
 import BreadcrumbView from "./BreadcrumbView";
 import FormTypeFileProps from "../props/FormTypeFileProps";
 import FormTypeFileView from "./FormTypeFileView";
+import FormTypeMultiplePopupSelectionProps from "../props/FormTypeMultiplePopupSelectionProps";
+import FormTypeMultiplePopupSelectionView from "./FormTypeMultiplePopupSelectionView";
 
 class FormView extends View<FormViewProps, {}> {
 
@@ -152,6 +154,22 @@ class FormView extends View<FormViewProps, {}> {
                             ref={this._formElementsRef[index]} />);
             }
 
+                        
+            if (formElement instanceof FormTypeMultiplePopupSelectionProps) {
+                return (<FormTypeMultiplePopupSelectionView index={index}
+                            inputType={formElement.inputType}
+                            name={formElement.name}
+                            value={formElement.value}
+                            selectedItemIds={formElement.selectedItemIds}
+                            selectionURL={formElement.selectionURL}
+                            isEnabled={formElement.isEnabled}
+                            errorHandler={this.handleFormError}
+                            validations={formElement.validations}
+                            changeHandler={formElement.changeHandler}
+                            key={index}
+                            ref={this._formElementsRef[index]} />);
+            }
+
             if (formElement instanceof FormTypePopupSelectionProps) {
                 return (<FormTypePopupSelectionView index={index}
                             inputType={formElement.inputType}
@@ -196,13 +214,13 @@ class FormView extends View<FormViewProps, {}> {
                             ref={this._formElementsRef[index]} />);
             }
 
-            return (<React.StrictMode></React.StrictMode>);
+            return (<BaseView></BaseView>);
         });
 
         const submitButtonClass = (this.props.submitButtonName.length > 0) ? "btn btn-primary" : "btn btn-primary d-none"
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <section className="container-fluid">
                     <BreadcrumbView navigation={this.props.navigation} resourceHome={this.props.resourceHome} showTitle={false} />
                     <section className="content">
@@ -225,7 +243,7 @@ class FormView extends View<FormViewProps, {}> {
                         </div>
                     </section>
                 </section>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

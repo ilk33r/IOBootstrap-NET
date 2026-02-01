@@ -2,9 +2,9 @@ import ListPushNotificationMessageResponseModel from "../models/ListPushNotifica
 import PushNotificationMessageDeleteRequestModel from "../models/PushNotificationMessageDeleteRequestModel";
 import PushNotificationListProops from "../props/PushNotificationListProops";
 import PushNotificationListState from "../props/PushNotificationListState";
-import React from "react";
 import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 import IOListPushNotificationsRequestModel from "../models/IOListPushNotificationsRequestModel";
+import { BaseView } from "iobootstrap-ui-base";
 
 class PushNotificationListController extends BOController<PushNotificationListProops, PushNotificationListState> {
 
@@ -145,7 +145,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
         pagination.pageClickHandler = this.pageChangeHandler;
         
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -160,7 +160,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={pagination} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

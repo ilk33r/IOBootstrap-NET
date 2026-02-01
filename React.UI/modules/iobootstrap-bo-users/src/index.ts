@@ -5,6 +5,8 @@ export { default as UsersListState } from "./props/UsersListState";
 export { default as UserLoginInformationProps } from "./props/UserLoginInformationProps";
 export { default as AddUserRequestModel } from "./models/AddUserRequestModel";
 export { default as DeleteUserRequestModel } from "./models/DeleteUserRequestModel";
+export { default as IOLogoutRequestModel } from "./models/IOLogoutRequestModel";
+export { default as ListUserRequestModel } from "./models/ListUserRequestModel";
 export { default as ListUserResponseModel } from "./models/ListUserResponseModel";
 export { default as UpdateUserRequestModel } from "./models/UpdateUserRequestModel";
 export { default as UserChangePasswordRequestModel } from "./models/UserChangePasswordRequestModel";

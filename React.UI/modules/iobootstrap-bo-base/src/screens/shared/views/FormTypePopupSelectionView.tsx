@@ -1,8 +1,7 @@
-import { Validatable, View, WindowMessageModel } from "iobootstrap-ui-base";
+import { BaseView, Validatable, View, WindowMessageModel } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypePopupSelectionProps from "../props/FormTypePopupSelectionProps";
 import FormViewState from "../props/FormViewState";
-import React from "react";
 import $ from 'jquery';
 
 type MessageEvent = { data: WindowMessageModel; };
@@ -122,7 +121,7 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
         const formClass = (this.state.hasError) ? "form-control is-invalid" : "form-control";
 
         return(
-            <React.StrictMode>
+            <BaseView>
                 <div className="row mb-3">
                     <div className="col-sm-2 text-end">
                         <label htmlFor={formId} className="col-form-label my-2">
@@ -139,7 +138,7 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

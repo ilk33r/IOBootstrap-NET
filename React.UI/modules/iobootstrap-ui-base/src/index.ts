@@ -34,4 +34,5 @@ export { default as ValidationMinAmountRule } from "./presentation/validations/V
 export { default as ValidationMinLengthRule } from "./presentation/validations/ValidationMinLengthRule";
 export { default as ValidationRegexRule } from "./presentation/validations/ValidationRegexRule";
 export { default as ValidationRequiredRule } from "./presentation/validations/ValidationRequiredRule";
+export { default as BaseView } from "./presentation/views/BaseView";
 export { default as View } from "./presentation/views/View";

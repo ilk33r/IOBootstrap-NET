@@ -1,16 +1,20 @@
 import DeleteUserRequestModel from "../models/DeleteUserRequestModel";
 import ListUserResponseModel from "../models/ListUserResponseModel";
-import React from "react";
 import UpdateUserRequestModel from "../models/UpdateUserRequestModel";
 import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
-import { DIHooks } from "iobootstrap-ui-base";
-import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
+import { BaseView, DIHooks } from "iobootstrap-ui-base";
+import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
+import { ListUserRequestModel } from "..";
 
 class UsersListController extends BOController<UsersListProps, UsersListState> {
 
+    private requestModel: ListUserRequestModel;
+
     constructor(props: UsersListProps) {
         super(props);
+
+        this.requestModel = new ListUserRequestModel();
 
         this.state = new UsersListState();
 
@@ -18,6 +22,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         this.deleteDataHandler = this.deleteDataHandler.bind(this);
         this.updateDataHandler = this.updateDataHandler.bind(this);
         this.itemVisibleHandler = this.itemVisibleHandler.bind(this);
+        this.pageChangeHandler = this.pageChangeHandler.bind(this);
     }
 
     public componentDidMount?(): void {
@@ -25,15 +30,23 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         this.appContext.removeObject("usersDeleteRequest");
         this.appContext.removeObject("usersUpdateRequest");
 
+        this.requestModel.start = 0;
+        this.requestModel.count = 25;
+
+        this.loadUsers();
+    }
+
+    private loadUsers() {
         this.indicatorPresenter.present();
 
         const requestPath = `${import.meta.env.VITE_BACKOFFICE_USER_CONTROLLER_NAME}/ListUsers`;
         const weakSelf = this;
 
-        this.service.get(requestPath, function (response: ListUserResponseModel) {
+        this.service.post(requestPath, this.requestModel, function (response: ListUserResponseModel) {
             if (weakSelf.handleServiceSuccess(response)) {
                 const newState = new UsersListState();
                 newState.userList = response.users;
+                newState.count = response.count ?? 0;
 
                 weakSelf.setState(newState);
             }
@@ -42,10 +55,16 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
         });
     }
 
+    private pageChangeHandler(start: number, length: number) {
+        this.requestModel.start = start;
+        this.requestModel.count = length;
+        this.loadUsers();
+    }
+
     private changePasswordHandler(index: number) {
         const currentUser = this.state.userList[index];
 
-        if (currentUser.userName == this.storage.stringForKey(BOCommonConstants.userNameStorageKey)) {
+        if (currentUser.userName == this.appContext.stringForKey(BOCommonConstants.userNameStorageKey)) {
             this.navigateToPage("userChangePassword");
             return;
         }
@@ -83,7 +102,7 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
 
     private itemVisibleHandler(listIndex: number, itemIndex: number): boolean {
         const currentUserRole = this.appContext.numberForKey(BOCommonConstants.userRoleStorageKey) ?? UserRoles.AnonmyMouse;
-        const currentUserName = this.storage.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
+        const currentUserName = this.appContext.stringForKey(BOCommonConstants.userNameStorageKey) ?? "";
         const listUser = this.state.userList[listIndex];
 
         if ((itemIndex == 1 || itemIndex == 3) && listUser.userName == currentUserName) {
@@ -180,8 +199,14 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
             new ListExtrasModel("Reset Password", "fa-key", this.changePasswordHandler)
         ];
 
+        const pagination = new ListDataPaginationModel();
+        pagination.start = this.requestModel.start;
+        pagination.length = this.requestModel.count;
+        pagination.count = this.state.count;
+        pagination.pageClickHandler = this.pageChangeHandler;
+
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -195,8 +220,8 @@ class UsersListController extends BOController<UsersListProps, UsersListState> {
                     updateDataHandler={this.updateDataHandler}
                     selectDataHandler={null}
                     itemVisibleHandler={this.itemVisibleHandler}
-                    pagination={null} />
-            </React.StrictMode>
+                    pagination={pagination} />
+            </BaseView>
         );
     }
 }

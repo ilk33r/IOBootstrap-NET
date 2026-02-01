@@ -1,4 +1,4 @@
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 import ListHeaderViewProps from "../props/ListHeaderViewProps";
 import ListDataFilterTypes from "../models/ListDataFilterTypes";
 import React from "react";
@@ -68,9 +68,9 @@ class ListHeaderView extends View<ListHeaderViewProps, ListHeaderViewState> {
 
             if (header.filterType == ListDataFilterTypes.None) {
                 headerNode = (
-                    <React.StrictMode>
+                    <BaseView>
                         {header.title}
-                    </React.StrictMode>
+                    </BaseView>
                 );
             } else {
                 let formNode: React.ReactNode;
@@ -103,7 +103,7 @@ class ListHeaderView extends View<ListHeaderViewProps, ListHeaderViewState> {
                         </form>
                     );
                 } else {
-                    formNode = (<React.StrictMode></React.StrictMode>);
+                    formNode = (<BaseView></BaseView>);
                 }
 
                 let buttonBadgeNode: React.ReactNode;
@@ -114,14 +114,14 @@ class ListHeaderView extends View<ListHeaderViewProps, ListHeaderViewState> {
                         </span>
                     );
                 } else {
-                    buttonBadgeNode = (<React.StrictMode></React.StrictMode>);
+                    buttonBadgeNode = (<BaseView></BaseView>);
                 }
 
                 headerNode = (
-                    <React.StrictMode>
+                    <BaseView>
                         {header.title} <button type="button" className="btn btn-outline-info btn-sm dropdown-toggle position-relative" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">{buttonBadgeNode}</button>
                         {formNode}
-                    </React.StrictMode>
+                    </BaseView>
                 );
             }
 

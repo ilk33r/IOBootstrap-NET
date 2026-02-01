@@ -8,7 +8,6 @@ using IOBootstrap.NET.Core.Interfaces;
 using IOBootstrap.NET.Common.Enumerations;
 using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Constants;
-using System.Threading.Tasks;
 
 namespace IOBootstrap.NET.BackOffice.Authentication.ViewModels;
 
@@ -39,6 +38,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             captchaID,
             encryptedCaptha
         );
+
         if (response.UserRole >= (int)UserRoles.BackOfficeUser)
         {
             throw new IOInvalidPermissionException();
@@ -47,18 +47,21 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         return response;
     }
 
-    public virtual async Task<IOCheckTokenResponseModel> CheckToken(string? token)
+    public virtual async Task<IOCheckTokenResponseModel> CheckToken(string? token, string? tokenExtras)
     {
         bool cookieAuthentication = Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         string? appToken;
+        string? appTokenExtras;
 
         if (cookieAuthentication && Request.Cookies.ContainsKey(IOCookieConstants.TokenCookieName))
         {
             // Obtain token
             appToken = Request.Cookies[IOCookieConstants.TokenCookieName]!;
+            appTokenExtras = Request.Cookies[IOCookieConstants.TokenExtrasCookieName]!;
         }
         else if (!cookieAuthentication) {
             appToken = token;
+            appTokenExtras = tokenExtras;
         }
         else
         {
@@ -70,12 +73,32 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             throw new IOInvalidPermissionException();
         }
 
-        IOCheckTokenResponseModel response = await this.CheckUserToken(appToken);
-        if (response.UserRole >= (int)UserRoles.BackOfficeUser)
+        IOCheckTokenResponseModel response = this.CheckUserToken(appToken, appTokenExtras ?? String.Empty);
+        int extrasCount = response.Extras?.Count ?? 0;
+        int userRole;
+        if (extrasCount > 2)
+        {
+            int? extrasRole = int.Parse(response.Extras?[2] ?? "0");
+            userRole = extrasRole ?? (int)UserRoles.AnonmyMouse;
+        }
+        else
+        {
+            userRole = (int)UserRoles.AnonmyMouse;
+        }
+
+        if (userRole >= (int)UserRoles.BackOfficeUser)
         {
             throw new IOInvalidPermissionException();
         }
 
+        List<string> encryptedExtras = new List<string>();
+        foreach (var item in response.Extras ?? [])
+        {
+            string encryptedData = await EncryptString(item ?? String.Empty);
+            encryptedExtras.Add(encryptedData);
+        }
+
+        response.Extras = encryptedExtras;
         return response;
     }
 

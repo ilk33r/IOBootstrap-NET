@@ -1,7 +1,7 @@
 import CalloutProps from '../props/CalloutProps';
 import CalloutState from '../props/CalloutState';
 import React from 'react';
-import { CalloutViewPresenter, View } from 'iobootstrap-ui-base';
+import { BaseView, CalloutViewPresenter, View } from 'iobootstrap-ui-base';
 
 class CalloutView extends View<CalloutProps, CalloutState> implements CalloutViewPresenter {
 
@@ -43,7 +43,7 @@ class CalloutView extends View<CalloutProps, CalloutState> implements CalloutVie
     render() {   
         const titleClassName = (this.state.title.length > 0) ? "d-block" : "d-none";
         return (
-            <React.StrictMode>
+            <BaseView>
                 <div id="callout" className={this.state.className} role="alert">
                     <div className="hstack gap-3">
                         <div>
@@ -59,7 +59,7 @@ class CalloutView extends View<CalloutProps, CalloutState> implements CalloutVie
                         <button type="button" className="btn-close" aria-label="Close" onClick={this.handleDismissButton}></button>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

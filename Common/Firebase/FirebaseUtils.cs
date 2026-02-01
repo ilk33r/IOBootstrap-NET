@@ -72,7 +72,7 @@ public class FirebaseUtils
         httpClient.AddHeader("Authorization", String.Format("Bearer {0}", token));
 
         // Set request body
-        httpClient.SetPostBody(message);
+        httpClient.SetBody(message);
 
         // Call http client
         var response = await httpClient.CallJSONAsync<FirebaseResponseModel>();

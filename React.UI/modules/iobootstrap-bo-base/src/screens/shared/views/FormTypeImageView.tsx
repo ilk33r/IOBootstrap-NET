@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { AppCryptography, Validatable, View } from "iobootstrap-ui-base";
+import { AppCryptography, BaseView, Validatable, View } from "iobootstrap-ui-base";
 import FormElement from "../interfaces/FormElement";
 import FormTypeImageProps from "../props/FormTypeImageProps";
 import FormViewState from "../props/FormViewState";
@@ -151,7 +151,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
         }
 
         return(
-            <React.StrictMode>
+            <BaseView>
                 <div className="row mb-3">
                     <div className="col-sm-2 text-end">
                         <label htmlFor={formId} className="col-form-label">
@@ -174,7 +174,7 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
                         <a href="#deleteImage" className={deleteButtonClassName} onClick={this.handleDeleteImage}><i className="fa fa-trash bi"></i> Delete</a>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

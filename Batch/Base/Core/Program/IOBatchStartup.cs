@@ -105,12 +105,23 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         Logger?.LogDebug("Process registered: {0}", processType.Name);
     }
 
-    public virtual void Run()
+    public virtual void Run(int executionCount, int executionDelayMilliseconds)
     {
+        if (executionCount > 0)
+        {
+            for (int i = 0; i < executionCount; i++)
+            {
+                RunSubProcesses();
+                Thread.Sleep(executionDelayMilliseconds);
+            }
+
+            return;
+        }
+
         while (true)
         {
             RunSubProcesses();
-            Thread.Sleep(2000);
+            Thread.Sleep(executionDelayMilliseconds);
         }
     }
 
@@ -125,9 +136,40 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
             }
             catch (Exception e)
             {
+                IOExceptionEntity exception = LogException(e);
+                
+                DatabaseContext?.Add(exception);
+                DatabaseContext?.SaveChanges();
+
                 Logger?.LogError("Process {0} exception.\n{1}\n\n{2}", process.ToString(), e.Message, e.StackTrace?.ToString());
                 Thread.Sleep(2000);
             }
         }
+    }
+
+    private IOExceptionEntity LogException(Exception ex)
+    {
+        string requestPath = "IOBatchStartup";
+        string exceptionMessage = "";
+        if (!String.IsNullOrEmpty(ex.Message))
+        {
+            exceptionMessage = ex.Message.Substring(0, Math.Min(ex.Message.Length, 2048));
+        }
+
+        string exceptionStackTrace = "";
+        if (!String.IsNullOrEmpty(ex.StackTrace))
+        {
+            exceptionStackTrace = ex.StackTrace?.Substring(0, Math.Min(ex.StackTrace?.Length ?? 0, 2048)) ?? "";
+        }
+
+        return new IOExceptionEntity()
+        {
+            RequestDate = DateTimeOffset.UtcNow,
+            RequestPath = requestPath,
+            RequestHeaders = string.Empty,
+            RequestBody = string.Empty,
+            ExceptionMessage = exceptionMessage,
+            ExceptionStackTrace = exceptionStackTrace,
+        };
     }
 }

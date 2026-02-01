@@ -43,7 +43,7 @@ where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity
     private void CreateExceptionModel(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IOExceptionEntity>().HasIndex(
-            userEntity => new { userEntity.RequestDate }).IsUnique(true);
+            userEntity => new { userEntity.RequestDate });
     }
     
     private void CreateUserModel(ModelBuilder modelBuilder)

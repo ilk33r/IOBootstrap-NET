@@ -11,7 +11,6 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using IOBootstrap.NET.Core.Extensions;
 using IOBootstrap.NET.Core.Interfaces;
-using System.Threading.Tasks;
 using IOBootstrap.NET.Common.Extensions;
 
 namespace IOBootstrap.NET.BackOffice.User.ViewModels;
@@ -131,8 +130,9 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         }
     }
 
-    public virtual IList<IOUserInfoModel> ListUsers()
+    public virtual IOListUserResponseModel ListUsers(int? start, int? count)
     {
+        int usersCount = DatabaseContext.Users.Count();
         IList<IOUserInfoModel> userList = DatabaseContext.Users
                                                             .Select(u => new IOUserInfoModel()
                                                             {
@@ -148,14 +148,16 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
                                                                 UpdateDate = u.UpdateDate
                                                             })
                                                             .OrderBy(u => u.ID)
+                                                            .Skip(start ?? 0)
+                                                            .Take(count ?? 0)
                                                             .ToList();
 
         if (userList == null)
         {
-            return new List<IOUserInfoModel>();
+            return new IOListUserResponseModel(0, new List<IOUserInfoModel>());
         }
 
-        return userList;
+        return new IOListUserResponseModel(usersCount, userList);
     }
 
     public virtual void UpdateUser(IOUpdateUserRequestModel request)

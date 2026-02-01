@@ -1,7 +1,6 @@
-import { UploadModalViewPresenter, View } from "iobootstrap-ui-base";
+import { BaseView, UploadModalViewPresenter, View } from "iobootstrap-ui-base";
 import UploadModalViewProps from "../props/UploadModalViewProps";
 import UploadModalViewState from "../props/UploadModalViewState";
-import React from "react";
 
 class UploadModalView extends View<UploadModalViewProps, UploadModalViewState> implements UploadModalViewPresenter {
 
@@ -41,7 +40,7 @@ class UploadModalView extends View<UploadModalViewProps, UploadModalViewState> i
         };
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <div id="uploadModal" className="modal fade" role="dialog" aria-hidden="true">
                      <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -55,7 +54,7 @@ class UploadModalView extends View<UploadModalViewProps, UploadModalViewState> i
                         </div>
                     </div>
                 </div>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

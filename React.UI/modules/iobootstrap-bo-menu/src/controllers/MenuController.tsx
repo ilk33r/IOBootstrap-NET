@@ -4,6 +4,7 @@ import MenuState from '../props/MenuState';
 import React from 'react';
 import $ from 'jquery';
 import { BOController } from 'iobootstrap-bo-base';
+import { BaseView } from 'iobootstrap-ui-base';
 
 class MenuController extends BOController<MenuProps, MenuState> {
 
@@ -132,7 +133,7 @@ class MenuController extends BOController<MenuProps, MenuState> {
         });
         
         return (
-            <React.StrictMode>
+            <BaseView>
                 <nav className="navbar navbar-dark bg-dark bg-gradient flex-column align-items-start d-flex p-4 position-absolute start-0 bottom-0 z-2 overflow-visible sidebar" data-bs-theme="dark">
                     <ul className="navbar-nav mb-2 mb-lg-0">
                         <li className="nav-item">
@@ -152,7 +153,7 @@ class MenuController extends BOController<MenuProps, MenuState> {
                         {menuContent}
                     </ul>
                 </nav>
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

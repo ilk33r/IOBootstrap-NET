@@ -1,6 +1,5 @@
-import React from "react";
 import SendPushNotificationRequestModel from "../models/SendPushNotificationRequestModel";
-import { BaseResponseModel, CalloutTypes, DeviceTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, DeviceTypes, DIHooks, ValidationBackofficeRequestRule, ValidationMaxLengthRule, ValidationMinLengthRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormDataOptionModel, FormType, FormTypeSelectProps, FormTypeTextAreaProps, FormTypeTextProps, FormView } from "iobootstrap-bo-base";
 
 class PushNotificationSendController extends BOController<{}, {}> {
@@ -77,7 +76,7 @@ class PushNotificationSendController extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Send a push notification"
@@ -85,7 +84,7 @@ class PushNotificationSendController extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

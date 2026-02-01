@@ -8,7 +8,10 @@ using IOBootstrap.NET.Common.Routes;
 using IOBootstrap.NET.Core.Middlewares;
 using IOBootstrap.NET.Core.Services.Captcha;
 using IOBootstrap.NET.DataAccess.Context;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IOBootstrap.NET.Application;
@@ -75,8 +78,20 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         });
 
         services.AddDistributedMemoryCache();
+        services.AddHealthChecks();
+
+        string? dataProtectionPath = Configuration.GetValue<string>(IOConfigurationConstants.DataProtectionPath);
+        if (!String.IsNullOrEmpty(dataProtectionPath))
+        {
+            services
+                .AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+                .SetApplicationName("io-app");
+        }
+
         services.AddSession(options =>
         {
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.Name = ".IO.Session";
         });
 
@@ -181,6 +196,8 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             endpoints.MapControllers();
             endpoints.MapControllerRoute("Error404", errorRoute.GetRouteString());
         });
+
+        app.UseHealthChecks("/Health");
 
         // Start static caching
         using (var serviceScope = app.ApplicationServices.CreateScope())

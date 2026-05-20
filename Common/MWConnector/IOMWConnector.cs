@@ -82,7 +82,7 @@ public class IOMWConnector : IOMWConnectorProtocol
         });
 
         string encryptedBody = Convert.ToBase64String(AESUtilities.Encrypt(serializedRequest));
-        HTTPClient.SetPostBody(encryptedBody);
+        HTTPClient.SetBody(encryptedBody);
         Task task = HTTPClient.Call(path, (bool status, string response, HttpResponseHeaders? headers) =>
         {
             try

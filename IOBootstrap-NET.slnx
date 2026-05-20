@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Common/">
+    <Project Path="Common/X.Common/X.Common.csproj" />
+  </Folder>
+  <Folder Name="/IOBootstrap-NET/">
+    <Project Path="Application/IOBootstrap.NET.Application.csproj" />
+    <Project Path="BackOffice/IOBootstrap.NET.BackOffice.csproj" />
+    <Project Path="Batch/Base/IOBootstrap.NET.Batch.Base.csproj" />
+    <Project Path="Batch/PushSender/IOBootstrap.NET.Batch.PushSender.csproj" />
+    <Project Path="Common/IOBootstrap.NET.Common.csproj" />
+    <Project Path="Core/IOBootstrap.NET.Core.csproj" />
+    <Project Path="DataAccess/IOBootstrap.NET.DataAccess.csproj" />
+    <Project Path="Default/Application/IOBootstrap.NET.Default.Application.csproj" />
+    <Project Path="Default/Batch/IOBootstrap.NET.Default.Batch.csproj" />
+    <Project Path="Functions/Functions/IOBootstrap.NET.Functions.csproj" />
+    <Project Path="WebApi/IOBootstrap.NET.WebApi.csproj" />
+  </Folder>
+  <Configuration Name="Debug|Any CPU" />
+  <Configuration Name="Debug|x64" />
+  <Configuration Name="Debug|x86" />
+  <Configuration Name="Release|Any CPU" />
+  <Configuration Name="Release|x64" />
+  <Configuration Name="Release|x86" />
+  <Configuration Name="Staging|Any CPU" />
+  <Configuration Name="Staging|x64" />
+  <Configuration Name="Staging|x86" />
+</Solution>

@@ -36,10 +36,10 @@
     <Content Include="BOTemplates\**" LinkBase="BOTemplates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
-    <Content Include="appcell.service.sh" LinkBase="appcell.service.sh">
+    <Content Include="io.service.sh" LinkBase="appcell.service.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
-    <Content Include="appcell.service.staging.sh" LinkBase="appcell.service.staging.sh">
+    <Content Include="io.service.staging.sh" LinkBase="appcell.service.staging.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
     <Content Include="localhost.pfx" LinkBase="localhost.pfx">

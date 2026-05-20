@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace IOBootstrap.NET.Core.Controllers;
 
 public abstract class IOFunctionController<TViewModel, TDBContext> : IOController<TViewModel, TDBContext>
-where TDBContext : IODatabaseContext<TDBContext>
+where TDBContext : IOBaseDatabaseContext<TDBContext>
 where TViewModel : IIOFunctionsViewModel<TDBContext>, new()
 {
 

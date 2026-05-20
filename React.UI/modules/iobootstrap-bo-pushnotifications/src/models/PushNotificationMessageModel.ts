@@ -4,7 +4,7 @@ class PushNotificationMessageModel {
     deviceType: number | null;
     notificationCategory: string | null;
     notificationData: string | null;
-    notificationMessage: string;
+    notificationMessage: string | null;
     notificationTitle: string;
     isCompleted: boolean;
     createdBy: string | null;

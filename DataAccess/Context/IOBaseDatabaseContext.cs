@@ -9,6 +9,7 @@ where TContext : DbContext
 {
     public virtual DbSet<IOConfigurationEntity> Configurations { get; set; }
     public virtual DbSet<IOExceptionEntity> Exceptions { get; set; }
+    public virtual DbSet<IOFilesEntity> Files { get; set; }
     public virtual DbSet<IOImagesEntity> Images { get; set; }
     public virtual DbSet<IOLogsEntity> Logs { get; set; }
     public virtual DbSet<IOMenuEntity> Menu { get; set; }

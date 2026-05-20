@@ -61,6 +61,7 @@ public static class IOPushSenderProcessFirebaseExtension
                 {
                     deliveredMessage.Device.LastUpdateTime = DateTimeOffset.UtcNow;
                     deliveredMessage.Device.IsActive = false;
+                    deliveredMessage.IsDelivered = true;
                 }
                 else
                 {

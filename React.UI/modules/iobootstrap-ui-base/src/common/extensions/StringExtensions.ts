@@ -7,6 +7,7 @@ declare global {
     interface String {
         EscapeHTML(): string
         RemoveHTML(): string
+        RemoveUnsafeHTML(): string
     }
 }
 
@@ -35,4 +36,9 @@ String.prototype.RemoveHTML = function (this: string): string {
             return tag;
         }
     });
+}
+
+String.prototype.RemoveUnsafeHTML = function (this: string): string {
+    const sanitized = DOMPurify.sanitize(this);
+    return sanitized;
 }

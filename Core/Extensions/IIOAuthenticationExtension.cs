@@ -145,8 +145,12 @@ public static class IIOAuthenticationExtension
         string decryptedUserTokenExtras = String.Format(formatString, args);
 
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         // Base 64 encode user token data
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);

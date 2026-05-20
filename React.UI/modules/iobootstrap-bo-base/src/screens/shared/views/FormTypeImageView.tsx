@@ -35,6 +35,10 @@ class FormTypeImageView extends View<FormTypeImageProps, FormViewState> implemen
     public getBlobValue(): Blob | null {
         return this._fileValue;
     }
+    
+    public setValue(value: string): void {
+        this._fileName = value;
+    }
 
     private handleDeleteImage(event: React.MouseEvent<HTMLAnchorElement>) {
         event.preventDefault();

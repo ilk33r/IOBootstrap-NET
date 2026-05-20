@@ -104,17 +104,25 @@ public static class IIOUserCredentialExtension
                 input.UserModel = findedUserEntity;
                 input.TokenExtras = tokenExtras;
 
-                if (input.TokenExtras.Length == 0 || int.Parse(input.TokenExtras[0]) != input.UserModel.ID)
+                try
                 {
+                    if (input.TokenExtras.Length == 0 || int.Parse(input.TokenExtras[0]) != input.UserModel.ID)
+                    {
+                        return false;
+                    }
+
+                    if (userCache == null)
+                    {
+                        userCache = new IOCacheObject(cacheKey, findedUserEntity, 60);
+                        IOCache.CacheObject(userCache);
+                    }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    input.Logger.LogError(e.StackTrace);
                     return false;
                 }
-                
-                if (userCache == null)
-                {
-                    userCache = new IOCacheObject(cacheKey, findedUserEntity, 60);
-                    IOCache.CacheObject(userCache);
-                }
-                return true;
             }
             else
             {
@@ -130,8 +138,12 @@ public static class IIOUserCredentialExtension
     where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
         try
@@ -149,7 +161,7 @@ public static class IIOUserCredentialExtension
         }
         catch (Exception e)
         {
-            input.Logger.LogDebug(e.StackTrace);
+            input.Logger.LogError(e.StackTrace);
             return new Tuple<string, int>("", 0);
         }
     }
@@ -158,8 +170,12 @@ public static class IIOUserCredentialExtension
     where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(input.Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
         try
@@ -168,13 +184,17 @@ public static class IIOUserCredentialExtension
             string decryptedToken = aesUtilities.Decrypt(Convert.FromBase64String(extras));
 
             // Split user id and token value
-            string[] tokenData = decryptedToken.Split(';');
+            if (String.IsNullOrEmpty(decryptedToken) || decryptedToken.Length < 2 || !decryptedToken.Contains(';'))
+            {
+                return [];
+            }
 
+            string[] tokenData = decryptedToken.Split(';');
             return tokenData;
         }
         catch (Exception e)
         {
-            input.Logger.LogDebug(e.StackTrace);
+            input.Logger.LogError(e.StackTrace);
             return [];
         }
     }

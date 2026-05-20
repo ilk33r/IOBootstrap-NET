@@ -37,6 +37,15 @@ class FormView extends View<FormViewProps, {}> {
         }
     }
 
+    public setValue(value: string, forIndex: number): void {
+        const formElement: FormElement | null = this._formElementsRef[forIndex].current as FormElement | null;
+        if (formElement == null) {
+            return;
+        }
+
+        formElement.setValue(value);
+    }
+
     private handleForm(e: { preventDefault: () => void; }) {
         e.preventDefault();
 
@@ -46,6 +55,9 @@ class FormView extends View<FormViewProps, {}> {
 
         this._formElementsRef.forEach(formElement => {
             const validatableElement = formElement.current as Validatable;
+            if (validatableElement == null) {
+                return;
+            }
 
             if (!validatableElement.validate()) {
                 isValidated = false;
@@ -69,7 +81,7 @@ class FormView extends View<FormViewProps, {}> {
         }
     }
 
-    handleFormError(errorTitle: string, errorMessage: string) {
+    private handleFormError(errorTitle: string, errorMessage: string) {
         this.props.errorHandler(errorTitle, errorMessage);
     }
 

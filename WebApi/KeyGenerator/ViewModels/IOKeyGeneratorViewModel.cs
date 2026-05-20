@@ -117,8 +117,12 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
     public IOEncryptResponseModel EncryptAES(IOEncryptRequestModel requestModel)
     {
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         // Base 64 encode user token data
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
@@ -137,8 +141,12 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
     public IOEncryptResponseModel DecryptAES(IOEncryptRequestModel requestModel)
     {
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionKey)!);
-        byte[] iv = Convert.FromBase64String(Configuration.GetValue<string>(IOConfigurationConstants.EncryptionIV)!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         // Base 64 encode user token data
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);

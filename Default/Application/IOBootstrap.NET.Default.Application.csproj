@@ -36,11 +36,47 @@
     <Content Include="BOTemplates\**" LinkBase="BOTemplates">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
+    <Content Include="appcell.service.sh" LinkBase="appcell.service.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <Content Include="appcell.service.staging.sh" LinkBase="appcell.service.staging.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
+    <Content Include="localhost.pfx" LinkBase="localhost.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </Content>
     <Content Include="Fonts\**" LinkBase="Fonts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content>
     <None Include="Backoffice.UI\**" LinkBase="Backoffice.UI" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <SwaggerUiDebugJsSource>DevAssets\swagger-ui\swagger-encryption.js</SwaggerUiDebugJsSource>
+    <SwaggerUiDebugJsTarget>wwwroot\swagger-ui\swagger-encryption.js</SwaggerUiDebugJsTarget>
+
+    <SwaggerUiDebugJsInterceptorSource>DevAssets\swagger-ui\swagger-encryption-interceptor.js</SwaggerUiDebugJsInterceptorSource>
+    <SwaggerUiDebugJsInterceptorTarget>wwwroot\swagger-ui\swagger-encryption-interceptor.js</SwaggerUiDebugJsInterceptorTarget>
+  </PropertyGroup>
+
+  <Target Name="CopySwaggerDebugAssets" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <MakeDir Directories="wwwroot\swagger-ui" />
+    <Copy SourceFiles="$(SwaggerUiDebugJsSource)" DestinationFiles="$(SwaggerUiDebugJsTarget)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(SwaggerUiDebugJsInterceptorSource)" DestinationFiles="$(SwaggerUiDebugJsInterceptorTarget)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopySwaggerDebugAssets" BeforeTargets="Build" Condition="'$(Configuration)' == 'Staging'">
+    <MakeDir Directories="wwwroot\swagger-ui" />
+    <Copy SourceFiles="$(SwaggerUiDebugJsSource)" DestinationFiles="$(SwaggerUiDebugJsTarget)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(SwaggerUiDebugJsInterceptorSource)" DestinationFiles="$(SwaggerUiDebugJsInterceptorTarget)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!--
+  <Target Name="RemoveSwaggerDebugAssets" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Delete Files="$(SwaggerUiDebugJsTarget)" />
+    <Delete Files="$(SwaggerUiDebugJsInterceptorTarget)" />
+  </Target>
+  -->
 
   <PropertyGroup>
    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>

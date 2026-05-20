@@ -1,6 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 
 import pkg from './package.json';
 
@@ -8,24 +8,26 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      file: './lib/cjs/index.js',
+      dir: './lib',
+      entryFileNames: 'cjs/[name].js',
       format: 'cjs',
       sourcemap: 'inline'
     },
     {
-      file: './lib/esm/index.js',
+      dir: './lib',
+      entryFileNames: 'esm/[name].js',
       format: 'es',
       sourcemap: 'inline'
     },
   ],
   external: [...Object.keys(pkg.peerDependencies || {})],
   plugins: [
-    nodeResolve(),
-    commonjs(),
+    nodeResolve({
+      extensions: ['.ts', '.tsx', '.json', '.js', '.jsx'] 
+    }),
     typescript({
-      typescript: require('typescript'),
-      sourceMap: false, 
-      inlineSources: true
-    })
+      tsconfig: './tsconfig.json'
+    }),
+    commonjs()
   ],
 };

@@ -183,11 +183,6 @@ where TViewModel : IIOViewModel<TDBContext>, new()
 
         if (Session?.SessionID != null)
         {
-            #if DEBUG
-            IOCacheObject sessionIDCache = new IOCacheObject(IOCacheKeys.SwaggerSessionID, Session?.SessionID ?? string.Empty, 0);
-            IOCache.CacheObject(sessionIDCache);
-            #endif
-
             Response.Headers.Append(IORequestHeaderConstants.SessionID, Session?.SessionID);
         }
     }

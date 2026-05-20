@@ -24,6 +24,10 @@ class FormTypeTextView extends View<FormTypeTextProps, FormViewState> implements
         return null;
     }
 
+    public setValue(value: string): void {
+        this._formValue = value;
+    }
+
     handleValueChange(event: { target: { value: string; }; }) {
         this._formValue = event.target.value;
         
@@ -36,10 +40,13 @@ class FormTypeTextView extends View<FormTypeTextProps, FormViewState> implements
         var validated = true;
         var errorMessage = "";
         var errorTitle= "";
-        let weakSelf = this;
+        let validationText = this._formValue;
+        if (validationText == "") {
+            validationText = this.props.value;
+        }
 
         this.props.validations.forEach(rule => {
-            if (!rule.validationResult(weakSelf._formValue)) {
+            if (!rule.validationResult(validationText)) {
                 errorMessage = rule.errorMessage;
                 errorTitle = rule.errorTitle;
                 validated = false;

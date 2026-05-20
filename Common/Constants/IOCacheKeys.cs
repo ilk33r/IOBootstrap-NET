@@ -13,11 +13,8 @@ public static class IOCacheKeys
     public static string RSAPrivateKeyIDCacheKey = "RSAPrivateKeyIDCache";
     public static string SessionCacheKey = "Session-{0}";
     public static string SwaggerAuthorization = "SwaggerAuthorization";
-    public static string SwaggerSessionID = "SwaggerSessionID";
     public static string SwaggerSymmetricKey = "SwaggerSymmetricKey";
     public static string SwaggerSymmetricIV = "SwaggerSymmetricIV";
-    public static string SwaggerToken = "SwaggerToken";
-    public static string SwaggerTokenExtra = "SwaggerTokenExtra";
 
     #endregion
 

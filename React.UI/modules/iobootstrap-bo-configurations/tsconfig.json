@@ -7,7 +7,7 @@
     "jsx": "react-jsx",
     "types": ["vite/client"],
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "esModuleInterop": true,
@@ -17,6 +17,6 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts*"],
+  "include": ["src/**/*.ts*", "src/*.ts"],
   "exclude": ["node_modules", "lib"]
 }

@@ -24,6 +24,10 @@ class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> im
         return null;
     }
 
+    public setValue(value: string): void {
+        this._formValue = value;
+    }
+
     handleValueChange(event: { target: { value: string; }; }) {
         this._formValue = event.target.value;
 
@@ -36,10 +40,13 @@ class FormTypeTextAreaView extends View<FormTypeTextAreaProps, FormViewState> im
         let validated = true;
         let errorMessage = "";
         let errorTitle= "";
-        const weakSelf = this;
+        let validationText = this._formValue;
+        if (validationText == "") {
+            validationText = this.props.value;
+        }
 
         this.props.validations.forEach(rule => {
-            if (!rule.validationResult(weakSelf._formValue)) {
+            if (!rule.validationResult(validationText)) {
                 errorMessage = rule.errorMessage;
                 errorTitle = rule.errorTitle;
                 validated = false;

@@ -17,8 +17,7 @@ public static class IOConfigurationConstants
     public static string CookieAuthentication = "IOCookieAuthentication";
     public static string DataAccessAssembly = "IODataAccessAssembly";
     public static string DataProtectionPath = "IODataProtectionPath";
-    public static string EncryptionKey = "IOEncryptionKey";
-    public static string EncryptionIV = "IOEncryptionIV";
+    public static string FilesFolderKey = "IOFilesFolder";
     public static string HttpsRequired = "IOHttpsRequired";
     public static string ImagesFolderKey = "IOImagesFolder";
     public static string ImagesEnabled = "IOImagesEnabled";
@@ -31,6 +30,7 @@ public static class IOConfigurationConstants
     public static string PushNotificationsEnabled = "IOPushNotificationsEnabled";
     public static string RateLimitEnabled = "IORateLimitEnabled";
     public static string SendGridApiKey = "IOSendGridApiKey";
+    public static string TempFolder = "IOTempFolder";
     public static string TokenLife = "IOTokenLife";
     public static string Version = "IOVersion";
 

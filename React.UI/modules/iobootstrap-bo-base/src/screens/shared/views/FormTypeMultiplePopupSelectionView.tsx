@@ -107,6 +107,9 @@ class FormTypeMultiplePopupSelectionView extends View<FormTypeMultiplePopupSelec
         return null;
     }
 
+    public setValue(value: string): void {
+    }
+
     public validate(): boolean {
         let validated = true;
         let errorMessage = "";

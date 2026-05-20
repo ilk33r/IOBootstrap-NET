@@ -71,7 +71,14 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             using (IServiceScope scope = ServiceScopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TDBContext>();
-                await SaveExceptionToDatabase(context, dbContext, ex);
+                try
+                {
+                    await SaveExceptionToDatabase(context, dbContext, ex);
+                }
+                catch (Exception logException)
+                {
+                    Logger.LogError(logException, "Failed to save exception to database.");
+                }
             }
         }
 

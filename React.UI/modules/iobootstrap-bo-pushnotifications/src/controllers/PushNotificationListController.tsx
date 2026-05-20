@@ -112,7 +112,7 @@ class PushNotificationListController extends BOController<PushNotificationListPr
                 deviceTypeString,
                 (message.notificationCategory ?? "").RemoveHTML(),
                 (message.notificationData ?? "").RemoveHTML(),
-                (message.notificationMessage).RemoveHTML(),
+                (message.notificationMessage ?? "").RemoveHTML(),
                 (message.notificationTitle).RemoveHTML(),
                 status,
                 (message.createdBy ?? "").RemoveHTML(),

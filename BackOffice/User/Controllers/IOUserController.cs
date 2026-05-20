@@ -71,14 +71,14 @@ where TViewModel : IIOUserViewModel<TDBContext>, new()
 
         if (String.IsNullOrEmpty(requestModel.NewPassword))
         {
-            string randomPassword = IORandomUtilities.GenerateRandomAlphaNumericString(8);
-            string base64Password = IOBase64Utilities.Base64Encode(randomPassword).Substring(Math.Max(0, randomPassword.Length - 8));
-            newPassword = await ViewModel.EncryptString(base64Password);
+            string randomPassword = IORandomUtilities.GenerateRandomPassword(12);
+            newPassword = await ViewModel.EncryptString(randomPassword);
         }
         else
         {
             newPassword = requestModel.NewPassword;
         }
+        
         // Reset user password
         await ViewModel.ResetPassword(requestModel.UserName ?? String.Empty, newPassword);
 

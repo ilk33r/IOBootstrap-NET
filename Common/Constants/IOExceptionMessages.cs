@@ -28,6 +28,10 @@ public static class IOExceptionMessages
     public const int ImageCorruptCode = 704;
     public const int ImageSaveCode = 705;
     public const int ImageFileSizeCode = 706;
+    public const int FileNotFoundCode = 707;
+    public const int FileCorruptCode = 708;
+    public const int FileSaveCode = 709;
+    public const int FileFileSizeCode = 710;
 
     public const string InvalidRequestMessage = "Invalid request.";
     public const string InvalidPermissionMessage = "Invalid permission.";
@@ -52,4 +56,8 @@ public static class IOExceptionMessages
     public const string ImageCorruptMessage = "Could not read image file.";
     public const string ImageSaveMessage = "Could not save image file.";
     public const string ImageFileSizeMessage = "File is too big.";
+    public const string FileNotFoundMessage = "File not found.";
+    public const string FileCorruptMessage = "Could not read file.";
+    public const string FileSaveMessage = "Could not save file.";
+    public const string FileFileSizeMessage = "File is too big.";
 }

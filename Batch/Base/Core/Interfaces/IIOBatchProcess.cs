@@ -14,6 +14,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     public ILogger<IOLoggerType>? Logger { get; set; }
     public TConfig? Configuration { get; set; }
     public TDBContext? DatabaseContext { get; set; }
+    public IServiceProvider? ServiceProvider { get; set; }
 
     public void OnLoad();
     

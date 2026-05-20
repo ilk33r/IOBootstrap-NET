@@ -144,13 +144,15 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             app.UseDeveloperExceptionPage();
             app.UseSwagger(options =>
             {
-                options.SerializeAsV2 = true;
+                options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1;
             });
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "IOBootstrapt");
                 options.RoutePrefix = "swagger-ui";
                 options.ConfigObject.TryItOutEnabled = true;
+                options.InjectJavascript("/swagger-ui/swagger-encryption.js");
+                options.InjectJavascript("/swagger-ui/swagger-encryption-interceptor.js");
             });
         }
 

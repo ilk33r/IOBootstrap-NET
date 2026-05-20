@@ -31,6 +31,9 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
         return this._fileValue;
     }
 
+    public setValue(value: string): void {
+    }
+
     handleDeleteFile(event: React.MouseEvent<HTMLAnchorElement>) {
         event.preventDefault();
 
@@ -80,10 +83,13 @@ class FormTypeFileView extends View<FormTypeFileProps, FormViewState> implements
         let validated = true;
         let errorMessage = "";
         let errorTitle= "";
-        const weakSelf = this;
+        let validationText = this._formValue;
+        if (validationText == "") {
+            validationText = this.props.value;
+        }
 
         this.props.validations.forEach(rule => {
-            if (!rule.validationResult(weakSelf._formValue)) {
+            if (!rule.validationResult(validationText)) {
                 errorMessage = rule.errorMessage;
                 errorTitle = rule.errorTitle;
                 validated = false;

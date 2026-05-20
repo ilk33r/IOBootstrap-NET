@@ -47,14 +47,6 @@ where TViewModel : IIOAuthenticationViewModel<TDBContext>, new()
             requestModel.EncryptedCaptcha
         );
 
-        #if DEBUG
-        IOCacheObject tokenCacheObject = new IOCacheObject(IOCacheKeys.SwaggerToken, response.Token ?? string.Empty, 0);
-        IOCacheObject tokenExtraCacheObject = new IOCacheObject(IOCacheKeys.SwaggerTokenExtra, response.Extras ?? string.Empty, 0);
-
-        IOCache.CacheObject(tokenCacheObject);
-        IOCache.CacheObject(tokenExtraCacheObject);
-        #endif
-
         bool cookieAuthentication = Configuration.GetValue<bool>(IOConfigurationConstants.CookieAuthentication);
         if (cookieAuthentication)
         {

@@ -18,6 +18,7 @@ where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity
     {
         CreateConfigurationModel(modelBuilder);
         CreateExceptionModel(modelBuilder);
+        CreateFilesModel(modelBuilder);
 
         modelBuilder.Entity<IOMenuEntity>().HasIndex(
             menuEntity => new { menuEntity.ParentEntityID, menuEntity.MenuOrder, menuEntity.RequiredRole }).IsUnique(false);
@@ -44,6 +45,18 @@ where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity
     {
         modelBuilder.Entity<IOExceptionEntity>().HasIndex(
             userEntity => new { userEntity.RequestDate });
+    }
+
+    private void CreateFilesModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IOFilesEntity>().HasIndex(
+            it => new { it.Description });
+
+        modelBuilder.Entity<IOFilesEntity>().HasIndex(
+            it => new { it.Description, it.AdditionalData });
+
+        modelBuilder.Entity<IOFilesEntity>().HasIndex(
+            it => new { it.CreatedDate });
     }
     
     private void CreateUserModel(ModelBuilder modelBuilder)

@@ -19,6 +19,9 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     public TConfig? Configuration { get; set; }
     public TDBContext? DatabaseContext { get; set; }
 
+    private ServiceCollection ServiceCollection { get; set; }
+    private IServiceProvider ServiceProvider { get; set; }
+
     private List<IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>> RegisteredProcesses { get; set; }
 
     public IOBatchStartup(string[] args)
@@ -31,6 +34,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         }
 
         Environment = args[0];
+        ServiceCollection = new ServiceCollection();
         ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddFilter("Microsoft", LogLevel.Warning)
@@ -60,9 +64,24 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         // Log call
         Logger?.LogDebug("Database initialized");
 
+        // Configure services
+        ConfigureServices(ServiceCollection);
+        ServiceProvider = ServiceCollection.BuildServiceProvider();
+        ConfigureServiceProviders(ServiceProvider);
+
         // Process Register
         RegisteredProcesses = new List<IIOBatchProcess<TConfig, TDBContext, TPushNotificationDevicesEntity>>();
         Logger?.LogDebug("Process register initialized");
+    }
+
+    public virtual void ConfigureServices(IServiceCollection serviceCollection)
+    {
+        Logger?.LogDebug("Configure services");
+    }
+
+    public virtual void ConfigureServiceProviders(IServiceProvider ServiceProvider)
+    {
+        Logger?.LogDebug("Configure service providers");
     }
 
     public virtual string CurrentDirectory()
@@ -99,6 +118,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         process.Logger = Logger;
         process.Configuration = Configuration;
         process.DatabaseContext = DatabaseContext;
+        process.ServiceProvider = ServiceProvider;
         RegisteredProcesses.Add(process);
 
         process.OnLoad();
@@ -141,7 +161,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
                 DatabaseContext?.Add(exception);
                 DatabaseContext?.SaveChanges();
 
-                Logger?.LogError("Process {0} exception.\n{1}\n\n{2}", process.ToString(), e.Message, e.StackTrace?.ToString());
+                Logger?.LogError("Process {0} exception.\n{1}\n\n{2}\n", process.ToString(), e.Message, e.StackTrace?.ToString());
                 Thread.Sleep(2000);
             }
         }

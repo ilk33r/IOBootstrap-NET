@@ -9,6 +9,12 @@ public static class IORandomUtilities
 
     #region Random Helpers
 
+    private const string DefaultAlphabet =
+        "abcdefghijklmnopqrstuvwxyz" +
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "0123456789" +
+        "!@#$%^&*()-_=+[]{};:,.?/";
+
     public static string GenerateGUIDString()
     {
         return Guid.NewGuid().ToString();
@@ -65,6 +71,23 @@ public static class IORandomUtilities
         }
         
         return min + (result * (max - min));
+    }
+
+    public static string GenerateRandomPassword(int length)
+    {
+        if (length <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(length));
+        }
+
+        var chars = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            int idx = GenerateRandomNumber(0, DefaultAlphabet.Length - 1);
+            chars[i] = DefaultAlphabet[idx];
+        }
+
+        return new string(chars);
     }
 
     #endregion

@@ -20,6 +20,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
     public ILogger<IOLoggerType>? Logger { get; set; }
     public TConfig? Configuration { get; set; }
     public TDBContext? DatabaseContext { get; set; }
+    public IServiceProvider? ServiceProvider { get; set; }
     public FirebaseUtils? FirebaseMessageUtilities;
     public APNSHttpServiceUtils? APNSUtilities;
 
@@ -34,19 +35,18 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         }
 
         // Read file
-        string fileContent = File.ReadAllText(apnsFilePath);
+        byte[] apnsFileContent = File.ReadAllBytes(apnsFilePath);
 
         // Convert key and iv to byte array
-        byte[] key = Convert.FromBase64String(Configuration!.IOEncryptionKey!);
-        byte[] iv = Convert.FromBase64String(Configuration!.IOEncryptionIV!);
+        byte[] key = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionKey) ?? string.Empty
+        );
+        byte[] iv = Convert.FromBase64String(
+            System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.EncryptionIV) ?? string.Empty
+        );
 
         // Base 64 encode user token data
         IOAESUtilities aesUtilities = new IOAESUtilities(key, iv);
-
-        // Obtain decrypted token value
-        byte[] encryptedAPNSKeyFileBytes = Convert.FromBase64String(fileContent);
-        string decryptedAPNSKeyFile = aesUtilities.Decrypt(encryptedAPNSKeyFileBytes);
-        byte[] decryptedAPNSKeyFileBytes = Convert.FromBase64String(decryptedAPNSKeyFile);
 
         string firebaseFilePath = Path.Combine(currentDirectory, Configuration!.IOFirebaseEncryptedKeyFile);
         if (!File.Exists(firebaseFilePath))
@@ -58,16 +58,11 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
         // Read file
         string firebaseFileContent = File.ReadAllText(firebaseFilePath);
 
-        // Obtain decrypted token value
-        byte[] encryptedFirebaseKeyFileBytes = Convert.FromBase64String(firebaseFileContent);
-        string decryptedFirebaseKeyFile = aesUtilities.Decrypt(encryptedFirebaseKeyFileBytes);
-        byte[] decryptedFirebaseKeyFileBytes = Convert.FromBase64String(decryptedFirebaseKeyFile);
-
         FirebaseMessageUtilities = new FirebaseUtils(
             Logger!,
             Configuration?.IOFirebaseApiUrl ?? String.Empty,
             Configuration?.IOFirebaseProjectID ?? String.Empty,
-            System.Text.Encoding.UTF8.GetString(decryptedFirebaseKeyFileBytes)
+            firebaseFileContent
         );
 
         IOConfigurationEntity? apnsBundleID = DatabaseContext?.Configurations.Where(c => c.ConfigKey!.Equals(IOConfigurationKeys.APNSBundleIDKey)).FirstOrDefault();
@@ -91,7 +86,7 @@ where TDBContext : IODatabaseContext<TDBContext, TPushNotificationDevicesEntity>
             Logger,
             Configuration?.IOAPNSApiURL ?? String.Empty, 
             apnsBundleID.ConfigStringValue,
-            decryptedAPNSKeyFileBytes,
+            apnsFileContent,
             encryptedAPNSKeyPasswordString 
         );
     }

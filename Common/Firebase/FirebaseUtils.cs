@@ -92,6 +92,8 @@ public class FirebaseUtils
                 Logger?.LogError("Firebase api call failed. Device not found.");
                 return FirebaseUtilsMessageTypes.DeviceNotFound;
             }
+
+            return FirebaseUtilsMessageTypes.DeviceNotFound;
         }
 
         Logger?.LogError("Firebase api call failed.");

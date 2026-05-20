@@ -75,6 +75,10 @@ class FormTypePopupSelectionView extends View<FormTypePopupSelectionProps, FormV
     public getBlobValue(): Blob | null {
         return null;
     }
+    
+    public setValue(value: string): void {
+        this._formSelectedItemId = Number(value);
+    }
 
     private handleValueChange(event: { target: { value: string; }; }) {
     }

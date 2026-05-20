@@ -5,7 +5,7 @@ import UsersListProps from "../props/UsersListProps";
 import UsersListState from "../props/UsersListState";
 import { BaseView, DIHooks } from "iobootstrap-ui-base";
 import { BOCommonConstants, BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListExtrasModel, ListView, UserRoles } from "iobootstrap-bo-base";
-import { ListUserRequestModel } from "..";
+import ListUserRequestModel from "../models/ListUserRequestModel";
 
 class UsersListController extends BOController<UsersListProps, UsersListState> {
 

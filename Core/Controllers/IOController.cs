@@ -139,8 +139,12 @@ where TViewModel : IIOViewModel<TDBContext>, new()
             return;
         }
 
-        // Check maintenance status
-        CheckIsMaintenanceMode(context);
+        bool dabaseExceptions = Configuration.GetValue<bool>(IOConfigurationConstants.DatabaseExceptions);
+        if (dabaseExceptions)
+        {
+            // Check maintenance status
+            CheckIsMaintenanceMode(context);
+        }
 
         // Validate request
         ValidateRequestModel(context);

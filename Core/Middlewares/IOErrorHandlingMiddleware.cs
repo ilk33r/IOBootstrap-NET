@@ -17,17 +17,20 @@ public class IOErrorHandlingMiddleware<TDBContext>
 where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
+    private readonly IConfiguration Configuration;
     private readonly ILogger<IOLoggerType> Logger;
     private readonly RequestDelegate RequestDelegate;
     private readonly IServiceScopeFactory ServiceScopeFactory;
 
     public IOErrorHandlingMiddleware(
         RequestDelegate next,
+        IConfiguration configuration,
         ILogger<IOLoggerType> logger,
         IServiceScopeFactory serviceScopeFactory
     )
     {
         RequestDelegate = next;
+        Configuration = configuration;
         Logger = logger;
         ServiceScopeFactory = serviceScopeFactory;
     }
@@ -68,16 +71,20 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             Logger.LogError(ex, ex.Message + '\n' + '\n' + ex.StackTrace);
 #endif
 
-            using (IServiceScope scope = ServiceScopeFactory.CreateScope())
+            bool dabaseExceptions = Configuration.GetValue<bool>(IOConfigurationConstants.DatabaseExceptions);
+            if (dabaseExceptions)
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TDBContext>();
-                try
+                using (IServiceScope scope = ServiceScopeFactory.CreateScope())
                 {
-                    await SaveExceptionToDatabase(context, dbContext, ex);
-                }
-                catch (Exception logException)
-                {
-                    Logger.LogError(logException, "Failed to save exception to database.");
+                    var dbContext = scope.ServiceProvider.GetRequiredService<TDBContext>();
+                    try
+                    {
+                        await SaveExceptionToDatabase(context, dbContext, ex);
+                    }
+                    catch (Exception logException)
+                    {
+                        Logger.LogError(logException, "Failed to save exception to database.");
+                    }
                 }
             }
         }

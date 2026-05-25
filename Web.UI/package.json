@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/ui/",
   "dependencies": {
-    "iobootstrap-ui-base": "file:../React.UI/modules/iobootstrap-ui-base",
+    "iobootstrap-ui-base": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-ui-base",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -20,12 +20,12 @@
     "web-vitals": "^3.5.2"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
-    "build:development": "react-scripts -r dotenv/config build dotenv_config_path=.env.development",
-    "build:staging": "node -r dotenv/config ./build.js dotenv_config_path=.env.staging",
-    "build:production": "node -r dotenv/config ./build.js dotenv_config_path=.env.production",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build:development": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "eslintConfig": {
     "extends": [

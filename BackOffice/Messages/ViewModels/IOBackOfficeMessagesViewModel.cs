@@ -32,7 +32,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
     public IList<IOMessageModel> GetMessages()
     {
-        DateTime currentDate = DateTime.Now;
+        DateTimeOffset currentDate = DateTimeOffset.UtcNow;
         IList<IOMessageModel> messages = DatabaseContext.Messages
                                                         .Select(m => new IOMessageModel()
                                                         {
@@ -82,7 +82,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         IOBackOfficeMessageEntity messageEntity = new IOBackOfficeMessageEntity()
         {
             Message = request.Message,
-            MessageCreateDate = DateTimeOffset.Now,
+            MessageCreateDate = DateTimeOffset.UtcNow,
             MessageStartDate = request.MessageStartDate ?? DateTimeOffset.UtcNow,
             MessageEndDate = request.MessageEndDate ?? DateTimeOffset.UtcNow
         };

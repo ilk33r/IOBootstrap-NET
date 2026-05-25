@@ -139,57 +139,39 @@ class Main extends BOController<MainProps, MainState> {
     }
 
     private checkToken() {
-      const cookieAuthentication = import.meta.env.VITE_COOKIE_AUTHENTICATION;
-      let userToken: string | null = null;
+        const cookieAuthentication = import.meta.env.VITE_COOKIE_AUTHENTICATION;
+        let userToken: string | null = null;
+        let userTokenExtras: string | null = null;
 
-      if (cookieAuthentication !== "true") {
-        userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
-      }
-
-      const newState = new MainState();
-      newState.isLoggedIn = false;
-
-      this.indicatorPresenter.present();
-
-      const checkTokenRequest = new CheckTokenRequestModel();
-      checkTokenRequest.Token = userToken;
-
-      const requestPath = `${import.meta.env.VITE_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
-      const weakSelf = this;
-
-      this.service.post(requestPath, checkTokenRequest, function (response: CheckTokenResponseModel) {
-        weakSelf.indicatorPresenter.dismiss();
-
-        if (response.status?.code !== 200) {
-          weakSelf.setState(newState);
-          return;
+        if (cookieAuthentication !== "true") {
+            userToken = this.storage.stringForKey(UICommonConstants.userTokenStorageKey);
+            userTokenExtras = this.storage.stringForKey(UICommonConstants.userTokenExtrasStorageKey);
         }
 
-        if (response.userRole != null) {
-          weakSelf.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, response.userRole);
-        }
-
-        weakSelf.decryptResponseAndUpdateState(response.userName ?? "");
-      }, function (error: string) {
-        weakSelf.handleServiceError("", error);
-        newState.isLoggedIn = false;
-        weakSelf.setState(newState);
-      });
-    }
-
-    private decryptResponseAndUpdateState(encryptedUserName: string) {
         const newState = new MainState();
         newState.isLoggedIn = false;
+
+        this.indicatorPresenter.present();
+
+        const checkTokenRequest = new CheckTokenRequestModel();
+        checkTokenRequest.Token = userToken;
+        checkTokenRequest.Extras = userTokenExtras;
+
+        const requestPath = `${import.meta.env.VITE_BACKOFFICE_AUTHENTICATION_CONTROLLER_NAME}/CheckToken`;
         const weakSelf = this;
 
-        AppCryptography.Instance.decrypt(encryptedUserName)
-          .then((decrypted) => {
-            weakSelf.storage.setStringForKey(
-              BOCommonConstants.userNameStorageKey,
-              decrypted
-            );
-            newState.isLoggedIn = true;
-            weakSelf.setState(newState, () => {
+        this.service.post(requestPath, checkTokenRequest, function (response: CheckTokenResponseModel) {
+            if (response.status?.code !== 200) {
+                weakSelf.indicatorPresenter.dismiss();
+                weakSelf.setState(newState);
+                return;
+            }
+
+            const extras = response.extras ?? [];
+            weakSelf.decryptResponseAndUpdateState(extras)
+            .then(() => {
+                newState.isLoggedIn = true;
+                
                 if (window.location.hash === "#!userChangePassword") {
                     weakSelf.updateLocation("#!userChangePassword");
                 } else {
@@ -197,12 +179,26 @@ class Main extends BOController<MainProps, MainState> {
                         weakSelf.updateLocation(window.location.hash);
                     });
                 }
+            })
+            .catch(() => {
+                weakSelf.indicatorPresenter.dismiss();
+                weakSelf.setState(newState);
             });
-          })
-          .catch(() => {
-            weakSelf.indicatorPresenter.dismiss();
+        }, function (error: string) {
+            weakSelf.handleServiceError("", error);
+        	newState.isLoggedIn = false;
             weakSelf.setState(newState);
-          });
+        });
+    }
+
+    private async decryptResponseAndUpdateState(extras: string[]): Promise<any> {
+        const encryptedUserName = extras[1];
+        const userName = await AppCryptography.Instance.decrypt(encryptedUserName);
+        this.appContext.setStringForKey(BOCommonConstants.userNameStorageKey, userName);
+
+        const encryptedRole = extras[2];
+        const userRole = await AppCryptography.Instance.decrypt(encryptedRole);
+        this.appContext.setNumberForKey(BOCommonConstants.userRoleStorageKey, Number(userRole));
     }
 
     private handleLoginSuccess() {

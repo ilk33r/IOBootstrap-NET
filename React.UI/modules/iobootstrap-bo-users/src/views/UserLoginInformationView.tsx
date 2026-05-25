@@ -17,13 +17,13 @@ class UserLoginInformationView extends View<UserLoginInformationProps, {}> {
                                                 <tbody>
                                                     <tr>
                                                         <td style={{backgroundColor: '#11BFDE', color: '#ffffff', textAlign: 'center', paddingTop: '15px', paddingBottom: '15px', fontSize: '24px', fontWeight: 'bold', borderTopLeftRadius: '16px', borderTopRightRadius: '16px'}}>
-                                                            {process.env.REACT_APP_APP_NAME} LOGIN
+                                                            {import.meta.env.VITE_APP_NAME} LOGIN
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td style={{padding: '10px', textAlign: 'center'}}>
                                                             <p style={{textAlign: 'left'}}>Your account has been created.</p>
-                                                            <p style={{textAlign: 'left'}}><b>{process.env.REACT_APP_APP_NAME}</b> login information is below.</p>
+                                                            <p style={{textAlign: 'left'}}><b>{import.meta.env.VITE_APP_NAME}</b> login information is below.</p>
                                                             <table width="100%" cellPadding={0} cellSpacing={0} border={0} style={{margin: '0px auto', border: '2px solid #000000', padding: '15px', borderRadius: '8px', backgroundColor: 'rgb(249, 249, 249)'}}>
                                                                 <tbody>
                                                                     <tr>
@@ -31,7 +31,7 @@ class UserLoginInformationView extends View<UserLoginInformationProps, {}> {
                                                                             <b>URL</b>
                                                                         </td>
                                                                         <td width="50%" style={{padding: '10px', border: '1px solid #000000'}}>
-                                                                            <b><a href={process.env.REACT_APP_BACKOFFICE_PAGE_URL} target="_blank">{process.env.REACT_APP_APP_NAME} Login</a></b>
+                                                                            <b><a href={import.meta.env.VITE_BACKOFFICE_PAGE_URL} target="_blank">{import.meta.env.VITE_APP_NAME} Login</a></b>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>

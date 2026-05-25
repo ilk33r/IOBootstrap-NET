@@ -12,3 +12,4 @@ dotnet ef migrations script Y --context IODefaultDatabaseContext --verbose -o ..
 
 dotnet tool list -g
 dotnet tool install -g dotnet-ef
+dotnet tool update --global dotnet-ef

@@ -8,16 +8,17 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <!-- <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.0" /> -->
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
   </ItemGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
@@ -25,15 +26,15 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MYSQL_DATABASE;DEBUG;</DefineConstants>
+    <DefineConstants>USE_POSTGRES_DATABASE;DEBUG;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
     <DebugType>full</DebugType>
-    <DefineConstants>USE_MYSQL_DATABASE;DEBUG</DefineConstants>
+    <DefineConstants>USE_POSTGRES_DATABASE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>
-    <DefineConstants>USE_MYSQL_DATABASE;RELEASE</DefineConstants>
+    <DefineConstants>USE_POSTGRES_DATABASE;RELEASE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

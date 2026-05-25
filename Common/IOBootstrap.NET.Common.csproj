@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
@@ -11,6 +11,6 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Sendgrid" Version="9.29.3" />
     <PackageReference Include="Google.Apis.Auth" Version="1.73.0" />
-    <PackageReference Include="HtmlSanitizer" Version="9.1.891-beta" />
+    <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
   </ItemGroup>
 </Project>

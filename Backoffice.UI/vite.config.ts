@@ -1,6 +1,7 @@
 // vite.config.ts
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'node:path'
 
 export default defineConfig(({ mode }) => {
   // .env.* dosyalarını mode'a göre yükle (isteğe bağlı kullanırsınız)
@@ -20,6 +21,10 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'build',
       rollupOptions: {
+        input: {
+          main: resolve(__dirname, 'index.html'),
+          // docs: resolve(__dirname, 'how-to-integrate.html')
+        },
         output: {
           // JS entry ve chunk dosyaları:
           entryFileNames: `static/js/[name].${dateString}.js`,

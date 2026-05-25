@@ -9,11 +9,12 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^29.5.12",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "bootstrap": "^5.3.5",
     "iobootstrap-bo-base": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-base",
     "iobootstrap-bo-configurations": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-configurations",
+    "iobootstrap-bo-files": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-files",
     "iobootstrap-bo-generatebopage": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-generatebopage",
     "iobootstrap-bo-images": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-images",
     "iobootstrap-bo-login": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-login",
@@ -25,8 +26,8 @@
     "iobootstrap-bo-users": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-bo-users",
     "iobootstrap-ui-base": "file:../IOBootstrap-NET/React.UI/modules/iobootstrap-ui-base",
     "jquery": "^3.7.1",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "sass": "^1.86.3",
     "web-vitals": "^3.5.2"
   },
@@ -61,8 +62,8 @@
     "@types/jquery": "^3.5.29",
     "@types/node": "^22.18.6",
     "@vitejs/plugin-react": "^5.0.3",
-    "vite": "^7.1.7",
-    "typescript": "^4.9.5"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.7"
   },
   "overrides": {
     "postcss": ">=8.4"

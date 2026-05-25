@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using IOBootstrap.NET.Common.Constants;
 using IOBootstrap.NET.Common.Logger;
 using IOBootstrap.NET.Common.Utilities;
 using IOBootstrap.NET.DataAccess.Context;
@@ -31,6 +32,13 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        bool dabaseExceptions = Configuration.GetValue<bool>(IOConfigurationConstants.DatabaseExceptions);
+        if (!dabaseExceptions)
+        {
+            await next();
+            return;
+        }
+
         if (
             context.HttpContext.Request.Method.Equals("POST") ||
             context.HttpContext.Request.Method.Equals("GET") ||

@@ -16,6 +16,7 @@ public static class IOConfigurationConstants
     public static string ConfigurationsEnabled = "IOConfigurationsEnabled";
     public static string CookieAuthentication = "IOCookieAuthentication";
     public static string DataAccessAssembly = "IODataAccessAssembly";
+    public static string DatabaseExceptions = "IODatabaseExceptions";
     public static string DataProtectionPath = "IODataProtectionPath";
     public static string FilesFolderKey = "IOFilesFolder";
     public static string HttpsRequired = "IOHttpsRequired";

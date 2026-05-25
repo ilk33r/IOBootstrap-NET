@@ -13,7 +13,7 @@ namespace IOBootstrap.NET.WebApi.Handshake.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ApiExplorerSettings(IgnoreApi = true)]
-[IOSessionAttribute]
+[IOSession]
 public class IOHandshakeDefaultController : IOHandshakeController<IOHandshakeDefaultViewModel, IODatabaseContextDefaultImpl>
 {
     public IOHandshakeDefaultController(IConfiguration configuration,

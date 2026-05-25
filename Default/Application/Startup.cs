@@ -42,7 +42,13 @@ public class Startup : IOStartup<IODatabaseContextDefaultImpl>
         connectionString = aesUtilities.Decrypt(Convert.FromBase64String(connectionString ?? ""));
 #endif
 
-#if USE_MYSQL_DATABASE
+#if USE_POSTGRES_DATABASE
+        options.UseNpgsql(connectionString, o =>
+        {
+           o.SetPostgresVersion(18, 0)
+           .MigrationsAssembly(migrationAssembly);
+        });
+#elif USE_MYSQL_DATABASE
             // options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(migrationAssembly));
             options.UseMySql(connectionString, new MySqlServerVersion(new Version(5, 0, 7)), b => b.MigrationsAssembly(migrationAssembly));
 #elif USE_SQLSRV_DATABASE

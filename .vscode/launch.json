@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetDefaultApplication",
-            "program": "${workspaceFolder}/Default/Application/bin/Debug/net8.0/IOBootstrap.NET.Default.Application.dll",
+            "program": "${workspaceFolder}/Default/Application/bin/Debug/net10.0/IOBootstrap.NET.Default.Application.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Default/Application",
             "stopAtEntry": false,
@@ -135,7 +135,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIOBootstrapNetBatch",
-            "program": "${workspaceFolder}/Default/Batch/bin/Debug/net8.0/IOBootstrap.Net.Default.Batch.dll",
+            "program": "${workspaceFolder}/Default/Batch/bin/Debug/net10.0/IOBootstrap.Net.Default.Batch.dll",
             "args": ["Development"],
             "cwd": "${workspaceFolder}/Default/Batch",
             "stopAtEntry": false,
@@ -149,7 +149,7 @@
             "name": "IO.DB.Migration",
             "type": "node-terminal",
             "request": "launch",
-            "command": "dotnet ef migrations add ${input:ioMigrationName} --project \"${workspaceFolder}/MobileAppBetaDistributions/Application/MobileAppBetaDistributions.Application.csproj\" --startup-project \"${workspaceFolder}/MobileAppBetaDistributions/Application/MobileAppBetaDistributions.Application.csproj\"",
+            "command": "dotnet ef migrations add ${input:ioMigrationName} --project \"${workspaceFolder}/Default/Application/IOBootstrap.NET.Default.Application.csproj\" --startup-project \"${workspaceFolder}/Default/Application/IOBootstrap.NET.Default.Application.csproj\"",
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "IO_ENCRYPTION_KEY": "test1234",
@@ -157,10 +157,10 @@
             }
         },
         {
-            "name": "AppCell.DB.Script",
+            "name": "IO.DB.Script",
             "type": "node-terminal",
             "request": "launch",
-            "command": "dotnet ef migrations script ${input:ioMigrationFrom} ${input:ioMigrationName} --project \"${workspaceFolder}/MobileAppBetaDistributions/Application/MobileAppBetaDistributions.Application.csproj\" --startup-project \"${workspaceFolder}/MobileAppBetaDistributions/Application/MobileAppBetaDistributions.Application.csproj\"",
+            "command": "dotnet ef migrations script ${input:ioMigrationFrom} ${input:ioMigrationName} --project \"${workspaceFolder}/Default/Application/IOBootstrap.NET.Default.Application.csproj\" --startup-project \"${workspaceFolder}/Default/Application/IOBootstrap.NET.Default.Application.csproj\"",
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "IO_ENCRYPTION_KEY": "test1234",

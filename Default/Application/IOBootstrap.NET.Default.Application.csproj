@@ -30,7 +30,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoStdLib>false</NoStdLib>
-    <DefineConstants>USE_POSTGRES_DATABASE;RELEASE</DefineConstants>
+    <DefineConstants>USE_POSTGRES_DATABASE;ENV_CONNECTION_STRING;RELEASE</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup>

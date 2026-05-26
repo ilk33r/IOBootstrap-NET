@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <_DugunApplicationProjectPath Condition="'$(_DugunApplicationProjectPath)' == '' and Exists('$(MSBuildThisFileDirectory)Dugun/Application/Dugun.Application.csproj')">$(MSBuildThisFileDirectory)Dugun/Application/Dugun.Application.csproj</_DugunApplicationProjectPath>
+    <_DugunApplicationProjectPath Condition="'$(_DugunApplicationProjectPath)' == '' and Exists('$(MSBuildThisFileDirectory)../../Dugun/Application/Dugun.Application.csproj')">$(MSBuildThisFileDirectory)../../Dugun/Application/Dugun.Application.csproj</_DugunApplicationProjectPath>
+    <_IsDugunProject>$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('Dugun.'))</_IsDugunProject>
+    <_IsIOBootstrapProject>$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('IOBootstrap.NET.'))</_IsIOBootstrapProject>
+    <_UseDugunApplicationDefineConstants Condition="'$(MSBuildProjectName)' != 'Dugun.Application' and ('$(_IsDugunProject)' == 'True' or '$(_IsIOBootstrapProject)' == 'True') and '$(_DugunApplicationProjectPath)' != ''">true</_UseDugunApplicationDefineConstants>
+  </PropertyGroup>
+
+  <Target Name="UseDugunApplicationDefineConstants"
+          BeforeTargets="AddImplicitDefineConstants;CoreCompile;GetCopyToOutputDirectoryItems;GetCopyToPublishDirectoryItems"
+          Condition="'$(_UseDugunApplicationDefineConstants)' == 'true'">
+    <XmlPeek XmlInputPath="$(_DugunApplicationProjectPath)"
+             Query="/Project/PropertyGroup[contains(@Condition, &quot;'$(Configuration)'&quot;)]/DefineConstants/text()">
+      <Output TaskParameter="Result" PropertyName="_DugunApplicationDefineConstants" />
+    </XmlPeek>
+
+    <ItemGroup Condition="'$(_DugunApplicationDefineConstants)' != ''">
+      <_MergedDefineConstants Include="$(DefineConstants)" />
+      <_MergedDefineConstants Include="$(_DugunApplicationDefineConstants)" />
+    </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(_MergedDefineConstants)" Condition="'@(_MergedDefineConstants)' != ''">
+      <Output TaskParameter="Filtered" ItemName="_DistinctDefineConstants" />
+    </RemoveDuplicates>
+
+    <PropertyGroup Condition="'@(_DistinctDefineConstants)' != ''">
+      <DefineConstants>@(_DistinctDefineConstants)</DefineConstants>
+    </PropertyGroup>
+  </Target>
+</Project>

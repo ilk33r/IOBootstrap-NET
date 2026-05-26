@@ -27,6 +27,9 @@ public class Startup : IOStartup<IODatabaseContextDefaultImpl>
 #if PLAIN_CONNECTION_STRING
         // Obtain connection string
         string? connectionString = Configuration.GetConnectionString("DefaultConnection");
+#elif ENV_CONNECTION_STRING
+        // Obtain connection string
+        string? connectionString = System.Environment.GetEnvironmentVariable(IOEnvironmentConstants.ConnectionString) ?? string.Empty;
 #else
         // Obtain connection string
         string? connectionString = Configuration.GetConnectionString("EncryptedConnection");

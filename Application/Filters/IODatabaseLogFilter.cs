@@ -8,6 +8,7 @@ using IOBootstrap.NET.DataAccess.Context;
 using IOBootstrap.NET.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOBootstrap.NET.Application.Filters;
 
@@ -120,9 +121,15 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TDBContext>();
 
-                // Do some background processing with the EF database context.
-                dbContext.Add(log);
-                dbContext.SaveChanges();
+                try
+                {
+                    dbContext.Add(log);
+                    dbContext.SaveChanges();
+                }
+                catch (DbUpdateException ex)
+                {
+                    Logger.LogError(ex, "Failed to save request log to database.");
+                }
             }
         }
         else

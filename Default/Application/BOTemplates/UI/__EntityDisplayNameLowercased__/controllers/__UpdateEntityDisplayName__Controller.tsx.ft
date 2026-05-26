@@ -1,6 +1,6 @@
 import React from "react";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { BaseResponseModel, CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, ValidationBackofficeRequestRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, BreadcrumbNavigationModel, FormTypeDateProps, FormTypeNumberProps, FormTypeTextProps, FormTypeSelectProps, FormDataOptionModel, FormType, FormView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
@@ -44,7 +44,7 @@ __UIEntityUpdateProperties__
 
     render() {
         if (this._updateRequest == null) {
-            return (<React.StrictMode></React.StrictMode>);
+            return (<BaseView></BaseView>);
         }
     
         const navigation: BreadcrumbNavigationModel[] = [
@@ -58,7 +58,7 @@ __UIEntityUpdateFormProperties__
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Update a __EntityItemNameLowercased__"
@@ -66,7 +66,7 @@ __UIEntityUpdateFormProperties__
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 

@@ -22,7 +22,7 @@ public class IOFilesEntity
     [StringLength(128)]
     public string? Description { get; set; }
 
-    [StringLength(128)]
+    [StringLength(2048)]
     public string? AdditionalData { get; set; }
 
     [StringLength(255)]

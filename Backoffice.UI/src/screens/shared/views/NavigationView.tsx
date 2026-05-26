@@ -10,7 +10,8 @@ import { MenuEditorAddController, MenuEditorDeleteController, MenuEditorListCont
 import { PushNotificationDeleteController, PushNotificationListController, PushNotificationSendController } from "iobootstrap-bo-pushnotifications";
 import { GenerateBOPageController } from "iobootstrap-bo-generatebopage";
 import { ImagesAddController, ImagesEditController, ImagesModifyController } from "iobootstrap-bo-images";
-import { LogsController } from "iobootstrap-bo-logs";
+import { ExceptionsController, LogsController } from "iobootstrap-bo-logs";
+import { FilesAddController, FilesEditController, FilesModifyController } from "iobootstrap-bo-files";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 
@@ -129,12 +130,28 @@ class NavigationView extends View<NavigationProps, NavigationState> {
             return <ImagesModifyController />
         }
 
+        if (this.props.pageHash === "filesEdit") {
+            return <FilesEditController />
+        }
+
+        if (this.props.pageHash === "filesAdd") {
+            return <FilesAddController />
+        }
+
+        if (this.props.pageHash === "fileModify") {
+            return <FilesModifyController />
+        }
+
         if (this.props.pageHash === "actionGenerateBOPage") {
             return <GenerateBOPageController />
         }
 
         if (this.props.pageHash === "logsEdit") {
             return <LogsController />
+        }
+
+        if (this.props.pageHash === "exceptionsEdit") {
+            return <ExceptionsController />
         }
         
         return (

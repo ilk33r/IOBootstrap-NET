@@ -15,6 +15,7 @@ namespace __ProjectName__.BackOffice.__EntityDisplayName__;
 [Produces("application/json")]
 [ApiController]
 [Route("[controller]")]
+[IOSession]
 public class BackOffice__EntityDisplayName__Controller : BackOfficeController<BackOffice__EntityDisplayName__ViewModel>
 {
     public BackOffice__EntityDisplayName__Controller(IConfiguration configuration, IWebHostEnvironment environment, ILogger<IOLoggerType> logger, DatabaseContext databaseContext) : base(configuration, environment, logger, databaseContext)
@@ -22,6 +23,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -31,6 +33,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]
@@ -44,6 +47,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpDelete("[action]")]
@@ -57,6 +61,7 @@ public class BackOffice__EntityDisplayName__Controller : BackOfficeController<Ba
     }
 
     [IORequireHTTPS]
+    [IORateLimit(seconds: 60, requestCount: 15)]
     [IOValidateRequestModel]
     [IOUserRole(UserRoles.Admin)]
     [HttpPost("[action]")]

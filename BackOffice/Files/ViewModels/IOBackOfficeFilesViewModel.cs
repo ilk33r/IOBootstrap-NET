@@ -64,7 +64,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
         foreach (IOFileVariationsModel file in paginatedFiles)
         {
-            file.FileName = this.CreateFilePublicId(file.FileName ?? "");
+            file.PublicId = this.CreateFilePublicId(file.FileName ?? "");
         }
 
         return new IOGetFilesResponseModel(fileCount, paginatedFiles);
@@ -75,7 +75,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
         return this.SaveRawFile(file);
     }
 
-    public IOFileVariationsModel SaveFilesMetaData(string filePath, string contentType, string description)
+    public IOFileVariationsModel SaveFilesMetaData(string filePath, string contentType, string description, string additionalData)
     {
         string fileName = Path.GetFileName(filePath);
         string sanitizedDescription = description.SanitizeHtml().Trim();
@@ -95,7 +95,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
             FileName = fileName,
             FileType = contentType,
             Description = sanitizedDescription,
-            AdditionalData = null,
+            AdditionalData = additionalData,
             CreatedBy = UserModel?.UserName,
             CreatedDate = DateTimeOffset.UtcNow
         };

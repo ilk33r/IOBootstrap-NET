@@ -1,6 +1,6 @@
 import React from "react";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { BaseResponseModel, CalloutTypes, ValidationRequiredRule } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView, CalloutTypes, ValidationBackofficeRequestRule, ValidationDateRule, ValidationRequiredRule } from "iobootstrap-ui-base";
 import { BOController, FormTypeDateProps, FormTypeNumberProps, FormTypeTextProps, FormTypeSelectProps, FormDataOptionModel, BreadcrumbNavigationModel, FormType, FormView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
@@ -45,7 +45,7 @@ __UIEntityCreateFormProperties__
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <FormView navigation={navigation} 
                     resourceHome="Home"
                     title="Create a __EntityItemNameLowercased__"
@@ -53,7 +53,7 @@ __UIEntityCreateFormProperties__
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                     formElements={formElements} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

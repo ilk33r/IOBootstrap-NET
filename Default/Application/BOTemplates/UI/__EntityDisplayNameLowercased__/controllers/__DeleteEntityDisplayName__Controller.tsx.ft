@@ -1,4 +1,4 @@
-import { BaseResponseModel } from "iobootstrap-ui-base";
+import { BaseResponseModel, BaseView } from "iobootstrap-ui-base";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import React from "react";
 import { BOController, BreadcrumbNavigationModel, QuestionView } from "iobootstrap-bo-base";
@@ -43,7 +43,7 @@ class __DeleteEntityDisplayName__Controller extends BOController<{}, {}> {
 
     render() {
         if (this._deleteRequest == null) {
-            return (<React.StrictMode></React.StrictMode>);
+            return (<BaseView />);
         }
     
         const navigation: BreadcrumbNavigationModel[] = [
@@ -52,7 +52,7 @@ class __DeleteEntityDisplayName__Controller extends BOController<{}, {}> {
         ];
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <QuestionView navigation={navigation} 
                     resourceHome="Home"
                     title="Delete a __EntityItemNameLowercased__"
@@ -60,7 +60,7 @@ class __DeleteEntityDisplayName__Controller extends BOController<{}, {}> {
                     errorHandler={this.handleFormError}
                     successHandler={this.handleFormSuccess}
                      />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

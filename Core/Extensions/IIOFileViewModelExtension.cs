@@ -1,4 +1,5 @@
 using IOBootstrap.NET.Common.Constants;
+using IOBootstrap.NET.Common.Exceptions.Common;
 using IOBootstrap.NET.Common.Exceptions.Files;
 using IOBootstrap.NET.Common.Extensions;
 using IOBootstrap.NET.Common.Utilities;
@@ -10,6 +11,11 @@ public static class IIOFileViewModelExtension
 {
     public static string SaveRawFile(this IIOFileViewModel input, IFormFile file)
     {
+        if (file == null)
+        {
+            throw new IOInvalidRequestException("File is required.");
+        }
+
         if (file.Length < 16)
         {
             throw new IOFileCorruptException();
@@ -27,14 +33,21 @@ public static class IIOFileViewModelExtension
 
         try
         {
+            if (!Directory.Exists(filesFolder))
+            {
+                Directory.CreateDirectory(filesFolder);
+            }
+
             using FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             file.CopyTo(fileStream);
             fileStream.Flush();
             return filePath;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new IOFileSaveException();
+            string exceptionMessage = $"{ex.Message}\n{ex.StackTrace}";
+            input.Logger.LogError(exceptionMessage);
+            throw new IOFileSaveException(exceptionMessage);
         }
     }
 

@@ -5,7 +5,8 @@ import BO__ListEntityDisplayName__RequestModel from "../models/BO__ListEntityDis
 import BO__ListEntityDisplayName__ResponseModel from "../models/BO__ListEntityDisplayName__ResponseModel";
 import BO__DeleteEntityDisplayName__RequestModel from "../models/BO__DeleteEntityDisplayName__RequestModel";
 import BO__UpdateEntityDisplayName__RequestModel from "../models/BO__UpdateEntityDisplayName__RequestModel";
-import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, istDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
+import { BaseView } from "iobootstrap-ui-base";
+import { BOController, BreadcrumbNavigationModel, ListDataFilterTypes, ListDataHeaderModel, ListDataItemModel, ListDataPaginationModel, ListView } from "iobootstrap-bo-base";
 __UIEnumImports__
 
 class __ListEntityDisplayName__Controller extends BOController<__ListEntityDisplayName__Props, __ListEntityDisplayName__State> {
@@ -97,7 +98,7 @@ __UIIetmListParameterArray__
         pagination.pageClickHandler = this.pageChangeHandler;
 
         return (
-            <React.StrictMode>
+            <BaseView>
                 <ListView navigation={navigation} 
                     headers={headers} 
                     items={items}
@@ -112,7 +113,7 @@ __UIIetmListParameterArray__
                     selectDataHandler={null}
                     itemVisibleHandler={null}
                     pagination={pagination} />
-            </React.StrictMode>
+            </BaseView>
         );
     }
 }

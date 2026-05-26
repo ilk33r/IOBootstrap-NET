@@ -14,6 +14,8 @@ public class IOFileVariationsModel : IOModel
 
     public string? FileType { get; set; }
 
+    public string? PublicId { get; set; }
+
     public string? Description { get; set; }
 
     public string? AdditionalData { get; set; }

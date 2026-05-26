@@ -2,6 +2,7 @@ import BaseRequestModel from "../../common/models/BaseRequestModel";
 import BaseResponseModel from "../../common/models/BaseResponseModel";
 import { IAppServiceHeaderInterceptor } from "./IAppServiceHeaderInterceptor";
 import DIHooks from "../../di/DIHooks";
+import { IAppServiceFormData } from "./IAppServiceFormData";
 
 type AppServiceBlobHandler = (blob: Blob | null, response: BaseResponseModel | null) => void;
 type AppServiceSuccessHandler<T extends BaseResponseModel> = (response: T) => void;
@@ -183,8 +184,12 @@ class AppService {
     }
 
     public upload<TResponse extends BaseResponseModel>(path: string, blob: Blob, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
+        this.uploadWithData(path, blob, [], successHandler, errorHandler);
+    }
+
+    public uploadWithData<TResponse extends BaseResponseModel>(path: string, blob: Blob, formData: IAppServiceFormData[], successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
         const requestUrl = `${this.baseUrl}/${path}`;
-        this.uploadAsync(requestUrl, blob)
+        this.uploadAsyncWithData(requestUrl, blob, formData)
         .then(data => {
             const response = data as TResponse;
             successHandler(response);
@@ -196,10 +201,18 @@ class AppService {
     }
 
     public async uploadAsync(requestUrl: string, blob: Blob): Promise<any> {
+        return this.uploadAsyncWithData(requestUrl, blob, []);
+    }
+
+    public async uploadAsyncWithData(requestUrl: string, blob: Blob, formData: IAppServiceFormData[]): Promise<any> {
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
 
         const form = new FormData();
         form.append("file", blob);
+
+        formData.forEach((it) => {
+            form.append(it.name, it.value);
+        });
 
         return fetch(requestUrl, {
             method: 'PUT',

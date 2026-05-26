@@ -27,7 +27,7 @@ public static class IIOFileSecurityCheckExtension
             {
                 int byteLength = StartsWith[0].Length;
                 byte[] fileBytes = new byte[byteLength];
-                fileStream.Read(fileBytes, 0, byteLength);
+                _ = fileStream.Read(fileBytes, 0, byteLength);
                 byte[]? outputMagicBytes = null;
 
                 foreach (byte[] expectedBytes in StartsWith)
@@ -68,7 +68,7 @@ public static class IIOFileSecurityCheckExtension
             if (Anywhere != null)
             {
                 byte[] fileBytes = new byte[256];
-                fileStream.Read(fileBytes, 0, 256);
+                _ = fileStream.Read(fileBytes, 0, 256);
                 bool isValid;
 
                 foreach (byte[] expectedBytes in Anywhere)

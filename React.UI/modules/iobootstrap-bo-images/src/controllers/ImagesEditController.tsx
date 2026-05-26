@@ -44,7 +44,7 @@ class ImagesEditController extends BOController<ImagesListProps, ImagesListState
         this.appContext.removeObject("selectedImage");
 
         this.requestModel.start = 0;
-        this.requestModel.count = 5;
+        this.requestModel.count = 10;
         this.LoadImages();
     }
 

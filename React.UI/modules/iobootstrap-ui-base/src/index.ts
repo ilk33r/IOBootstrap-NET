@@ -10,6 +10,7 @@ export type { WindowMessageModel } from "./common/models/WindowMessageModel";
 export { default as AppContext } from "./core/context/AppContext";
 export { default as AppCryptography } from "./core/cryptography/AppCryptography";
 export { default as AppService } from "./core/service/AppService";
+export type { IAppServiceFormData } from "./core/service/IAppServiceFormData";
 export type { IAppServiceHeaderInterceptor } from "./core/service/IAppServiceHeaderInterceptor";
 export { default as AppServiceHeaderAuthenticationInterceptor } from "./core/service/AppServiceHeaderAuthenticationInterceptor";
 export { default as AppStorage } from "./core/storage/AppStorage";

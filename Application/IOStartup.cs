@@ -10,6 +10,8 @@ using IOBootstrap.NET.Core.Services.Captcha;
 using IOBootstrap.NET.DataAccess.Context;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -41,6 +43,18 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
     public virtual void ConfigureServices(IServiceCollection services)
     {
+        long maxUploadRequestSize = GetMaxUploadRequestSize();
+
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = maxUploadRequestSize;
+        });
+
+        services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = maxUploadRequestSize;
+        });
+
         services.AddDbContext<TDBContext>(opt => DatabaseContextOptions((DbContextOptionsBuilder<TDBContext>)opt));
         services.AddControllersWithViews(options =>
                 {
@@ -217,6 +231,17 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
     {
         return Environment.IsDevelopment() || Environment.IsStaging();
     } 
+
+    private long GetMaxUploadRequestSize()
+    {
+        long maxFileSize = Configuration.GetValue<long>(IOConfigurationConstants.IOMaxUploadFileSize);
+        if (maxFileSize <= 0)
+        {
+            return 128L * 1024L * 1024L;
+        }
+
+        return maxFileSize + (5L * 1024L * 1024L);
+    }
 
     public virtual void ConfigureSwagger(SwaggerGenOptions options)
     {

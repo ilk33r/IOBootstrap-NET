@@ -361,7 +361,39 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             RequiredRole = (int)UserRoles.Admin,
             ParentEntityID = null
         };
-        DatabaseContext.Add(imageAddEntity);
+
+        IOMenuEntity filesEntity = new IOMenuEntity()
+        {
+            Action = "actionFiles",
+            CssClass = "fa-file",
+            Name = "Files",
+            MenuOrder = 30,
+            RequiredRole = (int)UserRoles.Admin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(filesEntity);
+
+        IOMenuEntity filesListEntity = new IOMenuEntity()
+        {
+            Action = "filesEdit",
+            CssClass = "fa-circle-o",
+            Name = "Edit Files",
+            MenuOrder = 31,
+            RequiredRole = (int)UserRoles.Admin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(filesListEntity);
+
+        IOMenuEntity fileAddEntity = new IOMenuEntity()
+        {
+            Action = "filesAdd",
+            CssClass = "fa-circle-o",
+            Name = "Add File",
+            MenuOrder = 32,
+            RequiredRole = (int)UserRoles.Admin,
+            ParentEntityID = null
+        };
+        DatabaseContext.Add(fileAddEntity);
         DatabaseContext.SaveChanges();
     }
 
@@ -372,7 +404,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "actionGenerateBOPage",
             CssClass = "fa-file-code",
             Name = "Generate BO Page",
-            MenuOrder = 30,
+            MenuOrder = 33,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -387,7 +419,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "logsEdit",
             CssClass = "fa-book",
             Name = "Logs",
-            MenuOrder = 31,
+            MenuOrder = 34,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };
@@ -398,7 +430,7 @@ public class IODatabaseContentGeneratorViewModel<TDBContext> : IOViewModel<TDBCo
             Action = "exceptionsEdit",
             CssClass = "fa-book",
             Name = "Exceptions",
-            MenuOrder = 32,
+            MenuOrder = 35,
             RequiredRole = (int)UserRoles.SuperAdmin,
             ParentEntityID = null
         };

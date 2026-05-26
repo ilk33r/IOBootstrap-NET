@@ -17,7 +17,7 @@ public class IOImageAssetController<TViewModel, TDBContext> : IOController<TView
     }
 
     [IORequireHTTPS]
-    [IORateLimit(seconds: 60, requestCount: 30)]
+    [IORateLimit(seconds: 60, requestCount: 60)]
     [IOUserRole(UserRoles.AnonmyMouse)]
     [HttpGet("[action]")]
     [ResponseCache(Duration = 604800, Location = ResponseCacheLocation.Any, NoStore = false)]

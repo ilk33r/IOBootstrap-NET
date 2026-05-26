@@ -50,6 +50,11 @@ public static class IIOImageViewModelExtension
         
         try
         {
+            if (!Directory.Exists(imagesFolder))
+            {
+                Directory.CreateDirectory(imagesFolder);
+            }
+            
             FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             fileStream.Write(jpegImage, 0, jpegImage.Length);
             fileStream.Flush();
@@ -81,6 +86,7 @@ public static class IIOImageViewModelExtension
         
         try
         {
+            Directory.CreateDirectory(imagesFolder);
             FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             file.CopyTo(fileStream);
             fileStream.Flush();

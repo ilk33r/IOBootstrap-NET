@@ -46,10 +46,10 @@ where TViewModel : IOBackOfficeFilesViewModel<TDBContext>, new()
     [IONonceRequired]
     [IOUserRole(UserRoles.BackOfficeUser)]
     [HttpPut("[action]")]
-    public IOSaveFileResponseModel SaveFile(IFormFile file, [FromForm] string description)
+    public IOSaveFileResponseModel SaveFile([FromForm] IFormFile file, [FromForm] string description, [FromForm] string additionalData)
     {
         string filePath = ViewModel.SaveFile(file);
-        IOFileVariationsModel fileMetadata = ViewModel.SaveFilesMetaData(filePath, file.ContentType, description);
+        IOFileVariationsModel fileMetadata = ViewModel.SaveFilesMetaData(filePath, file.ContentType, description, additionalData);
         return new IOSaveFileResponseModel(fileMetadata);
     }
 

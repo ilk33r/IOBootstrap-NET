@@ -7,8 +7,8 @@ namespace __ProjectName__.Common.Messages.__EntityDisplayName__;
 public class BO__ListEntityDisplayName__RequestModel : RequestModel
 {
     [Required]
-    public int? Count { get; set; }
+    public int Count { get; set; }
 
     [Required]
-    public int? Start { get; set; }
+    public int Start { get; set; }
 }

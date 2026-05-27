@@ -25,8 +25,7 @@ class AppService {
     }
 
     public get<TResponse extends BaseResponseModel>(path: string, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.getAsync(requestUrl)
+        this.getAsync(path)
             .then(data => {
                 const response = data as TResponse;
                 successHandler(response);
@@ -37,7 +36,8 @@ class AppService {
             });
     }
 
-    public async getAsync(requestUrl: string): Promise<any> {
+    public async getAsync<TResponse extends BaseResponseModel>(path: string): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
@@ -53,8 +53,7 @@ class AppService {
     }
 
     public post<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.postAsync(requestUrl, request)
+        this.postAsync(path, request)
             .then(data => {
                 const response = data as TResponse;
                 successHandler(response);
@@ -65,7 +64,8 @@ class AppService {
             });
     }
 
-    public async postAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+    public async postAsync<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
@@ -82,8 +82,7 @@ class AppService {
     }
 
     public delete<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel, successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.deleteAsync(requestUrl, request)
+        this.deleteAsync(path, request)
             .then(data => {
                 const response = data as TResponse;
                 successHandler(response);
@@ -94,7 +93,8 @@ class AppService {
             });
     }
 
-    public async deleteAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+    public async deleteAsync<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
@@ -111,8 +111,7 @@ class AppService {
     }
 
     public downloadFile(path: string, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.downloadFileAsync(requestUrl)
+        this.downloadFileAsync(path)
         .then(data => {
             if (data instanceof Blob) {
                 successHandler(data, null);
@@ -126,7 +125,8 @@ class AppService {
         });
     }
 
-    public async downloadFileAsync(requestUrl: string): Promise<any> {
+    public async downloadFileAsync<TResponse extends BaseResponseModel>(path: string): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
@@ -147,8 +147,7 @@ class AppService {
     }
 
     public postDownloadFile(path: string, request: BaseRequestModel, successHandler: AppServiceBlobHandler, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.postDownloadFileAsync(requestUrl, request)
+        this.postDownloadFileAsync(path, request)
         .then(data => {
             if (data instanceof Blob) {
                 successHandler(data, null);
@@ -162,7 +161,8 @@ class AppService {
         });
     }
 
-    public async postDownloadFileAsync(requestUrl: string, request: BaseRequestModel): Promise<any> {
+    public async postDownloadFileAsync<TResponse extends BaseResponseModel>(path: string, request: BaseRequestModel): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
         headers['Content-Type'] = 'application/json';
 
@@ -188,8 +188,7 @@ class AppService {
     }
 
     public uploadWithData<TResponse extends BaseResponseModel>(path: string, blob: Blob, formData: IAppServiceFormData[], successHandler: AppServiceSuccessHandler<TResponse>, errorHandler: AppServiceErrorHandler) {
-        const requestUrl = `${this.baseUrl}/${path}`;
-        this.uploadAsyncWithData(requestUrl, blob, formData)
+        this.uploadAsyncWithData(path, blob, formData)
         .then(data => {
             const response = data as TResponse;
             successHandler(response);
@@ -200,11 +199,12 @@ class AppService {
         });
     }
 
-    public async uploadAsync(requestUrl: string, blob: Blob): Promise<any> {
-        return this.uploadAsyncWithData(requestUrl, blob, []);
+    public async uploadAsync<TResponse extends BaseResponseModel>(path: string, blob: Blob): Promise<TResponse> {
+        return this.uploadAsyncWithData(path, blob, []);
     }
 
-    public async uploadAsyncWithData(requestUrl: string, blob: Blob, formData: IAppServiceFormData[]): Promise<any> {
+    public async uploadAsyncWithData<TResponse extends BaseResponseModel>(path: string, blob: Blob, formData: IAppServiceFormData[]): Promise<TResponse> {
+        const requestUrl = `${this.baseUrl}/${path}`;
         let headers = await this.appServiceHeaderInterceptor.interceptRequestHeaders();
 
         const form = new FormData();

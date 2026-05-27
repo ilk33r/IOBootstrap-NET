@@ -1,4 +1,4 @@
-import { View, WindowMessageModel } from "iobootstrap-ui-base";
+import { BaseView, View, WindowMessageModel } from "iobootstrap-ui-base";
 import SelectionWrapperProps from "../props/SelectionWrapperProps";
 import SelectionWrapperState from "../props/SelectionWrapperState";
 import React from "react";
@@ -62,7 +62,7 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
     render() {
         if (this.props.selectionHash != null) {
             return (
-                <React.StrictMode>
+                <BaseView>
                     <div className="selection-content container-fluid">
                         <div className="overlay" onClick={this.handleClose}></div>
                         <a className="icon-link icon-link-hover link-underline-opacity-0 link-light fs-3 close" onClick={this.closeButtonClicked} href="#root">
@@ -75,13 +75,13 @@ class SelectionWrapperView extends View<SelectionWrapperProps, SelectionWrapperS
                             <NavigationView pageHash={this.props.selectionHash} />
                         </div>
                     </div>
-                </React.StrictMode>
+                </BaseView>
             );
         }
 
         return (
-            <React.StrictMode>
-            </React.StrictMode>
+            <BaseView>
+            </BaseView>
         );
     }
 }

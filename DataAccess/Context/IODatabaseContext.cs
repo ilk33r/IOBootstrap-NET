@@ -53,7 +53,7 @@ where TPushNotificationDevicesEntity : IOPushNotificationDevicesEntity
             it => new { it.Description });
 
         modelBuilder.Entity<IOFilesEntity>().HasIndex(
-            it => new { it.Description, it.AdditionalData });
+            it => new { it.FileType });
 
         modelBuilder.Entity<IOFilesEntity>().HasIndex(
             it => new { it.CreatedDate });

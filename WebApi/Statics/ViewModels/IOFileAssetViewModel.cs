@@ -8,7 +8,7 @@ using IOBootstrap.NET.DataAccess.Entities;
 
 namespace IOBootstrap.NET.WebApi.Statics;
 
-public class IOFileAssetViewModel<TDBContext> : IOViewModel<TDBContext>, IIOImageAssetViewModel
+public class IOFileAssetViewModel<TDBContext> : IOViewModel<TDBContext>, IIOFileAssetViewModel
     where TDBContext : IOBaseDatabaseContext<TDBContext>
 {
 
@@ -18,7 +18,7 @@ public class IOFileAssetViewModel<TDBContext> : IOViewModel<TDBContext>, IIOImag
 
     public (FileStream, string) GetFile(string publicId)
     {
-        string? fileName = this.GetImageFileName(publicId);
+        string? fileName = this.GetFileName(publicId);
         if (String.IsNullOrEmpty(fileName))
         {
             throw new IOFileNotFoundException();

@@ -2,7 +2,7 @@ import MainProps from '../props/MainProps';
 import MainState from '../props/MainState';
 import NavigationView from '../../shared/views/NavigationView';
 import React from 'react';
-import { AppServiceHeaderAuthenticationInterceptor, Controller, DIHooks } from 'iobootstrap-ui-base';
+import { AppServiceHeaderAuthenticationInterceptor, BaseView, Controller, DIHooks } from 'iobootstrap-ui-base';
 
 class Main extends Controller<MainProps, MainState> {
 
@@ -54,14 +54,14 @@ class Main extends Controller<MainProps, MainState> {
 
     render() {
         return (
-          <React.StrictMode>
+          <BaseView>
             <div className="container-fluid">
                 <NavigationView
                     pagePath={this.state.pagePath ?? "dashboard"}
                     pathComponents={this.state.pathComponents}
                 />
             </div>
-          </React.StrictMode>
+          </BaseView>
         );
     }
 }

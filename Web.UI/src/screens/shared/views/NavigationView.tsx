@@ -1,7 +1,7 @@
 import NavigationProps from "../props/NavigationProps";
 import NavigationState from "../props/NavigationState";
 import React from "react";
-import { View } from "iobootstrap-ui-base";
+import { BaseView, View } from "iobootstrap-ui-base";
 
 class NavigationView extends View<NavigationProps, NavigationState> {
 
@@ -13,8 +13,8 @@ class NavigationView extends View<NavigationProps, NavigationState> {
 
     render() {
         return (
-            <React.StrictMode>
-            </React.StrictMode>
+            <BaseView>
+            </BaseView>
         );
     }
 }

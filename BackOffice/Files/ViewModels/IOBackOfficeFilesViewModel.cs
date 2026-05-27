@@ -64,7 +64,7 @@ where TDBContext : IOBaseDatabaseContext<TDBContext>
 
         foreach (IOFileVariationsModel file in paginatedFiles)
         {
-            file.PublicId = this.CreateFilePublicId(file.FileName ?? "");
+            file.PublicId = this.CreateFilePublicId(file.FileName ?? string.Empty);
         }
 
         return new IOGetFilesResponseModel(fileCount, paginatedFiles);
